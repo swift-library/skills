@@ -1,0 +1,21 @@
+{
+  "name": "swift-skills",
+  "owner": {
+    "name": "showxu"
+  },
+  "metadata": {
+    "description": "Swift skill collection focused on repository-native package documentation architecture",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "swift-package-docs",
+      "description": "Scaffold, audit, normalize, and export repository-native documentation architecture for Swift package repositories",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swift-package-docs"
+      ]
+    }
+  ]
+}
