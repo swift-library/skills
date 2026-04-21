@@ -1,0 +1,3 @@
+skills/swift-package-docs/templates/*.tpl linguist-documentation
+skills/swift-package-docs/templates/*.md.tpl linguist-language=Markdown
+skills/swift-package-docs/templates/*.yml.tpl linguist-language=YAML
