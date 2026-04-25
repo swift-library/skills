@@ -1,0 +1,5 @@
+interface:
+  display_name: "ActivityKit Patterns"
+  short_description: "Implement and review Live Activities with ActivityKit"
+  brand_color: "#FF9500"
+  default_prompt: "Use $activitykit-patterns for Live Activities, Dynamic Island, ActivityKit lifecycle, WidgetKit Live Activity UI, push tokens, and liveactivity APNs updates."

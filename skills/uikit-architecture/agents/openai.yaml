@@ -1,0 +1,7 @@
+interface:
+  display_name: "UIKit Architecture"
+  short_description: "Choose and review UIKit module architecture"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $uikit-architecture to choose, review, or refactor UIKit module architecture, including MVC cleanup, MVP, MVVM, VIPER, Coordinator, Clean Architecture adapters, reactive pipelines, SwiftUI interop, dependency injection, async cancellation, and testability."

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Group Activities Patterns"
+  short_description: "Implement and review GroupActivities and SharePlay"
+  brand_color: "#BF5AF2"
+  default_prompt: "Use $group-activities-patterns for GroupActivity, GroupSession, GroupSessionMessenger, GroupActivitySharingController, synchronized media playback, participant tracking, GroupSessionJournal, nearby participants, FaceTime/iMessage group experiences, entitlement setup, and session lifecycle."

@@ -1,0 +1,7 @@
+interface:
+  display_name: "SwiftUI Architecture"
+  short_description: "Choose and review SwiftUI feature architecture"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $swiftui-architecture to choose, review, or refactor SwiftUI feature architecture, including MVVM, MVI, TCA, Clean Architecture adapters, navigation coordinators, dependency boundaries, async effects, and testability."

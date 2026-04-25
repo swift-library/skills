@@ -1,0 +1,5 @@
+interface:
+  display_name: "WeatherKit Patterns"
+  short_description: "Implement and review WeatherKit data and attribution flows"
+  brand_color: "#64D2FF"
+  default_prompt: "Use $weatherkit-patterns for WeatherKit, WeatherService, forecasts, alerts, availability, attribution, location-backed weather, caching, and weather dashboard validation."

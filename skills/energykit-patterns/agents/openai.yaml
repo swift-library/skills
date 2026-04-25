@@ -1,0 +1,5 @@
+interface:
+  display_name: "EnergyKit Patterns"
+  short_description: "Implement and review EnergyKit guidance"
+  brand_color: "#FFD60A"
+  default_prompt: "Use $energykit-patterns for electricity guidance, cleaner energy periods, utility-rate-aware guidance, venues, EV charger and HVAC load event sessions, suggested actions, guidance tokens, unsupported regions, dashboards, insights, and entitlement-gated residential energy workflows."

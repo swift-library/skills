@@ -1,0 +1,5 @@
+interface:
+  display_name: "SpriteKit Patterns"
+  short_description: "Implement and review SpriteKit 2D scenes"
+  brand_color: "#FF453A"
+  default_prompt: "Use $spritekit-patterns for SKScene, SKView, SpriteView, SKRenderer, SKNode, SKSpriteNode, SKAction, texture atlases, physics bodies, SKPhysicsWorld, contact delegates, touch input, SKCameraNode, particles, tile maps, shaders, constraints, frame-cycle callbacks, SwiftUI presentation, and 2D game performance."

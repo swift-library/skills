@@ -1,0 +1,5 @@
+interface:
+  display_name: "App Clips Patterns"
+  short_description: "Implement and review App Clip targets and invocation flows"
+  brand_color: "#34C759"
+  default_prompt: "Use $app-clips-patterns for App Clip target setup, invocation URLs, associated domains, shared code, location confirmation, testing, and full-app handoff."

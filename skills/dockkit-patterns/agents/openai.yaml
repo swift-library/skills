@@ -1,0 +1,5 @@
+interface:
+  display_name: "DockKit Patterns"
+  short_description: "Implement and review DockKit accessory tracking"
+  brand_color: "#BF5AF2"
+  default_prompt: "Use $dockkit-patterns for DockAccessoryManager, DockAccessory, DockKitError, system tracking enable/disable, custom tracking, motorized stand control, rotation/positioning, AVCaptureSession coordination, subject/object tracking, device support, and physical dock validation."

@@ -15,7 +15,7 @@ Describe the bug clearly and briefly.
 Select or describe the area involved:
 
 - repository root docs or governance
-- `skills/swift-package-docs`
+- `skills/swiftpm-docs`
 - rules
 - templates
 - profiles

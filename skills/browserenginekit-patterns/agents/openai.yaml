@@ -1,0 +1,5 @@
+interface:
+  display_name: "BrowserEngineKit Patterns"
+  short_description: "Implement and review BrowserEngineKit engines"
+  brand_color: "#64D2FF"
+  default_prompt: "Use $browserenginekit-patterns for alternative browser engine eligibility, host apps, web content extensions, networking extensions, rendering extensions, XPC, sandboxing, JIT, rendering layer hosting, text input, downloads, process lifecycle, and non-WebKit browser-engine boundaries."

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Swift Testing Patterns"
+  short_description: "Write and review Swift Testing tests"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $swift-testings-patterns to write, review, or migrate Swift tests with Swift Testing patterns."

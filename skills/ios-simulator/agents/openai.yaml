@@ -1,0 +1,7 @@
+interface:
+  display_name: "iOS Simulator"
+  short_description: "Script-backed iOS Simulator automation, diagnostics, and UI-driving tools"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $ios-simulator to operate iOS Simulator devices, run simulator builds/tests, capture screenshots/logs/state, compare screenshots, inspect models, or use optional IDB semantic UI actions."

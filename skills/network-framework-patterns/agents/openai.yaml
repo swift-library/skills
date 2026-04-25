@@ -1,0 +1,5 @@
+interface:
+  display_name: "Network Framework Patterns"
+  short_description: "Implement and review Network.framework transports"
+  brand_color: "#32D74B"
+  default_prompt: "Use $network-framework-patterns for NWConnection, NWListener, NWBrowser, NWPathMonitor, NWParameters, NWEndpoint, TCP/UDP/TLS/WebSocket/QUIC options, Bonjour, local network privacy, path-aware networking, transport state machines, backpressure, and receive loops."

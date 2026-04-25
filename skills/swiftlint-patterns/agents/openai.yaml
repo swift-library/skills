@@ -1,0 +1,5 @@
+interface:
+  display_name: "SwiftLint Patterns"
+  short_description: "Implement and review SwiftLint enforcement."
+  brand_color: "#F05138"
+  default_prompt: "Use $swiftlint-patterns for SwiftLint setup, .swiftlint.yml, disabled_rules, opt_in_rules, only_rules, analyzer_rules, included/excluded paths, suppressions, baselines, autocorrection, reporters, build tool/command plugins, Xcode run scripts, CI/pre-commit wiring, custom regex and Swift rules, swiftlint analyze, toolchain selection, and rollout strategy."

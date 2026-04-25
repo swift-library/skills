@@ -1,0 +1,5 @@
+interface:
+  display_name: "AuthenticationServices Patterns"
+  short_description: "Implement and review Apple authentication flows."
+  brand_color: "#111111"
+  default_prompt: "Use $authenticationservices-patterns for Sign in with Apple, ASAuthorizationAppleIDProvider, ASAuthorizationController, ASAuthorizationAppleIDCredential, credential state checks, identity-token validation handoff, ASWebAuthenticationSession, WebAuthenticationSession, OAuth callback handling, password AutoFill, passkeys, security-key authentication, associated domains, SignInWithAppleButton, presentation contexts, existing-account setup, and account-security upgrades."

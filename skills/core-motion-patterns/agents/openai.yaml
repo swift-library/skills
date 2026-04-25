@@ -1,0 +1,5 @@
+interface:
+  display_name: "Core Motion Patterns"
+  short_description: "Implement and review Core Motion sensor flows"
+  brand_color: "#FF9F0A"
+  default_prompt: "Use $core-motion-patterns for CMMotionManager, CMDeviceMotion, accelerometer, gyroscope, magnetometer, attitude reference frames, CMPedometer, CMMotionActivityManager, CMAltimeter, CMHeadphoneMotionManager, CMWaterSubmersionManager, NSMotionUsageDescription, availability checks, sampling intervals, and sensor lifecycle cleanup."

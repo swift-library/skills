@@ -1,0 +1,5 @@
+interface:
+  display_name: "CallKit Patterns"
+  short_description: "Implement and review CallKit and PushKit VoIP flows"
+  brand_color: "#32ADE6"
+  default_prompt: "Use $callkit-patterns for CXProviderConfiguration, CXProvider, CXCallController, CXCallUpdate, incoming and outgoing calls, provider delegates, answer/end/mute/hold actions, PushKit VoIP token and push handling, audio-session coordination, and Call Directory extensions."

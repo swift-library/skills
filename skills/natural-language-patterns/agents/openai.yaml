@@ -1,0 +1,5 @@
+interface:
+  display_name: "Natural Language Patterns"
+  short_description: "Implement and review Natural Language and Translation flows"
+  brand_color: "#FF9F0A"
+  default_prompt: "Use $natural-language-patterns for NLTokenizer, NLLanguageRecognizer, NLTagger, NLEmbedding, NLContextualEmbedding, NLModel, TranslationSession, LanguageAvailability, translationTask, batch translation, and deterministic text-analysis pipelines."

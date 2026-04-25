@@ -1,0 +1,5 @@
+interface:
+  display_name: "Core Bluetooth Patterns"
+  short_description: "Implement and review Core Bluetooth BLE flows"
+  brand_color: "#0A84FF"
+  default_prompt: "Use $core-bluetooth-patterns for CBCentralManager, CBPeripheral, CBPeripheralManager, BLE scanning, connection, service/characteristic discovery, read/write/notify flows, GATT modeling, advertising, L2CAP channels, background modes, state restoration, NSBluetoothAlwaysUsageDescription, and Bluetooth Classic support."

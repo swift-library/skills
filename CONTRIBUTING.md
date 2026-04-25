@@ -17,8 +17,8 @@ Keep changes small, boundary-first, and tied to the existing collection model.
 
 - Keep route language in `AGENTS.md`.
 - Keep tree, placement, and ownership language in `README`-class files.
-- Keep `skills/<skill>/templates/` upstream and keep exported output
-  downstream from rule authority.
+- Keep `skills/<skill>/templates/` authoritative and keep exported output
+  below rule authority.
 - If a template change alters intended structure, update rules or `SKILL.md`
   first.
 - Prefer minimal edits over speculative expansion.

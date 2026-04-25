@@ -1,0 +1,5 @@
+interface:
+  display_name: "AdAttributionKit Patterns"
+  short_description: "Implement and review AdAttributionKit APIs"
+  brand_color: "#30D158"
+  default_prompt: "Use $adattributionkit-patterns for privacy-preserving ad attribution, publisher and advertised app setup, ad network identifiers, UIEventAttributionView, JWS impressions, StoreKit-rendered ads, postbacks, conversion values, conversion tags, re-engagement, developer postback copies, testing, and server integration boundaries."

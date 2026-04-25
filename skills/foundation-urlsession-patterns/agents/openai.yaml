@@ -1,0 +1,5 @@
+interface:
+  display_name: "Foundation URLSession Patterns"
+  short_description: "Implement and review Foundation URLSession networking"
+  brand_color: "#0A84FF"
+  default_prompt: "Use $foundation-urlsession-patterns for URLSession, URLRequest, HTTPURLResponse validation, async data/download/upload tasks, byte streams, background transfers, delegates, authentication challenges, cookies, caches, redirects, retries, pagination, SSE, WebSocket tasks, URLProtocol mocks, and ATS."

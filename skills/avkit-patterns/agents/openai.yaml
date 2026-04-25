@@ -1,0 +1,5 @@
+interface:
+  display_name: "AVKit Patterns"
+  short_description: "Implement and review AVKit playback surfaces"
+  brand_color: "#BF5AF2"
+  default_prompt: "Use $avkit-patterns for AVPlayer, AVPlayerViewController, VideoPlayer, Picture in Picture, AirPlay, subtitles, playback lifecycle, and media playback debugging."

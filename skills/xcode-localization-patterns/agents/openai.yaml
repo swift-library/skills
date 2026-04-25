@@ -1,0 +1,5 @@
+interface:
+  display_name: "Xcode Localization Patterns"
+  short_description: "Implement and review Xcode and Swift localization workflows"
+  brand_color: "#F05138"
+  default_prompt: "Use $xcode-localization-patterns to implement or review Xcode String Catalogs, localized resources, Swift localization APIs, SwiftUI text localization, translator exchange, pseudolocalization, and locale tests."

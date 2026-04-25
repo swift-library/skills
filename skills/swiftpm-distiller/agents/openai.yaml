@@ -1,0 +1,5 @@
+interface:
+  display_name: "SwiftPM Distiller"
+  short_description: "Distill Swift packages into agent-ready skills"
+  brand_color: "#F05138"
+  default_prompt: "Use $swiftpm-distiller to turn a SwiftPM package or Swift library source tree into skill-ready agent usage guidance."

@@ -1,0 +1,5 @@
+interface:
+  display_name: "AppMigrationKit Patterns"
+  short_description: "Implement and review AppMigrationKit transfers"
+  brand_color: "#5E5CE6"
+  default_prompt: "Use $appmigrationkit-patterns for migration extensions, source and destination apps, data-container access, export property declarations, ResourcesExporting, resource import, MigrationStatus, progress, App Group recovery, AppMigrationTester, versioned migration, cancellation, and first-launch import UX."

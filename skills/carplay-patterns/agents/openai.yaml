@@ -1,0 +1,5 @@
+interface:
+  display_name: "CarPlay Patterns"
+  short_description: "Implement and review CarPlay template surfaces"
+  brand_color: "#007AFF"
+  default_prompt: "Use $carplay-patterns for CarPlay entitlements, app category boundaries, CPTemplateApplicationScene, scene delegates, CPInterfaceController, CPListTemplate, CPMapTemplate, CPNowPlayingTemplate, dashboard and instrument-cluster scenes, CarPlay Simulator, template limits, and vehicle display constraints."

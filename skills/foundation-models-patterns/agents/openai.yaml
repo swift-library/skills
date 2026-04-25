@@ -1,0 +1,5 @@
+interface:
+  display_name: "Foundation Models Patterns"
+  short_description: "Implement and review Apple Foundation Models generation flows"
+  brand_color: "#0A84FF"
+  default_prompt: "Use $foundation-models-patterns for SystemLanguageModel availability, LanguageModelSession state, prompts, transcripts, structured output, @Generable, @Guide, streaming, tool calling, adapters, guardrails, and on-device generative fallback decisions."

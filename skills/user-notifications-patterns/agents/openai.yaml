@@ -1,0 +1,5 @@
+interface:
+  display_name: "User Notifications Patterns"
+  short_description: "Implement and review UserNotifications and APNs flows"
+  brand_color: "#5856D6"
+  default_prompt: "Use $user-notifications-patterns for UserNotifications, APNs, local and remote notifications, authorization, payloads, notification extensions, and delivery debugging."

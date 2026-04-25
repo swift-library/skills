@@ -1,0 +1,5 @@
+interface:
+  display_name: "HomeKit Patterns"
+  short_description: "Implement and review HomeKit and MatterSupport flows"
+  brand_color: "#34C759"
+  default_prompt: "Use $homekit-patterns for HMHomeManager, homes, rooms, accessories, services, characteristics, action sets, triggers, Matter commissioning, MatterAddDeviceExtensionRequestHandler, HomeKit entitlements, delegate lifecycle, and HomeKit Accessory Simulator validation."

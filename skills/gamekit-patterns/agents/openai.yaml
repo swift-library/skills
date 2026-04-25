@@ -1,0 +1,5 @@
+interface:
+  display_name: "GameKit Patterns"
+  short_description: "Implement and review GameKit and Game Center"
+  brand_color: "#30B0C7"
+  default_prompt: "Use $gamekit-patterns for Game Center entitlement setup, GKLocalPlayer authentication, authenticateHandler, scoped player identifiers, GKAccessPoint, Game Center dashboards, GKLeaderboard, GKAchievement, GKMatchmakerViewController, GKMatch, GKTurnBasedMatch, multiplayer matchmaking, saved games, challenges, friends, nearby discovery, and server identity verification."

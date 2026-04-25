@@ -1,0 +1,5 @@
+interface:
+  display_name: "PhotoKit Patterns"
+  short_description: "Implement and review Photos, PhotosUI, and camera workflows"
+  brand_color: "#FF375F"
+  default_prompt: "Use $photokit-patterns for PhotosPicker, PhotoKit authorization, PHAsset workflows, camera capture, selected media loading, and photo-library behavior."
