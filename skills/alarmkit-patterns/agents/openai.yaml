@@ -1,0 +1,5 @@
+interface:
+  display_name: "AlarmKit Patterns"
+  short_description: "Implement and review AlarmKit alarms and timers"
+  brand_color: "#FF9F0A"
+  default_prompt: "Use $alarmkit-patterns for authorization, AlarmManager, alarm versus timer decisions, Alarm.Schedule, scheduling/configuration, state observation, countdowns, AlarmAttributes, AlarmPresentation, AlarmPresentationState, AlarmButton, stop/snooze/secondary actions, Live Activity/widget extension wiring, and Info.plist setup."

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Core NFC Patterns"
+  short_description: "Implement and review Core NFC tag workflows"
+  brand_color: "#30D158"
+  default_prompt: "Use $core-nfc-patterns for NFCNDEFReaderSession, NFCTagReaderSession, NFCNDEFMessage, NFCNDEFPayload, NDEF read/write, ISO 7816, ISO 15693, FeliCa, MIFARE, VAS/payment reader sessions, background tag reading, NFCReaderUsageDescription, entitlements, readingAvailable checks, and physical tag testing."

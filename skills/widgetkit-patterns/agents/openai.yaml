@@ -1,0 +1,5 @@
+interface:
+  display_name: "WidgetKit Patterns"
+  short_description: "Implement and review WidgetKit extensions."
+  brand_color: "#30D158"
+  default_prompt: "Use $widgetkit-patterns for WidgetKit implementation, widget extension targets, Widget, WidgetBundle, StaticConfiguration, AppIntentConfiguration, TimelineProvider, AppIntentTimelineProvider, TimelineEntry, reload policies, WidgetCenter, widget families, Lock Screen widgets, StandBy, Smart Stack behavior, interactive widgets, App Intents-backed configuration, ControlWidget, shared App Group data, deep links, push/background reload strategy, previews, snapshots, and extension constraints."

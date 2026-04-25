@@ -1,0 +1,5 @@
+interface:
+  display_name: "PassKit Patterns"
+  short_description: "Implement and review Apple Pay and Wallet flows"
+  brand_color: "#0A84FF"
+  default_prompt: "Use $passkit-patterns for Apple Pay, PKPaymentRequest, payment authorization, Wallet passes, PKPassLibrary, entitlements, and device payment validation."

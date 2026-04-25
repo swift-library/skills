@@ -1,0 +1,5 @@
+interface:
+  display_name: "MetricKit Patterns"
+  short_description: "Implement and review MetricKit telemetry."
+  brand_color: "#5E5CE6"
+  default_prompt: "Use $metrickit-patterns for MetricKit telemetry, MXMetricManager, MXMetricManagerSubscriber, MXMetricPayload, MXDiagnosticPayload, app launch/runtime/CPU/memory/responsiveness/network/cellular/app-exit metrics, crash/hang/CPU/disk diagnostics, MXCallStackTree, custom MXSignpostMetric payloads, JSON export, payload persistence, backend upload, Xcode Organizer correlation, privacy redaction, and delayed telemetry expectations."

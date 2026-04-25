@@ -4,17 +4,791 @@
     "name": "showxu"
   },
   "metadata": {
-    "description": "Swift skill collection focused on repository-native package documentation architecture",
+    "description": "Swift skill collection focused on package documentation architecture, Swift library dependency audits, SwiftPM architecture guidance, SwiftPM library distillation, SwiftUI and UIKit architecture guidance, Swift Concurrency guidance, Swift Testing patterns, SwiftData patterns, Core Data patterns, CloudKit patterns, Keychain patterns, CryptoKit patterns, Certificate Trust patterns, AuthenticationServices patterns, Accessibility patterns, Focus Engine patterns, interface writing, Figma-to-SwiftUI translation, SwiftUI patterns, SwiftUI performance, SwiftUI design, WidgetKit implementation, WidgetKit design, TipKit patterns, RelevanceKit patterns, Swift Charts patterns, Xcode Instruments patterns, MetricKit patterns, Xcode localization workflows, App Intents, ActivityKit, App Clips, UserNotifications/APNs, StoreKit, WebKit, MapKit, PhotoKit, AVKit, MusicKit, PDFKit, PaperKit, PencilKit, Contacts, EventKit, HealthKit, PassKit, WeatherKit, FinanceKit, Foundation Models, Core ML, MLX Swift, Vision, Natural Language, Translation, Speech, Foundation URLSession, Network.framework, BackgroundTasks, DeviceCheck/App Attest, CryptoTokenKit, AccessorySetupKit, Core Bluetooth, Core NFC, Core Motion, DockKit, SensorKit, AudioAccessoryKit, HomeKit/MatterSupport, CallKit/PushKit, GroupActivities/SharePlay, CarPlay, AppMigrationKit, AdAttributionKit, AlarmKit, BrowserEngineKit, EnergyKit, PermissionKit, GameKit, SpriteKit, SceneKit, TabletopKit, RealityKit/ARKit, SwiftLint, iOS Simulator, Apple-platform release engineering, macOS SwiftPM app packaging, and broad Swift language / API baselines",
     "version": "0.1.0"
   },
   "plugins": [
     {
-      "name": "swift-package-docs",
-      "description": "Scaffold, audit, normalize, and export repository-native documentation architecture for Swift package repositories",
+      "name": "swiftpm-docs",
+      "description": "Scaffold, audit, normalize, and export repository-native documentation architecture for Swift Package repositories",
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/swift-package-docs"
+        "./skills/swiftpm-docs"
+      ]
+    },
+    {
+      "name": "swiftpm-index",
+      "description": "Check custom Swift reusable infrastructure against official library hints, with manual full-index, SPI, and local candidate discovery",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftpm-index"
+      ]
+    },
+    {
+      "name": "swiftpm-architecture",
+      "description": "Design, review, and diagnose Swift Package target graphs, module boundaries, dependency direction, and compact evidence briefs",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftpm-architecture"
+      ]
+    },
+    {
+      "name": "swiftpm-distiller",
+      "description": "Distill SwiftPM package or Swift library source into agent-ready skill material and usage guidance",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftpm-distiller"
+      ]
+    },
+    {
+      "name": "swiftui-architecture",
+      "description": "Choose, review, refactor, and scaffold SwiftUI feature architecture with MVVM, MVI, TCA, Clean Architecture adapters, navigation coordinators, dependency boundaries, async effects, and tests",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftui-architecture"
+      ]
+    },
+    {
+      "name": "uikit-architecture",
+      "description": "Choose, review, refactor, and scaffold UIKit module architecture with MVC cleanup, MVP, MVVM, VIPER, Coordinator, Clean Architecture adapters, reactive pipelines, SwiftUI interop, and tests",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/uikit-architecture"
+      ]
+    },
+    {
+      "name": "swift-concurrency-patterns",
+      "description": "Diagnose Swift Concurrency issues, guide Swift 6 strict concurrency migration, and apply actors, tasks, Sendable, async/await, testing, and performance patterns",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swift-concurrency-patterns"
+      ]
+    },
+    {
+      "name": "swift-testings-patterns",
+      "description": "Write, review, migrate, and debug Swift tests with Swift Testing patterns",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swift-testings-patterns"
+      ]
+    },
+    {
+      "name": "swiftdata-patterns",
+      "description": "Review, debug, migrate, and modernize SwiftData schema, context, query, migration, CloudKit sync, and concurrency patterns",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftdata-patterns"
+      ]
+    },
+    {
+      "name": "swift-programming-language",
+      "description": "Review broad Swift language patterns, API design, FormatStyle modernization, Google Swift style references, Foundation usage, localization, and obvious modernization opportunities",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swift-programming-language"
+      ]
+    },
+    {
+      "name": "core-data-patterns",
+      "description": "Review, debug, and modernize Core Data stack, context, fetch, migration, CloudKit sync, performance, and testing patterns",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/core-data-patterns"
+      ]
+    },
+    {
+      "name": "keychain-patterns",
+      "description": "Review, implement, debug, and modernize Apple Keychain Services code, credential storage, access control, sharing, biometrics, migration, and tests",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/keychain-patterns"
+      ]
+    },
+    {
+      "name": "cryptokit-patterns",
+      "description": "Review, implement, debug, and modernize CryptoKit encryption, hashing, signing, HPKE, post-quantum APIs, Secure Enclave, and crypto tests",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/cryptokit-patterns"
+      ]
+    },
+    {
+      "name": "certificate-trust-patterns",
+      "description": "Review, implement, debug, and modernize SecTrust, certificate pinning, SPKI pins, client certificates, mTLS, and URLSession trust challenges",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/certificate-trust-patterns"
+      ]
+    },
+    {
+      "name": "authenticationservices-patterns",
+      "description": "Implement and review AuthenticationServices flows, Sign in with Apple, passkeys, password AutoFill, web authentication sessions, callback handling, credential state, and account-security upgrades",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/authenticationservices-patterns"
+      ]
+    },
+    {
+      "name": "accessibility-patterns",
+      "description": "Review, implement, audit, and modernize Apple platform accessibility for SwiftUI, UIKit, and AppKit, including VoiceOver, Dynamic Type, Voice Control, testing, and Nutrition Label recommendations",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/accessibility-patterns"
+      ]
+    },
+    {
+      "name": "focus-engine-patterns",
+      "description": "Review, implement, debug, and modernize Apple platform focus management and focus movement across SwiftUI, UIKit, AppKit, RealityKit, and Apple platforms",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/focus-engine-patterns"
+      ]
+    },
+    {
+      "name": "interface-writing",
+      "description": "Write, rewrite, review, and improve product interface text for buttons, alerts, errors, empty states, onboarding, settings, notifications, CLI output, accessibility labels, and terminology consistency",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/interface-writing"
+      ]
+    },
+    {
+      "name": "figma-swiftui",
+      "description": "Translate Figma URLs, nodes, screenshots, assets, design tokens, variants, and briefs into production SwiftUI with Asset Catalog handling, responsive layout, and visual fidelity",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/figma-swiftui"
+      ]
+    },
+    {
+      "name": "swiftui-patterns",
+      "description": "Review, implement, and refactor SwiftUI state, view structure, layout, navigation, animation, macOS scenes, MenuBarExtra utilities, and modern API patterns",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftui-patterns"
+      ]
+    },
+    {
+      "name": "swiftui-performance",
+      "description": "Guide, review, diagnose, and optimize SwiftUI source-level performance before Instruments, covering slow rendering, janky scrolling, excessive updates, identity churn, heavy body work, and layout thrash",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftui-performance"
+      ]
+    },
+    {
+      "name": "swiftui-design",
+      "description": "Review and polish SwiftUI visual design, native Apple UI feel, spacing, typography, semantic colors, grouped content, controls, and editor surfaces",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftui-design"
+      ]
+    },
+    {
+      "name": "widgetkit-patterns",
+      "description": "Implement and review WidgetKit extension targets, widgets, configurations, timeline providers, reload policies, interactive widgets, Control Center widgets, shared App Group data, previews, and extension constraints",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/widgetkit-patterns"
+      ]
+    },
+    {
+      "name": "widgetkit-design",
+      "description": "Review and polish WidgetKit visual design, native widget layout, widget families, Gauge usage, backgrounds, dense rendering, and visible freshness",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/widgetkit-design"
+      ]
+    },
+    {
+      "name": "tipkit-patterns",
+      "description": "Implement and review TipKit feature-discovery flows, Tips.configure, Tip definitions, TipView, popovers, TipGroup, rules, events, datastore, invalidation, and testing helpers",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/tipkit-patterns"
+      ]
+    },
+    {
+      "name": "relevancekit-patterns",
+      "description": "Implement and review RelevanceKit widget relevance, watchOS Smart Stack surfacing, RelevantContext, relevance donation, contextual clues, permission boundaries, and testing",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/relevancekit-patterns"
+      ]
+    },
+    {
+      "name": "swift-charts-patterns",
+      "description": "Review, refactor, and implement Swift Charts marks, axes, selection, Chart3D, and chart accessibility patterns",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swift-charts-patterns"
+      ]
+    },
+    {
+      "name": "xcode-instruments",
+      "description": "Record and analyze Xcode Instruments traces with xctrace, Time Profiler, hangs, hitches, logs, and signposts",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/xcode-instruments"
+      ]
+    },
+    {
+      "name": "metrickit-patterns",
+      "description": "Implement and review MetricKit subscribers, metric and diagnostic payloads, custom signpost metrics, JSON export, payload persistence, backend upload, and privacy redaction",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/metrickit-patterns"
+      ]
+    },
+    {
+      "name": "xcode-localization-patterns",
+      "description": "Implement and review Xcode String Catalogs, localized resources, Swift localization APIs, SwiftUI text localization, translator exchange, pseudolocalization, and locale tests",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/xcode-localization-patterns"
+      ]
+    },
+    {
+      "name": "app-intents-patterns",
+      "description": "Implement and review App Intents actions, entities, shortcuts, Siri, Spotlight, widgets, controls, Focus, and related system integrations",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/app-intents-patterns"
+      ]
+    },
+    {
+      "name": "activitykit-patterns",
+      "description": "Implement and review Live Activities, Dynamic Island, ActivityKit lifecycle, WidgetKit Live Activity UI, and ActivityKit push updates",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/activitykit-patterns"
+      ]
+    },
+    {
+      "name": "app-clips-patterns",
+      "description": "Implement and review App Clip targets, invocation URLs, associated domains, shared code, local testing, and full-app handoff",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/app-clips-patterns"
+      ]
+    },
+    {
+      "name": "user-notifications-patterns",
+      "description": "Implement and review UserNotifications/APNs, local and remote notifications, authorization, payloads, notification extensions, and delivery debugging",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/user-notifications-patterns"
+      ]
+    },
+    {
+      "name": "storekit-patterns",
+      "description": "Implement and review StoreKit product loading, purchases, subscriptions, transaction verification, entitlements, StoreKit views, testing, and server validation",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/storekit-patterns"
+      ]
+    },
+    {
+      "name": "webkit-patterns",
+      "description": "Implement and review embedded WebKit surfaces, SwiftUI WebView/WebPage, WKWebView, navigation policy, JavaScript, local content, and custom schemes",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/webkit-patterns"
+      ]
+    },
+    {
+      "name": "mapkit-patterns",
+      "description": "Implement and review MapKit views, annotations, overlays, camera state, search, directions, Look Around, Core Location-backed map behavior, and map testing",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/mapkit-patterns"
+      ]
+    },
+    {
+      "name": "photokit-patterns",
+      "description": "Implement and review Photos/PhotosUI picking, PhotoKit library access, selected-media loading, camera capture tied to photo workflows, and photo-grid memory behavior",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/photokit-patterns"
+      ]
+    },
+    {
+      "name": "avkit-patterns",
+      "description": "Implement and review AVKit playback, AVPlayer, AVPlayerViewController, SwiftUI VideoPlayer, Picture in Picture, AirPlay, subtitles, and playback lifecycle debugging",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/avkit-patterns"
+      ]
+    },
+    {
+      "name": "musickit-patterns",
+      "description": "Implement and review MusicKit authorization, Apple Music catalog/library access, subscription state, music players, queues, MediaPlayer, Now Playing, and background audio",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/musickit-patterns"
+      ]
+    },
+    {
+      "name": "pdfkit-patterns",
+      "description": "Implement and review PDFKit display, navigation, search, annotations, forms, page manipulation, rendering, printing, and SwiftUI PDF wrappers",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/pdfkit-patterns"
+      ]
+    },
+    {
+      "name": "paperkit-patterns",
+      "description": "Implement and review PaperKit structured markup, PaperMarkupViewController, PaperMarkup, PencilKit coexistence, persistence, rendering, and compatibility checks",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/paperkit-patterns"
+      ]
+    },
+    {
+      "name": "pencilkit-patterns",
+      "description": "Implement and review PencilKit freeform drawing, PKCanvasView, PKDrawing, PKToolPicker, Apple Pencil interactions, drawing persistence, export, and SwiftUI wrappers",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/pencilkit-patterns"
+      ]
+    },
+    {
+      "name": "contacts-patterns",
+      "description": "Implement and review Contacts and ContactsUI access, limited contact access, contact pickers, contact mutation, vCards, groups, and change history",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/contacts-patterns"
+      ]
+    },
+    {
+      "name": "eventkit-patterns",
+      "description": "Implement and review EventKit and EventKitUI calendar and reminder access, full versus write-only calendar access, CRUD, recurrence, alarms, and editor wrappers",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/eventkit-patterns"
+      ]
+    },
+    {
+      "name": "healthkit-patterns",
+      "description": "Implement and review HealthKit authorization, health queries, samples, background delivery, workouts, units, and health-data privacy",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/healthkit-patterns"
+      ]
+    },
+    {
+      "name": "passkit-patterns",
+      "description": "Implement and review PassKit Apple Pay, Wallet passes, PKPaymentRequest, payment authorization, merchant/pass entitlements, and pass-library behavior",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/passkit-patterns"
+      ]
+    },
+    {
+      "name": "weatherkit-patterns",
+      "description": "Implement and review WeatherKit forecasts, alerts, availability, attribution, weather caching, location-backed data, and weather dashboard validation",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/weatherkit-patterns"
+      ]
+    },
+    {
+      "name": "financekit-patterns",
+      "description": "Implement and review FinanceKit availability, managed entitlement gating, authorization, accounts, balances, transactions, history tokens, Wallet orders, background delivery, and financial-data privacy",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/financekit-patterns"
+      ]
+    },
+    {
+      "name": "cloudkit-patterns",
+      "description": "Implement and review direct CloudKit and iCloud data workflows, containers, databases, records, zones, queries, subscriptions, CKSyncEngine, sharing, assets, account status, errors, and dashboard workflow",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/cloudkit-patterns"
+      ]
+    },
+    {
+      "name": "foundation-models-patterns",
+      "description": "Implement and review Apple Foundation Models availability, LanguageModelSession state, structured output, streaming, tool calling, guardrails, and on-device generative fallback decisions",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/foundation-models-patterns"
+      ]
+    },
+    {
+      "name": "core-ml-patterns",
+      "description": "Implement and review Core ML model loading, prediction, deployment, profiling, tensor/multiarray handling, VNCoreMLModel integration, and model performance",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/core-ml-patterns"
+      ]
+    },
+    {
+      "name": "mlx-swift-patterns",
+      "description": "Implement and review MLX Swift package setup, MLX arrays, Apple silicon and Metal build constraints, model examples, memory pressure, and backend selection",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/mlx-swift-patterns"
+      ]
+    },
+    {
+      "name": "vision-patterns",
+      "description": "Implement and review Vision and VisionKit OCR, barcode recognition, face detection, image classification, segmentation, tracking, coordinate conversion, and scanner UI",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/vision-patterns"
+      ]
+    },
+    {
+      "name": "natural-language-patterns",
+      "description": "Implement and review Natural Language and Translation tokenization, language recognition, tagging, embeddings, NLModel, TranslationSession, and deterministic text analysis",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/natural-language-patterns"
+      ]
+    },
+    {
+      "name": "speech-patterns",
+      "description": "Implement and review Speech framework authorization, microphone/audio pipeline setup, SpeechAnalyzer, SpeechTranscriber, SFSpeechRecognizer, live/file transcription, and cleanup",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/speech-patterns"
+      ]
+    },
+    {
+      "name": "foundation-urlsession-patterns",
+      "description": "Implement and review Foundation URLSession networking, HTTP API clients, transfers, validation, background handoff, URLProtocol mocks, SSE, WebSocket tasks, and ATS",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/foundation-urlsession-patterns"
+      ]
+    },
+    {
+      "name": "network-framework-patterns",
+      "description": "Implement and review Network.framework transports, connections, listeners, browsers, path monitoring, Bonjour, local network privacy, and receive loops",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/network-framework-patterns"
+      ]
+    },
+    {
+      "name": "background-tasks-patterns",
+      "description": "Implement and review BackgroundTasks scheduling, registration, expiration handlers, completion, checkpointing, background handoff, and debug launch",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/background-tasks-patterns"
+      ]
+    },
+    {
+      "name": "devicecheck-patterns",
+      "description": "Implement and review DeviceCheck and App Attest tokens, attestation, assertions, server verification, rollout, retry, and unsupported states",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/devicecheck-patterns"
+      ]
+    },
+    {
+      "name": "cryptotokenkit-patterns",
+      "description": "Implement and review CryptoTokenKit tokens, smart cards, drivers, sessions, PIN state, APDU exchange, and token-backed keychain exposure",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/cryptotokenkit-patterns"
+      ]
+    },
+    {
+      "name": "accessorysetupkit-patterns",
+      "description": "Implement and review AccessorySetupKit picker discovery, Bluetooth and Wi-Fi accessory setup, session events, authorization, and runtime handoff",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/accessorysetupkit-patterns"
+      ]
+    },
+    {
+      "name": "core-bluetooth-patterns",
+      "description": "Implement and review Core Bluetooth central and peripheral roles, BLE scanning, GATT discovery, read/write/notify, advertising, and restoration",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/core-bluetooth-patterns"
+      ]
+    },
+    {
+      "name": "core-nfc-patterns",
+      "description": "Implement and review Core NFC NDEF and tag-reader sessions, NFC entitlements, ISO tags, background reading, invalidation, and physical tag tests",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/core-nfc-patterns"
+      ]
+    },
+    {
+      "name": "core-motion-patterns",
+      "description": "Implement and review Core Motion device motion, raw sensors, pedometer, activity, altimeter, headphone motion, sampling, battery, and privacy behavior",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/core-motion-patterns"
+      ]
+    },
+    {
+      "name": "dockkit-patterns",
+      "description": "Implement and review DockKit accessory observation, tracking, motorized stand control, camera coordination, and physical dock validation",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/dockkit-patterns"
+      ]
+    },
+    {
+      "name": "sensorkit-patterns",
+      "description": "Implement and review SensorKit entitlement-gated research data access, authorization, sample fetches, deletion records, and high-sensitivity metrics",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/sensorkit-patterns"
+      ]
+    },
+    {
+      "name": "audioaccessorykit-patterns",
+      "description": "Implement and review AudioAccessoryKit accessory capabilities, placement state, automatic audio switching, pairing handoff, and validation",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/audioaccessorykit-patterns"
+      ]
+    },
+    {
+      "name": "homekit-patterns",
+      "description": "Implement and review HomeKit and MatterSupport smart-home flows, HMHomeManager, accessories, characteristics, triggers, and Matter commissioning",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/homekit-patterns"
+      ]
+    },
+    {
+      "name": "callkit-patterns",
+      "description": "Implement and review CallKit and PushKit VoIP calls, CXProvider, CXCallController, call actions, audio coordination, and Call Directory",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/callkit-patterns"
+      ]
+    },
+    {
+      "name": "group-activities-patterns",
+      "description": "Implement and review GroupActivities and SharePlay sessions, GroupActivity, GroupSession, messaging, sharing, and synchronized state",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/group-activities-patterns"
+      ]
+    },
+    {
+      "name": "carplay-patterns",
+      "description": "Implement and review CarPlay entitlements, scenes, interface controllers, templates, dashboard surfaces, and simulator validation",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/carplay-patterns"
+      ]
+    },
+    {
+      "name": "appmigrationkit-patterns",
+      "description": "Implement and review AppMigrationKit migration extensions, source/destination transfer, resource export/import, status, and recovery",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/appmigrationkit-patterns"
+      ]
+    },
+    {
+      "name": "adattributionkit-patterns",
+      "description": "Implement and review AdAttributionKit ad attribution, impressions, postbacks, conversion values, tags, re-engagement, and testing",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/adattributionkit-patterns"
+      ]
+    },
+    {
+      "name": "alarmkit-patterns",
+      "description": "Implement and review AlarmKit authorization, AlarmManager scheduling, alarm/timer state, presentation, buttons, and widget wiring",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/alarmkit-patterns"
+      ]
+    },
+    {
+      "name": "browserenginekit-patterns",
+      "description": "Implement and review BrowserEngineKit alternative engine apps, host/extensions, XPC, sandboxing, JIT, rendering, and lifecycle",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/browserenginekit-patterns"
+      ]
+    },
+    {
+      "name": "energykit-patterns",
+      "description": "Implement and review EnergyKit electricity guidance, venues, EV/HVAC load events, suggested actions, tokens, and insights",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/energykit-patterns"
+      ]
+    },
+    {
+      "name": "permissionkit-patterns",
+      "description": "Implement and review PermissionKit child communication permissions, AskCenter, PermissionButton, topics, responses, and account behavior",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/permissionkit-patterns"
+      ]
+    },
+    {
+      "name": "gamekit-patterns",
+      "description": "Implement and review GameKit and Game Center authentication, dashboards, leaderboards, achievements, multiplayer, saved games, and identity",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/gamekit-patterns"
+      ]
+    },
+    {
+      "name": "spritekit-patterns",
+      "description": "Implement and review SpriteKit 2D scenes, nodes, actions, physics, input, cameras, particles, tile maps, shaders, and performance",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/spritekit-patterns"
+      ]
+    },
+    {
+      "name": "scenekit-patterns",
+      "description": "Implement and review SceneKit 3D scenes, nodes, geometry, materials, lighting, cameras, animation, physics, shaders, and migration-sensitive maintenance",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/scenekit-patterns"
+      ]
+    },
+    {
+      "name": "tabletopkit-patterns",
+      "description": "Implement and review TabletopKit tabletop games, equipment, seats, actions, turns, score counters, RealityKit rendering, and group sync",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/tabletopkit-patterns"
+      ]
+    },
+    {
+      "name": "realitykit-patterns",
+      "description": "Implement and review RealityKit and ARKit spatial scenes, entities, components, anchors, assets, materials, physics, gestures, and performance",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/realitykit-patterns"
+      ]
+    },
+    {
+      "name": "swiftlint-patterns",
+      "description": "Implement and review SwiftLint setup, .swiftlint.yml, rule governance, suppressions, baselines, plugins, run scripts, CI, analyzer rules, reporters, custom rules, autocorrection, and rollout",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftlint-patterns"
+      ]
+    },
+    {
+      "name": "ios-simulator",
+      "description": "Operate iOS Simulator devices, run simulator build/test helpers, capture screenshots/logs, manage app lifecycle, permissions, push notifications, status bar overrides, and optional IDB semantic UI actions",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/ios-simulator"
+      ]
+    },
+    {
+      "name": "apple-platform-release",
+      "description": "Prepare Apple-platform signing assets, Xcode archive/export, IPA/PKG artifacts, Developer ID notarization, stapling, Gatekeeper verification, and upload-ready release handoffs",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/apple-platform-release"
+      ]
+    },
+    {
+      "name": "swiftpm-macos-app-packaging",
+      "description": "Package SwiftPM-only macOS executables into local or distributable .app bundles with Info.plist, resources, framework embedding, universal builds, entitlements, signing, notarization, zip, and optional Sparkle appcast support",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftpm-macos-app-packaging"
       ]
     }
   ]

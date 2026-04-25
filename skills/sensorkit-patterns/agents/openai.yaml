@@ -1,0 +1,5 @@
+interface:
+  display_name: "SensorKit Patterns"
+  short_description: "Implement and review SensorKit research data access"
+  brand_color: "#30B0C7"
+  default_prompt: "Use $sensorkit-patterns for SRSensorReader, SRSensor, SRFetchRequest, SRFetchResult, SensorKit authorization, com.apple.developer.sensorkit.reader.allow entitlement, research-study approval, sample fetches, deletion records, and high-sensitivity sensor-derived metrics."

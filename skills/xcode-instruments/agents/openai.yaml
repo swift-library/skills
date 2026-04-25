@@ -1,0 +1,7 @@
+interface:
+  display_name: "Xcode Instruments"
+  short_description: "Record and analyze Xcode Instruments traces"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $xcode-instruments to analyze or record an Xcode Instruments trace with xctrace, Time Profiler, hangs, hitches, logs, and signposts."

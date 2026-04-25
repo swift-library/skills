@@ -1,0 +1,1107 @@
+#!/usr/bin/env python3
+"""Source-acquisition CLI for the swiftpm-index skill."""
+
+from __future__ import annotations
+
+import argparse
+import difflib
+import hashlib
+import json
+import shutil
+import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timezone
+from pathlib import Path
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlparse
+from urllib.request import Request, urlopen
+
+
+NAME = "swiftpm-index"
+USER_AGENT = f"{NAME}/0.1 (+https://github.com/swift-library/skills)"
+APPLE_COLLECTION_URL = "https://developer.apple.com/swift/packages/collections/apple.json"
+GITHUB_ORG_URL = "https://api.github.com/orgs/{org}/repos?per_page=100&type=public"
+SPI_PACKAGE_LIST_URL = "https://raw.githubusercontent.com/SwiftPackageIndex/PackageList/main/packages.json"
+SPI_OWNER_URLS = {
+    "apple": "https://swiftpackageindex.com/apple",
+    "swiftlang": "https://swiftpackageindex.com/swiftlang",
+}
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def timestamp() -> str:
+    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+
+def app_support_dir() -> Path:
+    return Path.home() / "Library" / "Application Support" / NAME
+
+
+def cache_dir() -> Path:
+    return Path.home() / "Library" / "Caches" / NAME
+
+
+def logs_dir() -> Path:
+    return Path.home() / "Library" / "Logs" / NAME
+
+
+def paths() -> dict[str, Path]:
+    base = app_support_dir()
+    return {
+        "state": base,
+        "cache": cache_dir(),
+        "logs": logs_dir(),
+        "latest": base / "latest",
+        "snapshots": base / "snapshots",
+        "normalized": base / "normalized",
+        "diffs": base / "diffs",
+    }
+
+
+def ensure_dirs() -> None:
+    p = paths()
+    for directory in p.values():
+        directory.mkdir(parents=True, exist_ok=True)
+    for child in [
+        "apple-package-collection",
+        "apple-repositories",
+        "swiftlang-repositories",
+        "spi-crosscheck",
+        "spi-package-list",
+        "package-manifest-enrichment",
+    ]:
+        (p["snapshots"] / child).mkdir(parents=True, exist_ok=True)
+    (p["cache"] / "http").mkdir(parents=True, exist_ok=True)
+
+
+def read_json(path: Path, default):
+    if not path.exists():
+        return default
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def write_json(path: Path, data) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def cache_key(url: str) -> str:
+    return hashlib.sha256(url.encode("utf-8")).hexdigest()
+
+
+def update_http_metadata(url: str, status: int | str, headers: dict[str, str]) -> None:
+    p = paths()
+    etags_path = p["cache"] / "etags.json"
+    rate_path = p["cache"] / "rate-limit.json"
+    etags = read_json(etags_path, {})
+    rate_limits = read_json(rate_path, {})
+    if headers.get("etag"):
+        etags[url] = headers["etag"]
+        write_json(etags_path, etags)
+    rate_headers = {
+        key: headers[key]
+        for key in headers
+        if key.lower().startswith("x-ratelimit")
+    }
+    if rate_headers:
+        rate_limits[url] = {
+            "status": status,
+            "checked_at": utc_now(),
+            "headers": rate_headers,
+        }
+        write_json(rate_path, rate_limits)
+
+
+def request_json(url: str, *, required: bool) -> tuple[dict | list | None, dict]:
+    request = Request(url, headers={"Accept": "application/json", "User-Agent": USER_AGENT})
+    try:
+        with urlopen(request, timeout=30) as response:
+            body = response.read()
+            headers = {key.lower(): value for key, value in response.headers.items()}
+            status = response.status
+            update_http_metadata(url, status, headers)
+            try:
+                parsed_body = json.loads(body.decode("utf-8"))
+            except json.JSONDecodeError as error:
+                result = {
+                    "ok": False,
+                    "status": status,
+                    "url": url,
+                    "error": f"Response was not JSON: {error}",
+                    "required": required,
+                }
+                if required:
+                    raise RuntimeError(result["error"]) from error
+                return None, result
+            http_cache = paths()["cache"] / "http" / f"{cache_key(url)}.json"
+            write_json(
+                http_cache,
+                {
+                    "url": url,
+                    "status": status,
+                    "fetched_at": utc_now(),
+                    "headers": headers,
+                    "body": parsed_body,
+                },
+            )
+            return parsed_body, {"ok": True, "status": status, "url": url}
+    except HTTPError as error:
+        headers = {key.lower(): value for key, value in error.headers.items()}
+        update_http_metadata(url, error.code, headers)
+        result = {
+            "ok": False,
+            "status": error.code,
+            "url": url,
+            "error": f"HTTP {error.code}: {error.reason}",
+            "required": required,
+        }
+        if required:
+            raise RuntimeError(result["error"]) from error
+        return None, result
+    except (URLError, TimeoutError) as error:
+        result = {
+            "ok": False,
+            "status": "unavailable",
+            "url": url,
+            "error": str(error),
+            "required": required,
+        }
+        if required:
+            raise RuntimeError(result["error"]) from error
+        return None, result
+
+
+def parse_link_header(value: str | None) -> dict[str, str]:
+    links: dict[str, str] = {}
+    if not value:
+        return links
+    for part in value.split(","):
+        section = part.strip().split(";")
+        if len(section) < 2:
+            continue
+        url = section[0].strip()
+        if not (url.startswith("<") and url.endswith(">")):
+            continue
+        rel = None
+        for item in section[1:]:
+            item = item.strip()
+            if item.startswith("rel="):
+                rel = item.split("=", 1)[1].strip('"')
+        if rel:
+            links[rel] = url[1:-1]
+    return links
+
+
+def request_github_pages(url: str) -> tuple[list[dict], list[dict]]:
+    items: list[dict] = []
+    statuses: list[dict] = []
+    current = url
+    while current:
+        request = Request(current, headers={"Accept": "application/vnd.github+json", "User-Agent": USER_AGENT})
+        try:
+            with urlopen(request, timeout=30) as response:
+                body = response.read()
+                headers = {key.lower(): value for key, value in response.headers.items()}
+                update_http_metadata(current, response.status, headers)
+                page_items = json.loads(body.decode("utf-8"))
+                if not isinstance(page_items, list):
+                    raise RuntimeError(f"GitHub response was not a list: {current}")
+                items.extend(page_items)
+                statuses.append({"ok": True, "status": response.status, "url": current, "count": len(page_items)})
+                write_json(
+                    paths()["cache"] / "http" / f"{cache_key(current)}.json",
+                    {
+                        "url": current,
+                        "status": response.status,
+                        "fetched_at": utc_now(),
+                        "headers": headers,
+                        "body": page_items,
+                    },
+                )
+                current = parse_link_header(headers.get("link")).get("next")
+        except HTTPError as error:
+            raise RuntimeError(f"HTTP {error.code}: {error.reason} ({current})") from error
+        except (URLError, TimeoutError) as error:
+            raise RuntimeError(f"{error} ({current})") from error
+    return items, statuses
+
+
+def request_manifest_status(url: str) -> dict:
+    request = Request(url, headers={"Accept": "text/plain", "User-Agent": USER_AGENT}, method="HEAD")
+    try:
+        with urlopen(request, timeout=15) as response:
+            return {
+                "status": "present",
+                "http_status": response.status,
+                "url": url,
+                "error": None,
+            }
+    except HTTPError as error:
+        if error.code == 404:
+            return {
+                "status": "absent",
+                "http_status": error.code,
+                "url": url,
+                "error": None,
+            }
+        return {
+            "status": "unavailable",
+            "http_status": error.code,
+            "url": url,
+            "error": f"HTTP {error.code}: {error.reason}",
+        }
+    except (URLError, TimeoutError) as error:
+        return {
+            "status": "unavailable",
+            "http_status": "unavailable",
+            "url": url,
+            "error": str(error),
+        }
+
+
+def repo_name_from_url(url: str) -> str:
+    path = urlparse(url).path.rstrip("/")
+    name = path.split("/")[-1] if path else url
+    return name.removesuffix(".git")
+
+
+def repo_owner_name(url: str) -> tuple[str | None, str | None]:
+    parsed = urlparse(url)
+    parts = parsed.path.strip("/").removesuffix(".git").split("/")
+    if len(parts) < 2:
+        return None, None
+    return parts[0], parts[1]
+
+
+def spi_package_page_url(repository: str) -> str | None:
+    owner, repo = repo_owner_name(repository)
+    if not owner or not repo:
+        return None
+    return f"https://swiftpackageindex.com/{owner}/{repo}"
+
+
+def package_manifest_url(repository: str, default_branch: str | None) -> str | None:
+    owner, repo = repo_owner_name(repository)
+    if not owner or not repo or not default_branch:
+        return None
+    return f"https://raw.githubusercontent.com/{owner}/{repo}/{default_branch}/Package.swift"
+
+
+def normalize_apple_collection(data: dict) -> dict:
+    packages = data.get("packages", [])
+    items = []
+    for package in packages:
+        repo_url = package.get("url", "")
+        items.append(
+            {
+                "name": repo_name_from_url(repo_url),
+                "repository": repo_url,
+                "source_category": "apple_package_collection",
+                "authority": "P1",
+                "summary": package.get("summary"),
+                "keywords": package.get("keywords", []),
+                "entry_kind": "package_collection_package",
+                "package_manifest_status": "not_checked",
+                "adoptability_basis": "official_package_collection_seed",
+            }
+        )
+    return {
+        "source": {
+            "category": "apple_package_collection",
+            "authority": "P1",
+            "url": APPLE_COLLECTION_URL,
+            "name": data.get("name"),
+        },
+        "fetched_at": utc_now(),
+        "count": len(items),
+        "items": sorted(items, key=lambda item: item["name"]),
+    }
+
+
+def normalize_github_repos(org: str, repos: list[dict]) -> dict:
+    category = "swiftlang_repository" if org == "swiftlang" else "apple_authored_repository"
+    items = []
+    for repo in repos:
+        items.append(
+            {
+                "name": repo.get("name"),
+                "repository": repo.get("html_url"),
+                "source_category": category,
+                "authority": "P1",
+                "description": repo.get("description"),
+                "archived": repo.get("archived"),
+                "fork": repo.get("fork"),
+                "language": repo.get("language"),
+                "primary_language": repo.get("language"),
+                "default_branch": repo.get("default_branch"),
+                "pushed_at": repo.get("pushed_at"),
+                "updated_at": repo.get("updated_at"),
+                "entry_kind": f"{category}_candidate",
+                "package_manifest_status": "not_checked",
+                "adoptability_basis": f"official_{org}_repository_candidate",
+            }
+        )
+    return {
+        "source": {
+            "category": category,
+            "authority": "P1",
+            "url": GITHUB_ORG_URL.format(org=org),
+            "org": org,
+        },
+        "fetched_at": utc_now(),
+        "count": len(items),
+        "items": sorted(items, key=lambda item: item["name"] or ""),
+    }
+
+
+def fetch_spi_crosscheck() -> dict:
+    results = []
+    for owner, url in SPI_OWNER_URLS.items():
+        _, status = request_json(url, required=False)
+        results.append(
+            {
+                "owner": owner,
+                "url": url,
+                "source_category": "spi_crosscheck",
+                "authority": "P3",
+                "ok": status.get("ok", False),
+                "status": status.get("status"),
+                "error": status.get("error"),
+                "note": "Discovery/cross-check only; not final adoption authority.",
+            }
+        )
+    return {
+        "source": {"category": "spi_crosscheck", "authority": "P3"},
+        "fetched_at": utc_now(),
+        "count": len(results),
+        "items": results,
+    }
+
+
+def normalize_spi_package_list(data: list) -> dict:
+    items = []
+    for repository in data:
+        if not isinstance(repository, str):
+            continue
+        name = repo_name_from_url(repository)
+        items.append(
+            {
+                "name": name,
+                "repository": repository.removesuffix(".git"),
+                "source_category": "spi_package_list",
+                "authority": "P3",
+                "entry_kind": "community_package_candidate",
+                "spi_url": spi_package_page_url(repository),
+                "adoptability_basis": "community_discovery_candidate",
+                "note": "Discovery only; verify source, license, maintenance, and dependency cost before adoption.",
+            }
+        )
+    return {
+        "source": {
+            "category": "spi_package_list",
+            "authority": "P3",
+            "url": SPI_PACKAGE_LIST_URL,
+            "note": "Canonical repository list used by Swift Package Index. Not final adoption authority.",
+        },
+        "fetched_at": utc_now(),
+        "count": len(items),
+        "items": sorted(items, key=lambda item: ((item["name"] or "").lower(), item["repository"])),
+    }
+
+
+def save_latest_and_snapshot(name: str, data: dict) -> None:
+    p = paths()
+    write_json(p["latest"] / f"{name}.json", data)
+    write_json(p["snapshots"] / name / f"{timestamp()}.json", data)
+
+
+def state_path() -> Path:
+    return app_support_dir() / "state.json"
+
+
+def load_state() -> dict:
+    return read_json(state_path(), {"runs": []})
+
+
+def save_state(state: dict) -> None:
+    write_json(state_path(), state)
+
+
+def command_show_paths(_args: argparse.Namespace) -> int:
+    ensure_dirs()
+    for name, path in paths().items():
+        print(f"{name}: {path}")
+    print(f"config: {app_support_dir() / 'config.json'}")
+    print(f"state_file: {state_path()}")
+    return 0
+
+
+def command_fetch(_args: argparse.Namespace) -> int:
+    ensure_dirs()
+    run = {"command": "fetch", "started_at": utc_now(), "warnings": []}
+    apple_data, apple_status = request_json(APPLE_COLLECTION_URL, required=True)
+    apple = normalize_apple_collection(apple_data if isinstance(apple_data, dict) else {})
+    save_latest_and_snapshot("apple-package-collection", apple)
+    run["apple_package_collection"] = apple_status
+
+    apple_repos_raw, apple_statuses = request_github_pages(GITHUB_ORG_URL.format(org="apple"))
+    apple_repos = normalize_github_repos("apple", apple_repos_raw)
+    save_latest_and_snapshot("apple-repositories", apple_repos)
+    run["apple_repositories"] = {"ok": True, "pages": apple_statuses, "count": apple_repos["count"]}
+
+    swiftlang_repos_raw, swiftlang_statuses = request_github_pages(GITHUB_ORG_URL.format(org="swiftlang"))
+    swiftlang_repos = normalize_github_repos("swiftlang", swiftlang_repos_raw)
+    save_latest_and_snapshot("swiftlang-repositories", swiftlang_repos)
+    run["swiftlang_repositories"] = {"ok": True, "pages": swiftlang_statuses, "count": swiftlang_repos["count"]}
+
+    spi = fetch_spi_crosscheck()
+    save_latest_and_snapshot("spi-crosscheck", spi)
+    for item in spi["items"]:
+        if not item.get("ok"):
+            run["warnings"].append(f"SPI cross-check unavailable for {item['owner']}: {item.get('error')}")
+    run["finished_at"] = utc_now()
+
+    state = load_state()
+    state["last_fetch"] = run
+    state.setdefault("runs", []).append(run)
+    save_state(state)
+    print(f"Fetched Apple collection packages: {apple['count']}")
+    print(f"Fetched apple repositories: {apple_repos['count']}")
+    print(f"Fetched swiftlang repositories: {swiftlang_repos['count']}")
+    if run["warnings"]:
+        for warning in run["warnings"]:
+            print(f"Warning: {warning}", file=sys.stderr)
+    return 0
+
+
+def command_fetch_spi(_args: argparse.Namespace) -> int:
+    ensure_dirs()
+    run = {"command": "fetch-spi", "started_at": utc_now(), "warnings": []}
+    spi_data, spi_status = request_json(SPI_PACKAGE_LIST_URL, required=True)
+    package_list = normalize_spi_package_list(spi_data if isinstance(spi_data, list) else [])
+    save_latest_and_snapshot("spi-package-list", package_list)
+    run["spi_package_list"] = spi_status
+    run["finished_at"] = utc_now()
+    run["count"] = package_list["count"]
+
+    state = load_state()
+    state["last_fetch_spi"] = run
+    state.setdefault("runs", []).append(run)
+    save_state(state)
+    print(f"Fetched SPI package repositories: {package_list['count']}")
+    return 0
+
+
+def command_search_spi(args: argparse.Namespace) -> int:
+    ensure_dirs()
+    path = paths()["latest"] / "spi-package-list.json"
+    if not path.exists():
+        raise RuntimeError(f"Missing SPI package list: {path}. Run fetch-spi first.")
+
+    query = args.query.lower().strip()
+    terms = [term for term in query.split() if term]
+    data = read_json(path, {})
+    matches = []
+    for item in data.get("items", []):
+        haystack = " ".join(
+            [
+                item.get("name") or "",
+                item.get("repository") or "",
+                item.get("spi_url") or "",
+            ]
+        ).lower()
+        if all(term in haystack for term in terms):
+            matches.append(item)
+        if len(matches) >= args.limit:
+            break
+
+    result = {
+        "query": args.query,
+        "count": len(matches),
+        "items": matches,
+        "note": "SPI search is discovery only. Verify repository source, license, releases, maintenance, platforms, Swift tools version, dependency tree, and public API impact before adoption.",
+    }
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0
+
+
+def language_filter_status(primary_language: str | None) -> str:
+    if primary_language == "Swift":
+        return "swift"
+    if primary_language:
+        return "non_swift"
+    return "unknown"
+
+
+def enrich_repo_candidate(repo: dict) -> dict:
+    repository = (repo.get("repository") or "").removesuffix(".git")
+    primary_language = repo.get("primary_language") or repo.get("language")
+    manifest = package_manifest_url(repository, repo.get("default_branch"))
+    if manifest:
+        manifest_status = request_manifest_status(manifest)
+    else:
+        manifest_status = {
+            "status": "unavailable",
+            "http_status": "unavailable",
+            "url": None,
+            "error": "Missing repository URL or default branch.",
+        }
+    return {
+        "name": repo.get("name"),
+        "repository": repository,
+        "source_category": repo.get("source_category"),
+        "authority": repo.get("authority", "P1"),
+        "primary_language": primary_language,
+        "language_filter_status": language_filter_status(primary_language),
+        "package_manifest_status": manifest_status["status"],
+        "package_manifest_url": manifest_status["url"],
+        "package_manifest_http_status": manifest_status["http_status"],
+        "package_manifest_error": manifest_status["error"],
+        "checked_at": utc_now(),
+    }
+
+
+def command_enrich(_args: argparse.Namespace) -> int:
+    ensure_dirs()
+    apple_repos = load_latest("apple-repositories")
+    swiftlang_repos = load_latest("swiftlang-repositories")
+    run = {"command": "enrich", "started_at": utc_now(), "warnings": []}
+    repo_candidates = []
+    for source in [swiftlang_repos, apple_repos]:
+        for repo in source.get("items", []):
+            repo_candidates.append(repo)
+    items = []
+    with ThreadPoolExecutor(max_workers=16) as executor:
+        futures = [executor.submit(enrich_repo_candidate, repo) for repo in repo_candidates]
+        for future in as_completed(futures):
+            item = future.result()
+            if item.get("package_manifest_status") == "unavailable":
+                run["warnings"].append(
+                    f"Package.swift check unavailable for {item.get('name')}: {item.get('package_manifest_error')}"
+                )
+            items.append(item)
+    data = {
+        "source": {
+            "category": "package_manifest_enrichment",
+            "authority": "P1-derived",
+            "note": "Mechanical candidate-quality enrichment; not adoption authority.",
+        },
+        "fetched_at": utc_now(),
+        "count": len(items),
+        "items": sorted(items, key=lambda item: (item["name"] or "").lower()),
+    }
+    save_latest_and_snapshot("package-manifest-enrichment", data)
+
+    state = load_state()
+    run["finished_at"] = utc_now()
+    run["count"] = len(items)
+    state["last_enrich"] = run
+    state.setdefault("runs", []).append(run)
+    save_state(state)
+    present = sum(1 for item in items if item["package_manifest_status"] == "present")
+    absent = sum(1 for item in items if item["package_manifest_status"] == "absent")
+    unavailable = sum(1 for item in items if item["package_manifest_status"] == "unavailable")
+    swift = sum(1 for item in items if item["language_filter_status"] == "swift")
+    print(f"Enriched official repository candidates: {len(items)}")
+    print(f"Package.swift present: {present}")
+    print(f"Package.swift absent: {absent}")
+    print(f"Package.swift unavailable: {unavailable}")
+    print(f"Primary language Swift: {swift}")
+    if run["warnings"]:
+        for warning in run["warnings"]:
+            print(f"Warning: {warning}", file=sys.stderr)
+    return 0
+
+
+def load_latest(name: str) -> dict:
+    path = paths()["latest"] / f"{name}.json"
+    if not path.exists():
+        raise RuntimeError(f"Missing latest source file: {path}. Run fetch first.")
+    return read_json(path, {})
+
+
+def source_rank(category: str) -> int:
+    order = {
+        "apple_package_collection": 0,
+        "swiftlang_repository": 1,
+        "apple_authored_repository": 2,
+    }
+    return order.get(category, 99)
+
+
+def ordered_categories(categories: list[str]) -> list[str]:
+    return sorted(set(categories), key=lambda category: (source_rank(category), category))
+
+
+def entry_kind(category: str) -> str:
+    if category == "apple_package_collection":
+        return "package_collection_package"
+    return f"{category}_candidate"
+
+
+def adoptability_basis(category: str) -> str:
+    values = {
+        "apple_package_collection": "official_package_collection_seed",
+        "swiftlang_repository": "official_swiftlang_repository_candidate",
+        "apple_authored_repository": "official_apple_repository_candidate",
+    }
+    return values.get(category, "official_source_candidate")
+
+
+def candidate_confidence(entry: dict) -> str:
+    if "apple_package_collection" in entry.get("source_categories", []):
+        return "package_collection"
+    if entry.get("package_manifest_status") == "present":
+        return "manifest_present"
+    if entry.get("language_filter_status") == "swift":
+        return "swift_language_candidate"
+    return "official_repo_only"
+
+
+def dependency_role_hint(entry: dict) -> str:
+    if entry.get("archived") or entry.get("fork"):
+        return "reference_only_candidate"
+    if "apple_package_collection" in entry.get("source_categories", []):
+        return "normal_candidate"
+    if entry.get("package_manifest_status") == "present":
+        return "normal_candidate"
+    if entry.get("package_manifest_status") == "absent" and entry.get("language_filter_status") == "non_swift":
+        return "reference_only_candidate"
+    name = (entry.get("name") or "").lower()
+    summary = ((entry.get("summary") or "") + " " + (entry.get("description") or "")).lower()
+    tooling_terms = ["docc", "format", "plugin", "syntax", "lsp", "indexstore", "build", "sdk", "tool"]
+    if any(term in name or term in summary for term in tooling_terms):
+        return "tooling_candidate"
+    return "unknown"
+
+
+def item_status_notes(item: dict, category: str) -> list[str]:
+    notes = []
+    if category == "apple_package_collection":
+        notes.append("Present in Apple Swift Package Collection.")
+    if item.get("archived"):
+        notes.append("GitHub repository is archived; verify before adoption.")
+    if item.get("fork"):
+        notes.append("GitHub repository is a fork; verify official package role.")
+    return notes
+
+
+def append_unique(values: list[str], additions: list[str]) -> list[str]:
+    for value in additions:
+        if value and value not in values:
+            values.append(value)
+    return values
+
+
+def entry_from_item(item: dict) -> dict:
+    category = item["source_category"]
+    return {
+        "name": item.get("name"),
+        "repository": (item.get("repository") or "").removesuffix(".git") or item.get("repository"),
+        "primary_source_category": category,
+        "source_categories": [category],
+        "entry_kind": item.get("entry_kind") or entry_kind(category),
+        "authority": item.get("authority", "P1"),
+        "summary": item.get("summary") or item.get("description"),
+        "description": item.get("description"),
+        "keywords": item.get("keywords", []),
+        "archived": item.get("archived"),
+        "fork": item.get("fork"),
+        "language": item.get("language"),
+        "primary_language": item.get("primary_language") or item.get("language"),
+        "language_filter_status": language_filter_status(item.get("primary_language") or item.get("language")),
+        "default_branch": item.get("default_branch"),
+        "pushed_at": item.get("pushed_at"),
+        "updated_at": item.get("updated_at"),
+        "package_manifest_status": item.get("package_manifest_status") or "not_checked",
+        "package_manifest_url": item.get("package_manifest_url"),
+        "package_manifest_http_status": item.get("package_manifest_http_status"),
+        "package_manifest_error": item.get("package_manifest_error"),
+        "adoptability_basis": item.get("adoptability_basis") or adoptability_basis(category),
+        "swift_package_candidate": category == "apple_package_collection"
+        or language_filter_status(item.get("primary_language") or item.get("language")) == "swift",
+        "status_notes": item_status_notes(item, category),
+    }
+
+
+def merge_entry(existing: dict, item: dict) -> dict:
+    category = item["source_category"]
+    existing["source_categories"] = ordered_categories(existing["source_categories"] + [category])
+
+    if source_rank(category) < source_rank(existing["primary_source_category"]):
+        existing["primary_source_category"] = category
+        existing["entry_kind"] = item.get("entry_kind") or entry_kind(category)
+        existing["adoptability_basis"] = item.get("adoptability_basis") or adoptability_basis(category)
+        if item.get("summary") or item.get("description"):
+            existing["summary"] = item.get("summary") or item.get("description")
+    elif not existing.get("summary") and (item.get("summary") or item.get("description")):
+        existing["summary"] = item.get("summary") or item.get("description")
+
+    for field in [
+        "description",
+        "archived",
+        "fork",
+        "language",
+        "primary_language",
+        "default_branch",
+        "pushed_at",
+        "updated_at",
+    ]:
+        if existing.get(field) is None and item.get(field) is not None:
+            existing[field] = item.get(field)
+
+    if not existing.get("keywords") and item.get("keywords"):
+        existing["keywords"] = item.get("keywords")
+
+    if category == "apple_package_collection" and item.get("summary"):
+        existing["summary"] = item["summary"]
+
+    existing["status_notes"] = append_unique(
+        existing.get("status_notes", []),
+        item_status_notes(item, category),
+    )
+    return existing
+
+
+def enrichment_map() -> dict[str, dict]:
+    data = read_json(paths()["latest"] / "package-manifest-enrichment.json", {})
+    mapped = {}
+    for item in data.get("items", []):
+        repo = (item.get("repository") or "").removesuffix(".git")
+        if repo:
+            mapped[repo.lower()] = item
+    return mapped
+
+
+def apply_enrichment(entry: dict, enrichment: dict | None) -> dict:
+    if enrichment:
+        for field in [
+            "primary_language",
+            "language_filter_status",
+            "package_manifest_status",
+            "package_manifest_url",
+            "package_manifest_http_status",
+            "package_manifest_error",
+        ]:
+            if enrichment.get(field) is not None:
+                entry[field] = enrichment.get(field)
+    primary_language = entry.get("primary_language") or entry.get("language")
+    entry["primary_language"] = primary_language
+    entry["language_filter_status"] = language_filter_status(primary_language)
+    entry.setdefault("package_manifest_status", "not_checked")
+    entry["swift_package_candidate"] = (
+        "apple_package_collection" in entry.get("source_categories", [])
+        or entry.get("package_manifest_status") == "present"
+        or entry.get("language_filter_status") == "swift"
+    )
+    entry["candidate_confidence"] = candidate_confidence(entry)
+    entry["dependency_role_hint"] = dependency_role_hint(entry)
+    return entry
+
+
+def grouped_entries(entries: list[dict]) -> list[tuple[str, list[dict]]]:
+    groups = [
+        ("Apple Package Collection Packages", []),
+        ("Verified Swift Package Candidates", []),
+        ("Swift-Language Official Repository Candidates Needing Review", []),
+        ("Non-Swift / Non-Package Official Repositories", []),
+        ("Unknown-Language Official Repositories", []),
+    ]
+    collection, verified, swift_language, non_swift, unknown = [group[1] for group in groups]
+    for entry in entries:
+        if "apple_package_collection" in entry.get("source_categories", []):
+            collection.append(entry)
+        elif entry.get("package_manifest_status") == "present":
+            verified.append(entry)
+        elif entry.get("language_filter_status") == "swift":
+            swift_language.append(entry)
+        elif entry.get("language_filter_status") == "non_swift" or entry.get("package_manifest_status") == "absent":
+            non_swift.append(entry)
+        else:
+            unknown.append(entry)
+    return groups
+
+
+def append_entry_markdown(lines: list[str], package: dict) -> None:
+    categories = ", ".join(package["source_categories"])
+    lines.extend(
+        [
+            f"#### {package['name']}",
+            "",
+            f"- Repository: {package['repository']}",
+            f"- Entry kind: {package['entry_kind']}",
+            f"- Source categories: {categories}",
+            f"- Primary source category: {package['primary_source_category']}",
+            f"- Authority: {package['authority']}",
+            f"- Package manifest status: {package['package_manifest_status']}",
+            f"- Primary language: {package.get('primary_language') or 'unknown'}",
+            f"- Language filter status: {package['language_filter_status']}",
+            f"- Swift package candidate: {package['swift_package_candidate']}",
+            f"- Candidate confidence: {package['candidate_confidence']}",
+            f"- Dependency role hint: {package['dependency_role_hint']}",
+            f"- Adoptability basis: {package['adoptability_basis']}",
+            f"- Summary: {package.get('summary') or 'TODO(source-needed)'}",
+        ]
+    )
+    if package.get("package_manifest_url"):
+        lines.append(f"- Package manifest URL: {package['package_manifest_url']}")
+    if package.get("archived") is not None:
+        lines.append(f"- Archived: {package['archived']}")
+    if package.get("fork") is not None:
+        lines.append(f"- Fork: {package['fork']}")
+    if package.get("status_notes"):
+        lines.append(f"- Status notes: {' '.join(package['status_notes'])}")
+    lines.append("")
+
+
+def build_index() -> dict:
+    apple_collection = load_latest("apple-package-collection")
+    apple_repos = load_latest("apple-repositories")
+    swiftlang_repos = load_latest("swiftlang-repositories")
+    spi = read_json(paths()["latest"] / "spi-crosscheck.json", {})
+    enrichments = enrichment_map()
+    entries: dict[str, dict] = {}
+    for source in [apple_collection, swiftlang_repos, apple_repos]:
+        for item in source.get("items", []):
+            repo = (item.get("repository") or "").removesuffix(".git")
+            key = repo.lower() if repo else item.get("name", "").lower()
+            if not key:
+                continue
+            existing = entries.get(key)
+            if existing:
+                entries[key] = merge_entry(existing, item)
+            else:
+                entries[key] = entry_from_item(item)
+
+    index_entries = []
+    for key, entry in entries.items():
+        index_entries.append(apply_enrichment(entry, enrichments.get(key)))
+    index_entries = sorted(index_entries, key=lambda item: (item["name"] or "").lower())
+    quality_counts = {
+        "package_manifest_present": sum(
+            1 for item in index_entries if item.get("package_manifest_status") == "present"
+        ),
+        "package_manifest_absent": sum(
+            1 for item in index_entries if item.get("package_manifest_status") == "absent"
+        ),
+        "package_manifest_unavailable": sum(
+            1 for item in index_entries if item.get("package_manifest_status") == "unavailable"
+        ),
+        "package_manifest_not_checked": sum(
+            1 for item in index_entries if item.get("package_manifest_status") == "not_checked"
+        ),
+        "language_swift": sum(1 for item in index_entries if item.get("language_filter_status") == "swift"),
+        "language_non_swift": sum(
+            1 for item in index_entries if item.get("language_filter_status") == "non_swift"
+        ),
+        "language_unknown": sum(
+            1 for item in index_entries if item.get("language_filter_status") == "unknown"
+        ),
+        "swift_package_candidates": sum(1 for item in index_entries if item.get("swift_package_candidate")),
+    }
+
+    return {
+        "generated_at": utc_now(),
+        "sources": {
+            "apple_package_collection": apple_collection.get("source", {}),
+            "apple_repositories": apple_repos.get("source", {}),
+            "swiftlang_repositories": swiftlang_repos.get("source", {}),
+            "spi_crosscheck": spi.get("source", {}),
+        },
+        "counts": {
+            "apple_package_collection": apple_collection.get("count", 0),
+            "apple_repositories": apple_repos.get("count", 0),
+            "swiftlang_repositories": swiftlang_repos.get("count", 0),
+            "index_entries": len(index_entries),
+        },
+        "quality_counts": quality_counts,
+        "spi_crosscheck": spi,
+        "index_entries": index_entries,
+    }
+
+
+def render_markdown(index: dict) -> str:
+    lines = [
+        "# Official Package Candidate Index",
+        "",
+        f"Generated: {index['generated_at']}",
+        "",
+        "## Counts",
+        "",
+        f"- Apple package collection: {index['counts']['apple_package_collection']}",
+        f"- Apple repository candidates: {index['counts']['apple_repositories']}",
+        f"- swiftlang repository candidates: {index['counts']['swiftlang_repositories']}",
+        f"- normalized index entries: {index['counts']['index_entries']}",
+        f"- Package.swift present: {index['quality_counts']['package_manifest_present']}",
+        f"- Package.swift absent: {index['quality_counts']['package_manifest_absent']}",
+        f"- Package.swift unavailable: {index['quality_counts']['package_manifest_unavailable']}",
+        f"- Package.swift not checked: {index['quality_counts']['package_manifest_not_checked']}",
+        f"- primary language Swift: {index['quality_counts']['language_swift']}",
+        f"- primary language non-Swift: {index['quality_counts']['language_non_swift']}",
+        f"- primary language unknown: {index['quality_counts']['language_unknown']}",
+        f"- Swift package candidates: {index['quality_counts']['swift_package_candidates']}",
+        "",
+        "## SPI Cross-check",
+        "",
+    ]
+    for item in index.get("spi_crosscheck", {}).get("items", []):
+        status = "ok" if item.get("ok") else f"unavailable ({item.get('status')})"
+        lines.append(f"- {item['owner']}: {status} - {item['url']}")
+    lines.extend(["", "## Official Candidate Groups", ""])
+    for title, entries in grouped_entries(index["index_entries"]):
+        lines.extend([f"### {title}", "", f"Count: {len(entries)}", ""])
+        for package in entries:
+            append_entry_markdown(lines, package)
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def command_render(_args: argparse.Namespace) -> int:
+    ensure_dirs()
+    index = build_index()
+    latest = paths()["latest"]
+    previous_json = latest / "official-package-index.previous.json"
+    previous_md = latest / "official-package-index.previous.md"
+    current_json = latest / "official-package-index.json"
+    current_md = latest / "official-package-index.md"
+    if current_json.exists():
+        shutil.copy2(current_json, previous_json)
+    if current_md.exists():
+        shutil.copy2(current_md, previous_md)
+    write_json(current_json, index)
+    write_text(current_md, render_markdown(index))
+    print(f"Rendered {current_json}")
+    print(f"Rendered {current_md}")
+    return 0
+
+
+def latest_diff_path() -> Path:
+    return paths()["diffs"] / "latest-diff.md"
+
+
+def command_diff(_args: argparse.Namespace) -> int:
+    ensure_dirs()
+    latest = paths()["latest"]
+    previous = latest / "official-package-index.previous.md"
+    current = latest / "official-package-index.md"
+    if not current.exists():
+        raise RuntimeError(f"Missing current index: {current}. Run render first.")
+    if not previous.exists():
+        diff_text = "# Official Package Candidate Index Diff\n\nNo previous index is available.\n"
+    else:
+        diff = difflib.unified_diff(
+            previous.read_text(encoding="utf-8").splitlines(),
+            current.read_text(encoding="utf-8").splitlines(),
+            fromfile=str(previous),
+            tofile=str(current),
+            lineterm="",
+        )
+        body = "\n".join(diff)
+        diff_text = "# Official Package Candidate Index Diff\n\n```diff\n" + body + "\n```\n"
+    diff_path = paths()["diffs"] / f"{timestamp()}-official-package-index.diff.md"
+    write_text(diff_path, diff_text)
+    write_text(latest_diff_path(), diff_text)
+    print(f"Rendered {diff_path}")
+    return 0
+
+
+def command_update(args: argparse.Namespace) -> int:
+    command_fetch(args)
+    command_enrich(args)
+    command_render(args)
+    command_diff(args)
+    return 0
+
+
+def source_summary() -> str:
+    latest = paths()["latest"]
+    lines = ["# Source Summary", ""]
+    for name in [
+        "apple-package-collection",
+        "apple-repositories",
+        "swiftlang-repositories",
+        "spi-crosscheck",
+        "spi-package-list",
+        "package-manifest-enrichment",
+    ]:
+        path = latest / f"{name}.json"
+        if path.exists():
+            data = read_json(path, {})
+            lines.append(f"- `{name}`: {data.get('count', 0)} items")
+        else:
+            lines.append(f"- `{name}`: missing")
+    return "\n".join(lines) + "\n"
+
+
+def command_export(args: argparse.Namespace) -> int:
+    ensure_dirs()
+    output = Path(args.output).expanduser()
+    output.mkdir(parents=True, exist_ok=True)
+    latest = paths()["latest"]
+    files = [
+        "official-package-index.json",
+        "official-package-index.md",
+    ]
+    for filename in files:
+        src = latest / filename
+        if not src.exists():
+            raise RuntimeError(f"Missing export input: {src}. Run update or render first.")
+        shutil.copy2(src, output / filename)
+    spi_package_list = latest / "spi-package-list.json"
+    if spi_package_list.exists():
+        shutil.copy2(spi_package_list, output / "spi-package-list.json")
+    write_text(output / "source-summary.md", source_summary())
+    if latest_diff_path().exists():
+        shutil.copy2(latest_diff_path(), output / "diff.md")
+    else:
+        write_text(output / "diff.md", "# Official Package Candidate Index Diff\n\nNo diff available.\n")
+    manifest = {
+        "name": NAME,
+        "exported_at": utc_now(),
+        "source_state": str(app_support_dir()),
+        "files": sorted(path.name for path in output.iterdir() if path.is_file()),
+    }
+    write_json(output / "manifest.json", manifest)
+    print(f"Exported review bundle to {output}")
+    return 0
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog=NAME)
+    subcommands = parser.add_subparsers(dest="command", required=True)
+    subcommands.add_parser("show-paths").set_defaults(func=command_show_paths)
+    subcommands.add_parser("fetch").set_defaults(func=command_fetch)
+    subcommands.add_parser("fetch-spi").set_defaults(func=command_fetch_spi)
+    search_spi = subcommands.add_parser("search-spi")
+    search_spi.add_argument("--query", required=True)
+    search_spi.add_argument("--limit", type=int, default=20)
+    search_spi.set_defaults(func=command_search_spi)
+    subcommands.add_parser("enrich").set_defaults(func=command_enrich)
+    subcommands.add_parser("render").set_defaults(func=command_render)
+    subcommands.add_parser("diff").set_defaults(func=command_diff)
+    subcommands.add_parser("update").set_defaults(func=command_update)
+    export = subcommands.add_parser("export")
+    export.add_argument("--output", required=True)
+    export.set_defaults(func=command_export)
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    try:
+        return args.func(args)
+    except RuntimeError as error:
+        print(f"error: {error}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

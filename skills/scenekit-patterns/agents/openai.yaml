@@ -1,0 +1,5 @@
+interface:
+  display_name: "SceneKit Patterns"
+  short_description: "Implement and review SceneKit 3D scenes"
+  brand_color: "#8E8E93"
+  default_prompt: "Use $scenekit-patterns for SCNView, SceneView, SCNScene, SCNNode, transforms, SCNGeometry, SCNMaterial, PBR materials, lights, cameras, SCNAction, SCNTransaction, animations, physics, particles, model loading, shader modifiers, SCNProgram, hit testing, render delegates, SpriteKit overlays, and migration-sensitive SceneKit maintenance."

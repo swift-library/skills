@@ -1,0 +1,26 @@
+# Swift Testing Reference Index
+
+- `fundamentals.md` - `@Test`, suites, structure, naming, and baseline patterns
+- `expectations.md` - `#expect`, `#require`, throw validation, and failure readability
+- `traits-and-tags.md` - traits, tags, bug linking, conditions, and test-plan filtering
+- `parameterized-testing.md` - single/multi-argument parameterization, `zip`, and scaling strategy
+- `parallelization-and-isolation.md` - default parallel execution, random order, `.serialized`, and isolation patterns
+- `performance-and-best-practices.md` - test speed, determinism, flaky-test prevention, and parallel-safe defaults
+- `async-testing-and-waiting.md` - async/await in tests, callback bridging, and event-stream verification
+- `migration-from-xctest.md` - pragmatic XCTest -> Swift Testing migration workflow
+- `xcode-workflows.md` - navigator/report workflows, insights, and diagnostics quality
+- `review-rules.md` - concise idiomatic Swift Testing review rules
+- `test-quality-rules.md` - Arrange-Act-Assert, F.I.R.S.T., hidden dependencies, and diagnostics
+- `async-review-rules.md` - async review rules, confirmations, `.serialized`, and actor-bound tests
+- `modern-api-updates.md` - newer Swift Testing APIs and availability-sensitive guidance
+- `xctest-migration-rules.md` - XCTest migration rules and before/after examples
+- `organization-patterns.md` - suites, nested suites, tags, traits, setup, teardown, and discovery
+- `test-doubles.md` - dummies, stubs, fakes, mocks, spies, and verification style
+- `fixtures.md` - fixtures, builders, factories, and deterministic sample data
+- `integration-testing.md` - integration boundaries, controlled I/O, and test containers
+- `snapshot-testing.md` - UI snapshot testing patterns and review cautions
+- `dump-snapshot-testing.md` - structured dump snapshot testing for readable regressions
+- `async-patterns.md` - async test examples, waiting strategies, and callbacks
+- `parameterized-design.md` - additional parameterized-test patterns
+- `xctest-migration-playbook.md` - additional XCTest migration playbook
+- `licenses.md` - license file locations

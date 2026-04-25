@@ -1,0 +1,5 @@
+interface:
+  display_name: "AudioAccessoryKit Patterns"
+  short_description: "Implement and review AudioAccessoryKit accessory state"
+  brand_color: "#FF375F"
+  default_prompt: "Use $audioaccessorykit-patterns for AccessoryControlDevice, audio accessory capabilities, configuration, placement, automatic audio switching, third-party accessory companion apps, AccessorySetupKit pairing handoff, connected audio sources, EU availability constraints, distribution limits, and physical accessory validation."

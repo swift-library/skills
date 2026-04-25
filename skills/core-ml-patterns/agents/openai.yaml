@@ -1,0 +1,5 @@
+interface:
+  display_name: "Core ML Patterns"
+  short_description: "Implement and review Core ML model inference and deployment"
+  brand_color: "#64D2FF"
+  default_prompt: "Use $core-ml-patterns for .mlmodel, .mlpackage, .mlmodelc, MLModel loading, MLModelConfiguration, compute units, prediction, MLTensor, MLMultiArray, VNCoreMLModel integration, MLComputePlan profiling, and on-device model deployment."

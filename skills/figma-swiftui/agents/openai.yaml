@@ -1,0 +1,7 @@
+interface:
+  display_name: "Figma SwiftUI"
+  short_description: "Translate Figma designs into native SwiftUI"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $figma-swiftui to convert Figma nodes, screenshots, assets, tokens, variants, or briefs into production SwiftUI with project-aware layout, Asset Catalog handling, responsive behavior, and visual fidelity."

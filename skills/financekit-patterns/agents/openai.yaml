@@ -1,0 +1,5 @@
+interface:
+  display_name: "FinanceKit Patterns"
+  short_description: "Implement and review FinanceKit financial-data flows"
+  brand_color: "#30D158"
+  default_prompt: "Use $financekit-patterns for FinanceKit availability, authorization, accounts, balances, transactions, history tokens, Wallet orders, background delivery, and financial-data privacy."

@@ -1,0 +1,5 @@
+interface:
+  display_name: "CloudKit Patterns"
+  short_description: "Implement and review CloudKit data workflows."
+  brand_color: "#0A84FF"
+  default_prompt: "Use $cloudkit-patterns for CloudKit setup, iCloud containers, public/private/shared databases, CKRecord modeling, custom zones, queries, subscriptions, silent-change delivery, CKSyncEngine, server change tokens, CKShare, UICloudSharingController, CKAsset storage, account status, CKError handling, conflict resolution, CloudKit Dashboard workflows, NSUbiquitousKeyValueStore, and iCloud document coordination."

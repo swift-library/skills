@@ -1,0 +1,5 @@
+interface:
+  display_name: "Contacts Patterns"
+  short_description: "Implement and review Contacts and ContactsUI workflows"
+  brand_color: "#34C759"
+  default_prompt: "Use $contacts-patterns for Contacts, ContactsUI, CNContactStore, limited contact access, contact pickers, contact mutation, vCards, and change history."

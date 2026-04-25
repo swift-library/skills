@@ -1,0 +1,7 @@
+interface:
+  display_name: "macOS SwiftPM App Packaging"
+  short_description: "Package SwiftPM macOS executables into signed, notarized .app bundles"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $swiftpm-macos-app-packaging to scaffold, package, sign, notarize, launch, or verify a SwiftPM-only macOS .app bundle."

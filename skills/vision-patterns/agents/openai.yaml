@@ -1,0 +1,5 @@
+interface:
+  display_name: "Vision Patterns"
+  short_description: "Implement and review Vision and VisionKit recognition flows"
+  brand_color: "#BF5AF2"
+  default_prompt: "Use $vision-patterns for Vision and VisionKit OCR, barcode recognition, face detection, image classification, segmentation, tracking, coordinate conversion, VNCoreMLModel requests, DataScannerViewController, ImageAnalyzer, document camera, overlays, and SwiftUI wrappers."

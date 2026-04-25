@@ -1,0 +1,7 @@
+interface:
+  display_name: "SwiftPM Index"
+  short_description: "Check Swift code against official package alternatives"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $swiftpm-index to check custom Swift reusable infrastructure against official Apple/swiftlang package hints, or to run manual full-index, SPI, local-candidate, and source-refresh workflows."

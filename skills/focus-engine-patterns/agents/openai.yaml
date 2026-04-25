@@ -1,0 +1,7 @@
+interface:
+  display_name: "Focus Engine Patterns"
+  short_description: "Fix Apple platform focus behavior"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $focus-engine-patterns to review Apple platform focus behavior."

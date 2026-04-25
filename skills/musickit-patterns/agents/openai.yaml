@@ -1,0 +1,5 @@
+interface:
+  display_name: "MusicKit Patterns"
+  short_description: "Implement and review Apple Music and MusicKit features"
+  brand_color: "#FA243C"
+  default_prompt: "Use $musickit-patterns for MusicKit authorization, catalog/library access, Apple Music subscription state, playback queues, MediaPlayer, and background audio."

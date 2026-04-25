@@ -1,0 +1,7 @@
+interface:
+  display_name: "WidgetKit Design"
+  short_description: "Review and polish native WidgetKit visuals"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $widgetkit-design to review and polish WidgetKit widget design."

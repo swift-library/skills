@@ -1,0 +1,5 @@
+interface:
+  display_name: "AccessorySetupKit Patterns"
+  short_description: "Implement and review AccessorySetupKit setup flows"
+  brand_color: "#5E5CE6"
+  default_prompt: "Use $accessorysetupkit-patterns for ASAccessorySession, ASAccessory, ASDiscoveryDescriptor, ASPickerDisplayItem, picker discovery, NSAccessorySetupKitSupports, event handling, accessory authorization, rename/remove flows, Bluetooth HID support options, and handoff to Core Bluetooth or Wi-Fi code."

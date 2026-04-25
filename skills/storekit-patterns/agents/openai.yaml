@@ -1,0 +1,5 @@
+interface:
+  display_name: "StoreKit Patterns"
+  short_description: "Implement and review StoreKit purchases and entitlements"
+  brand_color: "#FF2D55"
+  default_prompt: "Use $storekit-patterns for StoreKit products, purchases, subscriptions, transaction verification, current entitlements, StoreKit views, testing, and server validation."

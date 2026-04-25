@@ -1,0 +1,7 @@
+interface:
+  display_name: "SwiftUI Performance"
+  short_description: "Code-first SwiftUI performance guidance before Instruments"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $swiftui-performance to review or optimize SwiftUI code for slow rendering, janky scrolling, excessive updates, identity churn, heavy body work, or layout thrash."

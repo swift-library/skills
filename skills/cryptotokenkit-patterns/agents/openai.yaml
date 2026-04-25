@@ -1,0 +1,5 @@
+interface:
+  display_name: "CryptoTokenKit Patterns"
+  short_description: "Implement and review CryptoTokenKit token and smart card flows"
+  brand_color: "#64D2FF"
+  default_prompt: "Use $cryptotokenkit-patterns for TKToken, TKTokenDriver, TKTokenSession, TKTokenWatcher, TKSmartCard, TKSmartCardToken, smart card app extensions, token keychain contents, certificate/key exposure, PIN state, APDU exchange, TLV records, and managed smart card authentication."

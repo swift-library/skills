@@ -1,0 +1,7 @@
+interface:
+  display_name: "SwiftPM Architecture"
+  short_description: "Design and review Swift package architecture"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $swiftpm-architecture to review or design Swift Package target graphs, module boundaries, dependency direction, and composition roots."

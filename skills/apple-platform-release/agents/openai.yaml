@@ -1,0 +1,7 @@
+interface:
+  display_name: "Apple Platform Release"
+  short_description: "Prepare Apple-platform signing, Xcode export, notarization, and release artifacts"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $apple-platform-release to prepare or troubleshoot Apple-platform signing, Xcode archive/export, IPA/PKG artifacts, Developer ID notarization, stapling, or Gatekeeper verification."

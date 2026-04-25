@@ -1,0 +1,5 @@
+interface:
+  display_name: "RelevanceKit Patterns"
+  short_description: "Implement and review RelevanceKit widget relevance."
+  brand_color: "#64D2FF"
+  default_prompt: "Use $relevancekit-patterns for RelevanceKit implementation, watchOS Smart Stack relevance, RelevantContext, widget relevance donation, WidgetKit and App Intents integration, time/date relevance, location and place relevance, fitness clues, sleep clues, hardware clues, grouping, relevant widget testing, permission boundaries, graceful unsupported-platform behavior, and current SDK gating."

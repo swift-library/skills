@@ -1,0 +1,5 @@
+interface:
+  display_name: "Background Tasks Patterns"
+  short_description: "Implement and review BackgroundTasks scheduling"
+  brand_color: "#FF9F0A"
+  default_prompt: "Use $background-tasks-patterns for BGTaskScheduler, BGTaskRequest, BGAppRefreshTask, BGProcessingTask, BGContinuedProcessingTask, permitted identifiers, Info.plist setup, SwiftUI backgroundTask registration, expiration handlers, setTaskCompleted, checkpointing, background URLSession handoff, background push coordination, and debug launch."

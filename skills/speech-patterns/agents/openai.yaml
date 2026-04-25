@@ -1,0 +1,5 @@
+interface:
+  display_name: "Speech Patterns"
+  short_description: "Implement and review Speech framework transcription flows"
+  brand_color: "#FF453A"
+  default_prompt: "Use $speech-patterns for speech authorization, microphone permission, SpeechAnalyzer, SpeechTranscriber, AssetInventory, AnalyzerInput streams, SFSpeechRecognizer, live/file transcription, AVAudioEngine taps, on-device/server recognition decisions, cancellation, and cleanup."

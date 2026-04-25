@@ -1,0 +1,5 @@
+interface:
+  display_name: "PDFKit Patterns"
+  short_description: "Implement and review PDFKit document workflows"
+  brand_color: "#AF52DE"
+  default_prompt: "Use $pdfkit-patterns for PDFView, PDFDocument, annotations, search, forms, rendering, printing, page manipulation, and SwiftUI PDF wrappers."

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Keychain Patterns"
+  short_description: "Apple Keychain storage, access control, sharing, and credential migration patterns"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $keychain-patterns to review or implement Keychain Services code for credential storage, access control, biometrics, migration, and tests."

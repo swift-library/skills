@@ -1,0 +1,5 @@
+interface:
+  display_name: "TipKit Patterns"
+  short_description: "Implement and review TipKit feature-discovery flows."
+  brand_color: "#FF9F0A"
+  default_prompt: "Use $tipkit-patterns for TipKit setup, Tips.configure, Tip definitions, TipView, popoverTip, TipUIView, TipNSView, TipGroup, Rule, Parameter, Event, display frequency, datastore location, CloudKit tip sync, actions, custom TipViewStyle, invalidation, eligibility reset, testing helpers, and onboarding/discovery boundaries."

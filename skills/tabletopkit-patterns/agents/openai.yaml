@@ -1,0 +1,5 @@
+interface:
+  display_name: "TabletopKit Patterns"
+  short_description: "Implement and review TabletopKit games"
+  brand_color: "#AF52DE"
+  default_prompt: "Use $tabletopkit-patterns for visionOS tabletop games, TabletopGame, TableSetup, Tabletop, EntityTabletop, equipment protocols, seats, TableState, TabletopAction, move/update equipment actions, turns, score counters, state bookmarks, interactions, gestures, dice, RealityKit rendering, GroupActivities synchronization, and multiplayer table state."

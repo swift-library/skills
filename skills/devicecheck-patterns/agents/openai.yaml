@@ -1,0 +1,5 @@
+interface:
+  display_name: "DeviceCheck Patterns"
+  short_description: "Implement and review DeviceCheck and App Attest flows"
+  brand_color: "#FF453A"
+  default_prompt: "Use $devicecheck-patterns for DCDevice tokens, two server-side bits, DCAppAttestService, App Attest key generation, attestation, assertions, nonce/challenge handling, server verification, environment entitlement, DCError handling, rollout strategy, invalidated keys, retry policy, and graceful unsupported states."

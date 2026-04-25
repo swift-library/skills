@@ -1,0 +1,5 @@
+interface:
+  display_name: "RealityKit Patterns"
+  short_description: "Implement and review RealityKit and ARKit"
+  brand_color: "#0A84FF"
+  default_prompt: "Use $realitykit-patterns for RealityKit and ARKit implementation across RealityView, ARView, Entity, Component, System, AnchorEntity, AnchoringComponent, ModelEntity, USDZ/Reality Composer Pro assets, materials, lighting, physics, collision and input targets, gestures, raycasting, scene understanding, ARKit sessions and anchors, hand/world tracking, spatial audio, SharePlay synchronization, and spatial performance."
