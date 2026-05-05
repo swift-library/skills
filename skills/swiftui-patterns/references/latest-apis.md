@@ -318,7 +318,14 @@ TabView {
 
 ### Toolbars
 
-**Use `ToolbarSpacer` to control grouping of toolbar items.** Fixed spacers visually separate related groups; flexible spacers push items apart.
+**On iOS 26.0 and macOS 26.0 or newer, use `ToolbarSpacer` to control grouping of toolbar items.** Fixed spacers visually separate related groups; flexible spacers push items apart.
+
+`ToolbarSpacer` participates in the toolbar content list. In macOS merged
+toolbars, especially around `NavigationSplitView` and `inspector`, it is not
+column-local spacing. Use `Spacer()` inside a single toolbar item's custom
+`ViewBuilder` content for view-level spacing within that item. For deployment
+targets below iOS 26.0 or macOS 26.0, avoid referencing `ToolbarSpacer` except
+inside an availability guard; use `ToolbarItem { Spacer() }` for the fallback.
 
 ```swift
 .toolbar {
@@ -331,6 +338,16 @@ TabView {
     ToolbarSpacer(.fixed)
     ToolbarItem(placement: .topBarTrailing) {
         Button("Settings", systemImage: "gear") { }
+    }
+}
+```
+
+Fallback for earlier deployment targets:
+
+```swift
+.toolbar {
+    ToolbarItem(placement: .topBarTrailing) {
+        Spacer()
     }
 }
 ```

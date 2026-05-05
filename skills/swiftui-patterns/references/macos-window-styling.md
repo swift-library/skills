@@ -94,6 +94,27 @@ struct ContentView: View {
 }
 ```
 
+### Toolbar ownership and spacing
+
+In macOS `NavigationSplitView`, inspector, and multi-column workbench layouts,
+SwiftUI may merge toolbar content from several view subtrees into one window
+toolbar. Keep each toolbar item attached to the view or feature state it
+controls; visual adjacency in the merged toolbar is not ownership.
+
+On iOS 26.0 and macOS 26.0 or newer, use `ToolbarSpacer` only when you want
+spacing between toolbar content items in the merged toolbar. Do not use it to
+emulate column-local spacing inside a split view or inspector. For deployment
+targets below iOS 26.0 or macOS 26.0, do not reference `ToolbarSpacer` outside
+an availability guard; use `ToolbarItem { Spacer() }` for view-level fallback
+spacing.
+
+`Spacer()` is ordinary view layout because `ToolbarItem` and `ToolbarItemGroup`
+content is built with a `ViewBuilder`.
+
+For inspector sizing, prefer inspector APIs such as
+`inspectorColumnWidth(min:ideal:max:)`; toolbar placement should not become a
+layout workaround for inspector width.
+
 ---
 
 ## Window Style
