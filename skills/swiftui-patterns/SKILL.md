@@ -1,6 +1,6 @@
 ---
 name: swiftui-patterns
-description: Use this skill for SwiftUI view implementation, ordinary review, focused view cleanup/refactoring, and debugging of state/data flow, view structure, layout, lists, navigation and presentation, controls/forms, scrolling, text/images, SwiftUI text localization slices, animation, macOS SwiftUI, MenuBarExtra, or Liquid Glass. Do not use for dedicated sibling-domain work such as architecture selection, performance diagnosis, accessibility audits, focus-system audits, Instruments traces, Swift Charts, persistence, networking, package architecture, Xcode localization resource workflows, or concurrency migration.
+description: Use this skill for SwiftUI view implementation, ordinary review, focused view cleanup/refactoring, and debugging of state/data flow, view structure, layout, lists, navigation and presentation, toolbars, controls/forms, scrolling, text/images, SwiftUI text localization slices, animation, macOS SwiftUI, MenuBarExtra, or Liquid Glass. Do not use for dedicated sibling-domain work such as architecture selection, performance diagnosis, accessibility audits, focus-system audits, Instruments traces, Swift Charts, persistence, networking, package architecture, Xcode localization resource workflows, or concurrency migration.
 ---
 
 # SwiftUI Patterns
@@ -22,7 +22,7 @@ platform-specific SwiftUI APIs.
 - Restructuring large view bodies, extracting subviews, avoiding unnecessary
   `AnyView`, or using `@ViewBuilder` correctly.
 - Fixing list, `ForEach`, table, scroll, app shell, TabView, deep-link,
-  navigation, sheet, inspector, or simple in-view form focus behavior.
+  navigation, toolbar, sheet, inspector, or simple in-view form focus behavior.
 - Noticing small invalidation, identity, or image-loading issues while already
   working on ordinary SwiftUI implementation.
 - Implementing or reviewing animations, transitions, tap targets, system
