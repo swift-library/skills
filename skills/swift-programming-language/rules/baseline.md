@@ -19,9 +19,9 @@ Repository-local truth wins over this skill.
 - Avoid old GCD patterns such as `DispatchQueue.main.async()` when Swift
   concurrency is appropriate.
 - Assume strict Swift concurrency only if the project does.
-- Use the dedicated `swift-concurrency-patterns` skill for nontrivial concurrency
-  diagnostics, Swift 6 migration, actor-isolation design, data-race work,
-  `Sendable` fixes, or concurrency performance work.
+- Nontrivial concurrency diagnostics, Swift 6 migration, actor-isolation
+  design, data-race work, `Sendable` fixes, and concurrency performance work are
+  out of scope for this baseline.
 - Do not introduce third-party frameworks without explicit approval.
 - Avoid UIKit unless requested or justified.
 - Avoid force unwraps and force `try` unless the failure is genuinely
@@ -132,9 +132,9 @@ Do not expand this into general SwiftData schema design.
   for user-facing strings.
 - Prefer symbol keys when generated symbols are available.
 - Preserve the project's existing localization strategy.
-- If the task involves String Catalog setup or migration, XLIFF/xcloc exchange,
+- String Catalog setup or migration, XLIFF/xcloc exchange,
   pseudolocalization, localized package/framework resources, bundle lookup,
-  RTL validation, or locale UI tests, use `xcode-localization-patterns`.
+  RTL validation, and locale UI tests are out of scope for this baseline.
 
 ## Formatting And Linting Baseline
 

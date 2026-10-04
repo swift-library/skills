@@ -222,7 +222,7 @@ let access = SecAccessControlCreateWithFlags(
 )
 ```
 
-**Tradeoff:** Users who change biometrics must re-authenticate via your app's password flow. Detect enrollment changes via `LAContext.evaluationPolicyDomainState` (see Enrollment Change Detection below) and present graceful re-enrollment.
+**Tradeoff:** Users who change biometrics must re-authenticate via your app's password flow. Detect enrollment changes via the `LAContext` domain state (see Enrollment Change Detection below) and present graceful re-enrollment.
 
 ### `.biometryAny` — Convenience Features, Moderate Sensitivity
 
@@ -367,7 +367,7 @@ class BiometricEnrollmentMonitor {
         guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) else { return }
 
         // domainState changes whenever biometric enrollment changes
-        if let domainState = context.evaluatedPolicyDomainState {
+        if let domainState = biometryStateHash(context) {
             UserDefaults.standard.set(domainState, forKey: domainStateKey)
         }
     }
@@ -379,17 +379,24 @@ class BiometricEnrollmentMonitor {
             return true  // Can't evaluate — treat as changed
         }
 
-        guard let currentState = context.evaluatedPolicyDomainState,
+        guard let currentState = biometryStateHash(context),
               let savedState = UserDefaults.standard.data(forKey: domainStateKey) else {
             return true  // No saved state — first run or data cleared
         }
 
         return currentState != savedState
     }
+
+    private func biometryStateHash(_ context: LAContext) -> Data? {
+        if #available(iOS 18.0, macOS 15.0, *) {
+            return context.domainState.biometry.stateHash
+        }
+        return context.evaluatedPolicyDomainState
+    }
 }
 ```
 
-**Note:** `evaluatedPolicyDomainState` is an opaque `Data` blob. It changes whenever biometric enrollment changes but reveals no information about the biometrics themselves. Store it in `UserDefaults` (not keychain) since it is not sensitive — it's only used for change detection.
+**Note:** `evaluatedPolicyDomainState` is deprecated as of iOS 18 / macOS 15; the SDK replacement is `domainState.biometry.stateHash`. Both are an opaque `Data` blob. It changes whenever biometric enrollment changes but reveals no information about the biometrics themselves. Store it in `UserDefaults` (not keychain) since it is not sensitive — it's only used for change detection.
 
 ---
 
@@ -542,7 +549,6 @@ Static code review alone is insufficient. Verification requires dynamic testing:
 
 - `keychain-fundamentals.md` — SecItem CRUD patterns used by the keychain-bound biometric flow
 - `keychain-access-control.md` — `SecAccessControlCreateWithFlags`, accessibility constants, and flag composition rules
-- `secure-enclave.md` — Hardware-backed keys with biometric gating via `SecAccessControl`
 - `common-anti-patterns.md` — Anti-pattern #3 (LAContext-only biometric gate)
 - `credential-storage-patterns.md` — Biometric protection for high-value credentials (OAuth tokens, API keys)
 - `testing-security-code.md` — Protocol-based mocking for biometric flows, LAContext test strategies
@@ -559,7 +565,7 @@ Static code review alone is insufficient. Verification requires dynamic testing:
 5. **ThisDeviceOnly accessibility** — Biometric-gated secrets use `kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly` or `WhenUnlockedThisDeviceOnly`; never syncable
 6. **Complete error handling** — All `LAError` codes handled: `.biometryNotEnrolled`, `.biometryLockout`, `.biometryNotAvailable`, `.passcodeNotSet`, `.userCancel`, `.userFallback`
 7. **Graceful degradation** — App provides fallback path (passcode or password) when biometrics are unavailable or locked out
-8. **Enrollment change detection** — `evaluatedPolicyDomainState` monitored when using `.biometryCurrentSet`; re-enrollment flow implemented
+8. **Enrollment change detection** — `domainState.biometry.stateHash` (iOS 18+ / macOS 15+) or `evaluatedPolicyDomainState` on earlier versions monitored when using `.biometryCurrentSet`; re-enrollment flow implemented
 9. **Thread safety** — `SecItemCopyMatching` with biometric ACL never runs on `@MainActor`; actor-isolated or dispatched to background queue
 10. **Dynamic verification** — objection/Frida bypass test confirms protected data remains inaccessible when `evaluatePolicy` callback is hooked
 11. **SAST/linting** — CI pipeline includes rule to flag standalone `evaluatePolicy` without corresponding `SecAccessControl` keychain operations

@@ -24,10 +24,10 @@ setup, resource export/import, and first-launch recovery.
 
 ## When Not To Use
 
-- Do not use for ordinary Core Data or SwiftData schema migration; use
-  `core-data-patterns` or `swiftdata-patterns`.
-- Do not use for CloudKit sync or account-based restore; use the relevant data
-  or CloudKit owner.
+- Do not use for ordinary Core Data or SwiftData schema migration; in-store
+  model migration is out of scope.
+- Do not use for CloudKit sync or account-based restore; leave those to the
+  owning persistence or CloudKit code.
 - Do not use for package architecture unless the target graph is the only issue.
 - Do not treat AppMigrationKit as a general backup/export feature.
 

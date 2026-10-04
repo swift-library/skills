@@ -23,10 +23,9 @@ Bluetooth or Wi-Fi connection code.
 
 ## When Not To Use
 
-- Do not use for generic Bluetooth scanning or GATT communication after setup;
-  use `core-bluetooth-patterns`.
-- Do not use for AudioAccessoryKit placement/capability state after pairing;
-  use `audioaccessorykit-patterns`.
+- Do not use for generic Core Bluetooth scanning or GATT communication after
+  setup.
+- Do not use for AudioAccessoryKit placement/capability state after pairing.
 - Do not use for HomeKit, Matter, or external accessory protocols that do not
   use AccessorySetupKit.
 - Do not use for broad product strategy or app architecture.
@@ -54,7 +53,7 @@ Bluetooth or Wi-Fi connection code.
 4. Show only accessories the app can actually configure and connect to.
 5. Handle added, removed, renamed, partially authorized, failed, unavailable,
    and cancelled states.
-6. After setup, hand off to the narrower runtime skill such as Core Bluetooth
+6. After setup, hand off to the runtime framework code, such as Core Bluetooth
    or AudioAccessoryKit.
 7. Validate with a physical accessory when hardware behavior is the issue.
 

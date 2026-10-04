@@ -119,8 +119,6 @@ final class AuthenticationManager {
 
 ## Seven Mistakes AI Generators Make in Keychain Tests
 
-Both research providers independently identified overlapping anti-patterns. This merged list covers the full set:
-
 **1. Tests that use the real keychain without cleanup.** Tests calling `SecItemAdd` directly leave state across runs. Second run fails with `errSecDuplicateItem` (-25299). AI generators rarely include `setUp`/`tearDown` cleanup.
 
 **2. Assuming Secure Enclave exists on simulator.** `SecureEnclave.isAvailable` returns `false` on every simulator. Tests calling `SecureEnclave.P256.Signing.PrivateKey()` directly throw `CryptoKitError` on simulator and crash CI.
@@ -329,13 +327,13 @@ final class CryptoKitTests: XCTestCase {
 }
 ```
 
-**iOS 26 note:** Post-quantum cryptography (ML-KEM, ML-DSA) is available via CryptoKit starting iOS 26. Gate these tests with `@available(iOS 26, *)` and use the same round-trip pattern. Software-based PQC works on simulator (see `cryptokit-public-key.md`).
+**iOS 26 note:** Post-quantum cryptography (ML-KEM, ML-DSA) is available via CryptoKit starting iOS 26. Gate these tests with `@available(iOS 26, *)` and use the same round-trip pattern. Software-based PQC works on simulator.
 
 ---
 
 ## Secure Enclave Test Strategy — Protocol Fallback
 
-> **Cross-reference contradiction:** One research source used a function returning `P256.Signing.PrivateKey` for both SE and software paths. This is a type error — `SecureEnclave.P256.Signing.PrivateKey` and `P256.Signing.PrivateKey` are distinct types. The correct approach is a protocol-based abstraction:
+> **Distinct key types:** A function returning `P256.Signing.PrivateKey` for both SE and software paths is a type error — `SecureEnclave.P256.Signing.PrivateKey` and `P256.Signing.PrivateKey` are distinct types. The correct approach is a protocol-based abstraction:
 
 ### SigningKeyProvider Protocol with SE/Software Implementations
 
@@ -581,7 +579,7 @@ end
 | `errSecInteractionNotAllowed` | -25308   | Keychain locked / needs GUI           | Unlock keychain + `set-key-partition-list`      |
 | `errSecMissingEntitlement`    | -34018   | No keychain-access-groups entitlement | Add entitlements to test host app               |
 | `errSecItemNotFound`          | -25300   | No test host or missing entitlement   | Use test host app with keychain capability      |
-| `errSecInternalComponent`     | -67585   | Partition list not set after import   | Call `set-key-partition-list` after cert import |
+| `errSecInternalComponent`     | -2070    | Partition list not set after import   | Call `set-key-partition-list` after cert import |
 | Default keychain not found    | -25307   | No default keychain on CI runner      | Create and set default keychain                 |
 
 ### Test Host App Requirement

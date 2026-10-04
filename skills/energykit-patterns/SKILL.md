@@ -23,7 +23,7 @@ event reporting.
 
 ## When Not To Use
 
-- Do not use for HomeKit accessory control; use `homekit-patterns`.
+- Do not use for HomeKit accessory control.
 - Do not use for generic IoT, Bluetooth, or HVAC device communication.
 - Do not use for marketing, sustainability claims, or campaign messaging.
 - Do not use for commercial or industrial energy-management systems.

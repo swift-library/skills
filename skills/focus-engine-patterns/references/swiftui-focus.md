@@ -63,7 +63,7 @@ VStack {
 With one enum binding, SwiftUI can distinguish a container receiving focus from
 the container merely containing a focused child.
 
-### Syncing with ViewModel (Fox Weather pattern)
+### Syncing with ViewModel
 ```swift
 // View extension for bidirectional sync
 extension View {
@@ -234,7 +234,7 @@ consumer should invalidate as the focused object changes.
 .focusEffectDisabled()     // Disables default focus appearance
 ```
 
-## AutoFocus Pattern (from Fox Weather)
+## AutoFocus Pattern
 
 One-time programmatic focus on screen load, coordinated with layout completion:
 

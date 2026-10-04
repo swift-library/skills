@@ -38,22 +38,22 @@ System-level resource that runs instructions. High overhead for creation and swi
 
 ## Cooperative Thread Pool
 
-Swift creates only as many threads as CPU cores. Tasks share these threads efficiently.
+The cooperative executor manages a bounded worker pool. Pool size and thread
+assignment are implementation details; do not rely on one thread per core for
+correctness or assume that every task leaves its actor.
 
 ### How it works
 
-1. **Limited threads**: Number matches CPU cores
+1. **Bounded workers**: Runtime-managed pool; do not depend on an exact count
 2. **Task scheduling**: Tasks scheduled onto available threads
-3. **Suspension**: At `await`, task suspends, thread freed for other work
+3. **Suspension**: `await` may suspend; suspension frees the thread for other work
 4. **Resumption**: Task resumes on any available thread (not necessarily the same one)
 
 ```swift
-func example() async {
-    print("Started on: \(Thread.current)")
-
+func example() async throws {
+    print("Before suspension")
     try await Task.sleep(for: .seconds(1))
-
-    print("Resumed on: \(Thread.current)") // Likely different thread
+    print("After suspension; isolation still defines safe access")
 }
 ```
 
@@ -63,7 +63,7 @@ func example() async {
 - No excessive thread creation
 - No high memory overhead from idle threads
 - No excessive context switching
-- No priority inversion
+- Priority escalation mitigates inversion when awaiting task results
 
 **Better performance**:
 - Fewer threads = less context switching
@@ -94,8 +94,9 @@ func updateUI() {
     // Runs on main actor (usually main thread)
 }
 
+@concurrent
 func heavyWork() async {
-    // Runs on any available thread in pool
+    // Swift 6.2+: leaves caller isolation; no particular thread is promised
 }
 ```
 
@@ -184,62 +185,50 @@ func deposit(amount: Int) async {
 }
 ```
 
-**Rule**: Don't mutate actor state after suspension points.
+**Rule**: Restore invariants before suspension and revalidate state assumptions
+after resumption. Mutating actor state after `await` is allowed, but values
+observed before suspension may be stale. Keep this example's balance-and-bonus
+transaction together before awaiting its log operation.
 
 ## Thread Execution Patterns
 
-### Default: Background threads
+### Task Context And MainActor
 
-Tasks run on cooperative thread pool (background threads):
-
-```swift
-Task {
-    print(Thread.current) // Background thread
-}
-```
-
-### Main thread execution
-
-Use `@MainActor` for main thread:
+A regular `Task` inherits its creation context, including actor isolation where
+applicable. Its priority does not select a background thread.
 
 ```swift
 @MainActor
 func updateUI() {
     Task {
-        print(Thread.current) // Main thread
+        MainActor.assertIsolated()
+        await performAsync()
+        MainActor.assertIsolated()
     }
 }
-```
 
-### Inheritance example
-
-```swift
-@MainActor
-func updateUI() {
-    print("Main thread: \(Thread.current)")
-
-    await backgroundTask() // Switches to background
-
-    print("Back on main: \(Thread.current)") // Returns to main
-}
-
-func backgroundTask() async {
-    print("Background: \(Thread.current)")
+@concurrent
+func performAsync() async {
+    // Independent work leaves the caller actor with a supporting compiler.
 }
 ```
+
+Observe scheduling with Instruments or the debugger when needed. Assertions
+about an actor validate an isolation contract; thread IDs do not prove it.
 
 ## Swift 6.2 Changes
 
 ### Nonisolated async functions (SE-461)
 
-**Old behavior**: Nonisolated async functions always switch to background.
-
-**New behavior**: Inherit caller's isolation by default.
+Without `NonisolatedNonsendingByDefault`, nonisolated async functions use the
+generic executor. With that Swift 6.2 upcoming feature enabled, they retain the
+caller's isolation unless explicitly `@concurrent`. Check module settings;
+compiler version alone does not prove that the feature is enabled.
 
 ```swift
 class NotSendable {
     func performAsync() async {
-        print(Thread.current)
+        // Remains in the caller isolation with the upcoming feature enabled
     }
 }
 
@@ -247,14 +236,14 @@ class NotSendable {
 func caller() async {
     let obj = NotSendable()
     await obj.performAsync()
-    // Old: Background thread
-    // New: Main thread (inherits @MainActor)
+    // With the feature: retains MainActor isolation for this call
+    // Without it: the non-Sendable value crosses an isolation boundary
 }
 ```
 
-### Enabling new behavior
+### Enabling NonisolatedNonsendingByDefault
 
-In Xcode 16+:
+With Swift 6.2+ (Xcode 26+) and compatible project settings:
 
 ```swift
 // Build setting or swift-settings
@@ -268,7 +257,7 @@ Force function to switch away from caller's isolation:
 ```swift
 @concurrent
 func performAsync() async {
-    print(Thread.current) // Always background
+    // Runs outside the caller actor; thread identity is not the contract
 }
 ```
 
@@ -288,10 +277,10 @@ nonisolated(nonsending) func storeTouch(...) async {
 
 ### Configuring default isolation
 
-**Build setting** (Xcode 16+):
-- Default Actor Isolation: `MainActor` or `None`
+**Build setting** (Xcode 26+ / Swift 6.2+):
+- Default Actor Isolation: `MainActor` or `nonisolated`
 
-**Swift Package**:
+**Swift Package** (tools-version 6.2+):
 
 ```swift
 .target(
@@ -338,21 +327,13 @@ Opt-in only. Default remains `nonisolated` if not specified.
 
 ## Debugging Thread Execution
 
-### Print current thread
+### Observe Isolation
 
-**⚠️ Important**: `Thread.current` is unavailable in Swift 6 language mode from async contexts. The compiler error states: "Class property 'current' is unavailable from asynchronous contexts; Thread.current cannot be used from async contexts."
-
-**Workaround** (Swift 6+ mode only):
-
-```swift
-extension Thread {
-    public static var currentThread: Thread {
-        Thread.current
-    }
-}
-
-print("Thread: \(Thread.currentThread)")
-```
+`Thread.current` is unavailable directly in async contexts in Swift 6 mode.
+Use debugger/trace observations for scheduling and actor checks such as
+`MainActor.assertIsolated()` where main-actor ownership is the contract. A
+synchronous wrapper around `Thread.current` can print a momentary diagnostic,
+but it does not prove isolation, ordering or post-suspension thread identity.
 
 ### Debug navigator
 
@@ -386,19 +367,11 @@ assert(Thread.isMainThread)
 
 ## Why Sendable Matters
 
-Since tasks move between threads unpredictably:
-
-```swift
-func example() async {
-    print("Thread 1: \(Thread.current)")
-
-    await someWork()
-
-    print("Thread 2: \(Thread.current)") // Different thread
-}
-```
-
-Values crossing suspension points may cross threads. **Sendable** ensures safety.
+Sendability describes values that can safely cross isolation boundaries.
+A suspension alone does not imply a transfer, and moving between threads does
+not justify bypassing actor ownership. Use immutable `Sendable` values or an
+explicit transfer/ownership design when crossing an actual boundary; consult
+`sendable.md` for the concrete compiler diagnostic.
 
 ## Best Practices
 
@@ -415,9 +388,9 @@ Values crossing suspension points may cross threads. **Sendable** ensures safety
 
 ## Migration Strategy
 
-### For new projects (Xcode 16+)
+### For new projects (Xcode 26+ / Swift 6.2+)
 
-1. Set default isolation to `@MainActor`
+1. Select `@MainActor` default isolation only for a module whose ownership fits
 2. Enable `NonisolatedNonsendingByDefault`
 3. Use `@concurrent` for explicit background work
 
@@ -434,8 +407,8 @@ Values crossing suspension points may cross threads. **Sendable** ensures safety
 Need to control execution?
 ├─ UI updates? → @MainActor
 ├─ Specific state isolation? → Custom actor
-├─ Background work? → Regular async (trust Swift)
-└─ Need to force background? → @concurrent (Swift 6.2+)
+├─ Waiting or non-UI work? → Choose isolation explicitly; async alone does not offload
+└─ CPU work must leave caller actor? → @concurrent (Swift 6.2+)
 
 Seeing Sendable warnings?
 ├─ Can make type Sendable? → Add conformance
@@ -450,7 +423,7 @@ Instead of asking "what thread should this run on?" ask "what isolation domain s
 - `DispatchQueue.main.async { }` → `@MainActor func updateUI()`
 - `DispatchQueue.global().async { }` → `func work() async` (or `@concurrent` if it must leave caller isolation)
 - `DispatchQueue(label:).sync { }` → `actor` or `Mutex` for protecting state
-- Serial queue for ordering → `actor` (guarantees serial access)
+- Serial queue for protected state → `actor` (serial isolated access, not FIFO task order)
 
 ## Decision Rules
 
@@ -473,11 +446,11 @@ Instead of asking "what thread should this run on?" ask "what isolation domain s
 - **Less context switching**: CPU spends more time on actual work
 - **Better cache utilization**: Threads stay on same cores longer
 - **No thread explosion**: Predictable resource usage
-- **Forward progress**: Threads never block, always productive
+- **Forward progress**: Avoid blocking cooperative workers; blocking code can still stall them
 
 ### Cooperative pool advantages
 
-- Matches hardware (one thread per core)
+- Runtime-managed pool sized for the environment
 - Prevents oversubscription
 - Efficient task scheduling
 - Automatic load balancing

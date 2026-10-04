@@ -1,15 +1,6 @@
 ---
 name: swiftui-architecture
-description: >-
-  Use this skill for SwiftUI app or feature architecture selection, review,
-  refactoring, or scaffolding involving MVVM, MVI, TCA, Clean Architecture
-  presentation layers, SwiftUI Coordinator patterns, NavigationStack flow
-  state, dependency injection, effect boundaries, async cancellation, testable
-  feature boundaries, or migration from ad hoc SwiftUI state to a named
-  architecture. Do not use for SwiftUI view layout, controls, animation,
-  visual design, accessibility audits, package architecture, UIKit-only module
-  architecture, SwiftData/Core Data persistence, or deep Swift Concurrency
-  diagnostics.
+description: Use this skill for SwiftUI app or feature architecture selection, review, refactoring, or scaffolding involving MVVM, MVI, whether to adopt TCA, Clean Architecture presentation layers, SwiftUI Coordinator patterns, NavigationStack flow state, dependency injection, effect boundaries, async cancellation, testable feature boundaries, or migration from ad hoc SwiftUI state to a named architecture. Do not use for detailed Point-Free ComposableArchitecture work after TCA is already used or explicitly accepted, SwiftUI view layout, controls, animation, visual design, accessibility audits, package architecture, UIKit-only module architecture, SwiftData/Core Data persistence, or deep Swift Concurrency diagnostics.
 ---
 
 # SwiftUI Architecture
@@ -19,7 +10,9 @@ description: >-
 Guide SwiftUI app and feature architecture choices without turning ordinary
 view implementation work into an architecture migration. This skill is for
 selecting, reviewing, or applying feature-level patterns such as MVVM, MVI,
-TCA, Clean Architecture adapters, and Coordinator-style navigation state.
+TCA fit checks, Clean Architecture adapters, and Coordinator-style navigation
+state. Detailed TCA feature work after TCA is selected or already present is
+out of scope.
 
 ## When To Use
 
@@ -37,17 +30,19 @@ TCA, Clean Architecture adapters, and Coordinator-style navigation state.
 ## When Not To Use
 
 - Do not use for ordinary SwiftUI state wrapper, layout, list, sheet,
-  animation, or API-usage work; use `swiftui-patterns`.
+  animation, or API-usage work.
 - Do not use for source-level SwiftUI performance review, diagnosis, or
-  optimization; use `swiftui-performance`.
+  optimization.
+- Do not use for detailed Point-Free ComposableArchitecture reducer, store,
+  effect, dependency, navigation, shared-state, or `TestStore` work after TCA
+  is accepted or already present.
 - Do not use for visual polish, native Apple UI feel, spacing, typography, or
-  screenshots; use `swiftui-design`.
-- Do not use for dedicated accessibility audits; use `accessibility-patterns`.
-- Do not use for local Swift Package target/module architecture; use
-  `swiftpm-architecture`.
-- Do not use for UIKit-only module architecture; use `uikit-architecture`.
+  screenshots.
+- Do not use for dedicated accessibility audits.
+- Do not use for local Swift Package target/module architecture.
+- Do not use for UIKit-only module architecture.
 - Do not use for deep Swift Concurrency diagnostics, actor isolation, or
-  `Sendable` migration; use `swift-concurrency-patterns`.
+  `Sendable` migration.
 
 ## Workflow
 
@@ -69,7 +64,8 @@ TCA, Clean Architecture adapters, and Coordinator-style navigation state.
    - `references/mvvm.md` for screen-level state and explicit ViewModel
      boundaries.
    - `references/mvi.md` for strict state machines without a TCA dependency.
-   - `references/tca.md` for existing or explicitly accepted TCA codebases.
+   - `references/tca.md` for deciding whether TCA fits and where detailed TCA
+     implementation leaves this skill's scope.
    - `references/clean-architecture.md` for domain/data isolation.
    - `references/navigation-coordinator.md` for flow ownership, deep links, or
      centralized SwiftUI navigation state.

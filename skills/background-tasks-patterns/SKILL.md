@@ -26,10 +26,10 @@ lifecycle correctness.
 ## When Not To Use
 
 - Do not use for ordinary async/await, actors, or cancellation without OS
-  background scheduling; use `swift-concurrency-patterns`.
+  background scheduling.
 - Do not use for URLSession transfer implementation when scheduling is not the
-  issue; use `foundation-urlsession-patterns`.
-- Do not use for notification payload design; use `user-notifications-patterns`.
+  issue.
+- Do not use for notification payload design.
 - Do not use for broad app architecture without a concrete background lifecycle
   concern.
 - Do not invent scheduling guarantees, background duration, GPU access, or

@@ -25,10 +25,8 @@ high-sensitivity sensor-derived metrics.
 
 ## When Not To Use
 
-- Do not use for ordinary accelerometer, gyroscope, pedometer, or motion data;
-  use `core-motion-patterns`.
-- Do not use for HealthKit samples, workouts, or health authorization; use
-  `healthkit-patterns`.
+- Do not use for ordinary accelerometer, gyroscope, pedometer, or motion data.
+- Do not use for HealthKit samples, workouts, or health authorization.
 - Do not use for general analytics or non-research sensor access.
 - Do not use for product telemetry without SensorKit APIs.
 - Do not invent entitlement eligibility, sensor availability, or approval
@@ -63,6 +61,9 @@ high-sensitivity sensor-derived metrics.
 - Do not access sensors that are not approved in the entitlement.
 - Do not log raw high-sensitivity sensor data.
 - Do not ignore deletion records or consent revocation.
+- In Swift, `SRSensorReader`, `SRSensorReaderDelegate`, and the deletion-record
+  sensor stream are deprecated in iOS 27; use `SRReader<Sensor>` and its
+  `deletionRecords(matching:)` when the deployment target allows.
 - Treat entitlement, approval, sensor list, and sample schema behavior as
   current-source gated.
 

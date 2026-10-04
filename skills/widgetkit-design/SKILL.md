@@ -24,9 +24,8 @@ families.
 
 ## When Not To Use
 
-- Do not use for general SwiftUI app screen design; use `swiftui-design`.
-- Do not use for deep SwiftUI implementation issues in the widget view body;
-  use `swiftui-patterns`.
+- Do not use for general SwiftUI app screen design.
+- Do not use for deep SwiftUI implementation issues in the widget view body.
 - Do not use for WidgetKit provider architecture, reload plumbing, AppIntent
   configuration, shared storage, entitlements, or background execution unless
   the concrete issue affects design output.
@@ -62,6 +61,7 @@ families.
 - `references/widget-visual-design.md`: `Gauge`, `.containerBackground`,
   family coverage, typography, padding, cross-family hierarchy, dense rendering,
   timeline cadence, and shared app/widget model guidance.
+
 ## Decision Rules
 
 - Prefer native WidgetKit components before custom drawing.

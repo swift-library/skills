@@ -85,8 +85,7 @@ Set them in the shell, `version.env`, or a project-local wrapper script.
 ## Entitlements Input
 
 - The packaging scripts default to
-  `.build/entitlements/<AppName>.entitlements`, matching the upstream skill
-  contract.
+  `.build/entitlements/<AppName>.entitlements`.
 - Set `APP_ENTITLEMENTS=App.entitlements` when the app needs a checked-in or
   project-local entitlements plist.
 - `ENTITLEMENTS` is accepted only as a compatibility alias.

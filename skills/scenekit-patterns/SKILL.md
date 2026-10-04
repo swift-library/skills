@@ -26,9 +26,8 @@ embedding.
 
 ## When Not To Use
 
-- Do not use for new RealityKit/ARKit-first spatial or AR scene construction;
-  use `realitykit-patterns`.
-- Do not use for SpriteKit 2D scene work; use `spritekit-patterns`.
+- Do not use for new RealityKit/ARKit-first spatial or AR scene construction.
+- Do not use for SpriteKit 2D scene work.
 - Do not use for low-level Metal rendering unless SceneKit shader integration
   is the actual issue.
 - Do not use for browser 3D or web rendering.

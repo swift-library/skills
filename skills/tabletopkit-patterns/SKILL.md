@@ -26,10 +26,10 @@ bookmarks, interactions, RealityKit rendering, and group-session state.
 ## When Not To Use
 
 - Do not use for generic board-game rules or AI that do not touch TabletopKit.
-- Do not use for Game Center matchmaking, leaderboards, or achievements; use
-  `gamekit-patterns`.
-- Do not use for RealityKit-only rendering without TabletopKit game state; use
-  `realitykit-patterns`.
+- Do not use for Game Center matchmaking, leaderboards, or achievements;
+  GameKit services are out of scope.
+- Do not use for RealityKit-only rendering without TabletopKit game state;
+  standalone RealityKit work is out of scope.
 - Do not use for browser tabletop games.
 
 ## Inputs To Inspect

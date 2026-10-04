@@ -12,12 +12,20 @@ MENU_BAR_APP=${MENU_BAR_APP:-0}
 SIGNING_MODE=${SIGNING_MODE:-}
 APP_IDENTITY=${APP_IDENTITY:-}
 
-if [[ -f "$ROOT/version.env" ]]; then
-  # shellcheck disable=SC1091
-  source "$ROOT/version.env"
-else
-  MARKETING_VERSION=${MARKETING_VERSION:-0.1.0}
-  BUILD_NUMBER=${BUILD_NUMBER:-1}
+if [[ ! -f "$ROOT/version.env" ]]; then
+  echo "ERROR: version.env is required; adapt this input to the project's authoritative version source." >&2
+  exit 1
+fi
+# Prevent inherited environment values from masking an incomplete declaration.
+unset MARKETING_VERSION BUILD_NUMBER
+# shellcheck disable=SC1091
+source "$ROOT/version.env"
+: "${MARKETING_VERSION:?version.env must declare MARKETING_VERSION}"
+: "${BUILD_NUMBER:?version.env must declare BUILD_NUMBER}"
+if [[ ! "$MARKETING_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] ||
+   [[ ! "$BUILD_NUMBER" =~ ^[0-9]+(\.[0-9]+){0,2}$ ]]; then
+  echo "ERROR: invalid product version or build number in version.env." >&2
+  exit 1
 fi
 
 ARCH_LIST=( ${ARCHES:-} )
@@ -70,6 +78,8 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 </plist>
 PLIST
 plutil -lint "$APP/Contents/Info.plist"
+[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist")" == "$MARKETING_VERSION" ]]
+[[ "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP/Contents/Info.plist")" == "$BUILD_NUMBER" ]]
 
 build_product_path() {
   local name="$1"

@@ -29,10 +29,9 @@ SwiftLint behavior, not when the task is only general Swift style judgment.
 ## When Not To Use
 
 - Ordinary Swift code review where SwiftLint is not part of the request.
-- Broad Swift language, API, or style guidance; use
-  `swift-programming-language`.
+- Broad Swift language, API, or style guidance.
 - Package graph or target-boundary design unless SwiftLint plugin wiring is
-  the package issue; use `swiftpm-architecture`.
+  the package issue.
 - General build, release, or App Store workflows unless they are directly
   enforcing SwiftLint.
 - Formatter-only work unless SwiftLint is part of the enforcement surface.
@@ -53,7 +52,7 @@ SwiftLint behavior, not when the task is only general Swift style judgment.
 ## Workflow
 
 1. Confirm the task is about SwiftLint enforcement or configuration. If it is
-   only ordinary Swift style review, route to the appropriate Swift skill.
+   only ordinary Swift style review, it is out of scope.
 2. Identify the runner: CLI, Xcode run script, SwiftPM command plugin, build
    tool plugin, CI, pre-commit, or another wrapper. Note working directory and
    config file discovery.

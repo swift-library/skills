@@ -24,10 +24,8 @@ using PDFKit.
 
 ## When Not To Use
 
-- Do not use for structured markup editing with PaperKit; use
-  `paperkit-patterns`.
-- Do not use for freeform Apple Pencil drawing mechanics; use
-  `pencilkit-patterns`.
+- Do not use for structured markup editing with PaperKit.
+- Do not use for freeform Apple Pencil drawing mechanics with PencilKit.
 - Do not use for generic document storage or file coordination unless PDFKit
   behavior is the main issue.
 - Do not use for server-side PDF generation unrelated to Apple PDFKit APIs.

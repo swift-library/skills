@@ -70,7 +70,7 @@ The table view naturally isolates rows — vertical focus moves between table ce
 
 ## Sidebar + Content Pattern
 
-### SwiftUI (Fox Weather pattern — basic)
+### SwiftUI (basic pattern)
 
 ```swift
 struct SidebarContentView: View {
@@ -110,9 +110,9 @@ Key patterns:
 - `.onExitCommand` returns focus to sidebar instead of exiting app
 - `isInitialLoad` guard to prevent sidebar expanding on first appearance
 
-### SwiftUI (Production pattern — dual @FocusState with .disabled() gating)
+### SwiftUI (dual @FocusState with .disabled() gating)
 
-The basic sidebar pattern above has a critical flaw: when focus leaves (to grid, nav bar) and returns, `@FocusState` doesn't guarantee landing on the correct item. This production pattern from Fox News tvOS solves it by combining three techniques:
+The basic sidebar pattern above has a critical flaw: when focus leaves (to grid, nav bar) and returns, `@FocusState` doesn't guarantee landing on the correct item. This pattern solves it by combining three techniques:
 
 ```swift
 struct TopicsSidebarView: View {
@@ -153,9 +153,9 @@ struct TopicsSidebarView: View {
 3. **`ScrollPosition`** — Declarative scroll binding avoids `ScrollViewReader.scrollTo()` feedback loops (see anti-pattern #26).
 4. **`onChange` guard** — Filters out transient focus touches during pass-through transitions (see anti-pattern #29).
 
-### UIKit Sidebar (Flagship Fox News pattern)
+### UIKit Sidebar
 
-The UIKit flagship uses a fundamentally different approach that avoids SwiftUI's focus chain issues:
+The UIKit sidebar uses a fundamentally different approach that avoids SwiftUI's focus chain issues:
 
 ```swift
 class TopicsSidebarViewController: UITableViewController {
@@ -216,7 +216,7 @@ TabView(selection: $selectedTab) {
 }
 ```
 
-For custom tab bar (Fox Weather SideTabBar pattern):
+For a custom side tab bar:
 - Wrap tab buttons in `.focusSection()`
 - Use `@FocusState` to track which tab is focused
 - Expand/collapse on focus enter/leave
@@ -299,7 +299,7 @@ override func shouldUpdateFocus(in context: UIFocusUpdateContext) -> Bool {
 
 ## Scroll + Arrow Button Pattern
 
-Horizontal shelf with left/right arrow buttons (Fox Weather PersonalitiesShelfView):
+Horizontal shelf with left/right arrow buttons:
 
 ```swift
 @FocusState private var buttonFocus: ScrollDirection?
@@ -364,7 +364,7 @@ NavigationSplitView {
     List(items, selection: $selectedItem) { item in
         Text(item.title)
     }
-    .focusSection()  // macOS 14+ — Tab switches between sidebar and content
+    .focusSection()  // macOS 13+ — Tab switches between sidebar and content
 } detail: {
     if let item = selectedItem {
         DetailView(item: item)
@@ -534,7 +534,7 @@ Use `.mask()` with static gradient stops matching UIKit's `CAGradientLayer`:
 
 ```swift
 struct StaticEdgeFadeMask: View {
-    let fadeHeight: CGFloat = 40  // Match flagship's CAGradientLayer stop distance
+    let fadeHeight: CGFloat = 40  // Match the UIKit CAGradientLayer stop distance
 
     var body: some View {
         VStack(spacing: 0) {
@@ -588,7 +588,7 @@ proxy.scrollTo(id, anchor: UnitPoint(x: 0.5, y: 0.7))
 
 UIKit apps typically use `adjustsImageWhenAncestorFocused` which applies ~1.13x scale with parallax. SwiftUI `scaleEffect` should match:
 
-| Element | UIKit (Flagship) | SwiftUI (Recommended) |
+| Element | UIKit | SwiftUI (Recommended) |
 |---------|-----------------|----------------------|
 | Clip card | System focus (~1.13 + parallax) | `scaleEffect(1.13)` |
 | Show poster | System focus (~1.13 + parallax) | `scaleEffect(1.13)` |

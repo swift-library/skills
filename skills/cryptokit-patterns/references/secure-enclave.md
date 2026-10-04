@@ -65,8 +65,6 @@ enum SecureEnclaveError: Error {
 
 The `#if targetEnvironment(simulator)` compile-time guard is essential. **`SecureEnclave.isAvailable` can return `true` on the Simulator** when the host Mac has SE hardware (T2/M-series), but actual key generation fails at runtime. This behavior varies across Xcode versions — some return `false` consistently, others reflect the host's hardware. The compile-time check eliminates the ambiguity entirely.
 
-> **Cross-validation note:** One comparison source documents the simulator `isAvailable` returning `true` as a confirmed trap; another comparison source states `isAvailable` is always `false` on simulator. Real-world behavior depends on Xcode version and host hardware. The defensive pattern above (compile-time guard + runtime check) is correct regardless of which behavior your environment exhibits.
-
 ```swift
 // ❌ INCORRECT: No availability check — crashes on simulator and old devices
 let key = try SecureEnclave.P256.Signing.PrivateKey()
@@ -248,7 +246,7 @@ let badControl = SecAccessControlCreateWithFlags(
 - **`.biometryAny`** — Key survives biometric re-enrollment. Good balance of security and convenience for most apps.
 - **`.userPresence`** — Accepts biometric or device passcode. Most flexible; use when you just need proof that a human is present.
 
-**Critical operational note:** If you use `.biometryCurrentSet` and the user changes their enrolled biometrics, the key becomes **permanently unusable**. Your app must detect `errSecItemNotFound` or authentication errors, explain to the user why re-authentication is needed, and generate a fresh key with server-side re-enrollment. (See `biometric-authentication.md` for full LAContext integration patterns.)
+**Critical operational note:** If you use `.biometryCurrentSet` and the user changes their enrolled biometrics, the key becomes **permanently unusable**. Your app must detect `errSecItemNotFound` or authentication errors, explain to the user why re-authentication is needed, and generate a fresh key with server-side re-enrollment.
 
 ---
 
@@ -287,7 +285,7 @@ func legacyCreateSEKey(tag: String) throws -> SecKey {
 }
 ```
 
-CryptoKit is preferred for new code because it provides compile-time type safety (distinct types per algorithm/operation), automatic memory zeroing, Swift-native error handling, and a curated API surface. The Security framework remains necessary for certificate management (`SecTrust`), RSA keys, or existing keychain items stored via the older API. (See `certificate-trust.md` for SecTrust patterns.)
+CryptoKit is preferred for new code because it provides compile-time type safety (distinct types per algorithm/operation), automatic memory zeroing, Swift-native error handling, and a curated API surface. The Security framework remains necessary for certificate management (`SecTrust`), RSA keys, or existing keychain items stored via the older API.
 
 ---
 
@@ -329,7 +327,7 @@ The SE's classical elliptic curve support remains **P-256 only** — the expansi
 
 **Common effective pattern:** Store a master asymmetric key in the SE and use ECDH to derive or wrap symmetric keys for bulk encryption. The SE protects the root of trust; derived keys handle the high-throughput work.
 
-The anti-pattern is reaching for the SE for every secret. The P-256 constraint, performance overhead, and device-binding mean SE keys should protect the most critical operations, not replace the standard keychain. (See `credential-storage-patterns.md` for token lifecycle patterns.)
+The anti-pattern is reaching for the SE for every secret. The P-256 constraint, performance overhead, and device-binding mean SE keys should protect the most critical operations, not replace the standard keychain.
 
 ---
 
@@ -518,7 +516,7 @@ Treat SE keys as **ephemeral, device-bound artifacts** rather than permanent use
 
 ## Conclusion
 
-The Secure Enclave's developer surface was remarkably stable from iOS 13 to iOS 25 — `SecureEnclave.P256` was the entire API. iOS 26 broke open the boundary with post-quantum ML-KEM and ML-DSA, the first algorithm expansion in the SE's 12-year history. The practical insight is that **correct SE usage is more about what you don't do** (don't skip availability checks, don't try to import keys, don't assume portability, don't use the SE for symmetric encryption) than complex API choreography. The CryptoKit API is deliberately minimal and hard to misuse, which is its greatest strength.
+The Secure Enclave's developer surface was remarkably stable from iOS 13 through iOS 18 — `SecureEnclave.P256` was the entire API. iOS 26 broke open the boundary with post-quantum ML-KEM and ML-DSA, the first algorithm expansion since the SE's 2013 introduction. The practical insight is that **correct SE usage is more about what you don't do** (don't skip availability checks, don't try to import keys, don't assume portability, don't use the SE for symmetric encryption) than complex API choreography. The CryptoKit API is deliberately minimal and hard to misuse, which is its greatest strength.
 
 For new projects, the recommended architecture is: protocol-based abstraction around signing and key agreement; SE implementation as primary with software P256 fallback; `dataRepresentation` persisted in the keychain as `kSecClassGenericPassword` with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`; biometric access control for high-value keys; server-side public key registration with re-keying support for device replacement; and `XCTSkip`-guarded integration tests on physical hardware.
 

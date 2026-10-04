@@ -30,7 +30,7 @@ Listed from most restrictive to least:
 
 **`kSecAttrAccessibleAlways`** ⚠️ DEPRECATED — Same deprecation. Items encrypted with only the device UID (no passcode involvement), equivalent to `NSFileProtectionNone`.
 
-> **Cross-validation note — deprecated "Always" runtime behavior:** One research source reports these constants "still function at runtime" with original semantics on iOS 15–18. The other reports modern iOS silently remaps them to `AfterFirstUnlock` behavior. The practical guidance is identical either way: **migrate immediately to `kSecAttrAccessibleAfterFirstUnlock`**. Block these constants in CI linting. Do not rely on any specific runtime behavior for deprecated constants across OS versions.
+> **Deprecated "Always" runtime behavior:** Runtime semantics of these constants are not guaranteed across OS versions; modern iOS may remap them to `AfterFirstUnlock` behavior. **Migrate immediately to `kSecAttrAccessibleAfterFirstUnlock`**. Block these constants in CI linting. Do not rely on any specific runtime behavior for deprecated constants across OS versions.
 
 ### Quick Reference Table
 
@@ -114,7 +114,7 @@ let flags: SecAccessControlCreateFlags = [.biometryAny, .and, .devicePasscode]
 let flags: SecAccessControlCreateFlags = [.biometryAny, .or, .devicePasscode, .applicationPassword]
 ```
 
-> **Critical rule: `.or` / `.and` is required between authentication flags.** Combining `.biometryCurrentSet` and `.devicePasscode` without a logical operator causes `SecAccessControlCreateWithFlags` to return `nil` with `errSecParam` (-50). Both sources confirm this behavior.
+> **Critical rule: `.or` / `.and` is required between authentication flags.** Combining `.biometryCurrentSet` and `.devicePasscode` without a logical operator causes `SecAccessControlCreateWithFlags` to return `nil` with `errSecParam` (-50).
 
 ---
 
@@ -321,7 +321,7 @@ func saveBiometricProtectedItem(data: Data, account: String, service: String) th
 }
 ```
 
-> **Important:** `SecItemUpdate` **cannot** change a `SecAccessControl` attribute on an existing item. To change access control, you must delete and re-add. Both sources confirm this.
+> **Important:** `SecItemUpdate` **cannot** change a `SecAccessControl` attribute on an existing item. To change access control, you must delete and re-add.
 
 ### Background-accessible token (push notifications, VPN, widgets)
 
@@ -486,7 +486,6 @@ All data protection testing **must** use physical devices with passcodes enabled
 
 - `keychain-fundamentals.md` — SecItem CRUD patterns, add-or-update, OSStatus handling
 - `biometric-authentication.md` — Biometric flag selection (`.biometryCurrentSet`, `.biometryAny`, `.userPresence`) and keychain-bound patterns
-- `secure-enclave.md` — Hardware-backed keys with `SecAccessControl` and `.privateKeyUsage`
 - `keychain-item-classes.md` — Class-specific accessibility considerations and primary key composition
 - `common-anti-patterns.md` — Anti-pattern #5 (missing `kSecAttrAccessible`), #3 (LAContext-only gate)
 - `compliance-owasp-mapping.md` — M9 (Insecure Data Storage) accessibility requirements

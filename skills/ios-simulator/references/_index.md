@@ -14,9 +14,7 @@ Use this index only when `SKILL.md` routing is not enough.
   long press, pinch, refresh, lightweight audit, and dependency failure
   handling.
 - `output.md`: output shapes, JSON handling, destructive-operation guardrails,
-  and handoff to source-code skills.
-- `command-map.md`: dense mapping from upstream-style script capabilities to
-  this skill's compact script commands.
+  and handoff of source-code fixes.
 - `troubleshooting.md`: high-density failure diagnosis and recovery commands.
 - `test-patterns.md`: repeatable simulator smoke, login, visual regression,
   permissions, bug-report, and model-inspection flows.
@@ -28,7 +26,6 @@ Use this index only when `SKILL.md` routing is not enough.
 - Accessibility tree, semantic tap/type/swipe, or `idb`: `idb.md`.
 - Visual diff, state capture, test recorder, or model inspector:
   `output.md` plus the target script `--help`.
-- Translating upstream-style commands: `command-map.md`.
 - Command failed or environment is unclear: `troubleshooting.md`.
 - User asks for a repeatable testing flow: `test-patterns.md`.
 - Unsure how much to report or when to hand off: `output.md`.

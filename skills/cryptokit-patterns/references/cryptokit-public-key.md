@@ -2,7 +2,7 @@
 
 > **Scope:** ECDSA signing, ECDH key agreement, HPKE (iOS 17+), ML-KEM/ML-DSA and hybrid migration patterns (iOS 26+), key serialization, and Secure Enclave integration boundaries on Apple platforms.
 >
-> **Cross-references:** Secure Enclave key lifecycle → `secure-enclave.md`. Symmetric encryption after key agreement → `cryptokit-symmetric.md`. Keychain storage of CryptoKit keys → `credential-storage-patterns.md`. RSA → ECC migration → § "Stop Using RSA for New Apple Development" below.
+> **Cross-references:** Secure Enclave key lifecycle → `secure-enclave.md`. Symmetric encryption after key agreement → `cryptokit-symmetric.md`. RSA → ECC migration → § "Stop Using RSA for New Apple Development" below.
 
 CryptoKit's asymmetric cryptography API covers ECDSA signing, ECDH key agreement, HPKE (iOS 17+), and post-quantum ML-KEM/ML-DSA (iOS 26+). The framework enforces correct usage through its type system — signing keys cannot perform key agreement, shared secrets must pass through HKDF before use, and Secure Enclave access is limited to P256 for classical curves. This reference covers every asymmetric primitive from iOS 13 through iOS 26 with verified Swift implementations, common AI-generator mistakes, and the quantum migration path.
 
@@ -53,7 +53,7 @@ The single most important decision is choosing the right curve or algorithm. AI 
 | ML-KEM-1024 | ~AES-192 | 26+ | ✅ Yes         | 1,568 bytes  | Higher-security KEM             |
 | ML-DSA-65   | ~AES-128 | 26+ | ✅ Yes         | 1,952 bytes  | Post-quantum signatures         |
 | ML-DSA-87   | ~AES-192 | 26+ | ✅ Yes         | 2,592 bytes  | Higher-security signatures      |
-| X-Wing      | Hybrid   | 26+ | ✅ Yes         | 1,216 bytes  | Hybrid PQC KEM                  |
+| X-Wing      | Hybrid   | 26+ | No             | 1,216 bytes  | Hybrid PQC KEM                  |
 
 On Apple Silicon, both P256 and Curve25519 are heavily optimized in corecrypto with hand-tuned assembly. Performance differences are negligible for most applications — Apple's NISTZ256 optimization closes the gap that Curve25519 holds in non-Apple benchmarks.
 
@@ -213,7 +213,7 @@ let plaintext = try recipient.open(
 
 3. **Message ordering matters.** If the sender seals messages A then B, the recipient must open A before B. The internal counter must stay synchronized.
 
-> **Source discrepancy (flagged):** One comparison source shows `seal()` returning a struct with `.encapsulatedKey` and `.ciphertext` properties. The documented API source shows `encapsulatedKey` as a property on `HPKE.Sender` and `seal()` returning `Data`. Per Apple's documentation, `encapsulatedKey` is a property of `HPKE.Sender` and `seal(_:authenticating:)` returns `Data`. The documented API pattern is correct.
+> `seal(_:authenticating:)` returns `Data`, and `encapsulatedKey` is a property of `HPKE.Sender`. Code that reads `.encapsulatedKey` or `.ciphertext` from a `seal()` result does not compile.
 
 ---
 
@@ -221,13 +221,13 @@ let plaintext = try recipient.open(
 
 At WWDC 2025 (session 314, "Get ahead with quantum-secure cryptography"), Apple announced CryptoKit support for NIST's post-quantum standards. The threat model is "harvest now, decrypt later" — adversaries storing encrypted traffic today to decrypt once cryptographically relevant quantum computers exist. iOS 26 enables quantum-secure TLS by default for `URLSession` and `Network.framework`, advertising `X25519MLKEM768` in the TLS ClientHello.
 
-Five new types join CryptoKit, all backed by formally verified implementations proven functionally equivalent to their FIPS specifications:
+iOS 26 adds five types to CryptoKit, all backed by formally verified implementations proven functionally equivalent to their FIPS specifications:
 
 | Type                  | Algorithm     | Standard                      | Operation          | Secure Enclave | Key/Sig Size                     |
 | --------------------- | ------------- | ----------------------------- | ------------------ | -------------- | -------------------------------- |
 | `MLKEM768`            | ML-KEM-768    | FIPS 203                      | Key encapsulation  | ✅             | 1,184 B pub / 1,088 B ciphertext |
 | `MLKEM1024`           | ML-KEM-1024   | FIPS 203                      | Key encapsulation  | ✅             | 1,568 B pub                      |
-| `XWingMLKEM768X25519` | X-Wing hybrid | draft-connolly-cfrg-xwing-kem | Key encapsulation  | ✅             | 1,216 B pub / 1,120 B encap      |
+| `XWingMLKEM768X25519` | X-Wing hybrid | draft-connolly-cfrg-xwing-kem | Key encapsulation  | No             | 1,216 B pub / 1,120 B encap      |
 | `MLDSA65`             | ML-DSA-65     | FIPS 204                      | Digital signatures | ✅             | 1,952 B pub / 3,309 B sig        |
 | `MLDSA87`             | ML-DSA-87     | FIPS 204                      | Digital signatures | ✅             | 2,592 B pub / 4,627 B sig        |
 
@@ -269,7 +269,7 @@ if #available(iOS 26, macOS 26, *) {
     let signature = try signingKey.signature(for: message)  // 3,309 bytes
 
     let isValid = verifyingKey.isValidSignature(
-        signature: signature,
+        signature,
         for: message
     )
 }
@@ -309,7 +309,7 @@ if #available(iOS 26, macOS 26, *) {
     let hybridSignature = pqSig + ecSig  // Concatenate both
 
     // Verify both — reject if either fails
-    let pqValid = pqKey.publicKey.isValidSignature(signature: pqSig, for: message)
+    let pqValid = pqKey.publicKey.isValidSignature(pqSig, for: message)
     let ecValid = ecKey.publicKey.isValidSignature(
         try P256.Signing.ECDSASignature(rawRepresentation: ecSig), for: message
     )
@@ -344,15 +344,15 @@ let importedPub = try P256.Signing.PublicKey(derRepresentation: publicDER)
 | P-256 / P-384 / P-521 | SPKI DER/PEM, x963, raw | PKCS#8 DER/PEM, x963, raw     | Full interop from iOS 14+   |
 | Curve25519            | Raw 32 bytes only       | Raw 32 bytes only             | No PEM/DER/x963 support     |
 | Secure Enclave P256   | Standard SPKI DER/PEM   | Encrypted blob (device-bound) | Public key exports normally |
-| ML-KEM / ML-DSA       | Raw representation      | Raw representation            | iOS 26+                     |
+| ML-KEM / ML-DSA       | Raw representation      | Seed or integrity-checked     | iOS 26+                     |
 
 **Curve25519 keys do not support PEM/DER.** They only have `rawRepresentation` (32 bytes for both public and private). If you need to exchange Curve25519 keys with external systems, handle raw byte serialization yourself or wrap the raw bytes in a custom format.
 
 ### Keychain Storage of CryptoKit Keys
 
-NIST curve keys (P-256/P-384/P-521) can be stored as `kSecClassKey` items in the keychain via their `SecKey` bridge. Curve25519 keys and Secure Enclave key blobs must be stored as `kSecClassGenericPassword` items using their `rawRepresentation` / `dataRepresentation`. Apple recommends implementing a `GenericPasswordConvertible` protocol for standardized conversion — see `credential-storage-patterns.md` for the full pattern.
+NIST curve keys (P-256/P-384/P-521) can be stored as `kSecClassKey` items in the keychain via their `SecKey` bridge. Curve25519 keys and Secure Enclave key blobs must be stored as `kSecClassGenericPassword` items using their `rawRepresentation` / `dataRepresentation`. Apple recommends implementing a `GenericPasswordConvertible` protocol for standardized conversion — see Apple's "Storing CryptoKit Keys in the Keychain" for the full pattern.
 
-**Peer / recipient public keys** received from a server or counterpart (for ECDH, HPKE, or signature verification) must also be persisted in the keychain — never in UserDefaults, plain files, or hardcoded in source. For NIST curves, store them as `kSecClassKey` with `kSecAttrKeyClass: kSecAttrKeyClassPublic`. For Curve25519 and post-quantum public keys, store the `rawRepresentation` as a `kSecClassGenericPassword` item. Use `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` for accessibility, and assign a distinct `kSecAttrApplicationTag` or `kSecAttrAccount` value (e.g., a `"peer-"` prefix) to separate received peer keys from your own key pairs. See `credential-storage-patterns.md` for the add-or-update pattern.
+**Peer / recipient public keys** received from a server or counterpart (for ECDH, HPKE, or signature verification) must also be persisted in the keychain — never in UserDefaults, plain files, or hardcoded in source. For NIST curves, store them as `kSecClassKey` with `kSecAttrKeyClass: kSecAttrKeyClassPublic`. For Curve25519 and post-quantum public keys, store the `rawRepresentation` as a `kSecClassGenericPassword` item. Use `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` for accessibility, and assign a distinct `kSecAttrApplicationTag` or `kSecAttrAccount` value (e.g., a `"peer-"` prefix) to separate received peer keys from your own key pairs.
 
 ---
 
@@ -413,7 +413,7 @@ let signature = try signingKey.signature(for: message)
 let isValid = signingKey.publicKey.isValidSignature(signature, for: message)
 ```
 
-> **Source discrepancy (flagged):** One comparison source shows `Insecure.RSA.PrivateKey(keySize: .bits2048)` as an anti-pattern example. This API does not exist in CryptoKit — there is no `Insecure.RSA` type. RSA is only available through the Security framework's `SecKeyCreateRandomKey` with `kSecAttrKeyTypeRSA`. The documented API pattern's Security framework example is the correct API.
+> CryptoKit has no `Insecure.RSA` type; code such as `Insecure.RSA.PrivateKey(keySize: .bits2048)` does not compile. RSA is only available through the Security framework's `SecKeyCreateRandomKey` with `kSecAttrKeyTypeRSA`.
 
 RSA-2048 provides only ~112-bit security with 256-byte keys and signatures. P256 achieves ~128-bit security with 32-byte private keys and 64-byte signatures — an 8× reduction in signature size with stronger security. Valid reasons to still use RSA: legacy server interoperability, X.509 certificates from CAs that mandate RSA, and JWT specifications locked to RS256.
 
@@ -429,7 +429,7 @@ RSA-2048 provides only ~112-bit security with 256-byte keys and signatures. P256
 | Declaring `HPKE.Sender`/`Recipient` with `let`     | Compile error (`seal()`/`open()` are mutating) | Declare with `var`                                                     |
 | Using RSA for new iOS code                         | Slower, larger keys, no CryptoKit/SE support   | Default to ECC (P-256 or Curve25519)                                   |
 | Recommending Curve25519 for Secure Enclave         | Curve25519 has no SE support                   | Use `SecureEnclave.P256` for hardware-backed keys                      |
-| Ignoring PEM/DER format limitations for Curve25519 | Runtime crash on `.pemRepresentation` access   | Use `.rawRepresentation` for Curve25519; PEM/DER for NIST curves only  |
+| Ignoring PEM/DER format limitations for Curve25519 | Compile error: no `.pemRepresentation` member  | Use `.rawRepresentation` for Curve25519; PEM/DER for NIST curves only  |
 | Using HPKE messages out of order                   | Decryption failure (nonce counter mismatch)    | Open messages in the same order they were sealed                       |
 
 ---

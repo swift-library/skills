@@ -1,6 +1,6 @@
 ---
 name: swiftpm-architecture
-description: 'Use this skill for Swift Package architecture design, review, refactoring guidance, and package-structure diagnostics involving Package.swift target graphs, module boundaries, product/library/executable layout, dependency direction, public API surfaces, composition roots, cross-target test strategy, source selection, or compact evidence briefs. Auto-trigger for package-structure work during implementation or review; use manual mode for full architecture review, active/proactive review, context packaging, and reviewer handoff. Do not use for full-repository concatenation, standalone feature specs, roadmap work, code rewrites, UI feature architecture, or package documentation migration.'
+description: 'Use this skill for Swift Package architecture design, review, refactoring guidance, and package-structure diagnostics involving Package.swift target graphs, module boundaries, product/library/executable layout, dependency direction, public API surfaces, composition roots, cross-target test strategy, source selection, or compact evidence briefs. Auto-trigger for package-structure work during implementation or review; use manual mode for full architecture review, active/proactive review, context packaging, and reviewer handoff. Do not use for full-repository concatenation, standalone feature specs, roadmap work, code rewrites, strict Swift code-shape taste review, UI feature architecture, or package documentation migration.'
 ---
 
 # SwiftPM Architecture
@@ -21,8 +21,8 @@ review artifacts when requested.
   evidence-oriented Markdown brief when the user explicitly asks for active,
   proactive, brief, bundle, context package, or reviewer handoff behavior.
 - Not its job: produce a final architecture verdict, generate a full migration
-  plan, rewrite code, rank community dependencies, or concatenate the whole
-  repository.
+  plan, rewrite code, rank community dependencies, run strict Swift code-shape
+  taste review, or concatenate the whole repository.
 - Review notes are prompts for deeper review. They must stay grounded in package
   layout, source names, public API, target graph, tests, and documentation.
 

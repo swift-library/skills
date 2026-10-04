@@ -10,6 +10,7 @@ Quick navigation for the Swift Concurrency Patterns skill.
 | `bug-patterns.md` | common runtime failure patterns after suspicious code is found |
 | `async-await-basics.md` | closure-to-async bridges and foundational async/await usage |
 | `tasks.md` | `Task`, cancellation, task groups, structured vs unstructured work |
+| `language-updates.md` | Swift 6.4 awaited `defer` and OS-gated cancellation shields |
 | `actors.md` | actor isolation, `@MainActor`, reentrancy, isolated conformances |
 | `sendable.md` | `Sendable`, `@Sendable`, region isolation, escape hatches |
 | `threading.md` | execution model, suspension points, Swift 6.2 isolation behavior |
@@ -37,6 +38,7 @@ Quick navigation for the Swift Concurrency Patterns skill.
 |---|---|
 | `migration.md` | rollout order, build settings, migration guardrails |
 | `linting.md` | concurrency-focused lint rules |
+| `official-sources.md` | primary sources and SDK/compiler checks for version-sensitive claims |
 | `glossary.md` | quick definitions |
 
 ## Problem Router

@@ -5,8 +5,9 @@ architecture decision, full view refactor, or dedicated design pass.
 
 ## Controls
 
-- Use native controls first: `Button`, `Toggle`, `Slider`, `Picker`,
-  `Stepper`, `Menu`, and `ControlGroup`.
+- Use native controls and control containers first: `Button`, `Toggle`,
+  `Slider`, `Picker`, `Stepper`, `Menu`, `ControlGroup`, `Label`, and
+  `LabeledContent`.
 - Bind controls to the narrowest state that owns the value.
 - Keep side effects out of binding setters; use explicit actions or
   `.onChange` when the side effect matters.
@@ -16,6 +17,8 @@ architecture decision, full view refactor, or dedicated design pass.
 
 - Use `Form` for settings and structured input when platform-native grouping is
   wanted.
+- Use `LabeledContent` for title-value rows, metadata rows, and custom
+  value-bearing controls that should align with other form rows.
 - Keep validation close to the field that caused it.
 - Use sections for related settings; do not make one giant form section.
 - For modal forms, keep save/cancel ownership inside the form surface when
@@ -45,6 +48,8 @@ architecture decision, full view refactor, or dedicated design pass.
 - Avoid firing haptics from `body`, computed view properties, or repeatedly
   evaluated modifiers.
 - Gate platform-specific haptic APIs and provide a silent fallback.
+- Custom tactile patterns, AHAP resources, advanced players, synchronized
+  audio-haptic feedback, and Core Haptics engine lifecycle are out of scope.
 
 ## Theming And Dynamic Type
 

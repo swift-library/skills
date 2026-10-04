@@ -2,7 +2,7 @@
 
 > **Scope:** The 10 most dangerous security anti-patterns that AI coding assistants generate for iOS apps. Each entry includes the vulnerability explanation, realistic ❌ insecure code, ✅ correct replacement, detection heuristic, and OWASP risk mapping. This is the skill's backbone — the single most important file for correcting AI-generated security code.
 >
-> **Cross-references:** `biometric-authentication.md` (anti-pattern #3 deep dive), `keychain-fundamentals.md` (anti-pattern #4 CRUD patterns), `keychain-access-control.md` (anti-pattern #5 protection classes), `cryptokit-symmetric.md` (anti-patterns #6–7), `credential-storage-patterns.md` (anti-patterns #1–2 token lifecycle), `migration-legacy-stores.md` (anti-pattern #9 first-launch cleanup), `compliance-owasp-mapping.md` (full OWASP/MASVS mapping).
+> **Cross-references:** `cryptokit-symmetric.md` (anti-patterns #6–7), `compliance-owasp-mapping.md` (full OWASP/MASVS mapping).
 
 ---
 
@@ -151,7 +151,7 @@ grep -rn '"sk_live_\|"pk_live_\|"AIza[A-Za-z0-9]\|"AKIA[A-Z0-9]' \
 
 **Severity:** CRITICAL | **OWASP:** M3 (Insecure Authentication) | **Fix effort:** Medium
 
-Using `LAContext.evaluatePolicy()` alone is the single most reproduced insecure pattern across iOS tutorials. The method returns a simple boolean callback in user-space — no cryptographic binding. Frida forces `success = true` in one command; Objection packages this as `ios ui biometrics_bypass`. OWASP MASTG: "Biometric authentication must be based on unlocking the keychain." Full deep dive: see `biometric-authentication.md`.
+Using `LAContext.evaluatePolicy()` alone is the single most reproduced insecure pattern across iOS tutorials. The method returns a simple boolean callback in user-space — no cryptographic binding. Frida forces `success = true` in one command; Objection packages this as `ios ui biometrics_bypass`. OWASP MASTG: "Biometric authentication must be based on unlocking the keychain."
 
 **❌ Insecure — AI-generated pattern:**
 
@@ -238,8 +238,6 @@ grep -rn "\.biometryCurrentSet\|\.biometryAny" --include="*.swift"
 
 `errSecDuplicateItem` (OSStatus -25299) is the most common Keychain failure. When `SecItemAdd` hits a duplicate, it silently discards the new value. Password updates never persist, refreshed tokens are lost, and auth breaks in hard-to-debug ways. Other critical codes: `errSecItemNotFound` (-25300), `errSecAuthFailed` (-25293), `errSecInteractionNotAllowed` (-25308).
 
-Full CRUD patterns: see `keychain-fundamentals.md`.
-
 **❌ Insecure — AI-generated pattern:**
 
 ```swift
@@ -303,7 +301,7 @@ grep -rn "SecItemAdd(" --include="*.swift" | \
 
 **Severity:** HIGH | **OWASP:** M9 (Insecure Data Storage) | **Fix effort:** Low
 
-Omitting `kSecAttrAccessible` inherits a default that may be insufficient. Using deprecated `kSecAttrAccessibleAlways` (deprecated iOS 12) leaves data decryptable on a locked device. Missing `ThisDeviceOnly` suffix means items are included in backups. Full protection class guide: see `keychain-access-control.md`.
+Omitting `kSecAttrAccessible` inherits a default that may be insufficient. Using deprecated `kSecAttrAccessibleAlways` (deprecated iOS 12) leaves data decryptable on a locked device. Missing `ThisDeviceOnly` suffix means items are included in backups.
 
 **❌ Insecure — AI-generated patterns:**
 
@@ -447,7 +445,7 @@ func authenticate(_ data: Data, key: SymmetricKey) -> Data {
 // See cryptokit-symmetric.md for full PBKDF2 implementation
 ```
 
-iOS 18 adds SHA-3 family (`SHA3_256`, `SHA3_384`, `SHA3_512`) in CryptoKit. WWDC 2025-314 covers post-quantum additions (ML-KEM, ML-DSA), not SHA-3.
+iOS 26 adds SHA-3 family (`SHA3_256`, `SHA3_384`, `SHA3_512`) in CryptoKit. WWDC 2025-314 covers post-quantum additions (ML-KEM, ML-DSA), not SHA-3.
 
 **MASTG test:** MASTG-TEST-0211. **MASTG demos:** MASTG-DEMO-0015, MASTG-DEMO-0016. **Legacy:** MSTG-CRYPTO-1.
 
@@ -520,7 +518,7 @@ grep -rn 'os_log.*%{public}' --include="*.swift" | \
 
 **Severity:** MEDIUM | **OWASP:** M9 (Insecure Data Storage) | **Fix effort:** Low
 
-Keychain items persist in a system-wide encrypted database managed by `securityd`, outside the app sandbox. App deletion removes the sandbox but keychain items survive. Apple DTS engineer Quinn "The Eskimo!" confirmed this as "currently expected behaviour despite being an obvious privacy concern." Consequences: stale credentials on reinstall, cross-user data leakage on device resale, and Firebase SDK authentication errors on reinstall. Full migration patterns: see `migration-legacy-stores.md`.
+Keychain items persist in a system-wide encrypted database managed by `securityd`, outside the app sandbox. App deletion removes the sandbox but keychain items survive. Apple DTS engineer Quinn "The Eskimo!" confirmed this as "currently expected behaviour despite being an obvious privacy concern." Consequences: stale credentials on reinstall, cross-user data leakage on device resale, and Firebase SDK authentication errors on reinstall.
 
 **❌ The missing pattern — AI never generates this:**
 
@@ -666,8 +664,8 @@ Recommended: Semgrep on every PR + post-build binary scanning. CodeQL nightly fo
 WWDC 2025-314 introduced the most significant CryptoKit expansion since 2019:
 
 - **Symmetric keys:** `.bits256` recommended over `.bits128` for quantum resistance (anti-patterns #6, #10)
-- **Hashing:** SHA-3 family (`SHA3_256/384/512`) in CryptoKit on iOS 18+ (anti-pattern #7)
-- **Post-quantum:** ML-KEM 768/1024, ML-DSA 65/87, X-Wing — all with Secure Enclave support
+- **Hashing:** SHA-3 family (`SHA3_256/384/512`) in CryptoKit on iOS 26+ (anti-pattern #7)
+- **Post-quantum:** ML-KEM 768/1024 and ML-DSA 65/87 with Secure Enclave support, plus the X-Wing hybrid KEM in software
 - **TLS:** `X25519MLKEM768` enabled by default for `URLSession` in iOS 26
 - **Secure Enclave:** Hardware post-quantum key creation strengthens anti-patterns #3 and #5 fixes
 
@@ -683,7 +681,7 @@ When reviewing iOS code for security anti-patterns, verify each item:
 1. **All SecItem calls checked** — `SecItemAdd` handles `errSecDuplicateItem` with `SecItemUpdate` fallback; `SecItemCopyMatching` handles `errSecItemNotFound`; no discarded `OSStatus` return values
 1. **Explicit data protection class** — every `SecItemAdd` includes `kSecAttrAccessible` or `kSecAttrAccessControl`; no `kSecAttrAccessibleAlways`; `ThisDeviceOnly` variants used for non-syncing items
 1. **No nonce reuse** — `AES.GCM.seal` called without explicit `nonce:` parameter (auto-random); no stored/global/counter-based nonce variables
-1. **No broken hashes** — no `Insecure.MD5`, `Insecure.SHA1`, `CC_MD5`, `CC_SHA1` for security purposes; passwords use KDF (Argon2id, bcrypt, PBKDF2 with ≥310,000 iterations)
+1. **No broken hashes** — no `Insecure.MD5`, `Insecure.SHA1`, `CC_MD5`, `CC_SHA1` for security purposes; passwords use KDF (Argon2id, bcrypt, PBKDF2-HMAC-SHA256 with ≥600,000 iterations)
 1. **No sensitive data in logs** — `print()` and `NSLog()` never contain tokens, keys, or credentials; `os_log` uses `%{private}@`; `Logger` uses `.private` or `.private(mask: .hash)`
 1. **First-launch keychain cleanup** — `UserDefaults` flag + `SecItemDelete` for all classes runs before SDK initialization at app startup
 1. **Cryptographic RNG only** — `SecRandomCopyBytes` or CryptoKit APIs for tokens, nonces, salts, keys; no `arc4random` / `rand()` / `drand48()` / GameplayKit RNG in security contexts

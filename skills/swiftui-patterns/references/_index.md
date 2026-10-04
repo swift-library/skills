@@ -25,17 +25,17 @@ Use this index only when `SKILL.md` routing is not enough.
   already established.
 - `sheet-navigation-patterns.md`: sheets, navigation, split views, inspectors.
 - `scroll-patterns.md`: `ScrollViewReader`, scroll position, scroll effects.
-- `focus-patterns.md`: route stub for SwiftUI focus knowledge owned by
-  `focus-engine-patterns`.
+- `focus-patterns.md`: basic SwiftUI `@FocusState` reminders and the
+  dedicated-focus boundary.
 
 ## UI Quality
 
-- `accessibility-patterns.md`: route stub for SwiftUI accessibility knowledge
-  owned by `accessibility-patterns`.
+- `accessibility-basics.md`: basic SwiftUI accessibility reminders and the
+  dedicated-audit boundary.
 - `text-patterns.md`: localized vs verbatim `Text`.
 - `image-optimization.md`: `AsyncImage`, image decoding, downsampling, caching.
-- `performance-patterns.md`: route stub for SwiftUI source-level performance
-  knowledge owned by `swiftui-performance`.
+- `performance-patterns.md`: incidental SwiftUI performance reminders and the
+  dedicated-performance boundary.
 
 ## Motion
 
@@ -45,7 +45,7 @@ Use this index only when `SKILL.md` routing is not enough.
 
 ## Platform And Tools
 
-- `liquid-glass.md`: iOS 26+ Liquid Glass and fallback patterns.
+- `liquid-glass.md`: platform SDK 26+ Liquid Glass and fallback patterns.
 - `macos-scenes.md`: macOS scenes, windows, settings, menu bar extras, and
   menu-bar-only utility rules.
 - `macos-window-styling.md`: macOS window and toolbar styling.
@@ -61,29 +61,35 @@ Use this index only when `SKILL.md` routing is not enough.
   placeholder, toast, overlay, input toolbar, top bar, scroll-reveal, or media
   viewer basics:
   `component-patterns.md`.
+- `Form`, `Section`, `LabeledContent`, `Label`, title-value rows, settings
+  rows, inspector rows, or manual row replacement with native SwiftUI
+  primitives:
+  `component-patterns.md`, then `layout-best-practices.md`.
+- Custom tactile patterns, AHAP files, synchronized audio-haptic feedback,
+  advanced haptic players, or `CHHapticEngine` lifecycle: out of scope.
 - App shell, TabView, NavigationStack, deep-link, or local sheet routing within
   established architecture: `app-wiring-and-routing.md`.
 - Navigation path, sheet, or inspector issue: `sheet-navigation-patterns.md`.
 - Dedicated SwiftUI view cleanup pass: `view-refactor.md`.
-- Dedicated SwiftUI performance work: use `swiftui-performance`.
+- Dedicated SwiftUI performance work: out of scope.
 - Basic SwiftUI `@FocusState` issue: `focus-patterns.md`.
 - tvOS remote focus, UIKit/AppKit focus, RealityKit hover/focus, Digital Crown
-  focus, focus restoration, or focus debugging: use `focus-engine-patterns`.
+  focus, focus restoration, or focus debugging: out of scope.
 - VoiceOver, Voice Control, Switch Control, Full Keyboard Access, Dynamic Type
   accessibility review, Accessibility Inspector, WCAG, or Nutrition Label
-  issue: use `accessibility-patterns`.
+  issue: out of scope.
 - Small SwiftUI modifier cleanup for labels, grouping, traits, or image-only
-  buttons while already doing SwiftUI source work: `accessibility-patterns.md`.
+  buttons while already doing SwiftUI source work: `accessibility-basics.md`.
 - Tap target, fixed frame, system control, or HIG-aligned layout issue:
   `layout-best-practices.md`.
 - Animation runs unexpectedly or not at all: `animation-basics.md` or
   `animation-transitions.md`.
-- Swift Charts API or accessibility issue: use `swift-charts-patterns`.
+- Swift Charts API or accessibility issue: out of scope.
 - Source-level high body updates, jank, memory growth, or performance work:
-  use `swiftui-performance`. Use `performance-patterns.md` only for
-  incidental notes during ordinary SwiftUI implementation.
+  out of scope. Use `performance-patterns.md` only for incidental notes during
+  ordinary SwiftUI implementation.
 - Instruments `.trace`, `xctrace`, hang, hitch, jank, or trace recording issue:
-  use `xcode-instruments`.
+  out of scope.
 - New API, deprecation, macOS scene, menu bar extra, or Liquid Glass
   API/fallback question:
   `latest-apis.md`, `macos-*.md`, or `liquid-glass.md`.

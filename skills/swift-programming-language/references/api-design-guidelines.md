@@ -10,7 +10,7 @@ Use this when:
 Skip this file if:
 
 - The API surface is private implementation detail with strong local precedent.
-- A domain-specific skill has more precise naming rules for the task.
+- The framework or domain in use has more precise naming rules for the task.
 
 ## Core Priority
 

@@ -26,7 +26,7 @@ Apple apps.
 
 ## When Not To Use
 
-- Do not use for playback-only media UI; use `avkit-patterns`.
+- Do not use for playback-only media UI; AVKit playback is out of scope.
 - Do not use for generic image loading unrelated to Photos or camera capture.
 - Do not use for App Store screenshots or marketing assets.
 - Do not use for visual polish of media grids unless Photos/camera behavior is
@@ -72,7 +72,7 @@ Apple apps.
   variants when the workflow supports them.
 - Do not store persistent access to user assets without a clear data model and
   authorization story.
-- Keep playback-only concerns in `avkit-patterns`.
+- Keep playback-only concerns out of photo and capture code.
 
 ## Validation
 

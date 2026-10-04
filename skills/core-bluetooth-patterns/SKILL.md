@@ -24,10 +24,8 @@ Bluetooth runtime state.
 
 ## When Not To Use
 
-- Do not use for AccessorySetupKit picker-based setup; use
-  `accessorysetupkit-patterns`.
-- Do not use for AudioAccessoryKit placement/capability state; use
-  `audioaccessorykit-patterns`.
+- Do not use for AccessorySetupKit picker-based setup.
+- Do not use for AudioAccessoryKit placement/capability state.
 - Do not use for NFC, Network.framework, or ordinary HTTP networking.
 - Do not use for hardware product strategy without Core Bluetooth code.
 - Do not invent background privileges, platform support, or Bluetooth Classic

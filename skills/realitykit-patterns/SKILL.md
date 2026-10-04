@@ -28,11 +28,10 @@ performance.
 ## When Not To Use
 
 - Do not use for SceneKit-only maintenance unless migration to RealityKit is the
-  task; use `scenekit-patterns`.
-- Do not use for SpriteKit 2D scenes; use `spritekit-patterns`.
-- Do not use for TabletopKit game-state semantics; use
-  `tabletopkit-patterns`.
-- Do not use for Focus Engine-only focus movement; use `focus-engine-patterns`.
+  task.
+- Do not use for SpriteKit 2D scenes.
+- Do not use for TabletopKit game-state semantics.
+- Do not use for Focus Engine-only focus movement.
 - Do not use for low-level Metal rendering unless RealityKit integration is the
   issue.
 

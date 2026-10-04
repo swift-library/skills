@@ -13,9 +13,8 @@ technology support, Dynamic Type, display settings, input alternatives,
 manual verification, automated checks, and App Store Accessibility Nutrition
 Label recommendations.
 
-The skill name follows Apple's Accessibility framework and accessibility
-documentation category. Do not assume every API comes from `import
-Accessibility`; many app UI APIs live in SwiftUI, UIKit, or AppKit.
+Do not assume every API comes from `import Accessibility`; many app UI APIs
+live in SwiftUI, UIKit, or AppKit.
 
 ## When To Use
 
@@ -35,14 +34,13 @@ Accessibility`; many app UI APIs live in SwiftUI, UIKit, or AppKit.
 
 - Do not use for general SwiftUI state, layout, navigation, animation, source
   performance, macOS windows, or Liquid Glass unless the issue is explicitly
-  accessibility-related; use `swiftui-patterns`.
+  accessibility-related.
 - Do not use for Swift Charts implementation or chart-specific accessibility
-  descriptors; use `swift-charts-patterns`.
-- Do not use for visual design polish without an accessibility goal; use
-  `swiftui-design` or `widgetkit-design`.
+  descriptors.
+- Do not use for visual design polish without an accessibility goal.
 - Do not use for general Focus Engine behavior, tvOS remote focus, UIKit/AppKit
   focus systems, SwiftUI `@FocusState`, focus restoration, or focus debugging
-  unless accessibility is the concrete goal; use `focus-engine-patterns`.
+  unless accessibility is the concrete goal.
 - Do not use for SwiftData, Core Data, networking, package architecture,
   dependency replacement, or repository documentation.
 - Do not present Nutrition Label or WCAG output as legal certification.
@@ -96,8 +94,8 @@ Accessibility`; many app UI APIs live in SwiftUI, UIKit, or AppKit.
   recommendation workflow and WCAG mapping boundaries.
 - `references/wcag-mapping.md`: WCAG 2.2 A/AA mapping for Apple-platform
   findings.
-- `references/media.md`: captions, audio descriptions, speech, media, and
-  chart-accessibility routing.
+- `references/media.md`: captions, audio descriptions, speech, media, and the
+  chart-accessibility boundary.
 - `references/assistive-access.md`: Assistive Access app declarations, scenes,
   design rules, and testing.
 - `references/platform-specifics.md`: macOS, Catalyst, watchOS, tvOS,
@@ -172,4 +170,4 @@ For Nutrition Label work, return:
 - If a fix needs product copy or design-system changes, identify the dependency
   instead of silently rewriting the UI.
 - If a task requires chart-specific descriptors, source-level SwiftUI
-  architecture, or visual redesign, route that part to the relevant skill.
+  architecture, or visual redesign, state that part is out of scope.

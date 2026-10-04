@@ -31,8 +31,7 @@ handoff, Wallet passes, and pass-library access.
 - Do not use for pricing strategy, market commerce planning, or payment copy.
 - Do not use for generic payment-provider SDK behavior unless Apple Pay or
   Wallet PassKit code is in scope.
-- Do not use for release signing/provisioning alone; use
-  `apple-platform-release`.
+- Do not use for release signing/provisioning alone.
 - Do not invent regional payment rules, merchant configuration requirements, or
   payment-network availability. Verify current Apple documentation, portal
   setup, and processor requirements.

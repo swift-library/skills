@@ -8,7 +8,7 @@ Use this when:
 
 Skip this file if:
 
-- You need time-based operators like debounce, throttle, or merge. Use `async-algorithms.md`.
+- You need time-based operators like debounce or timers, rate limiting, or merge. Use `async-algorithms.md`.
 - You are choosing between `Task`, `async let`, or task groups. Use `tasks.md`.
 
 Jump to:
@@ -535,9 +535,9 @@ for await value in stream {
 
 ### Use AsyncAlgorithms when:
 
-- **Time-based operations** need debounce/throttle/timer
+- **Time-based operations** need debounce or a timer
 - **Combining multiple async sequences** (merge, combineLatest, zip)
-- **Multi-consumer scenarios** require backpressure (AsyncChannel)
+- **Task-to-task handoff** needs backpressure (AsyncChannel), or **several consumers** need every value (`share()`)
 - **Complex operator chains** that Combine would handle naturally
 - **Need specific operators** not in standard library
 
@@ -553,12 +553,13 @@ for await value in stream {
 | Need | Solution |
 |------|----------|
 | Debounce search input | ✅ AsyncAlgorithms.debounce() |
-| Throttle button clicks | ✅ AsyncAlgorithms.throttle() |
+| Rate-limit button taps | Last-accepted-instant guard with `ContinuousClock` (AsyncAlgorithms only has underscored `_throttle()`) |
 | Merge independent streams | ✅ AsyncAlgorithms.merge() |
 | Combine dependent values | ✅ AsyncAlgorithms.combineLatest() or async let |
 | Pair values from two sources | ✅ AsyncAlgorithms.zip() |
 | Bridge callback API | AsyncStream |
-| Multi-consumer with backpressure | ✅ AsyncChannel |
+| Handoff between tasks with backpressure | ✅ AsyncChannel |
+| Every consumer receives every value | ✅ AsyncAlgorithms `share()` (1.1+) |
 | Periodic timer | ✅ AsyncTimerSequence |
 | Simple async iteration | for await in... |
 
@@ -724,5 +725,5 @@ AsyncStream { continuation in
 func fetchUser() -> AsyncStream<User> { ... } // Overkill for one result
 ```
 
-- **Sharing a single `AsyncStream` between multiple consumers**: Values split unpredictably. There is no built-in broadcast; use `AsyncChannel` for point-to-point multi-consumer patterns.
+- **Sharing a single `AsyncStream` between multiple consumers**: Values split unpredictably. `AsyncStream` and `AsyncChannel` do not broadcast; each value goes to one consumer. Use AsyncAlgorithms `share()` (1.1+) when every consumer needs every value.
 - **Forgetting `onTermination`** when bridging delegate or observer APIs, causing resources to leak.

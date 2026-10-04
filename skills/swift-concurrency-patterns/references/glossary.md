@@ -107,27 +107,27 @@ Wait for a period of inactivity before emitting a value. Used to reduce API call
 
 ## Throttle
 
-Emit at most one value per time interval, discarding intermediate values. Used to prevent excessive calls from repeated actions like button taps. Implemented as `throttle(for:clock:reducing:)` in AsyncAlgorithms.
+Emit at most one value per time interval, discarding intermediate values. Used to prevent excessive calls from repeated actions like button taps. swift-async-algorithms 1.x has no stable throttle: it ships only as underscored `_throttle(for:clock:latest:)` and `_throttle(for:clock:reducing:)`, which are outside the stable API. A guard on the last accepted `ContinuousClock` instant is the stable alternative.
 
 ## Merge (AsyncAlgorithms)
 
-Combine multiple asynchronous sequences into one, emitting values as they arrive from any source. Order is interleaved based on emission timing. Stable operator.
+Combine two or three asynchronous sequences into one, emitting values as they arrive from any source. Order is interleaved based on emission timing. Free function `merge(_:_:)` / `merge(_:_:_:)`. Stable operator.
 
 ## CombineLatest (AsyncAlgorithms)
 
-Combine multiple asynchronous sequences, emitting a tuple whenever any source emits a new value. Always uses the latest value from each sequence. Stable operator.
+Combine two or three asynchronous sequences, emitting a tuple whenever any source emits a new value. Always uses the latest value from each sequence. Free function `combineLatest(_:_:)` / `combineLatest(_:_:_:)`. Stable operator.
 
 ## Zip (AsyncAlgorithms)
 
-Combine multiple asynchronous sequences by pairing elements in order. Waits for all sequences to emit before producing a tuple. Stable operator.
+Combine two or three asynchronous sequences by pairing elements in order. Waits for all sequences to emit before producing a tuple. Free function `zip(_:_:)` / `zip(_:_:_:)`. Stable operator.
 
 ## AsyncChannel
 
-An AsyncSequence with backpressure sending semantics. Allows multiple producers to send values safely to multiple consumers with flow control. Stable operator.
+An AsyncSequence with backpressure sending semantics. Multiple producers can send values safely; each value goes to one awaiting consumer, so it does not broadcast. Use `share()` (swift-async-algorithms 1.1+) to broadcast. Stable operator.
 
 ## AsyncThrowingChannel
 
-Like AsyncChannel but can emit errors through the stream. Stable operator.
+Like AsyncChannel but can finish with an error through `fail(_:)`. Stable operator.
 
 ## AsyncTimerSequence
 

@@ -51,7 +51,7 @@ Use `@Transient` for runtime-only state that must not be stored.
 
 - Base SwiftData model macros are available from iOS 17.
 - `#Unique` and `#Index` are available from iOS 18.
-- Inheritance support appears in newer updates and examples (check deployment targets before adopting in shared code paths).
+- Model inheritance is available from iOS 26 (check deployment targets before adopting in shared code paths).
 
 ## Example Pattern
 

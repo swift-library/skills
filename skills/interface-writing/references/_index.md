@@ -21,9 +21,11 @@ Use this index only when `SKILL.md` routing is not enough.
 - Error, validation message, empty state, onboarding, setting, tooltip,
   notification, or CLI output: `interface-patterns.md`.
 - Accessibility label wording only: `interface-patterns.md`.
+- Source strings, SwiftUI `Text`, CLI output, localization-risk notes,
+  placeholders, terminology drift in implemented UI, or design-copy handoff:
+  `interface-patterns.md`, then `voice-and-tone.md`.
 - Official Apple writing, terminology, style-guide, or freshness checks:
   `apple-sources.md`.
 - Assistive-technology behavior, Accessibility Inspector, WCAG, or Nutrition
-  Label work: use `accessibility-patterns`.
-- Visual design, spacing, typography, or native UI polish: use
-  `swiftui-design` or the relevant design skill.
+  Label work: out of scope.
+- Visual design, spacing, typography, or native UI polish: out of scope.

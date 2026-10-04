@@ -27,11 +27,11 @@ coordinating microphone/audio pipeline state.
 ## When Not To Use
 
 - Do not use for Natural Language post-processing unless Speech transcription
-  is also in scope; use `natural-language-patterns`.
-- Do not use for AVKit playback or media-player UI; use `avkit-patterns`.
+  is also in scope.
+- Do not use for AVKit playback or media-player UI.
 - Do not use for server transcription APIs, voice AI products, or prompt
   marketing.
-- Do not use for generic permission dialog text only; use `interface-writing`.
+- Do not use for generic permission dialog text only.
 - Do not invent recognition limits, locale support, asset behavior, or modern
   Speech API availability. Verify current Apple documentation and the local
   SDK.
@@ -63,8 +63,8 @@ coordinating microphone/audio pipeline state.
    treating long-file behavior as equivalent to live dictation.
 6. For on-device recognition, verify support for the locale and API path rather
    than assuming it from device class.
-7. Keep transcript post-processing separate from recognition lifecycle and route
-   deterministic text analysis to `natural-language-patterns` when needed.
+7. Keep transcript post-processing separate from recognition lifecycle; treat
+   deterministic text analysis as Natural Language work outside this skill.
 
 ## Review Rules
 

@@ -23,6 +23,29 @@ import Testing
 
 ## Practical migration order
 
+### Swift 6.4 Interoperability
+
+Swift 6.4 supports deliberate XCTest/Swift Testing assertion interoperability.
+Inspect the toolchain, manifest tools version and
+`SWIFT_TESTING_XCTEST_INTEROP_MODE` before reusing helpers:
+
+- `limited`: default with older SwiftPM tools versions; Swift Testing assertions
+  in XCTest preserve failures, but XCTest failures in Swift Testing are warnings.
+  Do not use this mode to prove failure propagation in that latter direction.
+- `complete`: default with tools-version 6.4 or newer under the supporting
+  toolchain; supports both assertion directions.
+- `strict`: XCTest API usage warnings in Swift Testing become `fatalError`;
+  supported Swift Testing assertions in XCTest still preserve failures.
+- `none`: disable interoperability support.
+
+The environment variable can select a supported mode without raising the
+package's tools version. Test the actual runner configuration with an
+intentionally failing helper: failure must still fail the test and CI process.
+Keep older toolchains on the existing safe native-assertion path. Prefer
+`#expect`/`#require` for new Swift Testing code; interoperability allows gradual
+reuse and does not replace XCTest UI automation or metrics.
+Sources and version checks are in `official-sources.md`.
+
 1. Convert assertions to `#expect` / `#require`.
 2. Replace `test...` naming constraints with explicit `@Test`.
 3. Reorganize classes into suites where helpful.
@@ -118,7 +141,9 @@ import Testing
 
 - Prefer mechanical, reviewable commits.
 - Use editor pattern-replace to accelerate common assertion conversions.
-- Avoid mixing XCTest assertions in Swift Testing tests (and vice versa).
+- Avoid accidental assertion mixing. Deliberate helper reuse requires a
+  supporting toolchain, an explicit interoperable mode and failure-propagation
+  verification as described above.
 
 ## Common pitfalls
 

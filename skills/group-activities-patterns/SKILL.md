@@ -26,9 +26,8 @@ media/collaboration experiences.
 
 - Do not use for generic multiplayer networking; use the app's networking or
   game-specific owner.
-- Do not use for CallKit call lifecycle; use `callkit-patterns`.
-- Do not use for AVKit-only playback without GroupActivities synchronization;
-  use `avkit-patterns`.
+- Do not use for CallKit call lifecycle.
+- Do not use for AVKit-only playback without GroupActivities synchronization.
 - Do not use for generic collaboration UI that does not create or join a group
   session.
 

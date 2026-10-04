@@ -3,6 +3,7 @@
 > This reference summarizes modern SwiftUI API replacements from Apple documentation comparisons.
 
 ## Table of Contents
+- [Xcode 27 And OS 27](#xcode-27-and-os-27)
 - [Always Use (iOS 15+)](#always-use-ios-15)
 - [When Targeting iOS 16+](#when-targeting-ios-16)
 - [When Targeting iOS 17+](#when-targeting-ios-17)
@@ -10,6 +11,27 @@
 - [When Targeting iOS 26+](#when-targeting-ios-26)
 
 ---
+
+## Xcode 27 And OS 27
+
+Separate compiler behavior from runtime availability:
+
+- `@State` initialization changes come with Xcode 27 and can back-deploy to
+  iOS 17/macOS 14; see `state-management.md`.
+- ContentBuilder changes type checking and can expose source incompatibilities;
+  it is not evidence of improved runtime frame time. Use TN3211 from
+  `official-sources.md` for the exact diagnostic.
+- Prefer closure forms of `overlay`/`background` for builder ambiguities;
+  qualify ambiguous types by module and prefer opaque result types where
+  appropriate. Preserve the old-target branch when an explicit TupleView or
+  empty MapKit builder needs a compatibility fix.
+- OS 27 adds HTTP caching and request/session configuration for `AsyncImage`;
+  see `image-optimization.md`. Gate new APIs independently from the compiler.
+- `reorderContainer` and `swipeActionsContainer` are OS 27 APIs and unavailable
+  on tvOS in the 27 SDK. Verify each target declaration before adoption.
+
+Keep the project's deployment target and older API paths. Consult the current
+SDK when a session example and a declaration differ.
 
 ## Always Use (iOS 15+)
 
@@ -21,8 +43,8 @@ These replacements have minimal API shape changes. Most are near-direct swaps; a
 
 - **`navigationTitle(_:)`** instead of `navigationBarTitle(_:)`
 - **`toolbar { ToolbarItem(...) }`** instead of `navigationBarItems(...)` (structural change)
-- **`toolbarVisibility(.hidden, for: .navigationBar)`** instead of `navigationBarHidden(_:)`
-- **`statusBarHidden(_:)`** instead of `statusBar(hidden:)`
+- **`toolbarVisibility(.hidden, for: .navigationBar)`** (iOS 18+; `toolbar(.hidden, for: .navigationBar)` on iOS 16-17) instead of `navigationBarHidden(_:)`
+- **`statusBarHidden(_:)`** instead of `statusBar(hidden:)`; the 27 SDK marks `statusBarHidden(_:)` to be deprecated in favor of `toolbarVisibility(_:for: .statusBar)`, which requires iOS 27
 - **`ignoresSafeArea(_:edges:)`** instead of `edgesIgnoringSafeArea(_:)`
 - **`preferredColorScheme(_:)`** instead of `colorScheme(_:)`
 - **`foregroundStyle(_:)`** instead of `foregroundColor(_:)` (e.g., `.foregroundStyle(.primary)`)
@@ -182,6 +204,9 @@ The deprecated variant passes only the new value. The modern variants provide ei
 **Prefer `sensoryFeedback(_:trigger:)` and related overloads instead of `UIImpactFeedbackGenerator`, `UISelectionFeedbackGenerator`, and `UINotificationFeedbackGenerator` in SwiftUI views.**
 
 Attach haptics declaratively to the view that owns the state change, rather than imperatively firing UIKit generators inside button actions.
+Custom tactile patterns, AHAP resources, synchronized audio-haptic playback,
+and `CHHapticEngine` lifecycle are out of scope; do not embed Core Haptics
+engine code in a SwiftUI view.
 
 ```swift
 @State private var isFavorite = false
@@ -245,7 +270,7 @@ When using `Tab(role:)`, all tabs must use the `Tab` syntax. Mixing `Tab(role:)`
 **Use `@Previewable` for dynamic properties in previews.**
 
 ```swift
-// Modern (iOS 18+)
+// @Previewable requires iOS 17+
 #Preview {
     @Previewable @State var isOn = false
     Toggle("Setting", isOn: $isOn)
@@ -388,7 +413,7 @@ NavigationStack {
 
 ### Animations
 
-**Use `@Animatable` macro instead of manual `animatableData` declarations.** The macro auto-synthesizes `animatableData` from all animatable properties. Use `@AnimatableIgnored` to exclude specific properties.
+**Use `@Animatable` macro instead of manual `animatableData` declarations.** The macro auto-synthesizes `animatableData` from all animatable properties. Use `@AnimatableIgnored` to exclude specific properties. The SDK declares the macro for iOS 13 and later, so it does not require an iOS 26 deployment target.
 
 ```swift
 @Animatable
@@ -405,18 +430,21 @@ struct Wedge: Shape {
 
 ### Presentations
 
-**Use `navigationZoomTransition` to morph sheets out of their source view.** Toolbar items and buttons can serve as the transition source.
+**Use zoom navigation transitions to morph presentations out of their source
+view.** On iOS 26 and later, toolbar items and buttons can serve as the source
+through `matchedTransitionSource(id:in:)`, and the destination uses
+`.navigationTransition(.zoom(sourceID:in:))`.
 
 ```swift
 .toolbar {
     ToolbarItem {
         Button("Add", systemImage: "plus") { showSheet = true }
-            .navigationTransitionSource(id: "addSheet", namespace: namespace)
+            .matchedTransitionSource(id: "addSheet", in: namespace)
     }
 }
 .sheet(isPresented: $showSheet) {
     AddItemView()
-        .navigationTransitionDestination(id: "addSheet", namespace: namespace)
+        .navigationTransition(.zoom(sourceID: "addSheet", in: namespace))
 }
 ```
 
@@ -432,23 +460,22 @@ Button("Get Started") { }
     .controlSize(.extraLarge)
 ```
 
-**Use `concentric` corner style for buttons that match their container's corners.**
+**Use concentric corners for buttons that match their container's corners.**
 
 ```swift
 Button("Confirm") { }
-    .clipShape(.rect(cornerRadius: 12, style: .concentric))
+    .clipShape(.rect(corners: .concentric))
 ```
 
-**Sliders now support tick marks and a neutral value.**
+**On iOS 26 and later, sliders support tick marks and a neutral value.**
 
 ```swift
-Slider(value: $speed, in: 0.5...2.0, step: 0.25) {
+Slider(value: $speed, in: 0.5...2.0, neutralValue: 1.0) {
     Text("Speed")
 } ticks: {
-    SliderTick(value: 0.6)
-    SliderTick(value: 0.9)
+    SliderTick(0.6)
+    SliderTick(0.9)
 }
-.sliderNeutralValue(1.0)
 ```
 
 > Source: "Build a SwiftUI app with the new design" (WWDC25, session 323)
@@ -480,22 +507,22 @@ WebView(url: URL(string: "https://example.com")!)
 
 WebView(page)
     .onAppear { page.load(URLRequest(url: myURL)) }
-    .navigationTitle(page.title ?? "")
+    .navigationTitle(page.title)
 ```
 
 > Source: "Meet WebKit for SwiftUI" (WWDC25, session 231)
 
 ### Drag and Drop
 
-**Use `dragContainer` for multi-item drag operations.** Combine with `DragConfiguration` for custom drag behavior and `onDragSessionUpdated` to observe events.
+**Use `dragContainer` for multi-item drag operations.** Combine with `DragConfiguration` for custom drag behavior and `onDragSessionUpdated` to observe events. These APIs require macOS 26 or iOS and visionOS 27, and the `.delete` drop operation is macOS-only.
 
 ```swift
 PhotoGrid(photos: photos)
-    .dragContainer(for: Photo.self) { selection in
-        return selection.map { $0.transferable }
+    .dragContainer(for: Photo.self) { draggedIDs in
+        photos.filter { draggedIDs.contains($0.id) }
     }
     .onDragSessionUpdated { session in
-        if session.phase == .endedWithDelete {
+        if case .ended(.delete) = session.phase {
             deleteSelectedPhotos()
         }
     }
@@ -505,7 +532,7 @@ PhotoGrid(photos: photos)
 
 ### Scene Bridging
 
-**UIKit and AppKit lifecycle apps can now request SwiftUI scenes.** This enables using SwiftUI-only scene types like `MenuBarExtra` and `ImmersiveSpace` from imperative lifecycle apps via `UIApplication.shared.activateSceneSession(for:errorHandler:)`.
+**On iOS 26 and macOS 26 and later, UIKit and AppKit lifecycle apps can request SwiftUI scenes.** This enables using SwiftUI-only scene types like `MenuBarExtra` and `ImmersiveSpace` from imperative lifecycle apps via `UIApplication.shared.activateSceneSession(for:errorHandler:)`.
 
 > Source: "What's new in SwiftUI" (WWDC25, session 256)
 
@@ -517,8 +544,7 @@ PhotoGrid(photos: photos)
 |-----------|-------------|-------|
 | `navigationBarTitle(_:)` | `navigationTitle(_:)` | iOS 15+ |
 | `navigationBarItems(...)` | `toolbar { ToolbarItem(...) }` | iOS 15+ |
-| `navigationBarHidden(_:)` | `toolbarVisibility(.hidden, for: .navigationBar)` | iOS 15+ |
-| `statusBar(hidden:)` | `statusBarHidden(_:)` | iOS 15+ |
+| `statusBar(hidden:)` | `statusBarHidden(_:)`; `toolbarVisibility(_:for: .statusBar)` on iOS 27+ | iOS 15+ |
 | `edgesIgnoringSafeArea(_:)` | `ignoresSafeArea(_:edges:)` | iOS 15+ |
 | `colorScheme(_:)` | `preferredColorScheme(_:)` | iOS 15+ |
 | `foregroundColor(_:)` | `foregroundStyle(_:)` | iOS 15+ |
@@ -531,7 +557,9 @@ PhotoGrid(photos: photos)
 | `TextField` `onCommit`/`onEditingChanged` | `onSubmit` + `focused` | iOS 15+ |
 | `animation(_:)` (no value) | `animation(_:value:)` | Back-deploys (iOS 13+) |
 | Manual `EnvironmentKey` | `@Entry` macro | Back-deploys (Xcode 16+) |
+| Manual `animatableData` | `@Animatable` macro | Back-deploys (iOS 13+) |
 | `NavigationView` | `NavigationStack` / `NavigationSplitView` | iOS 16+ |
+| `navigationBarHidden(_:)` | `toolbar(.hidden, for: .navigationBar)`; `toolbarVisibility(.hidden, for: .navigationBar)` on iOS 18+ | iOS 16+ |
 | `.navigationBarLeading` / `.navigationBarTrailing` | `.topBarLeading` / `.topBarTrailing` | iOS 16+ |
 | `accentColor(_:)` | `tint(_:)` | iOS 16+ |
 | `disableAutocorrection(_:)` | `autocorrectionDisabled(_:)` | iOS 16+ |
@@ -544,7 +572,6 @@ PhotoGrid(photos: photos)
 | `coordinateSpace(name:)` | `coordinateSpace(.named(...))` | iOS 17+ |
 | `ObservableObject` | `@Observable` | iOS 17+ |
 | `tabItem(_:)` | `Tab` API | iOS 18+ |
-| Manual `animatableData` | `@Animatable` macro | iOS 26+ |
 | Wrapped `WKWebView` for ordinary web content | `WebView` | iOS 26+ |
 | `presentationBackground(_:)` on sheets | Default Liquid Glass sheet material | iOS 26+ |
 | Custom toolbar background hacks | `scrollEdgeEffectStyle(_:for:)` | iOS 26+ |

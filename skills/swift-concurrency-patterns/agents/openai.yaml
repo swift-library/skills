@@ -1,5 +1,5 @@
 interface:
-  display_name: "Swift Concurrency"
+  display_name: "Swift Concurrency Patterns"
   short_description: "Diagnose and modernize Swift Concurrency code"
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"

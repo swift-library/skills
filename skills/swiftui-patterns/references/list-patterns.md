@@ -51,7 +51,7 @@ ForEach(items) { item in
     ItemRow(item: item)
 }
 
-// Bad - variable view count breaks identity
+// Costly in lazy containers - variable leaf count obscures sizing and indexing
 ForEach(items) { item in
     if item.isSpecial {
         SpecialRow(item: item)
@@ -62,26 +62,30 @@ ForEach(items) { item in
 }
 ```
 
-**Avoid inline filtering:**
+**Filter at the data level and keep stable IDs.** Filtering does not itself
+change an item's identity. Repeated filtering can be costly; cache derived data
+only when its owner initializes and invalidates it correctly. For small inputs,
+a direct filter can be sufficient.
 
 ```swift
-// Bad - unstable identity, changes on every update
+// Stable item IDs, but repeats filtering whenever this body is evaluated
 ForEach(items.filter { $0.isEnabled }) { item in
     ItemRow(item: item)
 }
 
-// Good - prefilter and cache
-@State private var enabledItems: [Item] = []
+// The data owner supplies initialized, current derived data
+let enabledItems: [Item]
 
 var body: some View {
     ForEach(enabledItems) { item in
         ItemRow(item: item)
     }
-    .onChange(of: items) { _, newItems in
-        enabledItems = newItems.filter { $0.isEnabled }
-    }
 }
 ```
+
+Do not initialize a derived cache to an empty array and update it only after
+the input changes: that loses the initial result. Keep filtering with its data
+owner rather than duplicating model state in a view merely for style.
 
 **Avoid `AnyView` in list rows:**
 

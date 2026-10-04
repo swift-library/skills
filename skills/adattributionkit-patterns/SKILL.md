@@ -26,10 +26,9 @@ postback handling, and testing boundaries.
 
 ## When Not To Use
 
-- Do not use for campaign strategy, ASO, or market reporting; use
-  market-operation skills.
+- Do not use for campaign strategy, ASO, or market reporting.
 - Do not use for StoreKit purchase implementation unless attribution is the
-  issue; use `storekit-patterns`.
+  issue.
 - Do not use for generic analytics SDK integration without AdAttributionKit.
 - Do not treat attribution output as user-level tracking.
 

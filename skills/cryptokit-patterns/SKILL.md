@@ -1,18 +1,13 @@
 ---
 name: cryptokit-patterns
-description: >-
-  Use for CryptoKit cryptography in Swift or Apple-platform code: AES-GCM,
-  ChaChaPoly, HMAC, SHA, SymmetricKey, HKDF/PBKDF2, P256/P384/P521,
-  Curve25519, ECDSA/ECDH, HPKE, ML-KEM/ML-DSA, Secure Enclave, nonce/key
-  derivation, crypto migration/review/tests. Do not use for Keychain
-  CRUD/storage or certificate trust/TLS pinning.
+description: Use for CryptoKit cryptography in Swift or Apple-platform code across AES-GCM, ChaChaPoly, HMAC, SHA, SymmetricKey, HKDF/PBKDF2, P256/P384/P521, Curve25519, ECDSA/ECDH, HPKE, ML-KEM/ML-DSA, Secure Enclave, nonce/key derivation, crypto migration/review/tests. Do not use for Keychain CRUD/storage or certificate trust/TLS pinning.
 ---
 
 # CryptoKit Patterns
 
 Use this skill for cryptographic implementation, review, debugging, migration,
-and testing with CryptoKit and Apple-platform cryptographic APIs. Keep storage
-and trust-chain concerns routed to the sibling skills.
+and testing with CryptoKit and Apple-platform cryptographic APIs. Keychain
+storage and certificate trust-chain concerns are out of scope.
 
 ## Workflow
 
@@ -52,18 +47,17 @@ and trust-chain concerns routed to the sibling skills.
   Secure Enclave.
 - Guard Secure Enclave code for simulator and hardware availability.
 - Persist cryptographic keys through the Keychain when persistence is required;
-  coordinate with `keychain-patterns` for storage details.
+  the Keychain storage implementation itself is out of scope.
 
-## Coordination
+## Boundaries
 
-- Use `keychain-patterns` for Keychain CRUD, credential storage, access groups,
-  data protection classes, biometric-gated secret retrieval, and migration from
-  insecure stores.
-- Use `certificate-trust-patterns` for `SecTrust`, SPKI pinning, client
-  certificates, mTLS, and URLSession trust evaluation.
-- Use `swiftpm-index` when reviewing whether custom reusable crypto,
-  certificate, ASN.1, or protobuf infrastructure should be replaced by an
-  official package.
+- Keychain CRUD, credential storage, access groups, data protection classes,
+  biometric-gated secret retrieval, and migration from insecure stores are out
+  of scope.
+- `SecTrust`, SPKI pinning, client certificates, mTLS, and URLSession trust
+  evaluation are out of scope.
+- Deciding whether custom reusable crypto, certificate, ASN.1, or protobuf
+  infrastructure should be replaced by an official package is out of scope.
 
 ## Output
 

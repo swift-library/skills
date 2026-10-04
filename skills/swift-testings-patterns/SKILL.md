@@ -38,7 +38,7 @@ Use this skill for Swift test code and test-target design:
   scope.
 - Do not use for production-code concurrency design, actor isolation,
   `Sendable`, or Swift 6 strict-concurrency migration unless the concrete
-  issue is test structure. Use `swift-concurrency-patterns` for broader work.
+  issue is test structure.
 - Do not use for deep SwiftUI implementation, SwiftData/Core Data persistence,
   package architecture, dependency replacement, or repository documentation.
 

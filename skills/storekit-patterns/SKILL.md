@@ -30,7 +30,7 @@ entitlements, and tests purchase flows.
 - Do not use for App Store Connect operations unless they directly block local
   StoreKit code validation.
 - Do not use for release signing, provisioning, archive/export, or upload
-  readiness; use `apple-platform-release`.
+  readiness.
 - Do not use for non-StoreKit payment integrations.
 - Do not invent App Review policy, external purchase rules, offer availability,
   or StoreKit regional behavior. Verify current Apple policy, App Store

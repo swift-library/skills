@@ -10,8 +10,8 @@ description: Use this skill for AuthenticationServices implementation and review
 Guide implementation, review, and troubleshooting for AuthenticationServices
 flows in Swift and Apple-platform apps. This skill owns app-side system
 authentication surfaces such as Sign in with Apple, passkeys, password AutoFill,
-and web authentication sessions, while storage and local secret protection stay
-with the relevant security skills.
+and web authentication sessions; credential storage and local secret
+protection are out of scope.
 
 ## When To Use
 
@@ -35,7 +35,7 @@ with the relevant security skills.
   validation handoff.
 - Do not use for embedded `WKWebView` login surfaces; prefer system web
   authentication unless the task explicitly requires embedded web content.
-- Do not use for broad account UX copy; use `interface-writing` for wording.
+- Do not use for broad account UX copy or wording.
 
 ## Inputs To Inspect
 
@@ -65,8 +65,9 @@ with the relevant security skills.
    lifetime, cookie/ephemeral expectations, and external browser boundaries.
 6. For passkeys and password AutoFill, verify domain association, credential
    creation/retrieval, user verification expectations, and fallback behavior.
-7. Route storage of refresh tokens, local secrets, or biometric-protected access
-   to `keychain-patterns` when implementation goes beyond the auth flow.
+7. Treat storage of refresh tokens, local secrets, or biometric-protected access
+   as Keychain work outside this skill when implementation goes beyond the auth
+   flow.
 8. Test denied, cancelled, revoked, expired, existing-account, and first-run
    states where feasible.
 

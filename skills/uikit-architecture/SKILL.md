@@ -1,15 +1,6 @@
 ---
 name: uikit-architecture
-description: >-
-  Use this skill for UIKit app, feature, or module architecture selection,
-  review, refactoring, or scaffolding involving MVC-to-MVP/MVVM/VIPER
-  migration, Presenter/ViewModel/Interactor boundaries, Coordinator or Router
-  navigation, Clean Architecture adapters, Combine/RxSwift presentation
-  pipelines, UIViewController responsibility cleanup, dependency injection,
-  async cancellation, testability, or UIKit and SwiftUI interop ownership. Do
-  not use for SwiftUI-only architecture, SwiftUI view implementation, visual
-  design, accessibility audits, local Swift Package architecture review,
-  persistence schema work, or deep Swift Concurrency diagnostics.
+description: Use this skill for UIKit app, feature, or module architecture selection, review, refactoring, or scaffolding involving MVC-to-MVP/MVVM/VIPER migration, Presenter/ViewModel/Interactor boundaries, Coordinator or Router navigation, Clean Architecture adapters, Combine/RxSwift presentation pipelines, UIViewController responsibility cleanup, dependency injection, async cancellation, testability, or UIKit and SwiftUI interop ownership. Do not use for SwiftUI-only architecture, SwiftUI view implementation, visual design, accessibility audits, local Swift Package architecture review, persistence schema work, or deep Swift Concurrency diagnostics.
 ---
 
 # UIKit Architecture
@@ -36,18 +27,14 @@ Architecture adapters, and reactive presentation pipelines.
 
 ## When Not To Use
 
-- Do not use for SwiftUI-only app or feature architecture; use
-  `swiftui-architecture`.
+- Do not use for SwiftUI-only app or feature architecture.
 - Do not use for SwiftUI view layout, state wrapper usage, animation, or
-  navigation modifier behavior; use `swiftui-patterns`.
-- Do not use for visual polish or native UI feel; use `swiftui-design` when the
-  UI is SwiftUI, otherwise answer from local UIKit context without using this
-  skill for visual design.
-- Do not use for dedicated accessibility audits; use `accessibility-patterns`.
-- Do not use for local Swift Package target/module architecture; use
-  `swiftpm-architecture`.
+  navigation modifier behavior.
+- Do not use for visual polish or native UI feel.
+- Do not use for dedicated accessibility audits.
+- Do not use for local Swift Package target/module architecture.
 - Do not use for deep Swift Concurrency diagnostics, actor isolation, or
-  `Sendable` migration; use `swift-concurrency-patterns`.
+  `Sendable` migration.
 
 ## Workflow
 

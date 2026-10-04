@@ -26,8 +26,7 @@ playback queues.
 
 ## When Not To Use
 
-- Do not use for generic video playback or AVKit player UI; use
-  `avkit-patterns`.
+- Do not use for generic video playback or AVKit player UI.
 - Do not use for StoreKit purchases or in-app subscriptions.
 - Do not use for non-Apple streaming services unless an Apple-platform app also
   uses MusicKit.

@@ -1,6 +1,6 @@
 ---
 name: ios-simulator
-description: Use this skill for iOS Simulator automation and diagnostics when work involves xcrun simctl, simulator device list/suggest/create/boot/shutdown/erase/delete, environment health checks, installing or launching .app bundles, app state, opening deep links, screenshots, simulator status bar overrides, clipboard paste setup, simulator permissions, simulated push notifications, simulator logs or log streaming, xcodebuild build/test runs for iOS Simulator destinations, xcresult summaries and drill-down, visual screenshot diffs, app state capture, test evidence recording, Core Data or SwiftData model inspection from project files, or optional IDB semantic UI interaction such as accessibility-tree inspection, screen mapping, accessibility-tree audit, tapping by text/type/id, typing, special keys, hardware buttons, swiping, scrolling, long press, pinch, or refresh. Do not use for Xcode Instruments .trace analysis, source-only SwiftUI or UIKit code review, dedicated accessibility audits, Core Data schema design, SwiftData schema design, networking, package architecture, or repository documentation.
+description: Use for iOS Simulator automation and diagnostics involving xcrun simctl, device list/suggest/create/boot/shutdown/erase/delete, simulator health checks, installing or launching .app bundles, app state, deep links, screenshots, status bar overrides, clipboard setup, permissions, simulated push notifications, logs, xcodebuild simulator build/test runs, xcresult summaries, visual screenshot diffs, test evidence, project-file Core Data or SwiftData model inspection, or optional IDB accessibility-tree inspection and semantic UI actions. Do not use for Instruments .trace analysis, source-only SwiftUI/UIKit review, dedicated accessibility audits, Core Data or SwiftData schema design, networking, package architecture, or repository documentation.
 ---
 
 # iOS Simulator
@@ -11,8 +11,8 @@ Provide small, script-backed workflows for operating iOS Simulator targets,
 building and testing against simulator destinations, and inspecting or driving
 simulator UI when local tools are available.
 
-This is an automation skill, not a Swift coding-pattern skill. Keep source-code
-fixes in the relevant source skill after simulator evidence identifies the
+This is an automation skill, not a Swift coding-pattern skill. Source-code
+fixes are out of scope; report the simulator evidence that identifies the
 problem.
 
 ## When To Use
@@ -35,11 +35,11 @@ problem.
 ## When Not To Use
 
 - Do not use for Xcode Instruments `.trace`, `xctrace`, Time Profiler, hangs,
-  hitches, or signpost analysis; use `xcode-instruments`.
+  hitches, or signpost analysis.
 - Do not use for source-only SwiftUI, UIKit, or architecture review without a
   simulator operation.
 - Do not use for dedicated accessibility audits, WCAG mapping, Accessibility
-  Inspector workflows, or Nutrition Labels; use `accessibility-patterns`.
+  Inspector workflows, or Nutrition Labels.
 - Do not use for Core Data or SwiftData schema design, persistence fixes,
   migration, query/context implementation, networking, package architecture,
   dependency replacement, or repository documentation. This skill may still
@@ -74,9 +74,9 @@ problem.
    asks or the first summary is insufficient.
 6. Treat IDB as optional. If `idb` is unavailable, continue with `simctl` or
    report which semantic UI operation is blocked.
-7. If simulator evidence points to a source-code fix, hand off to the relevant
-   SwiftUI, UIKit, accessibility, concurrency, persistence, or architecture
-   skill for the source change.
+7. If simulator evidence points to a source-code fix, report the evidence and
+   the affected SwiftUI, UIKit, accessibility, concurrency, persistence, or
+   architecture area; the source change is out of scope.
 
 ## Reference Files To Consult
 
@@ -89,8 +89,6 @@ problem.
   IDB.
 - `references/output.md`: concise output, JSON, failure handling, and handoff
   expectations.
-- `references/command-map.md`: capability mapping to this skill's compact
-  commands. Read when translating examples or checking execution parity.
 - `references/troubleshooting.md`: dense failure diagnosis and recovery
   commands. Read only after a command fails or the environment is unclear.
 - `references/test-patterns.md`: repeatable simulator test flows. Read only

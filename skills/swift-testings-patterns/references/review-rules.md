@@ -25,7 +25,10 @@ Use these core rules to keep Swift Testing code idiomatic rather than translatin
     ```
 - All test suites must have an initializer that expects no parameters, so they can be called by tests inside that suite. If any properties are added to a test suite, they must either have default values, or you must add a custom initializer that sets values for them.
 - Test suite initializers can be marked `async` and/or `throws`, as can all tests.
-- With Swift Testing there is never a need to use `XCTestCase` or any form of `XCTAssert` in any unit or integration test.
+- New Swift Testing unit and integration tests use native test declarations and
+  assertions. Existing XCTest helpers can be reused deliberately with Swift
+  6.4 interoperability; follow `migration-from-xctest.md` and prove that a
+  failing helper still fails the selected runner.
 - You do *not* need to prefix test methods with `test`. For example, you can use `userCanLogOut()` rather than `testUserCanLogOut`.
 - Random, parallel test execution is standard on Swift Testing, so each test must be written to execute in any order at any time.
 - Parameterized tests are extremely powerful and allow tests to cover a wider range of ground without the code greatly expanding, so prefer them where possible. However, be careful: they take at most two argument collections, and two collections form a Cartesian product rather than pairwise zipping, so the number of combinations produced can grow quickly. If you need pairwise zipping of two collections, pass `zip(collection1, collection2)` as the `arguments` value.

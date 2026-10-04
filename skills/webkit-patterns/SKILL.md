@@ -26,14 +26,14 @@ Apple-platform apps, including SwiftUI `WebView`/`WebPage` workflows and
 ## When Not To Use
 
 - Do not use for OAuth, SSO, or login browser sessions; prefer
-  `ASWebAuthenticationSession` and the relevant authentication owner.
+  `ASWebAuthenticationSession`. Authentication flow design is out of scope.
 - Do not use for general SwiftUI layout or architecture without an embedded web
   surface.
-- Do not use for generic HTTP client work; use the URLSession or networking
-  owner when that exists.
+- Do not use for generic HTTP client work.
 - Do not use for web frontend implementation outside an Apple app.
-- Do not invent new SwiftUI WebKit API behavior. Verify current Apple
-  documentation and local SDK symbols before relying on version-specific APIs.
+- Do not invent behavior for the SwiftUI WebKit APIs (`WebView`/`WebPage`, iOS,
+  macOS, and visionOS 26+). Verify current Apple documentation and local SDK
+  symbols before relying on version-specific APIs.
 
 ## Inputs To Inspect
 

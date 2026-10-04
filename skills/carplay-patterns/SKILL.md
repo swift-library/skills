@@ -27,12 +27,9 @@ display validation.
 
 - Do not use for ordinary SwiftUI/UIKit navigation that is not displayed in
   CarPlay.
-- Do not use for App Store metadata or release handoff; use market or release
-  skills as appropriate.
-- Do not use for media playback implementation without a CarPlay surface; use
-  `avkit-patterns` or `musickit-patterns`.
-- Do not use for generic map implementation without CarPlay templates; use
-  `mapkit-patterns`.
+- Do not use for App Store metadata or release handoff.
+- Do not use for media playback implementation without a CarPlay surface.
+- Do not use for generic map implementation without CarPlay templates.
 
 ## Inputs To Inspect
 

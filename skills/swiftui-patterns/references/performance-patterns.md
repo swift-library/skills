@@ -1,22 +1,18 @@
-# SwiftUI Performance Route
+# SwiftUI Performance Basics
 
-SwiftUI source-level performance knowledge belongs to
-`swiftui-performance`.
-
-Use this route only when ordinary SwiftUI implementation touches a small
+Use this file only when ordinary SwiftUI implementation touches a small
 invalidation, identity, or image-loading concern and the task has not become
 dedicated performance work.
 
-## Route
+## Out Of Scope
 
-- Source-level performance smells, remediation patterns, update fan-out,
-  identity, heavy body work, image cost, animation cost, or layout thrash:
-  `../swiftui-performance/references/code-smells.md`
-- Runtime evidence intake and when to involve Instruments:
-  `../swiftui-performance/references/profiling-intake.md`
+Dedicated performance work stays outside this skill:
+
+- source-level performance smell audits and remediation for update fan-out,
+  identity, heavy body work, image cost, animation cost, or layout thrash
+- runtime evidence intake and deciding when to involve Instruments
 - `.trace`, `xctrace`, Time Profiler, hangs, hitches, signposts, or trace
-  capture/analysis:
-  use `xcode-instruments`.
+  capture/analysis
 
 ## Local Reminder
 

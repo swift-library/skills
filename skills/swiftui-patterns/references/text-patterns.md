@@ -6,10 +6,10 @@
 
 ## Text Initialization: Verbatim vs Localized
 
-Use this file for SwiftUI-local text decisions. If the task involves String
-Catalog setup or migration, generated symbols, translator export/import,
-pseudolocalization, localized package/framework resources, bundle lookup, RTL
-validation, or locale UI tests, use `xcode-localization-patterns`.
+Use this file for SwiftUI-local text decisions. String Catalog setup or
+migration, generated symbols, translator export/import, pseudolocalization,
+localized package/framework resources, bundle lookup, RTL validation, and
+locale UI tests are out of scope.
 
 **Default: always use `Text("…")`.** Only use `Text(verbatim:)` when explicitly required for a string literal that must not be localized.
 

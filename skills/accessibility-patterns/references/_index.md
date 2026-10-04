@@ -10,10 +10,9 @@ Pick framework files after identifying the UI stack, and pick topic files for
 cross-framework concerns such as VoiceOver semantics, Dynamic Type, testing, or
 media.
 
-Keep chart-specific accessibility in `swift-charts-patterns` because chart
-descriptors and Audio Graph are Swift Charts domain APIs. SwiftUI
-accessibility knowledge lives here; `swiftui-patterns` may keep only a route
-stub for incidental reminders during ordinary SwiftUI implementation.
+Chart-specific accessibility is out of scope because chart descriptors and
+Audio Graph are Swift Charts domain APIs. SwiftUI accessibility knowledge lives
+here.
 
 ## Core Topics
 
@@ -30,7 +29,7 @@ stub for incidental reminders during ordinary SwiftUI implementation.
   recommendations and WCAG mapping boundaries.
 - `wcag-mapping.md`: WCAG 2.2 A/AA mapping for Apple-platform findings.
 - `media.md`: captions, audio descriptions, speech, media playback, Smart
-  Invert, and chart-accessibility routing.
+  Invert, and the chart-accessibility boundary.
 - `assistive-access.md`: Assistive Access support, scene setup, design rules,
   and testing.
 - `platform-specifics.md`: macOS, Catalyst, watchOS, tvOS, visionOS, and
@@ -82,9 +81,9 @@ stub for incidental reminders during ordinary SwiftUI implementation.
 - Need definitions, source policy, or high-level accessibility principles:
   `principles-sources-glossary.md`.
 - Chart accessibility, `AXChartDescriptorRepresentable`, or Audio Graph issue:
-  use `swift-charts-patterns`.
+  out of scope.
 - General SwiftUI state, layout, navigation, or performance without a concrete
-  accessibility issue: use `swiftui-patterns`.
+  accessibility issue: out of scope.
 
 ## Optional Artifacts
 

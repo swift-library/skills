@@ -27,10 +27,9 @@ particles, tile maps, shaders, SwiftUI presentation, and performance.
 ## When Not To Use
 
 - Do not use for Game Center identity, leaderboards, achievements, or
-  matchmaking; use `gamekit-patterns`.
-- Do not use for SceneKit 3D scene graphs; use `scenekit-patterns`.
-- Do not use for RealityKit/ARKit spatial or AR scenes; use
-  `realitykit-patterns`.
+  matchmaking.
+- Do not use for SceneKit 3D scene graphs.
+- Do not use for RealityKit/ARKit spatial or AR scenes.
 - Do not use for browser games or web canvas engines.
 - Do not use for generic SwiftUI layout unless `SpriteView` is the problem.
 

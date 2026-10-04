@@ -25,11 +25,9 @@ and Live Activity presentation wiring.
 
 ## When Not To Use
 
-- Do not use for EventKit calendar/reminder alarms; use `eventkit-patterns`.
-- Do not use for generic local notifications; use
-  `user-notifications-patterns`.
-- Do not use for ActivityKit UI alone without AlarmKit scheduling; use
-  `activitykit-patterns`.
+- Do not use for EventKit calendar/reminder alarms.
+- Do not use for generic local notifications.
+- Do not use for ActivityKit UI alone without AlarmKit scheduling.
 - Do not treat AlarmKit timers as a background execution mechanism.
 
 ## Inputs To Inspect

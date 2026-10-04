@@ -22,11 +22,9 @@ Attest flows that protect server APIs and maintain limited per-device state.
 
 ## When Not To Use
 
-- Do not use for Keychain storage or biometric-protected credentials; use
-  `keychain-patterns`.
-- Do not use for cryptographic primitive design; use `cryptokit-patterns`.
-- Do not use for certificate trust or TLS pinning; use
-  `certificate-trust-patterns`.
+- Do not use for Keychain storage or biometric-protected credentials.
+- Do not use for cryptographic primitive design.
+- Do not use for certificate trust or TLS pinning.
 - Do not use for Sign in with Apple, OAuth, or authentication UI.
 - Do not invent App Attest server behavior, environment behavior, or fraud
   guarantees. Verify current Apple documentation and server implementation.

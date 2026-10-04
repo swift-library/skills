@@ -8,6 +8,7 @@ import difflib
 import hashlib
 import json
 import shutil
+import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
@@ -26,6 +27,15 @@ SPI_OWNER_URLS = {
     "apple": "https://swiftpackageindex.com/apple",
     "swiftlang": "https://swiftpackageindex.com/swiftlang",
 }
+PACKAGE_COLLECTION_TOOL_REPO = "https://github.com/swiftlang/swift-package-collection-generator.git"
+PACKAGE_COLLECTION_TOOL_COMMIT = "7bc2514946443f31242f17c25365c97491674d27"
+PACKAGE_COLLECTION_TOOL_NAME = "swift-package-collection-generator"
+PACKAGE_COLLECTION_TOOL_PRODUCTS = [
+    "package-collection-generate",
+    "package-collection-validate",
+    "package-collection-diff",
+    "package-collection-sign",
+]
 
 
 def utc_now() -> str:
@@ -58,6 +68,7 @@ def paths() -> dict[str, Path]:
         "snapshots": base / "snapshots",
         "normalized": base / "normalized",
         "diffs": base / "diffs",
+        "tools": base / "tools",
     }
 
 
@@ -75,6 +86,35 @@ def ensure_dirs() -> None:
     ]:
         (p["snapshots"] / child).mkdir(parents=True, exist_ok=True)
     (p["cache"] / "http").mkdir(parents=True, exist_ok=True)
+
+
+def run_process(args: list[str], *, cwd: Path | None = None) -> str:
+    try:
+        completed = subprocess.run(
+            args,
+            cwd=str(cwd) if cwd else None,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        return completed.stdout.strip()
+    except FileNotFoundError as error:
+        raise RuntimeError(f"Missing executable: {args[0]}") from error
+    except subprocess.CalledProcessError as error:
+        command = " ".join(args)
+        stderr = error.stderr.strip()
+        stdout = error.stdout.strip()
+        details = stderr or stdout or f"exit code {error.returncode}"
+        raise RuntimeError(f"Command failed: {command}\n{details}") from error
+
+
+def run_process_passthrough(args: list[str], *, cwd: Path | None = None) -> int:
+    try:
+        completed = subprocess.run(args, cwd=str(cwd) if cwd else None)
+        return completed.returncode
+    except FileNotFoundError as error:
+        raise RuntimeError(f"Missing executable: {args[0]}") from error
 
 
 def read_json(path: Path, default):
@@ -442,6 +482,69 @@ def command_show_paths(_args: argparse.Namespace) -> int:
     print(f"config: {app_support_dir() / 'config.json'}")
     print(f"state_file: {state_path()}")
     return 0
+
+
+def package_collection_tool_root() -> Path:
+    return paths()["tools"] / PACKAGE_COLLECTION_TOOL_NAME
+
+
+def ensure_package_collection_tool(*, build: bool) -> Path:
+    ensure_dirs()
+    tool_root = package_collection_tool_root()
+
+    if tool_root.exists() and not (tool_root / ".git").exists():
+        raise RuntimeError(f"Tool path exists but is not a git checkout: {tool_root}")
+
+    if not tool_root.exists():
+        run_process(["git", "clone", PACKAGE_COLLECTION_TOOL_REPO, str(tool_root)])
+    else:
+        origin = run_process(["git", "-C", str(tool_root), "remote", "get-url", "origin"])
+        if origin != PACKAGE_COLLECTION_TOOL_REPO:
+            raise RuntimeError(
+                f"Tool checkout origin mismatch: {origin}. Expected {PACKAGE_COLLECTION_TOOL_REPO}."
+            )
+        run_process(["git", "-C", str(tool_root), "fetch", "origin"])
+
+    run_process(["git", "-C", str(tool_root), "checkout", PACKAGE_COLLECTION_TOOL_COMMIT])
+    actual_commit = run_process(["git", "-C", str(tool_root), "rev-parse", "HEAD"])
+    if actual_commit != PACKAGE_COLLECTION_TOOL_COMMIT:
+        raise RuntimeError(f"Tool checkout mismatch: {actual_commit}")
+
+    if build:
+        run_process(["swift", "build", "--configuration", "release"], cwd=tool_root)
+
+    return tool_root
+
+
+def command_ensure_package_collection_tool(args: argparse.Namespace) -> int:
+    tool_root = ensure_package_collection_tool(build=args.build)
+    actual_commit = run_process(["git", "-C", str(tool_root), "rev-parse", "HEAD"])
+    result = {
+        "tool": PACKAGE_COLLECTION_TOOL_NAME,
+        "repository": PACKAGE_COLLECTION_TOOL_REPO,
+        "commit": actual_commit,
+        "path": str(tool_root),
+        "built": bool(args.build),
+        "products": PACKAGE_COLLECTION_TOOL_PRODUCTS,
+    }
+    print(json.dumps(result, indent=2, sort_keys=True))
+    return 0
+
+
+def command_package_collection_tool(args: argparse.Namespace) -> int:
+    tool_root = ensure_package_collection_tool(build=args.build)
+    arguments = list(args.arguments)
+    if arguments and arguments[0] == "--":
+        arguments = arguments[1:]
+    command = [
+        "swift",
+        "run",
+        "--package-path",
+        str(tool_root),
+        args.product,
+        *arguments,
+    ]
+    return run_process_passthrough(command)
 
 
 def command_fetch(_args: argparse.Namespace) -> int:
@@ -1077,6 +1180,22 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog=NAME)
     subcommands = parser.add_subparsers(dest="command", required=True)
     subcommands.add_parser("show-paths").set_defaults(func=command_show_paths)
+    ensure_tool = subcommands.add_parser("ensure-package-collection-tool")
+    ensure_tool.add_argument(
+        "--build",
+        action="store_true",
+        help="Also build package collection tool products in release configuration.",
+    )
+    ensure_tool.set_defaults(func=command_ensure_package_collection_tool)
+    run_tool = subcommands.add_parser("package-collection-tool")
+    run_tool.add_argument(
+        "--build",
+        action="store_true",
+        help="Build package collection tool products before running the selected product.",
+    )
+    run_tool.add_argument("product", choices=PACKAGE_COLLECTION_TOOL_PRODUCTS)
+    run_tool.add_argument("arguments", nargs=argparse.REMAINDER)
+    run_tool.set_defaults(func=command_package_collection_tool)
     subcommands.add_parser("fetch").set_defaults(func=command_fetch)
     subcommands.add_parser("fetch-spi").set_defaults(func=command_fetch_spi)
     search_spi = subcommands.add_parser("search-spi")

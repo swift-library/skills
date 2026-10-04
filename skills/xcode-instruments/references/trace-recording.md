@@ -17,8 +17,8 @@ The bundled `scripts/record_trace.py` wraps `xctrace record` with:
 
 ```bash
 python3 "${SKILL_DIR}/scripts/record_trace.py" \
-  --device "Pol's iPhone" \
-  --attach "Helm" \
+  --device "My iPhone" \
+  --attach "MyApp" \
   --output ~/Desktop/helm-session.trace
 ```
 
@@ -37,14 +37,14 @@ Useful for diagnosing cold-start hitches and view-creation cost.
 
 ### C) Agent-driven: start in background, stop via stop-file
 
-When you (the agent) are running non-interactively — e.g. via
-`Bash run_in_background` — use a stop-file so you can signal the
+When you (the agent) are running non-interactively, for example as a
+background shell job, use a stop-file so you can signal the
 recording to end cleanly:
 
 ```bash
 # Start recording (background)
 python3 "${SKILL_DIR}/scripts/record_trace.py" \
-  --attach Helm --stop-file /tmp/stop-trace \
+  --attach MyApp --stop-file /tmp/stop-trace \
   --output ~/Desktop/session.trace
 
 # ...user does their thing...
@@ -60,7 +60,7 @@ when it appears, and waits up to 60s for the trace to finalise.
 
 ```bash
 python3 "${SKILL_DIR}/scripts/record_trace.py" \
-  --attach Helm --time-limit 30s --output ~/Desktop/30s.trace
+  --attach MyApp --time-limit 30s --output ~/Desktop/30s.trace
 ```
 
 xctrace stops itself at the limit.
@@ -113,7 +113,7 @@ path straight into `analyze_trace.py`:
 
 ```bash
 TRACE=$(python3 "${SKILL_DIR}/scripts/record_trace.py" \
-    --attach Helm --stop-file /tmp/stop-trace --output ~/Desktop/session.trace \
+    --attach MyApp --stop-file /tmp/stop-trace --output ~/Desktop/session.trace \
     2>&1 | awk '/trace written:/ {print $NF}')
 python3 "${SKILL_DIR}/scripts/analyze_trace.py" --trace "$TRACE" --json-only
 ```

@@ -1,7 +1,7 @@
 interface:
   display_name: "SwiftUI Design"
-  short_description: "Review and polish native SwiftUI visuals"
+  short_description: "SwiftUI visuals and native control choice"
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $swiftui-design to review and polish SwiftUI visual design."
+  default_prompt: "Use $swiftui-design to review SwiftUI visual design, native Apple polish, and control primitive choice such as Form, Section, LabeledContent, Toggle, Picker, Button, Menu, List, or Table."

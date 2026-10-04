@@ -48,7 +48,7 @@ protocol KeychainServiceProtocol: Sendable {
 }
 ```
 
-The real `KeychainService` implementation wraps `SecItem*` calls with the add-or-update pattern and proper `OSStatus` mapping (see `keychain-fundamentals.md` for the full implementation). Key points: `save` attempts update first to avoid `errSecDuplicateItem`; `delete` treats `errSecItemNotFound` as success; the class conforms to `@unchecked Sendable` with immutable stored properties.
+The real `KeychainService` implementation wraps `SecItem*` calls with the add-or-update pattern and proper `OSStatus` mapping. Key points: `save` attempts update first to avoid `errSecDuplicateItem`; `delete` treats `errSecItemNotFound` as success; the class conforms to `@unchecked Sendable` with immutable stored properties.
 
 The mock replaces Security framework with a dictionary. Runs everywhere — simulator, CI, even Linux — with zero entitlement requirements. Supports injectable errors and call counting:
 
@@ -119,11 +119,9 @@ final class AuthenticationManager {
 
 ## Seven Mistakes AI Generators Make in Keychain Tests
 
-Both research providers independently identified overlapping anti-patterns. This merged list covers the full set:
-
 **1. Tests that use the real keychain without cleanup.** Tests calling `SecItemAdd` directly leave state across runs. Second run fails with `errSecDuplicateItem` (-25299). AI generators rarely include `setUp`/`tearDown` cleanup.
 
-**2. Assuming Secure Enclave exists on simulator.** `SecureEnclave.isAvailable` returns `false` on every simulator. Tests calling `SecureEnclave.P256.Signing.PrivateKey()` directly throw `CryptoKitError` on simulator and crash CI.
+**2. Assuming Secure Enclave exists on simulator.** Secure Enclave key generation fails on Simulator, and `SecureEnclave.isAvailable` there is not a reliable signal. Tests calling `SecureEnclave.P256.Signing.PrivateKey()` directly throw `CryptoKitError` on simulator and crash CI; guard them with `#if targetEnvironment(simulator)`.
 
 **3. Not testing error paths.** Real keychain code must handle `errSecDuplicateItem` (-25299), `errSecItemNotFound` (-25300), `errSecAuthFailed` (-25293), and `errSecInteractionNotAllowed` (-25308). AI generators almost never test these failure modes.
 
@@ -146,7 +144,7 @@ Understanding exactly what works where prevents entire categories of test failur
 | Keychain CRUD (`SecItemAdd`, etc.)                            | ✅ Works                              | ✅ Works                     |
 | CryptoKit software crypto (AES-GCM, ChaChaPoly, P256, SHA256) | ✅ Software                           | ✅ Hardware-accelerated      |
 | `kSecAttrAccessible` values                                   | ✅ Accepted but not hardware-enforced | ✅ Hardware-enforced         |
-| `SecureEnclave.isAvailable`                                   | Returns **false**                     | Returns **true** (A7+)       |
+| `SecureEnclave.isAvailable`                                   | Not reliable; varies by host and Xcode | Returns **true** (A7+)       |
 | `SecureEnclave.P256.Signing.PrivateKey()`                     | ❌ Throws                             | ✅ Works                     |
 | Biometric prompt on protected items                           | ❌ Skipped — value returned silently  | ✅ Shows prompt              |
 | `LAContext.canEvaluatePolicy(.biometrics)`                    | Returns **false**                     | Returns **true** if enrolled |
@@ -335,7 +333,7 @@ final class CryptoKitTests: XCTestCase {
 
 ## Secure Enclave Test Strategy — Protocol Fallback
 
-> **Cross-reference contradiction:** One research source used a function returning `P256.Signing.PrivateKey` for both SE and software paths. This is a type error — `SecureEnclave.P256.Signing.PrivateKey` and `P256.Signing.PrivateKey` are distinct types. The correct approach is a protocol-based abstraction:
+A single function returning `P256.Signing.PrivateKey` for both SE and software paths is a type error — `SecureEnclave.P256.Signing.PrivateKey` and `P256.Signing.PrivateKey` are distinct types. Use a protocol-based abstraction:
 
 ### SigningKeyProvider Protocol with SE/Software Implementations
 
@@ -674,7 +672,7 @@ The `.serialized` trait ensures keychain tests modifying shared state run sequen
 
 ### Migration Testing: UserDefaults to Keychain
 
-Migration code is security-critical — silent failure leaves credentials in UserDefaults (see `migration-legacy-stores.md`). The class under test accepts injected dependencies for both stores:
+Migration code is security-critical — silent failure leaves credentials in UserDefaults. The class under test accepts injected dependencies for both stores:
 
 ```swift
 final class StorageMigrationManager {

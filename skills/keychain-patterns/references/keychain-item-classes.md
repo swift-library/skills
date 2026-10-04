@@ -105,7 +105,7 @@ Protocol constants span **30+ values** including `kSecAttrProtocolHTTPS`, `kSecA
 
 ### Credential Provider Extensions (iOS 12+)
 
-For third-party password managers, `ASCredentialProviderViewController` enables credential provider extensions. Apps subclass this controller, populate `ASCredentialIdentityStore` with `ASPasswordCredentialIdentity` instances, and override `provideCredentialWithoutUserInteraction(for:)` for tap-to-fill behavior.
+For third-party password managers, `ASCredentialProviderViewController` enables credential provider extensions. Apps subclass this controller, populate `ASCredentialIdentityStore` with `ASPasswordCredentialIdentity` instances, and override `provideCredentialWithoutUserInteraction(for:)` for tap-to-fill behavior. On iOS 17+ / macOS 14+, use the `ASCredentialRequest` overload of `provideCredentialWithoutUserInteraction(for:)` and the `saveCredentialIdentityEntries` store methods; the `ASPasswordCredentialIdentity`-only variants are deprecated.
 
 ---
 
@@ -303,7 +303,7 @@ The keychain is designed for small secrets. Storing large data degrades performa
 
 On **iOS/tvOS/watchOS**, the data protection keychain is the only implementation — this flag is ignored. On **macOS native apps**, `SecItem` defaults to the legacy file-based keychain. Setting `kSecUseDataProtectionKeychain: true` switches to the data protection keychain, giving iOS-identical behavior. On **Mac Catalyst** apps, data protection is the default.
 
-Apple explicitly recommends setting this flag to `true` for all keychain operations. The file-based keychain is on the path to deprecation (`SecKeychainCreate` deprecated in macOS 12).
+Apple explicitly recommends setting this flag to `true` for all keychain operations. The file-based keychain is on the path to deprecation (`SecKeychainCreate` is deprecated as of macOS 10.10).
 
 ### TN3137 Key Takeaways
 
@@ -444,11 +444,8 @@ func migrateWebCredentials() throws {
 - **SecItem CRUD operations, query dictionaries, error handling** → `keychain-fundamentals.md`
 - **Accessibility constants, SecAccessControl flags** → `keychain-access-control.md`
 - **Biometric protection for keys and passwords** → `biometric-authentication.md`
-- **Secure Enclave key generation and constraints** → `secure-enclave.md`
-- **CryptoKit key types and keychain storage mapping** → `cryptokit-symmetric.md`, `cryptokit-public-key.md`
 - **OAuth tokens, API keys, credential lifecycle** → `credential-storage-patterns.md`
 - **Access groups, app extensions, sharing** → `keychain-sharing.md`
-- **SecCertificate, SecTrust, trust evaluation** → `certificate-trust.md`
 - **Legacy migration patterns** → `migration-legacy-stores.md`
 - **AI-generated code anti-patterns** → `common-anti-patterns.md`
 - **OWASP MASVS/MASTG compliance** → `compliance-owasp-mapping.md`

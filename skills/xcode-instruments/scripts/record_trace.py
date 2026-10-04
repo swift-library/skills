@@ -14,8 +14,8 @@ Manual stop options, most to least automated:
   * Send SIGINT (Ctrl+C) to this script — forwarded to xctrace, which
     finalises the trace before exiting.
   * Pass --stop-file PATH; when that file appears on disk, this script
-    sends SIGINT to xctrace. Useful for `Bash run_in_background`
-    workflows where there's no interactive terminal.
+    sends SIGINT to xctrace. Useful for background shell jobs
+    where there's no interactive terminal.
   * Pass --time-limit 30s / 5m / etc. — xctrace stops itself.
 """
 from __future__ import annotations

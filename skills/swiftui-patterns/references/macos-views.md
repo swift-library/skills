@@ -7,7 +7,7 @@
 - [Quick Lookup Table](#quick-lookup-table)
 - [HSplitView & VSplitView (macOS-only)](#hsplitview--vsplitview-macos-only)
 - [Table](#table)
-- [PasteButton & CopyButton](#pastebutton--copybutton)
+- [PasteButton](#pastebutton)
 - [File Operations](#file-operations)
 - [Drag, Drop & Pasteboard](#drag-drop--pasteboard)
 - [AppKit Interop](#appkit-interop)
@@ -25,7 +25,6 @@
 | `VSplitView` | macOS 10.15+ | Yes | Vertical resizable split layout with user-draggable dividers |
 | `Table` | macOS 12.0+ | No | Full multi-column layout with sorting; on iOS compact, columns collapse |
 | `PasteButton` | macOS 10.15+ | No | System button that reads clipboard; does NOT auto-validate on macOS |
-| `CopyButton` | macOS 15.0+ | Yes | System button that copies `Transferable` content to clipboard |
 
 ### File Operations
 
@@ -34,16 +33,16 @@
 | `fileImporter()` | macOS 11.0+ | No | Native NSOpenPanel with column/list/gallery view, sidebar, tags, QuickLook |
 | `fileExporter()` | macOS 11.0+ | No | Native NSSavePanel with format dropdown, tags field |
 | `fileMover()` | macOS 11.0+ | No | Native macOS move panel with Finder-like navigation |
-| `fileDialogMessage(_:)` | macOS 13.0+ | Yes | Custom message text in file dialogs |
-| `fileDialogConfirmationLabel(_:)` | macOS 13.0+ | Yes | Custom confirm button text in file dialogs |
-| `fileExporterFilenameLabel(_:)` | macOS 13.0+ | Yes | Custom filename field label in file exporter |
+| `fileDialogMessage(_:)` | macOS 14.0+ | No | Custom message text in file dialogs |
+| `fileDialogConfirmationLabel(_:)` | macOS 14.0+ | No | Custom confirm button text in file dialogs |
+| `fileExporterFilenameLabel(_:)` | macOS 14.0+ | No | Custom filename field label in file exporter |
 
 ### Drag, Drop & Pasteboard
 
 | API | Availability | macOS-Only? | Usage |
 |-----|-------------|:-----------:|-------|
-| `onDrag(_:)` / `draggable(_:)` | macOS 11.0+ | No | Drag image follows cursor; items draggable between apps |
-| `onDrop(of:delegate:)` / `dropDestination(for:action:)` | macOS 11.0+ | No | Accepts drops from any macOS app including Finder |
+| `onDrag(_:)` / `draggable(_:)` | macOS 10.15+ / 13.0+ | No | Drag image follows cursor; items draggable between apps |
+| `onDrop(of:delegate:)` / `dropDestination(for:action:)` | macOS 11.0+ / 13.0+ | No | Accepts drops from any macOS app including Finder |
 
 ### AppKit Interop
 
@@ -103,9 +102,7 @@ Table(people) { /* columns */ }
 
 ---
 
-## PasteButton & CopyButton
-
-### PasteButton
+## PasteButton
 
 System button that reads clipboard content via `Transferable`. On macOS, it does NOT auto-validate pasteboard changes (unlike iOS).
 
@@ -121,23 +118,6 @@ struct ClipboardView: View {
             Divider()
             Text(pastedText)
             Spacer()
-        }
-    }
-}
-```
-
-### CopyButton (macOS 15.0+, macOS-only)
-
-System button that copies `Transferable` content to the clipboard.
-
-```swift
-struct CopyableContent: View {
-    let shareableText = "Hello, world!"
-
-    var body: some View {
-        HStack {
-            Text(shareableText)
-            CopyButton(item: shareableText)
         }
     }
 }
@@ -182,9 +162,9 @@ On macOS, presents a native `NSSavePanel` with format dropdown and tags.
 }
 ```
 
-### File dialog customization (macOS-only)
+### File dialog customization (macOS 14.0+, iOS 17.0+)
 
-Customize text in file dialogs with these macOS-specific modifiers:
+Customize text in file dialogs with these modifiers:
 
 ```swift
 // Custom message and confirm button on file importer
@@ -246,6 +226,11 @@ struct DropZone: View {
     }
 }
 ```
+
+The SDK marks this `dropDestination(for:action:)` form, whose action takes
+items and a location, to be deprecated: "Use
+`dropDestination(for:isEnabled:action:)` with an `action` that takes a
+`DropSession` parameter instead." The replacement requires macOS 26.
 
 ### Legacy approach (NSItemProvider)
 

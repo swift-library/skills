@@ -1,14 +1,6 @@
 ---
 name: swiftdata-patterns
-description: >-
-  Use this skill for any implementation, review, debugging, migration, or
-  modernization change that touches SwiftData surfaces, including @Model,
-  @Relationship, @Attribute, @Transient, #Predicate, @Query, FetchDescriptor,
-  ModelContainer, ModelContext, ModelConfiguration, ModelActor,
-  SchemaMigrationPlan, VersionedSchema, persistent history, CloudKit sync,
-  #Index, #Unique, inheritance, or Core Data coexistence. Do not use for Core
-  Data-only stacks, deep SwiftUI UI design, broad Swift Concurrency migration,
-  networking, package architecture, or repository documentation.
+description: 'Use this skill for any implementation, review, debugging, migration, or modernization change that touches SwiftData surfaces, including @Model, @Relationship, relationship append, inverse relationships, graph-root insertion, @Attribute, @Transient, #Predicate, @Query, FetchDescriptor, ModelContainer, ModelContext, context.insert, save/autosave, ModelConfiguration, ModelActor, SchemaMigrationPlan, VersionedSchema, persistent history, CloudKit sync, #Index, #Unique, inheritance, or Core Data coexistence. Also use alongside SwiftDataWritable when @Writable relationship chains raise persistence, insert, save, delete, or graph traversal questions. Do not use for Core Data-only stacks, deep SwiftUI UI design, broad Swift Concurrency migration, networking, package architecture, or repository documentation.'
 ---
 
 # SwiftData Patterns
@@ -23,6 +15,10 @@ querying, relationships, migrations, CloudKit sync, and concurrency boundaries.
 
 - Designing or reviewing `@Model` schemas, relationships, delete rules,
   attributes, transient data, uniqueness, indexes, or model inheritance.
+- Reviewing relationship append, inverse relationship maintenance, graph-root
+  insertion, `ModelContext.insert`, `context.save()`, context autosave, or delete
+  behavior, including SwiftDataWritable relationship-chain call sites where the
+  question is the underlying SwiftData persistence behavior.
 - Fixing `#Predicate`, `@Query`, `FetchDescriptor`, filtering, sorting,
   dynamic query setup, or query performance.
 - Setting up or reviewing `ModelContainer`, `ModelConfiguration`,
@@ -36,14 +32,19 @@ querying, relationships, migrations, CloudKit sync, and concurrency boundaries.
 
 ## When Not To Use
 
-- Do not use for Core Data-only stacks; use `core-data-patterns`.
+- Do not use for Core Data-only stacks.
+- SwiftDataWritable package-specific `@Writable` projection shape, macro
+  expansion, generated surface types, and ordinary/throws autosave API are out
+  of scope. Still use this skill for the underlying SwiftData persistence
+  truth: relationship graph traversal, graph-root insertion,
+  `ModelContext.insert`, save/autosave, delete rules, and inverse relationship
+  behavior.
 - Do not use for deep SwiftUI layout, navigation, accessibility, or animation
-  work; use `swiftui-patterns` or the relevant UI sibling.
-- Do not use for source-level SwiftUI performance work; use
-  `swiftui-performance`.
+  work.
+- Do not use for source-level SwiftUI performance work.
 - Do not use for broad Swift Concurrency migration, actor-isolation design,
   `Sendable` fixes, or data-race work unless the concrete problem is SwiftData
-  context/model isolation. Use `swift-concurrency-patterns` for broader work.
+  context/model isolation.
 - Do not use for networking architecture, package architecture, dependency
   replacement, or repository documentation.
 - Do not suggest Core Data unless SwiftData cannot solve the concrete
@@ -58,6 +59,9 @@ querying, relationships, migrations, CloudKit sync, and concurrency boundaries.
   `#Index`, and `#Unique` definitions.
 - `ModelContainer`, `.modelContainer(...)`, `ModelConfiguration`,
   `ModelContext`, `mainContext`, and custom context setup.
+- SwiftDataWritable relationship-chain call sites only when the question depends
+  on SwiftData relationship persistence, graph insertion, `context.insert`, or
+  save/autosave behavior.
 - `@Query`, `FetchDescriptor`, predicates, sort descriptors, fetch limits, and
   in-memory filtering.
 - Migrations, `VersionedSchema`, `SchemaMigrationPlan`, persistent history
@@ -114,9 +118,18 @@ querying, relationships, migrations, CloudKit sync, and concurrency boundaries.
 - `references/cloudkit-constraints.md`: concise SwiftData CloudKit constraints.
 - `references/indexing-rules.md`: iOS 18+ database indexing patterns.
 - `references/model-inheritance-rules.md`: iOS 26+ model subclassing.
+
 ## Decision Rules
 
 - Repository-local truth wins over this skill.
+- When SwiftDataWritable also applies, first use SwiftData rules to determine
+  persistence behavior, graph-root insertion, relationship traversal,
+  `ModelContext.insert`, save/autosave, delete, and inverse behavior; then
+  choose the writable API surface separately.
+- Do not require manual `context.insert(child)` solely because a newly created
+  model is appended to an attached owner's relationship; first check whether the
+  attached owner graph will be saved. Use explicit insert for independent graph
+  roots or when local design requires a separate insertion boundary.
 - Treat schema changes as migration changes. Rehearse on existing data before
   claiming safety.
 - Review delete rules as business rules. Unbounded or broad deletes require
@@ -167,4 +180,4 @@ For implementation work, summarize:
   CloudKit schema, stop and request explicit confirmation before proposing an
   irreversible path.
 - If the task becomes broad concurrency, SwiftUI, Core Data-only, or package
-  architecture work, route to the relevant specialized skill.
+  architecture work, state that it is outside SwiftData persistence scope.

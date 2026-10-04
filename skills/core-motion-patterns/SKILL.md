@@ -24,10 +24,8 @@ submersion data, and motion-related privacy/performance behavior.
 
 ## When Not To Use
 
-- Do not use for HealthKit samples, workouts, or health authorization; use
-  `healthkit-patterns`.
-- Do not use for SensorKit research-study data access; use
-  `sensorkit-patterns`.
+- Do not use for HealthKit samples, workouts, or health authorization.
+- Do not use for SensorKit research-study data access.
 - Do not use for Core Location, maps, or geofencing unless motion APIs are the
   concrete issue.
 - Do not use for generic SwiftUI animation or gesture design.

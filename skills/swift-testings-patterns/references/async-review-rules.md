@@ -1,6 +1,6 @@
 # Async tests
 
-Swift Testing is built to be async and run tests in parallel; special care must be taken to ensure those tests run well, particularly when Swift concurrency is involved. For production-code concurrency design, route that part to `swift-concurrency-patterns`.
+Swift Testing is built to be async and run tests in parallel; special care must be taken to ensure those tests run well, particularly when Swift concurrency is involved. Production-code concurrency design is out of scope here.
 
 
 ## Serializing tests

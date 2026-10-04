@@ -58,6 +58,10 @@ Tasks run regardless of whether you keep a reference.
 
 ## Cancellation
 
+For Swift 6.4 awaited `defer` and OS-gated cancellation shields, read
+`language-updates.md`. Cleanup completion and cancellation protection are
+separate guarantees; retain the cancellation checks below for ordinary work.
+
 ### Checking for cancellation
 
 Tasks must manually check for cancellation:

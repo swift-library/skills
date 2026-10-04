@@ -1,4 +1,4 @@
-# SwiftUI Liquid Glass Reference (iOS 26+)
+# SwiftUI Liquid Glass Reference (Platform SDK 26+)
 
 ## Table of Contents
 
@@ -19,13 +19,21 @@
 
 ## Overview
 
-Liquid Glass is Apple's new design language introduced in iOS 26. It provides translucent, dynamic surfaces that respond to content and user interaction. This reference covers the native SwiftUI APIs for implementing Liquid Glass effects.
+Liquid Glass is Apple's platform design material introduced with the 26-era
+SDKs. It provides translucent, dynamic surfaces that respond to content and
+user interaction. This reference covers the native SwiftUI APIs for
+implementing Liquid Glass effects.
 
 **Only adopt Liquid Glass when explicitly requested by the user.** Do not proactively convert existing UI to glass effects.
 
 ## Availability
 
-All Liquid Glass APIs require iOS 26 or later. Always provide fallbacks:
+The SwiftUI `glassEffect` APIs are available on iOS, macOS, tvOS, and watchOS
+26.0 or later and are unavailable on visionOS.
+Always verify the current SDK before making platform claims, and provide
+fallbacks when targeting older OS versions.
+
+For iOS-only code:
 
 ```swift
 if #available(iOS 26, *) {
@@ -35,6 +43,19 @@ if #available(iOS 26, *) {
 }
 ```
 
+For shared Apple-platform SwiftUI code, gate every platform the target builds:
+
+```swift
+if #available(iOS 26, macOS 26, tvOS 26, watchOS 26, *) {
+    // Liquid Glass implementation
+} else {
+    // Fallback using materials
+}
+```
+
+Do not compile this branch into a visionOS target unless the current SDK shows
+the API is available there.
+
 ## Core APIs
 
 ### glassEffect Modifier
@@ -42,7 +63,7 @@ if #available(iOS 26, *) {
 The primary modifier for applying glass effects to views:
 
 ```swift
-.glassEffect(_ style: GlassEffectStyle = .regular, in shape: some Shape = .rect)
+.glassEffect(_ glass: Glass = .regular, in shape: some Shape = DefaultGlassEffectShape())
 ```
 
 #### Basic Usage
@@ -50,7 +71,7 @@ The primary modifier for applying glass effects to views:
 ```swift
 Text("Hello")
     .padding()
-    .glassEffect()  // Default regular style, rect shape
+    .glassEffect()  // Default regular glass with DefaultGlassEffectShape
 ```
 
 #### With Shape
@@ -70,13 +91,12 @@ Text("Capsule")
     .glassEffect(in: .capsule)
 ```
 
-### GlassEffectStyle
-
-#### Prominence Levels
+### Glass
 
 ```swift
 .glassEffect(.regular)     // Standard glass appearance
-.glassEffect(.prominent)   // More visible, higher contrast
+.glassEffect(.clear)       // Clear glass variant
+.glassEffect(.identity)    // Identity glass variant
 ```
 
 #### Tinting
@@ -85,7 +105,7 @@ Add color tint to the glass:
 
 ```swift
 .glassEffect(.regular.tint(.blue))
-.glassEffect(.prominent.tint(.red.opacity(0.3)))
+.glassEffect(.regular.tint(.red.opacity(0.3)))
 ```
 
 #### Interactivity
@@ -100,7 +120,8 @@ Make glass respond to touch/pointer hover:
 .glassEffect(.regular.tint(.blue).interactive())
 ```
 
-**Important**: Only use `.interactive()` on elements that actually respond to user input (buttons, tappable views, focusable elements).
+**Important**: Only use `.interactive()` on elements that actually respond to
+user input, such as buttons, tappable views, or focusable controls.
 
 ## GlassEffectContainer
 
@@ -165,7 +186,9 @@ Button(action: { }) {
 
 ## Morphing Transitions
 
-Create smooth transitions between glass elements using `glassEffectID` and `@Namespace`:
+Create smooth transitions between glass elements using `glassEffectID` and
+`@Namespace`. `GlassEffectTransition` exposes `.matchedGeometry`,
+`.materialize`, and `.identity` when an explicit transition style is needed.
 
 ```swift
 struct MorphingExample: View {
@@ -178,10 +201,12 @@ struct MorphingExample: View {
                 ExpandedCard()
                     .glassEffect()
                     .glassEffectID("card", in: animation)
+                    .glassEffectTransition(.matchedGeometry)
             } else {
                 CompactCard()
                     .glassEffect()
                     .glassEffectID("card", in: animation)
+                    .glassEffectTransition(.matchedGeometry)
             }
         }
         .animation(.smooth, value: isExpanded)
@@ -205,6 +230,35 @@ struct MorphingExample: View {
 - Keep the container spacing aligned with the actual stack spacing.
 - Do not split a single visual cluster across multiple containers unless the
   surfaces are intentionally independent.
+
+Use `glassEffectUnion(id:namespace:)` when separate glass views should be
+resolved as the same unioned surface:
+
+```swift
+@Namespace private var glassUnion
+
+GlassEffectContainer(spacing: 12) {
+    HStack(spacing: 12) {
+        Button {
+            startDrawing()
+        } label: {
+            Image(systemName: "pencil")
+                .frame(width: 44, height: 44)
+                .glassEffect(.regular.interactive(), in: .circle)
+                .glassEffectUnion(id: "editor-tools", namespace: glassUnion)
+        }
+
+        Button {
+            startErasing()
+        } label: {
+            Image(systemName: "eraser")
+                .frame(width: 44, height: 44)
+                .glassEffect(.regular.interactive(), in: .circle)
+                .glassEffectUnion(id: "editor-tools", namespace: glassUnion)
+        }
+    }
+}
+```
 
 ### Background Extension
 
@@ -335,7 +389,9 @@ struct GlassSegmentedControl: View {
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
                         .glassEffect(
-                            selection == index ? .prominent.interactive() : .regular.interactive(),
+                            selection == index
+                                ? .regular.tint(.accentColor).interactive()
+                                : .regular.interactive(),
                             in: .capsule
                         )
                         .glassEffectID(selection == index ? "selected" : "option\(index)", in: animation)
@@ -380,13 +436,12 @@ if #available(iOS 26, *) {
 ```swift
 extension View {
     @ViewBuilder
-    func glassEffectWithFallback(
-        _ style: GlassEffectStyle = .regular,
-        in shape: some Shape = .rect,
+    func regularGlassEffectWithFallback<S: Shape>(
+        in shape: S,
         fallbackMaterial: Material = .ultraThinMaterial
     ) -> some View {
         if #available(iOS 26, *) {
-            self.glassEffect(style, in: shape)
+            self.glassEffect(.regular, in: shape)
         } else {
             self.background(fallbackMaterial, in: shape)
         }
@@ -398,11 +453,15 @@ extension View {
 
 ### Toolbar Icons
 
-In the new design, toolbar icons use **monochrome rendering** by default. The monochrome palette reduces visual noise and maintains legibility. Use `tint(_:)` only to convey meaning (e.g., a call to action), not for visual effect.
+In the Liquid Glass design, toolbar icons use **monochrome rendering** by default. The monochrome palette reduces visual noise and maintains legibility. Use `tint(_:)` only to convey meaning (e.g., a call to action), not for visual effect.
 
 ### Sheet Presentations
 
-Partial-height sheets use a Liquid Glass background by default. If you previously used `presentationBackground(_:)` with a custom background, consider removing it to let the new material shine. Sheets can morph out of the glass controls that present them using `navigationZoomTransition`.
+Partial-height sheets use a Liquid Glass background by default. If you
+previously used `presentationBackground(_:)` with a custom background, consider
+removing it to let the Liquid Glass material show through. For iOS zoom-style
+presentation transitions, use `matchedTransitionSource(id:in:)` at the source
+and `.navigationTransition(.zoom(sourceID:in:))` on the destination.
 
 ### Scroll Edge Effects
 
@@ -414,10 +473,11 @@ An automatic scroll edge effect blurs and fades content under system toolbars to
 
 - Use this reference for API correctness, modifier ordering, availability,
   fallback, and source-level implementation review.
-- Use `swiftui-design` when the primary task is visual direction, hierarchy,
-  spacing, color, or product-level polish.
-- Use `xcode-instruments` when the issue depends on measured scrolling,
-  animation, hang, hitch, or rendering trace evidence.
+- Visual direction, hierarchy, spacing, color, or product-level polish as the
+  primary task is out of scope.
+- Issues that depend on measured scrolling, animation, hang, hitch, or
+  rendering trace evidence need Instruments trace analysis, which is out of
+  scope.
 - Do not proactively convert an existing interface to Liquid Glass without an
   explicit user request or existing project convention.
 
@@ -429,9 +489,10 @@ An automatic scroll edge effect blurs and fades content under system toolbars to
 - Apply glass after layout modifiers
 - Use `.interactive()` only on tappable elements
 - Match container spacing with layout spacing
-- Provide material-based fallbacks for older iOS
+- Provide material-based fallbacks for older OS versions
 - Keep glass shapes consistent within a feature
-- Use `.glassProminent` only for actions that need stronger visual priority
+- Use `.buttonStyle(.glassProminent)` only for actions that need stronger visual
+  priority
 - Remove custom `presentationBackground(_:)` on sheets to use the default glass material
 
 ### Don't
@@ -439,7 +500,7 @@ An automatic scroll edge effect blurs and fades content under system toolbars to
 - Apply glass to every element (use sparingly)
 - Use `.interactive()` on static content
 - Mix different corner radii arbitrarily
-- Forget iOS version checks
+- Forget platform-specific availability checks
 - Apply glass before padding/frame modifiers
 - Nest `GlassEffectContainer` unnecessarily
 - Put essential controls in content that can scroll under a glass surface
@@ -447,7 +508,7 @@ An automatic scroll edge effect blurs and fades content under system toolbars to
 
 ## Checklist
 
-- [ ] `#available(iOS 26, *)` with fallback
+- [ ] Platform-specific `#available` gate with fallback
 - [ ] `GlassEffectContainer` wraps grouped elements
 - [ ] `.glassEffect()` applied after layout modifiers
 - [ ] `.interactive()` only on user-interactable elements

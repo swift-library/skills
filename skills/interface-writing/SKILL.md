@@ -1,6 +1,6 @@
 ---
 name: interface-writing
-description: Use this skill to write, rewrite, review, or improve text shown inside product interfaces, including button labels, alerts, error messages, empty states, onboarding, settings text, tooltips, notifications, CLI output, and accessibility labels. Trigger for UX writing, UI copy, interface text, microcopy, terminology consistency, or vague UX review requests where wording may affect the experience. Do not use for marketing copy, blog posts, App Store listings, API docs, brand guides, resumes, or interview writing.
+description: Use this skill to write, rewrite, review, improve, or harden text shown inside product interfaces, including UX writing, UI copy, interface text, microcopy, button labels, alerts, error messages, empty states, onboarding, settings text, tooltips, notifications, CLI output, accessibility labels, source strings, localization-risk notes, and terminology consistency. Trigger for design copy or implementation-side copy when wording may affect the experience, code strings, accessibility labels, or localization handoff. Do not use for marketing copy, blog posts, App Store listings, API docs, brand guides, resumes, or interview writing.
 ---
 
 # Interface Writing
@@ -11,6 +11,10 @@ Guide writing and review for text that appears inside software interfaces.
 Focus on clear product language, consistent terminology, voice/tone fit, and
 copy that helps users understand what happened and what to do next.
 
+When design-side UX writing already owns the wording, this skill checks
+whether the same text survives implementation, source strings, accessibility
+labels, localization risk, CLI output, and terminology drift.
+
 ## When To Use
 
 - Writing new interface text for a screen, flow, component, CLI command, or
@@ -19,6 +23,9 @@ copy that helps users understand what happened and what to do next.
   settings, tooltips, inline help, accessibility labels, or confirmation copy.
 - Checking whether interface wording is clear, useful, consistent, and aligned
   with the product's voice.
+- Checking implementation-side stability for interface text in source files,
+  string catalogs, SwiftUI `Text`, CLI output, accessibility labels,
+  placeholders, and localization handoff notes.
 - Building or updating a terminology list for product UI strings.
 - Handling broad requests such as "review the UX" when interface wording is
   part of the user experience.
@@ -29,13 +36,13 @@ copy that helps users understand what happened and what to do next.
   hierarchy unless the issue is specifically interface wording.
 - Do not use for marketing pages, blog posts, App Store listings, press copy,
   resumes, interview answers, API documentation, or brand-guide creation.
-- Do not use for accessibility implementation. Use `accessibility-patterns`
-  when the task is about VoiceOver behavior, assistive technology workflow,
-  WCAG mapping, Accessibility Inspector, or Nutrition Labels.
+- Do not use for accessibility implementation, such as VoiceOver behavior,
+  assistive technology workflow, WCAG mapping, Accessibility Inspector, or
+  Nutrition Labels.
 - Do not use for Xcode String Catalogs, localization resource wiring,
   `String(localized:)`, `LocalizedStringResource`, package/framework bundles,
-  translator export/import, pseudolocalization, or locale UI tests; use
-  `xcode-localization-patterns`.
+  translator export/import, pseudolocalization, or locale UI tests; localization
+  implementation is out of scope.
 - Do not rewrite product strategy, legal policy, or support commitments unless
   the user provides that source of truth.
 
@@ -53,15 +60,17 @@ copy that helps users understand what happened and what to do next.
 
 1. Find existing voice, tone, and terminology guidance. If none exists, infer
    from nearby product copy and state the assumption.
-2. Classify the task: new copy, review, rewrite, terminology cleanup, or
-   pattern-specific guidance.
+2. Classify the task: new copy, review, rewrite, terminology cleanup,
+   implementation stability, localization-risk handoff, accessibility-label
+   wording, or pattern-specific guidance.
 3. Identify the interface pattern and read only the matching reference section.
 4. Apply the precedence chain: clarity first, voice second, polish third.
 5. Rewrite element by element. Prefer concrete nouns and specific actions.
 6. Preserve product facts and user commitments. Do not invent capability,
    timing, policy, availability, or support promises.
-7. Flag terminology drift and suggest word-list entries when repeated terms are
-   inconsistent.
+7. Flag terminology drift, localization risks, accessibility-label wording
+   risks, placeholder risks, and implementation handoff notes when repeated
+   terms are inconsistent.
 
 ## Reference Files To Consult
 
@@ -95,6 +104,9 @@ copy that helps users understand what happened and what to do next.
 - Verify terminology against nearby UI and any word list.
 - Check localization risk: expansion, plurality, placeholders, cultural
   idioms, and right-to-left layout assumptions.
+- Check implementation risk: source string placement, CLI context,
+  accessibility-label fit, and whether the actual code/resource change belongs
+  to localization or accessibility implementation work.
 - For critical flows, confirm the copy does not change product behavior,
   policy, privacy, billing, or legal meaning.
 

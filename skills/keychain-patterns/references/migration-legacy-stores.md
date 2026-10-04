@@ -2,7 +2,7 @@
 
 > **Scope:** Migrating sensitive data from UserDefaults, plists, NSCoding archives, and other insecure storage to Apple Keychain Services. Covers secure deletion of legacy data, first-launch keychain cleanup, versioned migration patterns, and the Team ID transfer edge case.
 >
-> **Applies to:** iOS 15+ (actor support, pre-warming), iOS 17+ (recommended deployment target)
+> **Applies to:** iOS 15+ (pre-warming), iOS 17+ (recommended deployment target)
 >
 > **Cross-references:** `keychain-fundamentals.md` (SecItem CRUD), `keychain-access-control.md` (accessibility classes), `common-anti-patterns.md` (UserDefaults secrets anti-pattern), `credential-storage-patterns.md` (token lifecycle post-migration), `testing-security-code.md` (protocol-based mocking)
 
@@ -45,7 +45,7 @@ The persistence asymmetry (UserDefaults deleted on uninstall, keychain not) enab
 
 ```swift
 // ✅ CORRECT: First-launch cleanup with protected data guard
-// iOS 15+ required for isProtectedDataAvailable / pre-warming behavior
+// iOS 15+ pre-warming makes the isProtectedDataAvailable guard essential
 
 actor FirstLaunchGuard {
     static let shared = FirstLaunchGuard()
@@ -613,7 +613,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 ## Thread Safety Note
 
-> **Cross-validation note:** One research source claims SecItem C-APIs are non-thread-safe and recommends a serial `DispatchQueue`. Apple's documentation and Quinn "The Eskimo" (DTS) confirm that **SecItem\* functions are thread-safe on iOS**. However, your wrapper's mutable state (caches, migration flags, version tracking) does need synchronization. An `actor` provides this naturally in modern Swift concurrency — prefer actors over serial queues for new code (iOS 15+).
+**SecItem\* functions are thread-safe on iOS** (Apple documentation; Quinn "The Eskimo", DTS). However, your wrapper's mutable state (caches, migration flags, version tracking) does need synchronization. An `actor` provides this naturally in modern Swift concurrency — prefer actors over serial queues for new code.
 
 ---
 

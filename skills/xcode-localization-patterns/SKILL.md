@@ -28,13 +28,12 @@ resource access, runtime string APIs, SwiftUI presentation, and validation.
 
 ## When Not To Use
 
-- Do not use for writing or rewriting UI copy only; use `interface-writing`.
-- Do not use for FormatStyle-only modernization with no resource workflow; use
-  `swift-programming-language`.
+- Do not use for writing or rewriting UI copy only.
+- Do not use for FormatStyle-only modernization with no resource workflow.
 - Do not use for ordinary SwiftUI view implementation where localization is
-  only a local `Text` or layout concern; use `swiftui-patterns`.
+  only a local `Text` or layout concern.
 - Do not use for App Store listing localization, screenshots, ASO, or market
-  messaging; use the market operations collection.
+  messaging.
 - Do not invent tool, SDK, generated-symbol, or string-catalog behavior. Verify
   current Xcode and Apple documentation before relying on version-specific
   behavior.

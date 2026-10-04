@@ -318,7 +318,9 @@ extension PersonViewModel: @MainActor Equatable {
 }
 ```
 
-**Enable**: `InferIsolatedConformances` upcoming feature.
+Explicit isolated conformances need no feature flag. The
+`InferIsolatedConformances` upcoming feature infers this isolation for
+conformances of global-actor-isolated types.
 
 ## Actor Reentrancy
 

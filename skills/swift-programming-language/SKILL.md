@@ -1,19 +1,6 @@
 ---
 name: swift-programming-language
-description: >-
-  Use this skill for broad Swift or Apple-platform language and API baseline
-  work when no deeper domain skill fits: AI-generated Swift code review,
-  obvious modernization, Swift API Design Guidelines, naming and argument
-  labels, documentation comments, FormatStyle and .formatted() usage, Date.now,
-  count(where:), modern Foundation APIs, lightweight Observation or SwiftUI
-  baseline checks, accessible image buttons, force unwrap and force try caution,
-  user-visible error handling, baseline localization API checks, project
-  structure, tests, secrets, obvious secret-storage mistakes, SwiftLint, Google
-  Swift style reference checks, or Xcode MCP usage. Do not use it for deep Swift Concurrency
-  diagnostics or migration, deep SwiftUI, SwiftData
-  implementation/schema/query/migration/sync work, CoreData, Keychain Services
-  implementation, CryptoKit, certificate trust, networking, package
-  architecture, dependency replacement, or repository documentation work.
+description: "Use this skill for broad Swift or Apple-platform language and API baseline work when no deeper domain skill fits: obvious modernization, Swift API Design Guidelines, naming and argument labels, documentation comments, FormatStyle and .formatted() usage, Date.now, count(where:), modern Foundation APIs, lightweight Observation or SwiftUI baseline checks, accessible image buttons, force unwrap and force try caution, user-visible error handling, baseline localization API checks, project structure, tests, secrets, obvious secret-storage mistakes, SwiftLint, Google Swift style reference checks, or Xcode MCP usage. Do not use it for deep Swift Concurrency diagnostics or migration, deep SwiftUI, SwiftData implementation/schema/query/migration/sync work, CoreData, Keychain Services implementation, CryptoKit, certificate trust, networking, package architecture, dependency replacement, strict code-shape taste review, or repository documentation work."
 ---
 
 # The Swift Programming Language
@@ -30,11 +17,12 @@ checks, project structure, tests, obvious secret-storage mistakes, and SwiftLint
 Do not use it for deep Swift Concurrency diagnostics or migration, deep
 SwiftUI, SwiftData implementation/schema/query/migration/sync work, CoreData,
 networking, package architecture, dependency replacement, or repository
-documentation work.
+documentation work. Strict Swift code-shape, ownership, public API hygiene,
+semantic duplication, AI-shaped code, and alignment review against reference
+Apple or Swift code are out of scope.
 
 ## Use When
 
-- Reviewing AI-generated Swift or SwiftUI code against a lightweight baseline.
 - Checking API naming, argument labels, documentation comments, old
   Foundation formatting, Observation, SwiftUI baseline, baseline localization
   API usage, SwiftData CloudKit, testing, obvious secret-storage mistakes, or
@@ -55,32 +43,31 @@ documentation work.
 
 - The task requires deep SwiftUI implementation, state, navigation, layout,
   performance, accessibility, animation, Charts, or platform-specific SwiftUI
-  guidance. Use `swiftui-patterns` instead.
+  guidance.
 - The task requires nontrivial Swift Concurrency diagnostics, Swift 6 strict
   concurrency migration, actor-isolation design, data-race work, or `Sendable`
-  fixes. Use `swift-concurrency-patterns` instead.
+  fixes.
 - The task requires SwiftData implementation, schema design, custom DataStore,
-  query, migration, CloudKit sync, or troubleshooting work. Use
-  `swiftdata-patterns` instead.
+  query, migration, CloudKit sync, or troubleshooting work.
 - The task requires CoreData migration or persistent store design.
 - The task requires nontrivial Keychain Services implementation, access
   control, keychain sharing, biometric-protected secrets, credential migration,
-  or keychain testing. Use `keychain-patterns` instead.
+  or keychain testing.
 - The task requires CryptoKit algorithm selection, cryptographic correctness,
-  Secure Enclave key operations, nonce handling, or crypto tests. Use
-  `cryptokit-patterns` instead.
+  Secure Enclave key operations, nonce handling, or crypto tests.
 - The task requires certificate trust, pinning, SPKI hashes, client
-  certificates, mTLS, or URLSession trust challenge handling. Use
-  `certificate-trust-patterns` instead.
+  certificates, mTLS, or URLSession trust challenge handling.
 - The task requires networking architecture.
 - The task requires package dependency replacement analysis.
 - The task requires repository documentation scaffolding.
 - The task requires full package architecture or module-boundary design beyond
   baseline coding patterns.
+- The task requires strict code-shape, ownership, public API hygiene, semantic
+  duplication, AI-shaped code, or alignment review against reference Apple or
+  Swift code.
 - The task requires Xcode String Catalogs, generated localizable symbols,
   XLIFF/xcloc exchange, pseudolocalization, localized package/framework
-  resources, bundle lookup, RTL validation, or locale UI tests. Use
-  `xcode-localization-patterns` instead.
+  resources, bundle lookup, RTL validation, or locale UI tests.
 
 ## Workflow
 
@@ -104,6 +91,9 @@ documentation work.
 
 ## Read Next
 
+- Read `references/language-updates.md` for Swift 6.3/6.4 language syntax and
+  compiler-versus-runtime availability checks; use `references/official-sources.md`
+  when refreshing those facts.
 - Read `rules/baseline.md` when applying or reviewing baseline rules.
 - Read `references/format-style.md` when replacing legacy `Formatter`,
   `String(format:)`, or eager SwiftUI text formatting.

@@ -32,8 +32,7 @@ triage, and small implementation recommendations.
   replacement, or repository documentation.
 - Do not use for broad Swift Concurrency migration, actor-isolation design,
   `Sendable` fixes, or data-race work unless the concrete problem is Core Data
-  context confinement or managed-object handoff. Route broader concurrency work
-  to `swift-concurrency-patterns`.
+  context confinement or managed-object handoff.
 
 ## Inputs To Inspect
 
@@ -69,8 +68,8 @@ triage, and small implementation recommendations.
 - `references/stack-contexts-saving.md`: stack setup, contexts, merge policies,
   saving, and `hasPersistentChanges`.
 - `references/threading-concurrency.md`: context confinement,
-  `NSManagedObjectID`, `perform`, `performAndWait`, async/await, and routing to
-  Swift Concurrency guidance.
+  `NSManagedObjectID`, `perform`, `performAndWait`, async/await, and the
+  boundary with broader Swift Concurrency work.
 - `references/fetching-batch-history.md`: fetch requests,
   `NSFetchedResultsController`, batch operations, and persistent history.
 - `references/model-migration-cloudkit.md`: model constraints, validation,
@@ -126,4 +125,5 @@ For reviews or implementation recommendations, return:
 - If a migration is destructive or production CloudKit schema is involved, stop
   and request explicit confirmation before proposing irreversible steps.
 - If the task becomes broad Swift Concurrency design rather than Core Data
-  confinement, route to `swift-concurrency-patterns`.
+  confinement, report that it is out of scope and limit findings to Core Data
+  confinement and object handoff.

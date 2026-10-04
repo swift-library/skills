@@ -40,17 +40,10 @@ a short definition of common terms.
 ## Source Policy
 
 Prefer current Apple documentation for framework APIs and App Store
-Accessibility Nutrition Label criteria. Use upstream community skills as
-implementation pattern sources, not as final authority when Apple docs or local
-project constraints differ.
+Accessibility Nutrition Label criteria. Treat community implementation patterns
+as secondary when Apple docs or local project constraints differ.
 
-Upstream skill sources synthesized into this skill:
-
-- `dadederk/iOS-Accessibility-Agent-Skill`
-- `PasqualeVittoriosi/swift-accessibility-skill`
-- `rgmez/apple-accessibility-skills`
-
-License notices are preserved in the skill root. See `licenses.md`.
+Third-party sources and license notices are listed in `licenses.md`.
 
 ## Useful Official Source Areas
 

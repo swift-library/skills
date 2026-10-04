@@ -1,6 +1,6 @@
 ---
 name: swiftpm-index
-description: Check Swift package code for custom reusable infrastructure that may duplicate official Apple/swiftlang libraries, including CLI parsing, collections, sequence or async-sequence algorithms, process execution, Markdown or Swift source tooling, DocC/testing/system wrappers, logging, metrics, tracing, HTTP types, OpenAPI, protobuf, crypto, certificates, or ASN.1. Use automatically during implementation or review for lightweight official-library checks, and use manually for full SwiftPM Index audits, SPI discovery, local candidates, source refresh, and Adopt / Wrap / Reference / Keep custom decisions. Do not use for GitHub popularity ranking, Apple SDK framework catalogs, automatic migrations, code rewrites, or non-Swift package discovery.
+description: "Audit SwiftPM package code when implementation or review may duplicate official Apple/swiftlang or established package infrastructure: CLI parsing, Package Collections, sequence or async algorithms, process execution, Markdown or Swift source tooling, DocC/testing/system wrappers, logging/metrics/tracing, HTTP, OpenAPI, protobuf, crypto, certificates, or ASN.1. Use for full SwiftPM Index audits, Package Collection validation/diff/generation/signing, SPI discovery, source refresh, and Adopt/Wrap/Reference/Keep decisions. Do not use for ordinary feature work, registry publishing, treating collections as dependency URL aliases, GitHub popularity ranking, Apple SDK catalogs, automatic migrations, code rewrites, or non-Swift package discovery."
 ---
 
 # SwiftPM Index
@@ -14,7 +14,8 @@ a target Swift package. The skill has two entry modes:
   custom reusable Swift infrastructure that may duplicate official
   Apple/swiftlang libraries.
 - **Manual full index / discovery**: user-requested full audits, source refresh,
-  SPI discovery, local workspace candidate checks, and review bundle exports.
+  Swift Package Collection tool runs, SPI discovery, local workspace candidate
+  checks, and review bundle exports.
 
 ## Entry Modes
 
@@ -42,15 +43,19 @@ Read in this order:
 
 Use this entry when the user explicitly asks for a full audit, dependency
 discovery, SPI search, local workspace candidate review, index refresh, drift
-check, source acquisition, or export bundle.
+check, source acquisition, package collection validation/diff/generation/signing,
+or export bundle.
 
-Manual mode may use the broader source model:
+Manual mode may use the broader source model and tool backends:
 
 - **Official profile**: Apple Swift Package Collection, `github.com/apple/*`,
   and `github.com/swiftlang/*`.
 - **SPI profile**: community packages discoverable through Swift Package Index
   and its public PackageList repository.
 - **Local profile**: repo-local or workspace-local Swift packages.
+- **Tool backend**: `swiftlang/swift-package-collection-generator` as the fixed
+  executable backend for generating, validating, diffing, and signing package
+  collection JSON.
 
 Read task-specific rules and CLI docs only as needed.
 
@@ -62,6 +67,9 @@ Read task-specific rules and CLI docs only as needed.
   existing Swift libraries.
 - Map target capabilities to official, SPI community, or local workspace
   library candidates.
+- Route Swift Package Collection catalog/tooling work here when the task is
+  about collection JSON, Apple collection parsing, local collection catalogs, or
+  collection validation/diff/generation/signing.
 - Compare dependency cost, API fit, module boundaries, platform/toolchain fit,
   public API leakage, compliance notes when requested, and maintenance signals.
 - Produce Adopt / Wrap / Reference / Keep custom recommendations.
@@ -73,6 +81,9 @@ Read task-specific rules and CLI docs only as needed.
 - Do not rank packages by GitHub stars or popularity.
 - Do not catalog Apple SDK frameworks.
 - Do not automatically rewrite source code or migrate dependencies.
+- Do not use package collections as dependency URL aliases or Swift Package
+  Registry substitutes.
+- Do not set up or publish a Swift Package Registry service.
 - Do not recommend a third-party package from discovery metadata alone.
 - Do not treat generated source lists as curated skill truth.
 
@@ -80,6 +91,8 @@ Read task-specific rules and CLI docs only as needed.
 
 - Target package: `Package.swift`, `Sources/`, `Tests/`, `Docs/`, `README.md`,
   `AGENTS.md`, `Examples/`, `Plugins/`, and existing dependencies.
+- Package collection JSON files and local catalog inputs when the task is
+  about Swift Package Collection tooling.
 - Official source lists and SPI PackageList output from the CLI when available.
 - Curated knowledge files under `knowledge/`.
 - Source and workflow rules under `rules/`.
@@ -89,17 +102,20 @@ Read task-specific rules and CLI docs only as needed.
 
 1. Select the entry mode: automatic lightweight check or manual full index /
    discovery.
-2. Inventory the target package capabilities and existing dependencies.
-3. Identify custom wheels and classify the audit profile:
+2. If the task is only package collection JSON
+   generation/validation/diff/signing, run the tool backend through the CLI
+   wrapper and do not produce an adoption recommendation.
+3. Inventory the target package capabilities and existing dependencies.
+4. Identify custom wheels and classify the audit profile:
    - `official`: only Apple/swiftlang candidates.
    - `spi`: community Swift Package Index candidates.
    - `mixed`: official first, SPI only when official candidates do not fit.
    - `local`: local workspace packages only.
-4. Consult source authority in order for the selected profile.
-5. Load only the relevant reference files from `rules/` or `knowledge/`.
-6. Classify candidates using Adopt / Wrap / Reference / Keep custom.
-7. Check dependency cost before recommending adoption.
-8. Report migration seams, risks, and recommended next steps.
+5. Consult source authority in order for the selected profile.
+6. Load only the relevant reference files from `rules/` or `knowledge/`.
+7. Classify candidates using Adopt / Wrap / Reference / Keep custom.
+8. Check dependency cost before recommending adoption.
+9. Report migration seams, risks, and recommended next steps.
 
 ## Source Categories
 
@@ -114,6 +130,13 @@ Read task-specific rules and CLI docs only as needed.
   discovery only until package source and metadata are checked.
 - `spi_package_page`: Swift Package Index package page; community discovery and
   health metadata, not final adoption authority by itself.
+
+## Tool Backends
+
+- `swift_package_collection_generator`: fixed runtime checkout of
+  `swiftlang/swift-package-collection-generator`; use only as an executable
+  backend for package collection JSON generation, validation, diffing, and
+  signing.
 
 ## Reference Files To Consult
 
@@ -145,6 +168,9 @@ Read only files relevant to the selected operation:
   package, verify repository source, `Package.swift`, releases, maintenance
   activity, supported platforms, Swift tools version, dependency tree, and
   public-boundary impact.
+- Treat package collection tool output as catalog/tool evidence. It can
+  validate, diff, generate, or sign collection JSON, but it does not make
+  package adoption decisions and is not a source authority tier.
 - Do not use GitHub stars alone as adoption evidence.
 - Do not recommend adoption unless platform support, Swift tools version, API
   stability, dependency weight, maintenance, and module-boundary fit are
@@ -168,6 +194,8 @@ Expected commands:
 - `swiftpm-index fetch`
 - `swiftpm-index fetch-spi`
 - `swiftpm-index search-spi --query <term> [--limit <n>]`
+- `swiftpm-index ensure-package-collection-tool [--build]`
+- `swiftpm-index package-collection-tool [--build] <product> [-- <arguments>...]`
 - `swiftpm-index enrich`
 - `swiftpm-index diff`
 - `swiftpm-index render`
@@ -182,6 +210,8 @@ The executable lives at `cli/swiftpm-index`.
 - Generated source lists do not mutate curated `knowledge/` files.
 - Automatic lightweight checks do not require CLI refresh, SPI search, or
   runtime indexes.
+- Package collection tool runs use the fixed tool backend recorded in
+  `rules/source-acquisition.md` and do not vendor tool source into this skill.
 - CLI enrichment records candidate-quality facts; it does not make
   recommendations.
 - Every recommendation cites source category and authority level.

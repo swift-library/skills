@@ -26,8 +26,7 @@ updates, and manage workout sessions.
 ## When Not To Use
 
 - Do not use for generic persistence or sync with no HealthKit data.
-- Do not use for chart visual styling only; use `swift-charts-patterns` or
-  design skills as appropriate.
+- Do not use for chart visual styling only.
 - Do not provide medical advice or clinical interpretation.
 - Do not use for fitness marketing copy with no HealthKit implementation.
 - Do not invent data-type availability, descriptor API behavior, background

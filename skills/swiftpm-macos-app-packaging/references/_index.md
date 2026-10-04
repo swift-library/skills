@@ -18,5 +18,5 @@ Use this index only when `SKILL.md` routing is not enough.
 - Development signing setup, Developer ID signing, notarization, stapling, zip,
   GitHub release, or appcast:
   `release.md`.
-- If the work becomes source architecture or UI design, route to the relevant
-  SwiftUI, Swift, or architecture skill.
+- If the work becomes source architecture or UI design, it is outside packaging
+  scope.

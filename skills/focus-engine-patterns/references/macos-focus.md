@@ -63,11 +63,11 @@ popUpButton.nextKeyView = textField  // Complete the loop
 
 **Auto-recalculation:**
 ```swift
-window.recalculatesKeyViewLoop = true  // System manages the loop
+window.autorecalculatesKeyViewLoop = true  // System manages the loop
 // System uses geometric position (left-to-right, top-to-bottom) to determine order
 ```
 
-Common mistake: Setting `recalculatesKeyViewLoop = true` AND manually setting `nextKeyView`. The manual chain gets overwritten.
+Common mistake: Setting `autorecalculatesKeyViewLoop = true` AND manually setting `nextKeyView`. The manual chain gets overwritten.
 
 ## SwiftUI Focus on macOS
 
@@ -116,7 +116,7 @@ On macOS, `.focusable()` views participate in the Tab loop automatically.
 
 On macOS, `.activate` responds to Tab without requiring a system toggle (unlike iOS which requires "Keyboard Navigation" to be enabled).
 
-### defaultFocus(_:_:priority:) (macOS 14+)
+### defaultFocus(_:_:priority:) (macOS 13+)
 
 ```swift
 @FocusState var selectedField: Field?
@@ -125,7 +125,7 @@ VStack { ... }
     .defaultFocus($selectedField, .search, priority: .userInitiated)
 ```
 
-### .focusSection() (macOS 14+)
+### .focusSection() (macOS 13+)
 
 Groups focusable views for arrow key navigation within a section:
 
@@ -169,10 +169,8 @@ class MyView: NSView {
                      xRadius: 8, yRadius: 8).fill()
     }
 
-    // Tell AppKit when focus ring mask changes
-    override func noteFocusRingChanged() {
-        // Called when the ring needs to redraw
-    }
+    // When the mask shape changes, call noteFocusRingMaskChanged()
+    // so AppKit redraws the ring
 }
 ```
 
@@ -265,7 +263,7 @@ WindowGroup {
 @FocusedValue(\.activeDocument) var activeDocument
 ```
 
-### @FocusedObject (macOS 12+)
+### @FocusedObject (macOS 13+)
 
 Pass an entire ObservableObject through focus:
 
@@ -586,7 +584,7 @@ Forgetting that Mac Catalyst inherits iPad focus behavior. If your iPad app does
 | Focus indicator | Blue ring | Scale/highlight | Halo |
 | Primary input | Mouse + keyboard | Siri Remote | Touch |
 | focusedValue | Menu commands | N/A | Menu commands |
-| .focusSection() | macOS 14+ | tvOS 15+ | iOS 17+ |
+| .focusSection() | macOS 13+ | tvOS 15+ | Unavailable |
 | @FocusState | macOS 12+ | tvOS 15+ | iOS 15+ |
 | FKA toggle | System Settings | N/A | Settings > Accessibility |
 
@@ -601,8 +599,8 @@ Custom NSView subclasses return `false` by default. Without overriding to `true`
 ### 3. Focus ring on custom-drawn views
 If you draw content with custom insets or shapes, the default rectangular focus ring looks wrong. Override `drawFocusRingMask()` and `focusRingMaskBounds`.
 
-### 4. Conflicting recalculatesKeyViewLoop with manual nextKeyView
-Setting `recalculatesKeyViewLoop = true` overrides all manual `nextKeyView` connections. Pick one approach.
+### 4. Conflicting autorecalculatesKeyViewLoop with manual nextKeyView
+Setting `autorecalculatesKeyViewLoop = true` overrides all manual `nextKeyView` connections. Pick one approach.
 
 ### 5. Assuming Full Keyboard Access is always on
 Most users don't enable it. Your custom views that rely on Tab focus for non-text-field controls may not receive focus for most users. Always provide mouse/trackpad interaction as primary.
@@ -635,7 +633,7 @@ Using `.focusable()` on a view that already has system focus support (like TextF
 | `acceptsFirstResponder` | Whether NSView can receive focus at all |
 | `canBecomeKeyView` | Whether NSView participates in Tab loop |
 | `nextKeyView` / `previousKeyView` | Manual key view loop construction |
-| `recalculatesKeyViewLoop` | Auto-calculate Tab order from geometry |
+| `autorecalculatesKeyViewLoop` | Auto-calculate Tab order from geometry |
 | `NSWindow.initialFirstResponder` | View that gets focus when window opens |
 | `NSFocusRingType` | Control focus ring appearance per view |
 | `drawFocusRingMask()` | Custom focus ring shape |

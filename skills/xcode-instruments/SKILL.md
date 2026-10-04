@@ -26,14 +26,13 @@ recording when local Xcode tools are available.
 ## When Not To Use
 
 - Do not use for source-only SwiftUI performance review without trace or
-  profiling evidence; use `swiftui-performance`.
+  profiling evidence.
 - Do not use for source-only SwiftUI state, layout, navigation, accessibility,
-  animation, or image refactoring without trace or profiling evidence; use the
-  relevant source skill such as `swiftui-patterns` or `accessibility-patterns`.
-- Do not use for Swift Charts; use `swift-charts-patterns`.
+  animation, or image refactoring without trace or profiling evidence.
+- Do not use for Swift Charts.
 - Do not use for Core Data or SwiftData persistence design.
 - Do not use for broad Swift Concurrency migration, actor-isolation design,
-  `Sendable` fixes, or data-race work; use `swift-concurrency-patterns`.
+  `Sendable` fixes, or data-race work.
 - Do not use for networking architecture, package architecture, dependency
   replacement, or repository documentation.
 
@@ -57,10 +56,9 @@ recording when local Xcode tools are available.
    `scripts/record_trace.py`.
 5. Use `--list-runs`, `--list-logs`, `--list-signposts`, and `--window` before
    full analysis when the user gives a specific run, event, log, or time span.
-6. Keep trace-tool findings distinct from source-code recommendations. Route
-   source-level SwiftUI performance fixes to `swiftui-performance`; route
-   non-performance SwiftUI source fixes to the relevant source skill when they
-   go beyond trace interpretation.
+6. Keep trace-tool findings distinct from source-code recommendations. Report
+   source-level SwiftUI fixes as follow-up work when they go beyond trace
+   interpretation.
 7. Report tool gaps explicitly when `xctrace`, devices, templates, or trace
    files are unavailable.
 
@@ -91,8 +89,8 @@ Use `references/_index.md` only when the needed reference is unclear.
 - Use physical iOS/iPadOS devices or host Mac for the SwiftUI template lane;
   prefer Time Profiler for simulator recordings when the SwiftUI lane is not
   available.
-- If source edits are needed after analysis, apply the relevant source-code
-  skill for that area.
+- If source edits are needed after analysis, treat them as source-level work
+  outside trace interpretation.
 
 ## Validation Rules
 

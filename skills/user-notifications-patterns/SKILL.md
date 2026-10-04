@@ -25,14 +25,10 @@ and app routing code.
 
 ## When Not To Use
 
-- Do not use for push marketing copy or campaign planning; use the market
-  operations collection.
-- Do not use for Live Activities or ActivityKit push updates; use
-  `activitykit-patterns`.
-- Do not use for simulator lifecycle, screenshots, or device management alone;
-  use `ios-simulator`.
-- Do not use for release signing or provisioning profile work alone; use
-  `apple-platform-release`.
+- Do not use for push marketing copy or campaign planning.
+- Do not use for Live Activities or ActivityKit push updates.
+- Do not use for simulator lifecycle, screenshots, or device management alone.
+- Do not use for release signing or provisioning profile work alone.
 - Do not invent APNs headers, payload fields, entitlement requirements, or
   platform delivery behavior. Verify current Apple documentation and device
   behavior for version-specific claims.

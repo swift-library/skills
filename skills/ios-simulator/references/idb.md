@@ -47,6 +47,6 @@ missing.
 ## Boundaries
 
 - IDB output is accessibility-tree evidence, not a complete accessibility
-  audit. Use `accessibility-patterns` for dedicated accessibility findings.
+  audit. Dedicated accessibility findings are out of scope.
 - Do not assert that a screen is correct from one tree dump. Pair it with the
   user task, logs, screenshots, tests, or source inspection as needed.

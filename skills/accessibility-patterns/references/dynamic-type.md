@@ -116,7 +116,16 @@ button.addInteraction(UILargeContentViewerInteraction())
 ## UIKit Change Handling
 
 React to content size category changes only when the view has custom layout
-work:
+work. `traitCollectionDidChange(_:)` is deprecated as of iOS 17; on iOS 17 and
+later, use the trait change registration APIs from `UITraitChangeObservable`:
+
+```swift
+registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) { (self: Self, _: UITraitCollection) in
+    self.updateLayoutForContentSizeCategory()
+}
+```
+
+Keep the override only for deployment targets below iOS 17:
 
 ```swift
 override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -126,9 +135,6 @@ override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollect
     }
 }
 ```
-
-Use newer trait registration APIs when the project target and local style use
-them.
 
 ## Testing
 

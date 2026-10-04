@@ -1,18 +1,16 @@
 # CryptoKit Symmetric Cryptography
 
-> **Scope:** SHA-2/SHA-3 hashing, HMAC authentication, AES-GCM and ChaChaPoly authenticated encryption, SymmetricKey management, nonce handling, key derivation (HKDF + PBKDF2), and CommonCrypto migration. iOS 13+ baseline; SHA-3 requires iOS 18+.
+> **Scope:** SHA-2/SHA-3 hashing, HMAC authentication, AES-GCM and ChaChaPoly authenticated encryption, SymmetricKey management, nonce handling, key derivation (HKDF + PBKDF2), and CommonCrypto migration. iOS 13+ baseline; SHA-3 requires iOS 26+.
 >
-> **Key APIs:** `SHA256`, `SHA384`, `SHA512`, `SHA3_256` (iOS 18+), `HMAC`, `AES.GCM.seal/open`, `ChaChaPoly.seal/open`, `SymmetricKey`, `AES.GCM.Nonce`, `HKDF`, `SealedBox`
+> **Key APIs:** `SHA256`, `SHA384`, `SHA512`, `SHA3_256` (iOS 26+), `HMAC`, `AES.GCM.seal/open`, `ChaChaPoly.seal/open`, `SymmetricKey`, `AES.GCM.Nonce`, `HKDF`, `SealedBox`
 >
-> **Cross-references:** [secure-enclave.md] for hardware-backed asymmetric keys · [cryptokit-public-key.md] for ECDSA/ECDH/HPKE · [credential-storage-patterns.md] for key storage in Keychain · [common-anti-patterns.md] for the top-5 AI mistakes including hardcoded keys and nonce reuse
+> **Cross-references:** [secure-enclave.md] for hardware-backed asymmetric keys · [cryptokit-public-key.md] for ECDSA/ECDH/HPKE · [common-anti-patterns.md] for the top-5 AI mistakes including hardcoded keys and nonce reuse
 
 ---
 
 ## Hashing: SHA-2 and SHA-3
 
-CryptoKit's hash functions follow a unified `HashFunction` protocol. The SHA-2 family (`SHA256`, `SHA384`, `SHA512`) ships with iOS 13+. The SHA-3 family (`SHA3_256`, `SHA3_384`, `SHA3_512`) requires **iOS 18+ / macOS 15+ / tvOS 18+ / visionOS 2+** (added in 2024, per Apple's SHA3_256 documentation page).
-
-> **Cross-validation note:** One research source claimed SHA-3 requires iOS 26+. This is incorrect. Apple's official documentation lists SHA3_256 availability as iOS 18.0+, macOS 15.0+. iOS 26 introduced post-quantum primitives (ML-KEM, ML-DSA), not SHA-3.
+CryptoKit's hash functions follow a unified `HashFunction` protocol. The SHA-2 family (`SHA256`, `SHA384`, `SHA512`) ships with iOS 13+. The SHA-3 family (`SHA3_256`, `SHA3_384`, `SHA3_512`) requires **iOS 26+ / macOS 26+ / watchOS 26+ / tvOS 26+ / visionOS 26+**.
 
 All hash functions produce digest types that conform to `Sequence` (of `UInt8`), `ContiguousBytes`, `Hashable`, and `CustomStringConvertible`. Digest equality checks use **constant-time comparison** internally to prevent timing side-channels.
 
@@ -58,11 +56,11 @@ All hash functions support `init()` → `update(data:)` → `finalize()`. The `a
 
 ### SHA-3 with Availability Check
 
-**✅ Correct: SHA-3 with fallback (iOS 18+)**
+**✅ Correct: SHA-3 with fallback (iOS 26+)**
 
 ```swift
 func computeHash(data: Data) -> String {
-    if #available(iOS 18.0, macOS 15.0, *) {
+    if #available(iOS 26.0, macOS 26.0, *) {
         let digest = SHA3_256.hash(data: data)
         return digest.map { String(format: "%02x", $0) }.joined()
     } else {
@@ -95,9 +93,9 @@ CryptoKit deliberately places both in the `Insecure` namespace as an API-level w
 | SHA-256   | `SHA256`        | iOS 13+      | Strong     | Default for integrity, signing, HMAC       |
 | SHA-384   | `SHA384`        | iOS 13+      | Strong     | Certificate chains, higher security margin |
 | SHA-512   | `SHA512`        | iOS 13+      | Strong     | Large data, performance on 64-bit          |
-| SHA3-256  | `SHA3_256`      | iOS 18+      | Strong     | Compliance requiring SHA-3                 |
-| SHA3-384  | `SHA3_384`      | iOS 18+      | Strong     | Future-proofing                            |
-| SHA3-512  | `SHA3_512`      | iOS 18+      | Strong     | High-security contexts                     |
+| SHA3-256  | `SHA3_256`      | iOS 26+      | Strong     | Compliance requiring SHA-3                 |
+| SHA3-384  | `SHA3_384`      | iOS 26+      | Strong     | Future-proofing                            |
+| SHA3-512  | `SHA3_512`      | iOS 26+      | Strong     | High-security contexts                     |
 | MD5       | `Insecure.MD5`  | iOS 13+      | **Broken** | Legacy non-security checksums only         |
 | SHA-1     | `Insecure.SHA1` | iOS 13+      | **Broken** | Legacy non-security checksums only         |
 
@@ -300,7 +298,7 @@ let authKey = HKDF<SHA256>.deriveKey(
 )
 ```
 
-> **Iteration count note:** One research source used 100,000 iterations. The OWASP 2023 Password Storage Cheat Sheet recommends **600,000 iterations minimum** for PBKDF2-HMAC-SHA256. Use ≥600,000 for new implementations; only use lower counts if supporting legacy interoperability with documented justification.
+> **Iteration count note:** The OWASP 2023 Password Storage Cheat Sheet recommends **600,000 iterations minimum** for PBKDF2-HMAC-SHA256. Use ≥600,000 for new implementations; only use lower counts if supporting legacy interoperability with documented justification.
 
 **Critical distinction:** HKDF is designed for already-high-entropy input (shared secrets, master keys). It does **not** add computational cost. Never use HKDF alone for passwords — always PBKDF2 first.
 
@@ -332,7 +330,7 @@ HKDF follows RFC 5869 and supports one-shot `deriveKey()` and two-phase `extract
 let key = SymmetricKey(data: Data(base64Encoded: "c2VjcmV0S2V5MTIzNDU2Nzg5MDEyMzQ1Ng==")!)
 ```
 
-A Zimperium 2025 study found 48% of mobile apps contain hardcoded secrets. iOS binaries can be decrypted and analyzed with tools like Hopper or IDA Pro. **Store keys in the Keychain** with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`, derive them at runtime from user credentials, or fetch from a secure server. See [credential-storage-patterns.md] for detailed patterns.
+A Zimperium 2025 study found 48% of mobile apps contain hardcoded secrets. iOS binaries can be decrypted and analyzed with tools like Hopper or IDA Pro. **Store keys in the Keychain** with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`, derive them at runtime from user credentials, or fetch from a secure server.
 
 **SymmetricKey memory behavior:** Keys live in regular process memory (not the Secure Enclave — only asymmetric `SecureEnclave.P256` keys are hardware-backed). CryptoKit automatically overwrites key material during deallocation. For persistent storage, serialize to the Keychain — never UserDefaults or files.
 
@@ -454,7 +452,7 @@ See [compliance-owasp-mapping.md] for the full compliance matrix.
 | AES-GCM decrypt with wrong AAD             | Metadata binding               | `CryptoKitError.authenticationFailure` |
 | HMAC verify with wrong key                 | Timing-safe verification       | Returns `false`                        |
 | HMAC verify with tampered message          | Integrity detection            | Returns `false`                        |
-| SHA-3 availability fallback                | Backward compatibility         | Falls back to SHA-256 on <iOS 18       |
+| SHA-3 availability fallback                | Backward compatibility         | Falls back to SHA-256 on <iOS 26       |
 | SealedBox round-trip (combined format)     | Serialization correctness      | Decrypted output matches plaintext     |
 | PBKDF2 + HKDF derivation determinism       | Key derivation reproducibility | Same password + salt → same key        |
 
@@ -478,7 +476,7 @@ See [compliance-owasp-mapping.md] for the full compliance matrix.
 
 ## Conclusion
 
-CryptoKit's design philosophy — authenticated encryption by default, automatic nonce generation, memory zeroing, constant-time comparisons — eliminates the most common categories of cryptographic implementation errors. For new code: `AES.GCM.seal()` with automatic nonces for encryption, `SHA256` (or `SHA3_256` on iOS 18+) for hashing, `HMAC<SHA256>` for authentication, and `SymmetricKey(size: .bits256)` for key generation. Derive keys from passwords with PBKDF2 (≥600,000 iterations, CommonCrypto) followed by HKDF (CryptoKit) — never pass raw passwords to `SymmetricKey(data:)`. Store keys in the Keychain, not source code. Prefer AES-GCM over ChaChaPoly on Apple hardware for the hardware acceleration advantage, but ChaChaPoly remains sound for cross-platform consistency or software-only environments.
+CryptoKit's design philosophy — authenticated encryption by default, automatic nonce generation, memory zeroing, constant-time comparisons — eliminates the most common categories of cryptographic implementation errors. For new code: `AES.GCM.seal()` with automatic nonces for encryption, `SHA256` (or `SHA3_256` on iOS 26+) for hashing, `HMAC<SHA256>` for authentication, and `SymmetricKey(size: .bits256)` for key generation. Derive keys from passwords with PBKDF2 (≥600,000 iterations, CommonCrypto) followed by HKDF (CryptoKit) — never pass raw passwords to `SymmetricKey(data:)`. Store keys in the Keychain, not source code. Prefer AES-GCM over ChaChaPoly on Apple hardware for the hardware acceleration advantage, but ChaChaPoly remains sound for cross-platform consistency or software-only environments.
 
 ---
 
@@ -493,5 +491,5 @@ CryptoKit's design philosophy — authenticated encryption by default, automatic
 7. **SealedBox.combined for serialization** — Use `.combined` / `SealedBox(combined:)` for storage and network; no manual nonce/ciphertext/tag concatenation
 8. **Keys in Keychain** — Symmetric keys persisted via Keychain with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`; no hardcoded keys in source, no UserDefaults, no plist
 9. **Constant-time HMAC verification** — Use `HMAC.isValidAuthenticationCode()`, never manual byte comparison
-10. **SHA-3 availability guarded** — `SHA3_256` wrapped in `#available(iOS 18.0, macOS 15.0, *)` with SHA-256 fallback
+10. **SHA-3 availability guarded** — `SHA3_256` wrapped in `#available(iOS 26.0, macOS 26.0, *)` with SHA-256 fallback
 11. **Associated data for context binding** — AES-GCM `authenticating:` parameter used when ciphertext must be bound to metadata (user ID, resource ID, version)

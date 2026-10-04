@@ -1,6 +1,6 @@
 ---
 name: swiftui-performance
-description: Use this skill for SwiftUI source-level performance implementation guidance, review, diagnosis, and optimization involving slow rendering, janky scrolling, high CPU or memory use, excessive view updates, invalidation fan-out, unstable identity, heavy work in `body`, image cost, animation cost, or layout thrash. Auto-trigger when SwiftUI implementation or review explicitly involves performance-sensitive surfaces such as large lists, image-heavy views, high-frequency state updates, unstable identity, costly layout, or animation hot paths; use manual mode for PR-time performance review before requiring Instruments evidence. Do not use for `.trace`, `xctrace`, Time Profiler, hang, hitch, or signpost capture/analysis; use xcode-instruments.
+description: Use this skill for SwiftUI source-level performance implementation guidance, review, diagnosis, and optimization involving slow rendering, janky scrolling, high CPU or memory use, excessive view updates, invalidation fan-out, unstable identity, heavy work in `body`, image cost, animation cost, or layout thrash. Auto-trigger when SwiftUI implementation or review explicitly involves performance-sensitive surfaces such as large lists, image-heavy views, high-frequency state updates, unstable identity, costly layout, or animation hot paths; use manual mode for PR-time performance review before requiring Instruments evidence. Do not use for `.trace`, `xctrace`, Time Profiler, hang, hitch, or signpost capture/analysis.
 ---
 
 # SwiftUI Performance
@@ -17,9 +17,9 @@ route to Instruments only when runtime evidence is needed.
   materially affect rendering cost.
 - Manual performance review: Use when the user asks for PR-time or existing-code
   performance review, diagnosis, or optimization guidance.
-- Runtime evidence escalation: Route trace capture and trace interpretation to
-  `xcode-instruments`, then return here for source-level remediation when
-  useful.
+- Runtime evidence escalation: Trace capture and trace interpretation are out
+  of scope; once Instruments evidence exists, return here for source-level
+  remediation when useful.
 
 ## When To Use
 
@@ -35,10 +35,9 @@ route to Instruments only when runtime evidence is needed.
 ## When Not To Use
 
 - Do not use for `.trace`, `xctrace`, Time Profiler, hangs, hitches, signposts,
-  trace recording, or trace parsing; use `xcode-instruments`.
-- Do not use for ordinary view cleanup with no performance symptom; use
-  `swiftui-patterns`.
-- Do not use for broad architecture selection; use `swiftui-architecture`.
+  trace recording, or trace parsing.
+- Do not use for ordinary view cleanup with no performance symptom.
+- Do not use for broad architecture selection.
 - Do not claim performance improvement without measurement or a clearly stated
   source-level hypothesis.
 
@@ -60,8 +59,8 @@ route to Instruments only when runtime evidence is needed.
    work out of `body`, downsample images, reduce layout complexity, and narrow
    animation scope.
 5. If code review is inconclusive or runtime evidence is necessary, use
-   `references/profiling-intake.md` and route trace capture/analysis to
-   `xcode-instruments`.
+   `references/profiling-intake.md` and request Instruments trace capture and
+   analysis.
 6. Report likely causes, evidence, remediation, and validation steps.
 
 ## Reference Files To Consult
@@ -70,7 +69,6 @@ route to Instruments only when runtime evidence is needed.
 - `references/profiling-intake.md`: what runtime evidence to request before
   involving Instruments.
 - `references/report-template.md`: compact review output shape.
-- `../xcode-instruments/`: trace capture and analysis when needed.
 
 ## Decision Rules
 
@@ -86,8 +84,8 @@ route to Instruments only when runtime evidence is needed.
 - Rebuild after source edits.
 - Use previews, screenshots, `_logChanges()`, local benchmarks, or user-provided
   traces to validate the changed path.
-- If runtime evidence is required, ask for the smallest trace that reproduces
-  the symptom and route analysis to `xcode-instruments`.
+- If runtime evidence is required, ask for the smallest Instruments trace that
+  reproduces the symptom; trace analysis itself is out of scope.
 - Keep before/after claims tied to the same interaction and build mode.
 
 ## Output Format
@@ -106,7 +104,7 @@ Return:
 
 - If no code is available, ask for the smallest target view/model slice and
   reproduction path.
-- If the symptom cannot be explained from source, state that and request trace
-  evidence through `xcode-instruments`.
+- If the symptom cannot be explained from source, state that and request
+  Instruments trace evidence.
 - If performance is a secondary concern inside a larger refactor, keep the
-  performance note short and route the main work to the relevant skill.
+  performance note short and leave the main refactor outside this skill.

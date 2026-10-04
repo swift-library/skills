@@ -25,13 +25,12 @@ metadata, embeddings, custom natural-language models, and in-app translation.
 
 ## When Not To Use
 
-- Do not use for Foundation Models generation or prompt/session behavior; use
-  `foundation-models-patterns`.
-- Do not use for Speech framework transcription; use `speech-patterns`.
+- Do not use for Foundation Models generation or prompt/session behavior.
+- Do not use for Speech framework transcription.
 - Do not use for Core ML model internals unless `NLModel` is only a thin
   wrapper around a model artifact that needs Core ML review.
 - Do not use for server translation APIs, copywriting, or interface text
-  editing; use `interface-writing` for UI text.
+  editing.
 - Do not invent language coverage, translation availability, asset behavior, or
   thread-safety details. Verify current Apple documentation and the local SDK.
 
