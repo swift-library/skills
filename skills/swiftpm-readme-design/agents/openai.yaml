@@ -1,0 +1,7 @@
+interface:
+  display_name: "SwiftPM README Design"
+  short_description: "Design and verify Swift package READMEs and repository pages"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon-large.png"
+  brand_color: "#F05138"
+  default_prompt: "Use $swiftpm-readme-design to write or audit this Swift package's README header, badges, Install and Quick start, About, and topics, verifying every fact against the repository and the published package."
