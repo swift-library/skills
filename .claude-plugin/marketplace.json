@@ -4,7 +4,7 @@
     "name": "showxu"
   },
   "metadata": {
-    "description": "Swift skill collection focused on package documentation architecture, Swift library dependency audits, SwiftPM architecture guidance, SwiftPM library distillation, SwiftUI and UIKit architecture guidance, Swift Concurrency guidance, Swift Testing patterns, SwiftData patterns, Core Data patterns, CloudKit patterns, Keychain patterns, CryptoKit patterns, Certificate Trust patterns, AuthenticationServices patterns, Accessibility patterns, Focus Engine patterns, interface writing, Figma-to-SwiftUI translation, SwiftUI patterns, SwiftUI performance, SwiftUI design, WidgetKit implementation, WidgetKit design, TipKit patterns, RelevanceKit patterns, Swift Charts patterns, Xcode Instruments patterns, MetricKit patterns, Xcode localization workflows, App Intents, ActivityKit, App Clips, UserNotifications/APNs, StoreKit, WebKit, MapKit, PhotoKit, AVKit, MusicKit, PDFKit, PaperKit, PencilKit, Contacts, EventKit, HealthKit, PassKit, WeatherKit, FinanceKit, Foundation Models, Core ML, MLX Swift, Vision, Natural Language, Translation, Speech, Foundation URLSession, Network.framework, BackgroundTasks, DeviceCheck/App Attest, CryptoTokenKit, AccessorySetupKit, Core Bluetooth, Core NFC, Core Motion, DockKit, SensorKit, AudioAccessoryKit, HomeKit/MatterSupport, CallKit/PushKit, GroupActivities/SharePlay, CarPlay, AppMigrationKit, AdAttributionKit, AlarmKit, BrowserEngineKit, EnergyKit, PermissionKit, GameKit, SpriteKit, SceneKit, TabletopKit, RealityKit/ARKit, SwiftLint, iOS Simulator, Apple-platform release engineering, macOS SwiftPM app packaging, and broad Swift language / API baselines",
+    "description": "Claude and Codex skills for Swift packages, Apple frameworks, SwiftUI and UIKit, developer tooling, documentation, and release engineering",
     "version": "0.1.0"
   },
   "plugins": [
@@ -15,6 +15,15 @@
       "strict": false,
       "skills": [
         "./skills/swiftpm-docs"
+      ]
+    },
+    {
+      "name": "swiftpm-readme-design",
+      "description": "Design and verify the GitHub-facing README, badges, Install and Quick start, About, topics, and social preview of Swift package repositories",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftpm-readme-design"
       ]
     },
     {
@@ -36,6 +45,24 @@
       ]
     },
     {
+      "name": "swiftpm-plugin-patterns",
+      "description": "Design, implement, review, and debug Swift Package Manager command plugins, build tool plugins, executable tool targets, plugin tool/core topology, Package.swift plugin dependencies, context.tool(named:) workflows, generated source flows, SwiftSyntax parser tools inside plugins, macro-target interactions, host-tool diagnostics, and plugin fixture validation",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftpm-plugin-patterns"
+      ]
+    },
+    {
+      "name": "swift-code-taste",
+      "description": "Apply clean Swift code-shape taste, ownership boundaries, public API hygiene, and Apple, Swift, and reference-project alignment",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swift-code-taste"
+      ]
+    },
+    {
       "name": "swiftpm-distiller",
       "description": "Distill SwiftPM package or Swift library source into agent-ready skill material and usage guidance",
       "source": "./",
@@ -45,12 +72,39 @@
       ]
     },
     {
+      "name": "swift-design-tokens-patterns",
+      "description": "Implement, review, and debug Swift design-token compiler packages, TokenTool, TokensPlugin, DTCG token config, and generated Apple-platform token outputs",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swift-design-tokens-patterns"
+      ]
+    },
+    {
+      "name": "swift-python-patterns",
+      "description": "Implement, review, and debug Swift PythonKit-style bridge packages, PythonObject conversions, dynamic Python runtime loading, and numpy conversion",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swift-python-patterns"
+      ]
+    },
+    {
       "name": "swiftui-architecture",
-      "description": "Choose, review, refactor, and scaffold SwiftUI feature architecture with MVVM, MVI, TCA, Clean Architecture adapters, navigation coordinators, dependency boundaries, async effects, and tests",
+      "description": "Choose, review, refactor, and scaffold SwiftUI feature architecture with MVVM, MVI, TCA fit checks, Clean Architecture adapters, navigation coordinators, dependency boundaries, async effects, and tests",
       "source": "./",
       "strict": false,
       "skills": [
         "./skills/swiftui-architecture"
+      ]
+    },
+    {
+      "name": "swiftui-tca-architecture",
+      "description": "Design, implement, review, refactor, and test existing or explicitly accepted Point-Free ComposableArchitecture SwiftUI features with reducers, stores, effects, dependencies, navigation, shared state, performance, and TestStore",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftui-tca-architecture"
       ]
     },
     {
@@ -90,12 +144,57 @@
       ]
     },
     {
+      "name": "swift-data-writable-patterns",
+      "description": "Use, review, and debug writable SwiftData @Query collection workflows powered by SwiftDataWritable @Writable",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swift-data-writable-patterns"
+      ]
+    },
+    {
       "name": "swift-programming-language",
       "description": "Review broad Swift language patterns, API design, FormatStyle modernization, Google Swift style references, Foundation usage, localization, and obvious modernization opportunities",
       "source": "./",
       "strict": false,
       "skills": [
         "./skills/swift-programming-language"
+      ]
+    },
+    {
+      "name": "swift-scripts-patterns",
+      "description": "Review and debug small Swift scripts, `swift sh` usage, one-file script automation, dependency comments, argument handling, and script exit/IO behavior",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swift-scripts-patterns"
+      ]
+    },
+    {
+      "name": "swiftwasm-patterns",
+      "description": "Implement, review, and port Swift packages for Swift SDKs for WebAssembly, WASI, --swift-sdk builds, Embedded Swift Wasm, and runtime validation",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftwasm-patterns"
+      ]
+    },
+    {
+      "name": "javascriptkit-patterns",
+      "description": "Implement and review JavaScriptKit Swift-on-Wasm JavaScript interop with JSObject, JSValue, closures, promises, PackageToJS, and browser or Node hosts",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/javascriptkit-patterns"
+      ]
+    },
+    {
+      "name": "bridge-js-patterns",
+      "description": "Implement and review BridgeJS typed Swift-JavaScript bindings, @JS macros, TypeScript declarations, generated glue, and PackageToJS integration",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/bridge-js-patterns"
       ]
     },
     {
@@ -163,7 +262,7 @@
     },
     {
       "name": "interface-writing",
-      "description": "Write, rewrite, review, and improve product interface text for buttons, alerts, errors, empty states, onboarding, settings, notifications, CLI output, accessibility labels, and terminology consistency",
+      "description": "Write, rewrite, review, improve, and harden UX writing, UI copy, microcopy, source strings, CLI output, accessibility labels, localization-risk notes, and terminology consistency",
       "source": "./",
       "strict": false,
       "skills": [
@@ -181,7 +280,7 @@
     },
     {
       "name": "swiftui-patterns",
-      "description": "Review, implement, and refactor SwiftUI state, view structure, layout, navigation, animation, macOS scenes, MenuBarExtra utilities, and modern API patterns",
+      "description": "Review, implement, and refactor SwiftUI state, view structure, layout, navigation, controls/forms, Form/Section/LabeledContent implementation, animation, macOS scenes, MenuBarExtra utilities, and modern API patterns",
       "source": "./",
       "strict": false,
       "skills": [
@@ -199,7 +298,7 @@
     },
     {
       "name": "swiftui-design",
-      "description": "Review and polish SwiftUI visual design, native Apple UI feel, spacing, typography, semantic colors, grouped content, controls, and editor surfaces",
+      "description": "Review and polish SwiftUI visual design, native Apple UI feel, SwiftUI control selection, Form/Section/LabeledContent row semantics, spacing, typography, semantic colors, grouped content, controls, and editor surfaces",
       "source": "./",
       "strict": false,
       "skills": [
@@ -469,7 +568,7 @@
     },
     {
       "name": "core-ml-patterns",
-      "description": "Implement and review Core ML model loading, prediction, deployment, profiling, tensor/multiarray handling, VNCoreMLModel integration, and model performance",
+      "description": "Implement and review Core ML model conversion, loading, prediction, deployment, profiling, tensor/multiarray handling, quantization, palettization, pruning, VNCoreMLModel integration, and model performance",
       "source": "./",
       "strict": false,
       "skills": [
@@ -591,6 +690,15 @@
       "strict": false,
       "skills": [
         "./skills/core-motion-patterns"
+      ]
+    },
+    {
+      "name": "core-haptics-patterns",
+      "description": "Implement and review Core Haptics engines, AHAP files, custom haptic/audio patterns, advanced players, reset recovery, and device validation",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/core-haptics-patterns"
       ]
     },
     {
@@ -774,12 +882,30 @@
       ]
     },
     {
+      "name": "macos-tcc-permissions-patterns",
+      "description": "Implement and review macOS TCC privacy permissions, System Settings deep links, drag-to-authorize app bundles, helper identity, and onboarding fallbacks",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/macos-tcc-permissions-patterns"
+      ]
+    },
+    {
       "name": "apple-platform-release",
       "description": "Prepare Apple-platform signing assets, Xcode archive/export, IPA/PKG artifacts, Developer ID notarization, stapling, Gatekeeper verification, and upload-ready release handoffs",
       "source": "./",
       "strict": false,
       "skills": [
         "./skills/apple-platform-release"
+      ]
+    },
+    {
+      "name": "swiftpm-github-release",
+      "description": "Audit and dry-run GitHub release readiness for SwiftPM packages and Swift command-line tools",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/swiftpm-github-release"
       ]
     },
     {

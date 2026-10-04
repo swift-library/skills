@@ -15,10 +15,8 @@ Describe the requested change briefly.
 Select or describe the area involved:
 
 - new skill
-- rule improvement
-- template improvement
-- profile improvement
-- example or preview improvement
+- an existing skill: name it, and say whether the change is to its
+  description, rules, references, templates, examples, or scripts
 - repo-local governance or documentation
 
 ## Why

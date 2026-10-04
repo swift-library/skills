@@ -1,8 +1,53 @@
-# swift-skills Agent Route
+# swift-skills Agent Guide
 
 Read `README.md` first for the collection shape and authority model.
 
-## Route
+## First-Principles Work
+
+- Name the behavior, root cause, invariant, owner, data flow, and validation
+  before changing reusable skill files.
+- Change the owning skill or collection layer, not the nearest convenient file.
+- Keep changes traceable to the request, source evidence, or owning invariant.
+- Do not promote one fixture, one source run, or local execution state into
+  reusable skill contracts.
+- Keep skill docs focused on current reusable capabilities, trigger conditions,
+  workflows, validation, and resource navigation. Keep creation notes, one-run
+  validation logs, transitional explanations, retired-version notes, and source
+  comparison narratives out of reusable skill instructions.
+- Validate collection changes with the collection's declared checks.
+
+## Canonical Artifacts
+
+- Treat conversation, review, and intermediate attempts as editing input.
+  Recompute the complete accepted contract before finalizing reusable skill
+  material.
+- Active skill artifacts depend only on that contract and their owned role,
+  not on the editing path. Apply this to metadata, instructions, names,
+  branches, configuration, schemas, scripts, templates, comments, tests,
+  fixtures, examples, assets, and normative docs.
+- If an intermediate result is `A + B` and the accepted result is `A`, express
+  `A` directly. Remove `B` and its residual surface rather than naming the
+  result `A without B` or documenting the correction.
+- Normalize by semantic identity and artifact role, not by token. A rejected
+  current capability does not invalidate a distinct historical fact,
+  migration, provenance record, ownership boundary, or safety rule that uses
+  the same term.
+- Retain a negative rule only when exclusion is independently required by a
+  current compatibility, safety, ownership, or regression invariant.
+- A disabled flag, skipped test, dead branch, retained fixture, or prohibition
+  created by the rejected attempt is residue, not an invariant. Remove it or
+  route it to its owner; do not promote its disabled state into policy.
+- Keep history only in artifacts that explicitly own provenance or history and
+  still have durable value. Do not create one merely to preserve a correction.
+- Preserve role-owned facts unless separate evidence changes them; do not
+  rewrite history or ownership merely to make a rejected term disappear.
+- Leave an already-correct history, migration, provenance, ownership, or safety
+  artifact unchanged when the task does not change its facts. Do not polish or
+  restate it merely because it is relevant to the current edit.
+- Before handoff, verify that a reader without the editing conversation can use
+  the current skill without mentally subtracting a rejected concept.
+
+## Task Route
 
 - Use each `skills/*/SKILL.md` frontmatter description as the primary trigger
   contract for that skill. Keep detailed trigger lists in the skill, not here.
@@ -17,18 +62,36 @@ Read `README.md` first for the collection shape and authority model.
   documentation architecture for a Swift package repository: scaffold, audit,
   normalize, or export template.
 - For large multi-step documentation migrations or normalize/export work inside
-  that skill, emit the skill's `templates/PLANS.md.tpl` to the target
-  repository root as `PLANS.md` and keep the plan updated as work proceeds.
-- Enter `skills/swiftpm-index/` automatically when Swift implementation
-  or review is about to introduce, rewrite, or accept custom reusable
-  infrastructure that may overlap with official Apple / swiftlang libraries.
-- Enter the same skill manually when the user asks for full SwiftPM Index
+  that skill, emit the skill's `templates/.agent.PLANS.md.tpl` to the target
+  repository as `.agent/PLANS.md` and keep the plan updated as work proceeds.
+  Treat `.agent/*` as agent temporary execution state only, not `.codex`
+  capability or skill configuration and not durable repository documentation.
+  It stays out of Git through the target repository's local
+  `.git/info/exclude`.
+- Enter `skills/swiftpm-readme-design/` when the task is the GitHub-facing
+  presentation of a Swift package repository: README header, badges, Install
+  and Quick start verified against published tags, About and topics, social
+  preview, organization profile, or terminal demos. Keep the decision about
+  which content belongs in the README versus the documentation tree in
+  `swiftpm-docs`.
+- Enter `skills/swiftpm-index/` when the task is source-backed SwiftPM
+  dependency or candidate evaluation for custom reusable infrastructure that may
+  overlap with official Apple / swiftlang libraries.
+- Enter the same skill when the user asks for full SwiftPM Index
   audits, SPI discovery, local workspace candidates, source refresh, drift
   checks, or export bundles.
 - Enter `skills/swiftpm-distiller/` when the task is to distill a SwiftPM
   package or Swift library source tree into agent-operational skill material,
   such as trigger contracts, supported tasks, API usage workflows, validation
   commands, examples, or skill skeleton/update material.
+- Route DTCG token compiler packages, `SwiftDesignTokens`, `TokenTool`,
+  `TokensPlugin`, token config, alias/mode resolution, Apple asset generation,
+  Swift token constants, and resolved-token exports to
+  `swift-design-tokens-patterns`.
+- Route PythonKit-style Swift/Python bridge packages, `Python` module/product,
+  `PythonObject`, Swift/Python conversions, dynamic Python library loading,
+  Python bridge environment variables, Swift-callable Python functions/classes,
+  and numpy conversion to `swift-python-patterns`.
 - Enter `skills/swiftpm-architecture/` when the task is about Swift Package
   architecture: target graph, module boundaries, product/library/executable
   layout, dependency direction, public API surfaces, composition roots, package
@@ -37,9 +100,20 @@ Read `README.md` first for the collection shape and authority model.
   default. For explicit invocation, active/proactive review, brief, bundle,
   context pack, or handoff requests, produce the compact Markdown evidence
   brief.
+- Enter `skills/swift-code-taste/` when the task is about Swift code shape,
+  engineering taste, AI-shaped code, vague abstraction, semantic naming,
+  ownership truth, public API hygiene, semantic duplication, or alignment with
+  Apple and Swift conventions across Swift, SwiftPM, Xcode, iOS, and macOS
+  code. Combine it
+  with `swiftpm-architecture` when the same task also needs Package.swift,
+  target graph, product layout, or module dependency review.
 - Route architecture selection, migration, and feature/module architecture
   review to the matching architecture skill, such as `swiftui-architecture` or
   `uikit-architecture`.
+- Route detailed SwiftUI TCA feature design, implementation, review,
+  refactoring, and testing for existing or explicitly accepted Point-Free
+  ComposableArchitecture code to `swiftui-tca-architecture`. Keep the initial
+  "should this adopt TCA?" decision in `swiftui-architecture`.
 - For implementation and review work, prefer the most specific domain skill
   over a baseline skill. Use `swift-programming-language` only when no deeper
   domain skill is the right fit.
@@ -48,12 +122,21 @@ Read `README.md` first for the collection shape and authority model.
 - Route chart-specific accessibility to `swift-charts-patterns` after
   identifying the issue; route dedicated accessibility work to
   `accessibility-patterns`.
+- Use `interface-writing` for UX writing, UI copy, microcopy, implemented
+  source strings, CLI output, accessibility label wording, localization-risk
+  notes, and terminology consistency. It may overlap with design-side
+  `ux-writing`; use both when copy needs design quality and implementation
+  stability.
 - Use `figma-swiftui` for SwiftUI implementation from Figma context. Use the
   general `figma` skill only for Figma MCP setup or tool troubleshooting.
-- Use `swiftui-patterns` for SwiftUI view implementation, ordinary review, and
-  dedicated view cleanup passes. Use `swiftui-performance` for source-level
-  SwiftUI performance guidance, review, diagnosis, or optimization before
-  Instruments evidence is required.
+- Use `swiftui-design` for SwiftUI visual design, native Apple UI feel,
+  control selection, and visible primitive choice such as `Form`, `Section`,
+  `LabeledContent`, `Toggle`, `Picker`, `Button`, `Menu`, `List`, or `Table`.
+- Use `swiftui-patterns` for SwiftUI view implementation, ordinary review,
+  dedicated view cleanup passes, native primitive refactors, controls/forms,
+  and simple `.sensoryFeedback` state-triggered haptics. Use
+  `swiftui-performance` for source-level SwiftUI performance guidance, review,
+  diagnosis, or optimization before Instruments evidence is required.
 - Route WidgetKit extension targets, `Widget`, `WidgetBundle`,
   `StaticConfiguration`, `AppIntentConfiguration`, `TimelineProvider`,
   `AppIntentTimelineProvider`, `TimelineEntry`, reload policies,
@@ -102,6 +185,18 @@ Read `README.md` first for the collection shape and authority model.
 - Route embedded WebKit surfaces, SwiftUI `WebView`/`WebPage`, `WKWebView`,
   navigation policy, JavaScript, local content, and custom schemes to
   `webkit-patterns`.
+- Route Swift SDKs for WebAssembly, Swift-on-Wasm, WASI builds,
+  `swift sdk list`, `swift build --swift-sdk ..._wasm`, `#if os(WASI)`,
+  Embedded Swift Wasm, WasmKit runtime checks, and Wasm compatibility audits to
+  `swiftwasm-patterns`.
+- Route JavaScriptKit raw JavaScript interop, `JSObject`, `JSValue`,
+  `JSClosure`, `JSObject.global`, JavaScript promises, `JavaScriptEventLoop`,
+  PackageToJS, and browser/Node host calls from Swift Wasm to
+  `javascriptkit-patterns`.
+- Route BridgeJS typed Swift-JavaScript bindings, `@JS`, `@JSFunction`,
+  `@JSClass`, `@JSGetter`, `@JSSetter`, `JSTypedClosure`,
+  `bridge-js.d.ts`, generated glue, and TypeScript declaration import/export to
+  `bridge-js-patterns`.
 - Route map views, annotations, overlays, camera state, search, directions,
   Look Around, Core Location-backed map behavior, geofencing, and map testing
   to `mapkit-patterns`.
@@ -163,9 +258,10 @@ Read `README.md` first for the collection shape and authority model.
   transcripts, `@Generable`, `@Guide`, streaming, tool calling, adapters,
   guardrails, and on-device generative fallback decisions to
   `foundation-models-patterns`.
-- Route Core ML model loading, configuration, prediction, deployment,
-  profiling, `.mlmodel`/`.mlpackage`/`.mlmodelc` handling, `MLTensor`,
-  `MLMultiArray`, `VNCoreMLModel` integration, and model performance to
+- Route Core ML model conversion with `coremltools`, loading, configuration,
+  prediction, deployment, profiling, `.mlmodel`/`.mlpackage`/`.mlmodelc`
+  handling, `MLTensor`, `MLMultiArray`, `VNCoreMLModel` integration,
+  quantization, palettization, pruning, and model performance to
   `core-ml-patterns`.
 - Route MLX Swift package setup, MLX arrays, MLXNN, MLXOptimizers, MLXRandom,
   Apple silicon/Metal build constraints, model examples, memory pressure, and
@@ -215,6 +311,15 @@ Read `README.md` first for the collection shape and authority model.
   altimeter, headphone motion, water submersion, sampling intervals,
   sensor-fusion data, battery, and privacy behavior to
   `core-motion-patterns`.
+- Route Core Haptics custom tactile/audio-haptic patterns, `CHHapticEngine`,
+  `CHHapticPattern`, `CHHapticEvent`, `CHHapticPatternPlayer`,
+  `CHHapticAdvancedPatternPlayer`, AHAP files, dynamic parameters,
+  capability checks, stopped/reset handlers, interruption recovery,
+  real-device validation, and haptic failure diagnosis to
+  `core-haptics-patterns`. Keep simple SwiftUI `.sensoryFeedback` in
+  `swiftui-patterns`, accessibility-only haptic audits in
+  `accessibility-patterns`, and UIKit architecture out of ordinary
+  feedback-generator work.
 - Route DockKit accessory observation, system/custom tracking, motorized stand
   control, camera coordination, subject/object tracking, device support, and
   physical dock validation to `dockkit-patterns`.
@@ -293,6 +398,55 @@ Read `README.md` first for the collection shape and authority model.
   rollout to `swiftlint-patterns`. Do not auto-route ordinary Swift style/code
   review here unless the task is explicitly about SwiftLint enforcement or
   configuration.
+- Route macOS TCC privacy permissions, Screen Recording, Accessibility trust,
+  Input Monitoring, Full Disk Access, Automation, System Settings privacy deep
+  links, drag-to-authorize app bundles, helper permission identity, and
+  permission onboarding fallback behavior to `macos-tcc-permissions-patterns`.
+- Route Swift Concurrency diagnostics and review, async/await, actors, tasks,
+  task groups, `AsyncSequence`, `AsyncStream`, AsyncAlgorithms, `@MainActor`,
+  `Sendable`, actor isolation, data races, strict concurrency, and Swift 6
+  migration to `swift-concurrency-patterns`. Keep a framework's own API usage
+  in that framework's skill unless the problem is isolation, `Sendable`, or a
+  data race.
+- Route Swift Testing work, `@Test`, `@Suite`, `#expect`, `#require`,
+  parameterized tests, traits, tags, async tests, fixtures, test doubles,
+  snapshot tests, flaky or parallel tests, and XCTest migration to
+  `swift-testings-patterns`. UI automation and XCTest performance metrics stay
+  outside it.
+- Route SwiftData models, `@Model`, `@Relationship`, `@Attribute`,
+  `#Predicate`, `@Query`, `FetchDescriptor`, `ModelContainer`, `ModelContext`,
+  `ModelActor`, schema migration, history, and CloudKit-backed SwiftData to
+  `swiftdata-patterns`.
+- Route Core Data stacks, `NSPersistentContainer`,
+  `NSPersistentCloudKitContainer`, managed object contexts, fetch requests,
+  `NSFetchedResultsController`, merge policies, batch operations, persistent
+  history, migration, and Core Data performance to `core-data-patterns`.
+- Route the SwiftDataWritable package's `@Writable` surfaces, `@Query`
+  add/delete/save/reorder bridges, `$model.writable`, `WritableTransaction`,
+  and writeback hooks to `swift-data-writable-patterns`. Plain SwiftData model
+  and query work stays in `swiftdata-patterns`.
+- Route CryptoKit hashing, HMAC, symmetric encryption, key agreement,
+  signatures, HKDF, HPKE, ML-KEM, ML-DSA, Secure Enclave keys, and crypto
+  migration or review to `cryptokit-patterns`. Key storage belongs in
+  `keychain-patterns` and certificate trust in `certificate-trust-patterns`.
+- Route certificate and TLS trust, `SecTrust`, `SecCertificate`,
+  `SecIdentity`, URLSession authentication challenges, pinning,
+  `NSPinnedDomains`, client certificates, PKCS#12, and mTLS to
+  `certificate-trust-patterns`. App Transport Security configuration stays in
+  `foundation-urlsession-patterns`.
+- Route focus management across SwiftUI, UIKit, AppKit, and RealityKit,
+  `@FocusState`, focusable views, focus sections and guides, key view loops,
+  tvOS Focus Engine behavior, focus restoration, and focus debugging to
+  `focus-engine-patterns`. Assistive-technology focus semantics stay in
+  `accessibility-patterns`.
+- Route SwiftPM command plugins, build tool plugins, executable tool targets,
+  `context.tool(named:)`, generated sources, SwiftSyntax tools inside plugins,
+  and plugin build-graph diagnostics to `swiftpm-plugin-patterns`. Package
+  target and product topology outside plugins stays in `swiftpm-architecture`.
+- Route Swift scripts that run through swift-sh, `#!/usr/bin/swift sh`
+  shebangs, import-line dependency comments, argument passthrough, exit codes,
+  and the swift-sh cache, package, and open commands to
+  `swift-scripts-patterns`.
 - Keep `ios-simulator` separate from `xcode-instruments`: simulator operation
   and UI-driving belongs there; `.trace` recording and interpretation belongs
   in `xcode-instruments`.
@@ -303,15 +457,20 @@ Read `README.md` first for the collection shape and authority model.
 - Keep `apple-platform-release` separate from `swiftpm-macos-app-packaging`:
   Xcode release engineering belongs there; SwiftPM-only no-Xcode `.app`
   packaging belongs in `swiftpm-macos-app-packaging`.
+- Enter `skills/swiftpm-github-release/` when the task is GitHub release
+  readiness for a SwiftPM package or Swift command-line tool: pre-tag gates,
+  version and tag consistency, and the publish-boundary check before a
+  repository goes public or release attachments are uploaded. Signed app
+  archives, notarization, and store uploads stay in `apple-platform-release`.
 - Stop and clarify if the task drifts into feature specs, roadmap planning,
-  task orchestration, release automation, or general workflow systems.
+  task orchestration, live release publishing, or general workflow systems.
 
 ## Authority
 
-- `AGENTS.md` files route work and define operational handling.
+- `AGENTS.md` files are agent guides for work routing and operational handling.
 - `README`-class files are manuals plus indexes for scope, placement,
   ownership, install/use surface, and focused docs.
-- `Docs/Architecture/skill-authoring.md` defines the collection-level skill
+- `Documentation/Architecture/skill-authoring.md` defines the collection-level skill
   authoring architecture, including progressive disclosure and trigger
   precision.
 - `skills/*/SKILL.md` defines the skill boundary and supported operations.
@@ -324,6 +483,16 @@ Read `README.md` first for the collection shape and authority model.
 - `.claude-plugin/marketplace.json` is the discovery registry for the
   collection.
 
+## Boundary Guardrails
+
+- Do not put single-skill workflow detail in this collection guide unless the
+  collection itself owns the route.
+- Do not hardcode downstream commands, sibling skill names, source paths, or
+  fixture values into reusable guidance unless routing is the artifact being
+  edited.
+- If a value changes by source, package, skill, fixture, or runtime run, keep
+  it in the owning artifact and route to it from here.
+
 ## Operating Notes
 
 - When editing target-repository templates, write for the generated target
@@ -335,12 +504,22 @@ Read `README.md` first for the collection shape and authority model.
 - Keep report templates focused on the user-facing audit or review output they
   produce.
 - When creating or materially changing a skill, follow
-  `Docs/Architecture/skill-authoring.md`: keep `SKILL.md` trigger-oriented,
+  `Documentation/Architecture/skill-authoring.md`: keep `SKILL.md` trigger-oriented,
   preserve progressive disclosure, and keep host-specific `agents/` metadata
   secondary to the skill frontmatter and workflow.
 - When a skill is based on a named reference source, preserve source coverage
   for task-relevant capabilities and executable knowledge while translating it
   into this collection's structure.
+- For code-related upstream absorption, do not reduce source material to an API
+  guide. Preserve Swift engineering judgment: good and bad design shapes,
+  ownership boundaries, anti-patterns, tradeoffs, migration hazards,
+  validation commands, tests, and failure diagnosis when the source carries
+  that knowledge.
+- Preserve source-specific human guardrails during Swift upstream absorption.
+  If a source uses a named pattern, checklist, warning sign, negative example,
+  or preferred implementation shape to prevent AI-shaped Swift, keep a concrete
+  local equivalent in the owning skill/reference or record why it is
+  compressed, deferred, or dropped.
 - For Apple, Swift, Xcode, and swiftlang API facts that may have changed, use
   official documentation, the current local SDK/tool output, or verified
   package source before treating memory or skill references as authoritative.

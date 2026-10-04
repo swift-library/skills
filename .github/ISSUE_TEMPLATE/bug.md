@@ -15,11 +15,10 @@ Describe the bug clearly and briefly.
 Select or describe the area involved:
 
 - repository root docs or governance
-- `skills/swiftpm-docs`
-- rules
-- templates
-- profiles
-- examples or previews
+- a skill: name it, for example `skills/swiftpm-docs`
+- the skill's description, rules, references, templates, or examples
+- the skill's scripts: include the command and its output
+- marketplace or install metadata
 
 ## Expected Behavior
 
