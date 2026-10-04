@@ -34,7 +34,13 @@ references, templates, or scripts needed for the current task.
 - `skills/*/agents/` is optional interface metadata for agent hosts. It is not
   the authoritative trigger or workflow source.
 - `.claude-plugin/marketplace.json` is the Claude marketplace discovery
-  registry for this collection.
+  registry for this collection. Each entry's `source` is `./skills/<name>`, so
+  the plugin root is the skill folder and the plugin loads that one skill. A
+  source at the repository root would make Claude Code scan the whole
+  `skills/` directory for every plugin. Because the plugin root is the skill
+  folder, a skill must not contain the plugin component locations
+  `commands/`, `hooks/`, `output-styles/`, `.mcp.json`, or Markdown files in
+  `agents/`.
 
 ## Directory Shape
 
