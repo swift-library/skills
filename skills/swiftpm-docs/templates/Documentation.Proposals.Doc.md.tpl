@@ -32,6 +32,6 @@
 
 <alternatives>
 
-## Related Docs
+## Related Documentation
 
-<related-docs>
+<related-documentation>

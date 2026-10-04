@@ -7,13 +7,14 @@ profile.
 
 ## Source Templates Used
 
+- `templates/Documentation.Architecture.VersioningAndRelease.md.tpl` ->
+  `Documentation/Architecture/VersioningAndRelease.md`
 - `templates/AGENTS.md.tpl` -> `AGENTS.md`
 - `templates/README.md.tpl` -> `README.md`
 - `templates/CONTRIBUTING.md.tpl` -> `CONTRIBUTING.md`
-- `templates/Docs.README.md.tpl` -> `Docs/README.md`
-- `templates/Docs.Architecture.README.md.tpl` ->
-  `Docs/Architecture/README.md`
-- `templates/.github.README.md.tpl` -> `.github/README.md`
+- `templates/Documentation.README.md.tpl` -> `Documentation/README.md`
+- `templates/Documentation.Architecture.README.md.tpl` ->
+  `Documentation/Architecture/README.md`
 
 ## Expected Target Tree
 
@@ -22,15 +23,18 @@ profile.
   AGENTS.md
   README.md
   CONTRIBUTING.md
-  Docs/
+  Documentation/
     README.md
     Architecture/
       README.md
-  .github/
-    README.md
+      VersioningAndRelease.md
 ```
 
 ## Intentional Omissions
 
-This profile does not require `Docs/Proposals/`, `Docs/Decisions/`,
-`Docs/Migrations/`, `Docs/Archive/`, or `Docs/Reference/`.
+This profile does not require `Documentation/Proposals/`,
+`Documentation/Decisions/`, `Documentation/Migrations/`,
+`Documentation/Archive/`, or `Documentation/Reference/`.
+
+It also does not emit `.github/README.md`; normal repositories default to the
+root `README.md` for GitHub's surfaced repository landing page.

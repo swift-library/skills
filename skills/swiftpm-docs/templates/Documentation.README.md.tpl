@@ -1,4 +1,6 @@
-# Docs
+# Documentation
+
+- [Versioning and Release](Architecture/VersioningAndRelease.md): current version and release rules.
 
 This directory indexes repository-native documentation for `<repo-name>`.
 
@@ -11,6 +13,10 @@ This directory indexes repository-native documentation for `<repo-name>`.
 - `Archive/`: retired or superseded material kept for record when needed
 - `Reference/`: supporting reference material and examples when needed
 
+Target-level API documentation belongs with the SwiftPM target it documents,
+normally under `Sources/<Target>/<Target>.docc/`. Link to those catalogs from
+this index when present, but do not move them under `Documentation/` by default.
+
 ## Placement Rules
 
 - Put only current canonical guidance in `Architecture/`.
@@ -20,4 +26,7 @@ This directory indexes repository-native documentation for `<repo-name>`.
   those subtrees are present.
 - Put supporting reference material in `Reference/` when that subtree is
   present.
+- Keep DocC catalogs with their SwiftPM targets; treat `.doccarchive`
+  directories as generated output unless this repository explicitly governs
+  checked-in documentation archives.
 - Keep GitHub-facing governance in `.github/`, not here.

@@ -18,16 +18,24 @@ fuller GitHub/community-health surface. That distinction is intentional.
 | `SECURITY.md` | `../templates/SECURITY.md.tpl` | yes |
 | `SUPPORT.md` | `../templates/SUPPORT.md.tpl` | yes |
 | `GOVERNANCE.md` | `../templates/GOVERNANCE.md.tpl` | yes |
-| `CODEOWNERS` | `../templates/CODEOWNERS.tpl` | yes |
-| `Docs/README.md` | `../templates/Docs.README.md.tpl` | yes |
-| `Docs/Architecture/README.md` | `../templates/Docs.Architecture.README.md.tpl` | yes |
-| `Docs/Proposals/README.md` | `../templates/Docs.Proposals.README.md.tpl` | yes |
-| `Docs/Decisions/README.md` | `../templates/Docs.Decisions.README.md.tpl` | yes |
-| `Docs/Migrations/README.md` | `../templates/Docs.Migrations.README.md.tpl` | yes |
-| `Docs/Archive/README.md` | `../templates/Docs.Archive.README.md.tpl` | yes |
-| `Docs/Reference/README.md` | `../templates/Docs.Reference.README.md.tpl` | yes |
-| `.github/README.md` | `../templates/.github.README.md.tpl` | yes |
+| `.github/CODEOWNERS` | `../templates/CODEOWNERS.tpl` | yes |
+| `Documentation/README.md` | `../templates/Documentation.README.md.tpl` | yes |
+| `Documentation/Architecture/README.md` | `../templates/Documentation.Architecture.README.md.tpl` | yes |
+| `Documentation/Architecture/VersioningAndRelease.md` | `../templates/Documentation.Architecture.VersioningAndRelease.md.tpl` | yes |
+| `Documentation/Proposals/README.md` | `../templates/Documentation.Proposals.README.md.tpl` | yes |
+| `Documentation/Decisions/README.md` | `../templates/Documentation.Decisions.README.md.tpl` | yes |
+| `Documentation/Migrations/README.md` | `../templates/Documentation.Migrations.README.md.tpl` | yes |
+| `Documentation/Archive/README.md` | `../templates/Documentation.Archive.README.md.tpl` | yes |
+| `Documentation/Reference/README.md` | `../templates/Documentation.Reference.README.md.tpl` | yes |
 | `.github/ISSUE_TEMPLATE/bug.md` | `../templates/.github.ISSUE_TEMPLATE.bug.md.tpl` | yes |
 | `.github/ISSUE_TEMPLATE/feature.md` | `../templates/.github.ISSUE_TEMPLATE.feature.md.tpl` | yes |
 | `.github/ISSUE_TEMPLATE/_config.yml` | `../templates/.github.ISSUE_TEMPLATE._config.yml.tpl` | yes |
 | `.github/pull_request_template.md` | `../templates/.github.pull_request_template.md.tpl` | yes |
+
+## README Placement
+
+GitHub recognizes README files in the hidden `.github`, root, and `docs`
+directories. For ordinary Swift package repositories, this profile defaults to
+the root `README.md` as the surfaced repository landing page. Keep
+`.github/README.md` out of default exports unless the target is a special GitHub
+profile or default community-health repository.

@@ -7,6 +7,8 @@ profile.
 
 ## Source Templates Used
 
+- `templates/Documentation.Architecture.VersioningAndRelease.md.tpl` ->
+  `Documentation/Architecture/VersioningAndRelease.md`
 - `templates/AGENTS.md.tpl` -> `AGENTS.md`
 - `templates/README.md.tpl` -> `README.md`
 - `templates/CONTRIBUTING.md.tpl` -> `CONTRIBUTING.md`
@@ -15,16 +17,20 @@ profile.
 - `templates/SECURITY.md.tpl` -> `SECURITY.md`
 - `templates/SUPPORT.md.tpl` -> `SUPPORT.md`
 - `templates/GOVERNANCE.md.tpl` -> `GOVERNANCE.md`
-- `templates/CODEOWNERS.tpl` -> `CODEOWNERS`
-- `templates/Docs.README.md.tpl` -> `Docs/README.md`
-- `templates/Docs.Architecture.README.md.tpl` ->
-  `Docs/Architecture/README.md`
-- `templates/Docs.Proposals.README.md.tpl` -> `Docs/Proposals/README.md`
-- `templates/Docs.Decisions.README.md.tpl` -> `Docs/Decisions/README.md`
-- `templates/Docs.Migrations.README.md.tpl` -> `Docs/Migrations/README.md`
-- `templates/Docs.Archive.README.md.tpl` -> `Docs/Archive/README.md`
-- `templates/Docs.Reference.README.md.tpl` -> `Docs/Reference/README.md`
-- `templates/.github.README.md.tpl` -> `.github/README.md`
+- `templates/CODEOWNERS.tpl` -> `.github/CODEOWNERS`
+- `templates/Documentation.README.md.tpl` -> `Documentation/README.md`
+- `templates/Documentation.Architecture.README.md.tpl` ->
+  `Documentation/Architecture/README.md`
+- `templates/Documentation.Proposals.README.md.tpl` ->
+  `Documentation/Proposals/README.md`
+- `templates/Documentation.Decisions.README.md.tpl` ->
+  `Documentation/Decisions/README.md`
+- `templates/Documentation.Migrations.README.md.tpl` ->
+  `Documentation/Migrations/README.md`
+- `templates/Documentation.Archive.README.md.tpl` ->
+  `Documentation/Archive/README.md`
+- `templates/Documentation.Reference.README.md.tpl` ->
+  `Documentation/Reference/README.md`
 - `templates/.github.ISSUE_TEMPLATE.bug.md.tpl` ->
   `.github/ISSUE_TEMPLATE/bug.md`
 - `templates/.github.ISSUE_TEMPLATE.feature.md.tpl` ->
@@ -46,11 +52,11 @@ profile.
   SECURITY.md
   SUPPORT.md
   GOVERNANCE.md
-  CODEOWNERS
-  Docs/
+  Documentation/
     README.md
     Architecture/
       README.md
+      VersioningAndRelease.md
     Proposals/
       README.md
     Decisions/
@@ -62,7 +68,7 @@ profile.
     Reference/
       README.md
   .github/
-    README.md
+    CODEOWNERS
     ISSUE_TEMPLATE/
       bug.md
       feature.md
@@ -74,3 +80,6 @@ profile.
 
 This profile includes all `minimal` files and adds subtree indexes plus a
 larger GitHub/community-health surface.
+
+It does not emit `.github/README.md` by default; root `README.md` remains the
+GitHub-facing landing page for ordinary repositories.

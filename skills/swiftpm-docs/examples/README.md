@@ -16,7 +16,7 @@ Current examples:
 - `standard-export-preview.md`: manual preview of the `standard` profile
   output.
 - `proposal-in-architecture.md`: proposal content misplaced in current-truth
-  docs, then normalized into Proposal and Truth.
+  documentation, then normalized into Proposal and Truth.
 - `route-in-readme.md`: task-driven route language misplaced in a `README`,
   then normalized into `AGENTS.md` and index text.
 

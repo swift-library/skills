@@ -1,5 +1,5 @@
 interface:
-  display_name: "SwiftPM Docs"
+  display_name: "SwiftPM Documentation"
   short_description: "Scaffold and audit Swift package documentation structure"
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"

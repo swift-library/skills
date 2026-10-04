@@ -3,6 +3,11 @@
 This directory indexes GitHub-facing collaboration and governance files for
 `<repo-name>`.
 
+Use this template only for special GitHub profile or default community-health
+repositories. Ordinary Swift package repositories should not export
+`.github/README.md`; keep the root `README.md` as the GitHub-facing landing
+page.
+
 ## Belongs Here
 
 - pull request templates
@@ -20,8 +25,8 @@ This directory indexes GitHub-facing collaboration and governance files for
 
 ## Related Files
 
-- `../CODEOWNERS`: ownership defaults when that file is present
+- `CODEOWNERS`: ownership defaults when that file is present
 - `../CONTRIBUTING.md`: repo-wide contributor guidance
 - `../SECURITY.md` and `../SUPPORT.md`: repo-wide reporting guidance when
   those files are present
-- `../Docs/README.md`: internal docs index
+- `../Documentation/README.md`: internal docs index

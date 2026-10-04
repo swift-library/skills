@@ -2,11 +2,11 @@
 
 ## Problem
 
-`Docs/README.md` contains:
+`Documentation/README.md` contains:
 
 ```md
-If the task is a docs normalization pass, read `Docs/Architecture/` first and
-stop if release automation is requested.
+If the task is a documentation normalization pass, read
+`Documentation/Architecture/` first and stop if release automation is requested.
 ```
 
 ## Why It Is Misclassified
@@ -22,11 +22,11 @@ stop if release automation is requested.
 ## Normalized Outcome
 
 - move the task-driven sentence into `AGENTS.md`
-- keep `Docs/README.md` focused on tree and placement
+- keep `Documentation/README.md` focused on tree and placement
 
 Example normalized index:
 
 ```md
-`Docs/Architecture/` holds current truth.
-`Docs/Proposals/` holds design-in-progress.
+`Documentation/Architecture/` holds current truth.
+`Documentation/Proposals/` holds design-in-progress.
 ```

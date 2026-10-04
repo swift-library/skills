@@ -1,7 +1,7 @@
-# Governance vs Docs Placement
+# Governance vs Documentation Placement
 
 Use this rule when deciding between `.github/`, root governance files, and
-`Docs/`.
+`Documentation/`.
 
 ## Decision Test
 
@@ -10,7 +10,7 @@ Use this rule when deciding between `.github/`, root governance files, and
 - If the file gives repo-wide contributor policy or participation guidance, it
   belongs in a root governance file.
 - If the file explains repository-native documentation architecture, it belongs
-  in `Docs/`.
+  in `Documentation/`.
 
 ## `.github/`
 
@@ -24,6 +24,7 @@ Belongs:
 
 Does not belong:
 
+- default repository landing README for ordinary source repositories
 - architecture truth
 - proposal drafts
 - decision records
@@ -41,9 +42,9 @@ Belongs:
 Does not belong:
 
 - GitHub UI/configuration files
-- docs architecture truth or history
+- documentation architecture truth or history
 
-## `Docs/`
+## `Documentation/`
 
 Belongs:
 
@@ -61,18 +62,22 @@ Does not belong:
 
 ## Common Failure Modes
 
-- PR templates describe the full docs architecture instead of linking to `Docs/`.
+- PR templates describe the full documentation architecture instead of linking
+  to `Documentation/`.
 - `CONTRIBUTING.md` becomes the only place that explains the repository model.
-- `Docs/` stores GitHub template content that should live in `.github/`.
+- `Documentation/` stores GitHub template content that should live in `.github/`.
 - `.github/` stores internal architecture notes because they affect review.
 
 ## Normalization Guidance
 
 - Move GitHub-facing files into `.github/`.
+- Keep ordinary repository landing pages at root `README.md`; use
+  `.github/README.md` only for special GitHub profile or default
+  community-health repositories.
 - Move repo-wide contribution and conduct guidance into root governance files.
 - Move internal architecture, proposal, truth, history, and reference content
-  into `Docs/`.
-- If a governance file must mention docs structure, keep the guidance short and
-  link to the authoritative `Docs/` location.
-- If a docs file needs to mention PR or issue flow, link to `.github/` or root
-  governance files instead of embedding the full policy there.
+  into `Documentation/`.
+- If a governance file must mention documentation structure, keep the guidance
+  short and link to the authoritative `Documentation/` location.
+- If a documentation file needs to mention PR or issue flow, link to `.github/`
+  or root governance files instead of embedding the full policy there.

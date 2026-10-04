@@ -6,7 +6,7 @@ This directory indexes decision records for `<repo-name>`.
 
 - adopted documentation-structure decisions
 - decision rationale and tradeoffs
-- records of why a repository-docs change was chosen
+- records of why a repository documentation change was chosen
 
 ## Does Not Belong Here
 

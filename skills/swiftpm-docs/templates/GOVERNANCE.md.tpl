@@ -8,8 +8,8 @@ Maintainers are responsible for:
 
 - repository direction and scope
 - review and acceptance of contributions
-- protecting clarity across package docs, governance files, and GitHub-facing
-  collaboration surfaces
+- protecting clarity across package documentation, governance files, and
+  GitHub-facing collaboration surfaces
 
 ## Decision Making
 
