@@ -11,11 +11,11 @@ Why is this change needed?
 Which area does this PR affect?
 
 - repo-local governance or docs
-- skill contract
-- rules
-- templates
-- profiles
-- examples or previews
+- skill contract (name the skills)
+- rules, references, or knowledge
+- templates, profiles, or examples
+- scripts
+- marketplace or install metadata
 
 ## Boundary Impact
 

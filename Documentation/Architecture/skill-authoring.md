@@ -16,7 +16,7 @@ references, templates, or scripts needed for the current task.
 - `AGENTS.md` routes work inside this repository and records durable operating
   notes. It should not duplicate full skill logic.
 - `README.md` indexes the collection, available skills, and installation paths.
-- `Docs/Architecture/*` owns collection-level skill design rules.
+- `Documentation/Architecture/*` owns collection-level skill design rules.
 - `skills/*/SKILL.md` owns the boundary, trigger contract, workflow, validation
   rules, and output format for one skill.
 - `skills/*/rules/` owns stable skill-local invariants and decision rules.
