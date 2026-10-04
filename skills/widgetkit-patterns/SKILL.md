@@ -9,7 +9,7 @@ description: Use this skill for WidgetKit implementation and review across widge
 
 Guide implementation, review, and troubleshooting for WidgetKit source,
 extension, timeline, configuration, interaction, and data-refresh workflows.
-Use `widgetkit-design` for visual-only widget review.
+Visual-only widget review is out of scope.
 
 ## When To Use
 
@@ -30,11 +30,12 @@ Use `widgetkit-design` for visual-only widget review.
 ## When Not To Use
 
 - Do not use for visual-only layout, typography, color, widget family polish, or
-  native widget feel; use `widgetkit-design`.
-- Do not use for Live Activity request/update/end lifecycle; use
-  `activitykit-patterns`.
+  native widget feel; visual widget design is out of scope.
+- Do not use for Live Activity request/update/end lifecycle; ActivityKit
+  lifecycle is out of scope.
 - Do not use for App Intent action/entity design unless it is widget
-  configuration or interaction wiring; use `app-intents-patterns`.
+  configuration or interaction wiring; general App Intents design is out of
+  scope.
 - Do not use for App Store screenshots, metadata, or market messaging.
 
 ## Inputs To Inspect
@@ -70,7 +71,8 @@ Use `widgetkit-design` for visual-only widget review.
 
 ## Review Rules
 
-- Do not route visual-only feedback here when `widgetkit-design` is enough.
+- Do not handle visual-only feedback here when no WidgetKit implementation
+  change is involved.
 - Do not fetch broad network data or perform heavy image processing inside
   widget body rendering.
 - Do not assume reload timing is immediate or exact.

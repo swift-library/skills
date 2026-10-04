@@ -48,5 +48,4 @@
 - macOS tab order, first responder, menu command, or focus ring issue:
   `macos-focus.md`.
 - VoiceOver or Switch Control must coordinate with UI focus:
-  `accessibility-focus.md`, then route full accessibility audits to
-  `accessibility-patterns`.
+  `accessibility-focus.md`; full accessibility audits are out of scope.

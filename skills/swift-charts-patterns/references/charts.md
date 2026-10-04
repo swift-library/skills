@@ -240,7 +240,7 @@ if #available(iOS 26, *) {
 
 Camera and pose configuration:
 
-- **Projection**: `.chart3DCameraProjection(.orthographic)` (default, precise measurements) or `.perspective` (depth effect)
+- **Projection**: `.chart3DCameraProjection(.orthographic)` (precise measurements) or `.perspective` (depth effect); the modifier's default argument is `.automatic`
 - **Pose presets**: `.chart3DPose(.default)`, `.front`, `.back`, `.left`, `.right`
 - **Custom pose**: `.chart3DPose(azimuth: .degrees(45), inclination: .degrees(30))`
 - On visionOS, Chart3D supports natural 3D interaction gestures for rotation and exploration

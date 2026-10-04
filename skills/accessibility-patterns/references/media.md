@@ -1,7 +1,7 @@
 # Media Accessibility
 
 Use this file for captions, audio descriptions, speech, Smart Invert, media
-playback, and routing chart-specific accessibility.
+playback, and the chart-specific accessibility boundary.
 
 ## Prefer System Media Controls
 
@@ -64,13 +64,12 @@ accessibility display settings.
 
 ## Charts
 
-Chart accessibility belongs primarily in `swift-charts-patterns`. Route
 Swift Charts work involving `AXChartDescriptorRepresentable`, Audio Graph,
 `.accessibilityChartDescriptor`, mark labels, chart summaries, or custom chart
-fallbacks to that skill.
+fallbacks is out of scope.
 
-For non-chart accessibility audits, note chart blockers and then hand off
-chart-specific implementation to `swift-charts-patterns`.
+For non-chart accessibility audits, note chart blockers and leave
+chart-specific implementation to Swift Charts implementation guidance.
 
 ## Checklist
 
@@ -81,4 +80,5 @@ chart-specific implementation to `swift-charts-patterns`.
       possible.
 - [ ] Speech does not conflict with VoiceOver.
 - [ ] Photos, videos, and maps protect original colors only when needed.
-- [ ] Chart-specific work routes to `swift-charts-patterns`.
+- [ ] Chart-specific blockers are noted; chart implementation stays out of
+      scope.

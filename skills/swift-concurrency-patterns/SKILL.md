@@ -29,7 +29,7 @@ For migration-sensitive guidance, inspect settings before diagnosing:
 
 | Setting | SwiftPM | Xcode |
 |---|---|---|
-| Language mode | `swiftLanguageVersions` or `-swift-version` | Swift Language Version |
+| Language mode | `swiftLanguageModes`, target `.swiftLanguageMode(...)`, or `-swift-version`; older manifests use `swiftLanguageVersions` | Swift Language Version |
 | Strict concurrency | `.enableExperimentalFeature("StrictConcurrency=targeted")` | `SWIFT_STRICT_CONCURRENCY` |
 | Default isolation | `.defaultIsolation(MainActor.self)` | `SWIFT_DEFAULT_ACTOR_ISOLATION` |
 | Upcoming features | `.enableUpcomingFeature(...)` | `SWIFT_UPCOMING_FEATURE_*` |
@@ -77,6 +77,7 @@ settings.
 | Callback or delegate API should become async/await | `references/async-await-basics.md` |
 | Review, bug hunt, or suspicious generated concurrency code | `references/hotspots.md`, then `references/bug-patterns.md` |
 | Need to start async work, cancel work, run parallel work, or choose task groups | `references/tasks.md` |
+| Swift 6.4 awaited cleanup or cancellation shields | `references/language-updates.md` |
 | Main actor, actor isolation, actor reentrancy, protocol conformance, custom actors | `references/actors.md` |
 | Non-Sendable value crossing boundaries, `@Sendable`, `sending`, global mutable state | `references/sendable.md` |
 | Confusion about threads, suspension points, `nonisolated(nonsending)`, `@concurrent` | `references/threading.md` |

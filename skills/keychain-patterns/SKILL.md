@@ -1,21 +1,14 @@
 ---
 name: keychain-patterns
-description: >-
-  Use for Apple Keychain Services in Swift or Apple-platform code: SecItem
-  CRUD, OSStatus, kSecClass, kSecAttrAccessible, SecAccessControl, access
-  groups/sharing, credential storage, migration from
-  UserDefaults/@AppStorage/plists/NSCoding, keychain-bound biometrics, macOS
-  data protection keychain, and keychain tests. Do not use for CryptoKit
-  algorithms, certificate trust/pinning, App Transport Security, or server auth
-  architecture.
+description: 'Use for Apple Keychain Services in Swift or Apple-platform code: SecItem CRUD, OSStatus, kSecClass, kSecAttrAccessible, SecAccessControl, access groups/sharing, credential storage, migration from UserDefaults/@AppStorage/plists/NSCoding, keychain-bound biometrics, macOS data protection keychain, and keychain tests. Do not use for CryptoKit algorithms, certificate trust/pinning, App Transport Security, or server auth architecture.'
 ---
 
 # Keychain Patterns
 
 Use this skill for Keychain Services implementation, review, debugging, and
 modernization on Apple platforms. Keep the workflow centered on Keychain
-storage and access control; route cryptography and certificate trust work to
-the more specific sibling skills.
+storage and access control; cryptography and certificate trust work is out of
+scope.
 
 ## Workflow
 
@@ -62,14 +55,13 @@ the more specific sibling skills.
 - Native macOS targets that need iOS-style behavior must use
   `kSecUseDataProtectionKeychain: true` unless local constraints rule that out.
 
-## Coordination
+## Boundaries
 
-- Use `cryptokit-patterns` for AES-GCM, ChaChaPoly, HMAC, hashing, ECDH, ECDSA,
-  HPKE, post-quantum CryptoKit APIs, or Secure Enclave key operations.
-- Use `certificate-trust-patterns` for `SecTrust`, certificate pinning, SPKI
-  hashes, client certificates, mTLS, and URLSession trust challenges.
-- Use `swift-programming-language` only for broad baseline checks such as
-  spotting secrets in obvious places; move deep Keychain work here.
+- AES-GCM, ChaChaPoly, HMAC, hashing, ECDH, ECDSA, HPKE, post-quantum CryptoKit
+  APIs, and Secure Enclave key operations are out of scope beyond storing keys
+  and setting their access control.
+- `SecTrust`, certificate pinning, SPKI hashes, client certificates, mTLS, and
+  URLSession trust challenges are out of scope.
 
 ## Output
 

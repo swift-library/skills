@@ -25,9 +25,8 @@ ActivityKit push notifications.
 
 ## When Not To Use
 
-- Do not use for widget visual review only; use `widgetkit-design`.
-- Do not use for ordinary local or remote notifications with no Live Activity;
-  use `user-notifications-patterns`.
+- Do not use for widget visual review only.
+- Do not use for ordinary local or remote notifications with no Live Activity.
 - Do not use for broad SwiftUI feature architecture unless the Live Activity is
   the main surface.
 - Do not use for App Store listing, market messaging, pricing, or release

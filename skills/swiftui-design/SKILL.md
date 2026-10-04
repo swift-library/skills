@@ -1,6 +1,6 @@
 ---
 name: swiftui-design
-description: Use this skill for SwiftUI visual design, native Apple UI polish, and design review involving spacing, typography, semantic colors, component sizing, grouped content, cards, navigation chrome, system controls, tap targets, visual hierarchy, interactive editors, crop/collage/layout tools, screenshots, previews, or UI that feels non-native. Do not use for WidgetKit widget design, SwiftUI state/data-flow bugs, deep layout behavior, navigation routing, source-level performance, Swift Charts, persistence, networking, or package architecture.
+description: Use this skill for SwiftUI visual design, native Apple UI polish, SwiftUI control selection, system primitive choice, Form/Section/LabeledContent row semantics, anti-AI-slop UI review, and design review involving spacing, typography, semantic colors, component sizing, grouped content, cards, navigation chrome, system controls, tap targets, visual hierarchy, brand fit, design direction, interactive editors, crop/collage/layout tools, screenshots, previews, or UI that feels generic, AI-generated, or non-native. Do not use for WidgetKit widget design, SwiftUI state/data-flow bugs, deep layout behavior, navigation routing, source-level performance, Swift Charts, persistence, networking, or package architecture.
 ---
 
 # SwiftUI Design
@@ -10,29 +10,37 @@ description: Use this skill for SwiftUI visual design, native Apple UI polish, a
 Guide SwiftUI visual design and design review so app screens feel native,
 polished, restrained, and internally consistent. Focus on visual hierarchy,
 spacing, typography, color, component proportion, grouped content, controls,
-and editor surfaces.
+control primitive choice, and editor surfaces.
 
 ## When To Use
 
 - Reviewing SwiftUI screenshots, previews, or source for visual polish.
 - Creating or refining native-feeling app screens and reusable components.
+- Choosing visible SwiftUI primitives such as `Form`, `Section`,
+  `LabeledContent`, `Label`, `Toggle`, `Picker`, `TextField`, `Button`,
+  `Menu`, `NavigationLink`, `List`, or `Table` when the question is visual
+  semantics, row shape, native feel, or HIG-aligned control choice.
+- Reviewing settings, inspector, preference, metadata, title-value, or
+  form-row surfaces for native SwiftUI control choice.
 - Fixing UI that feels visually noisy, over-decorated, oddly spaced, too large,
   low contrast, or inconsistent with Apple platform conventions.
+- Fixing UI that feels generic, template-like, or AI-generated.
 - Choosing spacing, font hierarchy, semantic colors, card/group styling,
   divider usage, progress indicator sizing, row sizing, and navigation chrome.
+- Choosing a design direction when requirements are visually vague, including
+  differentiated options and brand-fit tradeoffs.
 - Reviewing interactive editors such as crop, collage, canvas, media-framing,
   layout-picker, and multi-mode configuration surfaces.
 
 ## When Not To Use
 
-- Do not use for WidgetKit widget design; use `widgetkit-design`.
+- Do not use for WidgetKit widget design.
 - Do not use for SwiftUI state/data-flow correctness, navigation routing,
   sheet mechanics, deep layout behavior, macOS windows, or Liquid Glass API
-  correctness; use `swiftui-patterns`.
-- Do not use for source-level SwiftUI performance; use
-  `swiftui-performance`.
-- Do not use for accessibility implementation; use `accessibility-patterns`.
-- Do not use for Swift Charts; use `swift-charts-patterns`.
+  correctness.
+- Do not use for source-level SwiftUI performance.
+- Do not use for accessibility implementation.
+- Do not use for Swift Charts.
 - Do not use for persistence, networking, package architecture, or repository
   documentation.
 
@@ -50,25 +58,32 @@ and editor surfaces.
 ## Workflow
 
 1. Classify the design problem: spacing, typography, color, component sizing,
-   grouped content, navigation chrome, controls, editor surface, or holistic
+   grouped content, navigation chrome, control primitive selection, controls,
+   anti-AI-slop, brand fit, design direction, editor surface, or holistic
    polish.
 2. Inspect the smallest useful screen/component surface and nearby conventions.
 3. Load only the matching reference file. Open `references/_index.md` if
    routing is unclear.
 4. Prefer native SwiftUI and system styling before custom drawing, gradients,
    borders, and hardcoded colors.
-5. Keep recommendations concrete: exact spacing, font role, color role,
+5. If no visual direction exists, offer two or three distinct directions with
+   palette, typography, density, and one signature detail before treating any
+   one direction as final.
+6. Keep recommendations concrete: exact spacing, font role, color role,
    component size, or view structure.
-6. Preserve product identity, but remove visual noise that does not serve the
+7. Preserve product identity, but remove visual noise that does not serve the
    workflow.
-7. Validate visually when code changes affect layout, screenshots, Dynamic
+8. Validate visually when code changes affect layout, screenshots, Dynamic
    Type, color scheme, or editor geometry.
 
 ## Reference Files To Consult
 
 - `references/visual-design-principles.md`: spacing grid, typography,
-  semantic colors, sizing, cards/groups, navigation chrome, controls, and
-  pre-ship checklist.
+  semantic colors, sizing, cards/groups, navigation chrome, SwiftUI control
+  selection, controls, and pre-ship checklist.
+- `references/anti-ai-ui-guardrails.md`: guardrails for avoiding generic
+  AI-looking SwiftUI, choosing design directions, brand asset intake, and
+  running a five-part design review.
 - `references/interactive-editor-design.md`: crop/collage/canvas editor
   state, shared geometry, gestures, fixed layouts, safe areas, and settings
   surfaces.
@@ -82,6 +97,9 @@ and editor surfaces.
   hardcoded light/dark colors and many opacity values.
 - Use system components and control semantics before manually composing common
   controls.
+- Choose the native SwiftUI visual/control primitive before custom rows or
+  custom drawing. Leave non-visual implementation details to general SwiftUI
+  implementation guidance when code needs to change.
 - Keep grouped content native: simple backgrounds, modest corner radii, system
   dividers, and clear internal padding.
 - Avoid `minimumScaleFactor` as a layout bandage; fix the container, wrapping,
@@ -90,6 +108,13 @@ and editor surfaces.
   booleans.
 - For editor UIs, centralize geometry and interaction state so preview,
   gesture, and export paths agree.
+- Do not ship generic AI-looking patterns: purple-blue gradients, emoji as
+  icons, left-accent rounded cards, centered gradient welcome heroes,
+  neon-on-dark dashboards, symmetric feature grids, AI SVG illustrations,
+  default-blue everything, or random spacing.
+- If a brand is named but no assets are provided, ask for existing brand
+  material or inspect official sources before inventing colors, typography, or
+  logo usage rules.
 
 ## Review Checklist
 
@@ -104,6 +129,8 @@ and editor surfaces.
   settings surface at a time.
 - Text fits without overlapping, truncating critical information, or depending
   on tiny scale factors.
+- The screen has a coherent design philosophy, a clear reading order, careful
+  craft, task-serving functionality, and at least one product-specific detail.
 
 ## Output Format
 

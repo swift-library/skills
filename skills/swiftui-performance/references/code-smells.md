@@ -40,8 +40,9 @@ is available.
 
 ### Redundant State Updates
 
-SwiftUI does not compare values before triggering updates. Guard repeated
-assignments in hot update paths:
+Redundant assignments can add work in hot update paths; observation and
+invalidation behavior depends on the value, storage, and framework version.
+Measure update causes and guard repeated assignments when equality is cheap:
 
 ```swift
 .onReceive(publisher) { value in
@@ -100,6 +101,24 @@ Use `if` when the branches are genuinely different UI.
 Use lazy containers for large collections, and downsample or cache images
 before rendering them repeatedly. Prefer reusing image work rather than
 decoding, resizing, or formatting inside `body`.
+
+Choose lazy containers for the actual data volume and measurements; small
+collections can use ordinary stacks. In lazy containers, check stable item IDs
+and a stable number of leaf views per item. Filter at the data level when rows
+would otherwise emit a variable number of leaves.
+
+Offscreen row state may be released; put state that must survive scrolling in
+the item model or another longer-lived owner. Content size and absolute offsets
+can be estimates, so use visible-item semantics for visibility tasks. Avoid
+layout changes triggered only after appearance. Do not defeat prefetching by
+recreating loading work in every `onAppear`; keep cache, cancellation, and reuse
+with the model or loader owner.
+
+With Xcode 27, lazy Observable `@State` initialization can reduce initialization
+work even on supported older deployment targets. OS 27 AsyncImage HTTP caching
+is a separate runtime change and does not remove image decoding cost.
+ContentBuilder's type-checking changes do not establish faster runtime frames.
+Use `official-sources.md` for the version-specific evidence.
 
 ### Debugging Updates
 

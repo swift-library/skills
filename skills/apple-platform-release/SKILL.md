@@ -34,9 +34,9 @@ copy, or product release planning.
 - Do not use for App Store Connect metadata, pricing, screenshot, TestFlight,
   review submission, encryption questionnaire, or content rights operations.
 - Do not use for SwiftPM-only macOS `.app` packaging without an Xcode app
-  project; use `swiftpm-macos-app-packaging`.
-- Do not use for simulator lifecycle or UI driving; use `ios-simulator`.
-- Do not use for Instruments traces; use `xcode-instruments`.
+  project.
+- Do not use for simulator lifecycle or UI driving.
+- Do not use for Instruments trace recording or analysis.
 - Do not use for app source architecture, SwiftUI/UI design, or code
   implementation.
 - Do not turn this into release automation or roadmap workflow machinery.
@@ -64,6 +64,38 @@ copy, or product release planning.
 4. Prefer local project conventions over generic command examples.
 5. Keep secrets out of repository files and final output.
 6. Validate each handoff point before claiming the artifact is release-ready.
+
+## Version, Build and Accepted Artifact
+
+Inspect the project's version/release policy and authoritative declaration.
+`MARKETING_VERSION` identifies the product release; `CURRENT_PROJECT_VERSION`
+identifies the build according to the platform and project's upload policy.
+Check the resolved Xcode settings, archive and exported bundle against that
+authority. Do not select values from an installed app or an unrelated archive,
+and do not add a second declaration when project tooling already generates
+these settings.
+
+Record the component, change type and upgrade rationale. A failed candidate
+does not alone justify a new formal patch version. Reuse the same artifact and
+submission when retrying a transport or status check; if source, dependencies,
+toolchain, target configuration, packaging, signature or entitlements change,
+create a new candidate/build identity where required and repeat the affected
+validation. Published versions and artifact bytes remain immutable.
+
+Acceptance belongs to the exact signed/exported artifact and its digest.
+Source tests do not substitute for installation and critical-path checks.
+Reuse evidence only from a trusted source with matching inputs and unchanged
+check definitions; reject missing or modified receipts. Preserve failure logs,
+bound retries and prefer the repository's existing status/resume/check entry
+points. This skill retains ownership of engineering artifacts and does not
+become a general release orchestrator.
+
+Separate artifact identity from checker identity. A check-only correction does
+not itself require rebuilding, re-signing or a new product version; validate
+the correction and rerun affected checks against the same identified artifact.
+Source, dependency, build, packaging or signing changes may affect that artifact.
+Follow project policy and investigate uncertain inputs; do not exempt files
+merely because they are scripts.
 
 ## Reference Files To Consult
 
@@ -135,5 +167,5 @@ For release engineering work, return:
   log before proposing broad changes.
 - If the task is really App Store operations or TestFlight management, route
   away from this skill.
-- If the target is a SwiftPM-only no-Xcode macOS app, route to
-  `swiftpm-macos-app-packaging`.
+- If the target is a SwiftPM-only no-Xcode macOS app, route away from this
+  skill.

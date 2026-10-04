@@ -29,7 +29,7 @@ The 2024 edition is a complete overhaul. Four categories are entirely new, two p
 
 ## Master Traceability Matrix
 
-This matrix links each OWASP 2024 category to its MASVS controls, MASTG test cases, iOS APIs, and required audit evidence. Both research sources agree on the core mappings; this table unifies them.
+This matrix links each OWASP 2024 category to its MASVS controls, MASTG test cases, iOS APIs, and required audit evidence.
 
 | OWASP 2024                        | MASVS v2 Controls                             | Key MASTG Tests (New IDs)                                        | iOS APIs / Flags                                                                        | Required Evidence                                                   |
 | --------------------------------- | --------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
@@ -38,7 +38,7 @@ This matrix links each OWASP 2024 category to its MASVS controls, MASTG test cas
 | **M9** Insecure Data Storage      | MASVS-STORAGE-1, MASVS-STORAGE-2              | 0296, 0297, 0299, 0300, 0301, 0302, 0303, 0215, 0298, 0313, 0314 | Keychain accessibility flags; `NSFileProtectionComplete`; `isExcludedFromBackup`        | `xattr` listings; backup extraction; keychain dump                  |
 | **M10** Insufficient Cryptography | MASVS-CRYPTO-1, MASVS-CRYPTO-2                | 0209, 0210, 0211, 0213, 0214, 0311, 0317                         | CryptoKit `AES.GCM`/`ChaChaPoly`; `SecRandomCopyBytes`; Secure Enclave keys             | Crypto inventory; algorithm audit; unit tests                       |
 
-> **Cross-reference note:** MASVS-STORAGE-1 and MASTG-TEST-0299/0302 appear under both M1 and M9. This is intentional — keychain configuration simultaneously addresses credential storage and data-at-rest protection. See `keychain-access-control.md` for detailed accessibility flag guidance.
+> **Cross-reference note:** MASVS-STORAGE-1 and MASTG-TEST-0299/0302 appear under both M1 and M9. This is intentional — keychain configuration simultaneously addresses credential storage and data-at-rest protection.
 
 ---
 
@@ -60,7 +60,7 @@ This matrix links each OWASP 2024 category to its MASVS controls, MASTG test cas
 
 **Testing procedure:** Use radare2 for static analysis — search for `SecKeyCreateWithData` with hardcoded key data or CryptoKit key initialization with inline bytes. Use objection (`ios keychain dump`, `ios nsuserdefaults get`) and filesystem grep at runtime. Check `.xcconfig`, `Info.plist`, and embedded resources for API keys.
 
-**App Attest (iOS 14+):** Closes the secret provisioning gap by verifying device integrity before the server issues credentials. This avoids hardcoded secrets entirely — the server provisions secrets only to attested, genuine app instances. See `credential-storage-patterns.md` for implementation details.
+**App Attest (iOS 14+):** Closes the secret provisioning gap by verifying device integrity before the server issues credentials. This avoids hardcoded secrets entirely — the server provisions secrets only to attested, genuine app instances.
 
 ### Compliant: Keychain credential storage
 
@@ -180,7 +180,7 @@ The correct pattern ties secrets to Keychain items protected by `SecAccessContro
 | `.userPresence`       | Biometry OR passcode (system chooses)                 | Allows passcode fallback                             | 8.0+  |
 | `.devicePasscode`     | Passcode only                                         | No biometric option                                  | 9.0+  |
 
-For high-security items, always use `.biometryCurrentSet`. If an attacker adds their fingerprint to a stolen device, `.biometryAny` items become accessible; `.biometryCurrentSet` items are permanently invalidated. See `biometric-authentication.md` for full implementation patterns.
+For high-security items, always use `.biometryCurrentSet`. If an attacker adds their fingerprint to a stolen device, `.biometryAny` items become accessible; `.biometryCurrentSet` items are permanently invalidated.
 
 ### Compliant: hardware-bound biometric authentication
 
@@ -192,7 +192,6 @@ import Security
 /// Compliance: OWASP M3 (Insecure Auth), MASVS-AUTH-2
 /// Test cases: MASTG-TEST-0266, MASTG-TEST-0270
 /// iOS 11.3+ (.biometryCurrentSet)
-/// Canonical pattern with full error handling: biometric-authentication.md § The Secure Pattern — Hardware-Bound Secrets
 
 // STEP 1: Store secret with biometric protection
 func storeBiometricProtectedSecret(account: String, secret: Data) throws {
@@ -350,7 +349,7 @@ print("Password entered: \(password)")
 
 | Category       | ❌ Deprecated/Broken              | ✅ Approved (CryptoKit, iOS 13+)                               |
 | -------------- | --------------------------------- | -------------------------------------------------------------- |
-| Hashing        | MD5, SHA-1 (for security)         | SHA256, SHA384, SHA512; SHA3 (iOS 18+)                         |
+| Hashing        | MD5, SHA-1 (for security)         | SHA256, SHA384, SHA512; SHA3 (iOS 26+)                         |
 | Symmetric      | DES, 3DES, RC4, Blowfish, AES-ECB | AES.GCM (AES-256-GCM), ChaChaPoly                              |
 | Asymmetric     | RSA < 2048 bits                   | P256, P384, P521, Curve25519, Ed25519                          |
 | Key derivation | Simple SHA hash of password       | HKDF; Argon2/bcrypt/scrypt server-side                         |
@@ -422,7 +421,7 @@ let sealed = try AES.GCM.seal(data, using: key, nonce: nonce)
 
 ## kSecAttrAccessible Selection Guide
 
-> Complete selection criteria and data protection tier mapping: `keychain-access-control.md` § The "When" Layer: Seven Accessibility Constants. The guidance below is a compliance-focused quick-reference for audit contexts.
+> The guidance below is a compliance-focused quick-reference for audit contexts.
 
 Keychain accessibility is the single most important iOS security decision — it simultaneously addresses M1, M3, M9, and M10 requirements.
 
@@ -435,9 +434,9 @@ Keychain accessibility is the single most important iOS security decision — it
 | `kSecAttrAccessibleAfterFirstUnlock`               | ✅     | ✅     | ❌                      | Background tasks (e.g., push notification keys)       |
 | `kSecAttrAccessibleAlways`                         | ✅     | ✅     | ❌                      | **❌ DEPRECATED (iOS 12) — never use**                |
 
-**Critical:** `kSecAttrAccessible` and `kSecAttrAccessControl` are mutually exclusive. When using `SecAccessControlCreateWithFlags`, the accessibility level is the function's first parameter — do not also set `kSecAttrAccessible` in the query dictionary, or you get `errSecParam (-50)`. See `keychain-access-control.md`.
+**Critical:** `kSecAttrAccessible` and `kSecAttrAccessControl` are mutually exclusive. When using `SecAccessControlCreateWithFlags`, the accessibility level is the function's first parameter — do not also set `kSecAttrAccessible` in the query dictionary, or you get `errSecParam (-50)`.
 
-> **Cross-validation note:** One comparison source recommends `kSecAttrAccessibleWhenUnlockedThisDeviceOnly` as the standard; the documented API source recommends `kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly`. Both are valid. The `WhenPasscodeSet` variant is strictly more secure (items are deleted if passcode is removed) but may surprise users. Choose based on threat model: `WhenPasscodeSet` for high-security credentials, `WhenUnlocked` for general sensitive data.
+> **Choosing between the two device-only defaults:** `kSecAttrAccessibleWhenUnlockedThisDeviceOnly` and `kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly` are both valid. The `WhenPasscodeSet` variant is strictly more secure (items are deleted if passcode is removed) but may surprise users. Choose based on threat model: `WhenPasscodeSet` for high-security credentials, `WhenUnlocked` for general sensitive data.
 
 ---
 
@@ -478,7 +477,7 @@ Auditors evaluate against MAS Testing Profiles: **L1 (standard)** for low-risk a
 
 ### Jailbreak-Era Testing (2025–2026)
 
-As of iOS 26, zero jailbreakable devices exist for current versions. Auditors use non-jailbreak techniques: objection with Frida Gadget injection into repackaged IPAs, Corellium virtual devices, or iMazing for backup extraction. This makes automated static analysis (MobSF, semgrep) and Frida Gadget–based dynamic testing the primary assessment paths.
+Public jailbreaks usually lag the current iOS release, so a jailbroken test device is often unavailable. Auditors use non-jailbreak techniques: objection with Frida Gadget injection into repackaged IPAs, Corellium virtual devices, or iMazing for backup extraction. This makes automated static analysis (MobSF, semgrep) and Frida Gadget–based dynamic testing the primary assessment paths.
 
 ---
 
@@ -504,12 +503,12 @@ Apple uses hybrid cryptography — combining post-quantum and classical algorith
 
 | iOS Practice                                              | M1  | M3  | M9  | M10              | Primary Reference                |
 | --------------------------------------------------------- | --- | --- | --- | ---------------- | -------------------------------- |
-| Keychain + `WhenPasscodeSetThisDeviceOnly`                | ✅  | —   | ✅  | ✅ (key storage) | `keychain-access-control.md`     |
-| `SecAccessControlCreateWithFlags` + `.biometryCurrentSet` | ✅  | ✅  | ✅  | —                | `biometric-authentication.md`    |
+| Keychain + `WhenPasscodeSetThisDeviceOnly`                | ✅  | —   | ✅  | ✅ (key storage) | —                                |
+| `SecAccessControlCreateWithFlags` + `.biometryCurrentSet` | ✅  | ✅  | ✅  | —                | —                                |
 | CryptoKit AES.GCM with auto-nonce                         | —   | —   | ✅  | ✅               | `cryptokit-symmetric.md`         |
-| `NSFileProtectionComplete`                                | —   | —   | ✅  | —                | `keychain-access-control.md`     |
+| `NSFileProtectionComplete`                                | —   | —   | ✅  | —                | —                                |
 | `SecRandomCopyBytes` for key/token generation             | ✅  | ✅  | —   | ✅               | `cryptokit-symmetric.md`         |
-| App Attest for credential provisioning                    | ✅  | ✅  | —   | —                | `credential-storage-patterns.md` |
+| App Attest for credential provisioning                    | ✅  | ✅  | —   | —                | —                                |
 | ML-KEM/ML-DSA (iOS 26+)                                   | —   | —   | —   | ✅               | `cryptokit-public-key.md`        |
 
 ---

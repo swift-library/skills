@@ -13,7 +13,7 @@ This two-level model does NOT exist on tvOS.
 
 ## iOS-Only APIs (Not Available on tvOS)
 
-### focusGroupIdentifier (iOS 15+, NOT tvOS)
+### focusGroupIdentifier (iOS 14+, NOT tvOS)
 
 Assigns a view to a named focus group. Focus groups define what Tab navigates between.
 
@@ -29,7 +29,7 @@ Rules:
 - Elements with the same identifier belong to the same group
 - Tab loop order is derived from focus groups, accounting for reading direction and layout
 
-### UIFocusGroupPriority (iOS 15+, tvOS 15+)
+### UIFocusGroupPriority (iOS 15+, NOT tvOS)
 
 Determines which item is "primary" within a focus group — the item that gets focus when Tab enters the group.
 
@@ -74,7 +74,7 @@ override var focusEffect: UIFocusEffect? {
 
 Common mistake: Not matching halo shape to content shape (square halo on circular avatar).
 
-### allowsFocus (UICollectionView/UITableView, iOS 15+)
+### allowsFocus (UICollectionView/UITableView, iOS 15+, tvOS 15+)
 
 Makes all cells keyboard-focusable.
 
@@ -107,9 +107,9 @@ VStack {
 .onSubmit { focusedField = .password }  // Tab to next field
 ```
 
-### .focusSection() (iOS 17+, tvOS 15+)
+### .focusSection() (tvOS 15+, macOS 13+, NOT iOS)
 
-Available on iOS starting iOS 17. Groups focusable descendants for directional navigation — same as tvOS but arrived later on iOS.
+Unavailable on iOS, iPadOS, watchOS, and visionOS in the current SDK. Groups focusable descendants for directional navigation on tvOS and macOS. On iPadOS, define Tab regions with focus groups (`focusGroupIdentifier`) instead.
 
 ### .focusable(interactions:) (iOS 17+)
 
@@ -155,7 +155,7 @@ Propagate data based on where focus is in the hierarchy. Used for menu/command s
 
 `focusedSceneValue` for multi-window iPad apps.
 
-### UIFocusItemDeferralMode (iOS 15+, tvOS 15+)
+### UIFocusItemDeferralMode (iOS 18+, tvOS 18+)
 
 Controls whether focus updates are deferred when the user isn't actively using keyboard:
 
@@ -173,19 +173,19 @@ Protocol for custom scrollable containers. UIScrollView already conforms. Implem
 |---------|------|-----------|
 | Focus always active | Yes | No (keyboard-driven) |
 | Focus groups (Tab nav) | No | Yes (iOS 15+) |
-| focusGroupIdentifier | No | Yes (iOS 15+) |
+| focusGroupIdentifier | No | Yes (iOS 14+) |
 | UIFocusHaloEffect | No | Yes (iOS 15+) |
-| UIFocusGuide | tvOS 9+ | iOS 15+ |
+| UIFocusGuide | tvOS 9+ | iOS 9+ |
 | @FocusState | tvOS 15+ | iOS 15+ |
-| .focusSection() | tvOS 15+ | iOS 17+ |
-| .focusable(interactions:) | No | iOS 17+ |
-| canBecomeFocused | tvOS 9+ | iOS 15+ |
+| .focusSection() | tvOS 15+ | Unavailable |
+| .focusable(interactions:) | tvOS 17+ | iOS 17+ |
+| canBecomeFocused | tvOS 9+ | iOS 9+ |
 | Responder chain sync | N/A | Yes |
 | .hoverEffect | tvOS 17+ | N/A (use pointer effects) |
 | Parallax tilt | tvOS | N/A |
 | Siri Remote | Yes | N/A |
-| allowsFocus on CV/TV | N/A | iOS 15+ |
-| selectionFollowsFocus | N/A | iOS 15+ |
+| allowsFocus on CV/TV | tvOS 15+ | iOS 15+ |
+| selectionFollowsFocus | N/A | iOS 14+ |
 
 ## Common iOS Focus Mistakes
 
@@ -442,4 +442,4 @@ These are **completely separate systems**:
 | Focus on iPad keyboard navigation | WWDC21 | Primary iOS focus session: focus groups, tab loop, halo, allowsFocus |
 | Direct and reflect focus in SwiftUI | WWDC21 | @FocusState, .focused, focusSection |
 | Support Full Keyboard Access | WWDC21 | FKA uses same focus system as Tab nav |
-| The SwiftUI cookbook for focus | WWDC23 | .focusable(interactions:), focus sections on iOS 17 |
+| The SwiftUI cookbook for focus | WWDC23 | .focusable(interactions:), focus sections |

@@ -26,9 +26,8 @@ integration, PushKit VoIP call delivery, and Call Directory extensions.
 
 ## When Not To Use
 
-- Do not use for generic UserNotifications/APNs behavior; use
-  `user-notifications-patterns`.
-- Do not use for media playback or Picture in Picture; use `avkit-patterns`.
+- Do not use for generic UserNotifications/APNs behavior.
+- Do not use for media playback or Picture in Picture.
 - Do not use for ordinary app navigation or architecture without CallKit state.
 - Do not use for generic `AVAudioSession` routing unless CallKit activates it.
 

@@ -30,7 +30,7 @@ Walks the preferred focus chain without actually moving focus. Shows which view 
 
 ### Check focus group tree
 ```
-(lldb) po UIFocusDebugger.checkFocusGroupTree(for: focusSystem)
+(lldb) po UIFocusDebugger.focusGroups(for: focusSystem)
 ```
 Prints the entire focus group hierarchy.
 
@@ -263,7 +263,7 @@ override func windowDidLoad() {
 3. Is the view hidden, zero-alpha, or not in a window?
 4. Is `isHidden` true on an ancestor?
 5. Is the view in the key view loop? Check `nextKeyView` chain.
-6. Is `recalculatesKeyViewLoop` enabled and possibly excluding the view geometrically?
+6. Is `autorecalculatesKeyViewLoop` enabled and possibly excluding the view geometrically?
 
 **Focus ring not appearing:**
 1. Is `focusRingType` set to `.none`?

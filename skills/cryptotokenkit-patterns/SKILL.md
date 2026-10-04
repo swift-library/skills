@@ -24,12 +24,9 @@ authentication.
 
 ## When Not To Use
 
-- Do not use for normal Keychain storage without hardware token semantics; use
-  `keychain-patterns`.
-- Do not use for cryptographic primitive choice or data encryption; use
-  `cryptokit-patterns`.
-- Do not use for TLS trust or certificate pinning policy; use
-  `certificate-trust-patterns`.
+- Do not use for normal Keychain storage without hardware token semantics.
+- Do not use for CryptoKit primitive choice or data encryption.
+- Do not use for TLS trust or certificate pinning policy.
 - Do not use for passkeys, Sign in with Apple, OAuth, or generic login UI.
 - Do not invent platform support, extension behavior, smart card management, or
   token-session semantics. Verify current Apple documentation and deployment
@@ -58,7 +55,7 @@ authentication.
    secrets into logs.
 5. Treat smart card communication as a state machine: connect, select, APDU,
    parse, error, disconnect, and card removal.
-6. Route trust policy to `certificate-trust-patterns` after token-backed
+6. Leave certificate trust policy to trust-evaluation code once token-backed
    identity exposure is correct.
 
 ## Review Rules

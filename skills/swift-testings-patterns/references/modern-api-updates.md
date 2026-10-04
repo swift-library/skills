@@ -5,6 +5,61 @@ This document covers newer Swift and Swift Testing features that may be version-
 - Check Swift/Xcode availability before recommending these APIs.
 - Treat these as opt-in patterns unless the project already uses them.
 
+## Swift 6.4 Diagnostics And Repetition
+
+Inspect the installed Testing module and runner before adopting these APIs:
+
+```swift
+Issue.record("Non-failing diagnostic", severity: .warning)
+try Test.cancel("Required runtime prerequisite is unavailable")
+```
+
+A warning reports information without turning it into an assertion failure.
+Do not downgrade a real regression to a warning. Runtime cancellation is for a
+meaningful unavailable prerequisite; it is not a substitute for fixing a failing
+test. Keep actual failure and cancellation outcomes visible in CI.
+
+For bounded flakiness investigation with the supporting SwiftPM runner:
+
+```sh
+swift test --filter stable --maximum-repetitions 3 --repeat-until fail
+```
+
+These repetition flags apply to Swift Testing. Record the actual executed
+count and result. Repeating until a pass does not prove that a flaky test was
+fixed. Keep deterministic inputs, controlled time and isolated state as the
+primary reliability measures.
+
+For XCTest assertion reuse, read `migration-from-xctest.md`; Swift 6.4 adds
+mode-dependent interoperability, not permission to mix frameworks accidentally.
+Current sources are in `official-sources.md`.
+
+## Test-specific reflection
+
+**Requires Swift 6.4 or later and a supporting Testing library.**
+
+Use `CustomTestReflectable` when failed `#expect` expressions need different
+fields from ordinary reflection. For an existing `Reading` type with a `value`
+property, add the conformance in its test target:
+
+```swift
+extension Reading: CustomTestReflectable {
+    var customTestMirror: Mirror {
+        Mirror(self, children: ["diagnostic": value])
+    }
+}
+```
+
+`Mirror(reflectingForTest:)` selects this mirror, including through an `Any`
+value. Without that conformance it uses ordinary reflection, honoring
+`CustomReflectable` when present. `Mirror(reflecting:)` remains unchanged.
+Keep `Testing` imports and the conformance in test targets. For older toolchains,
+retain existing assertion diagnostics and ordinary reflection.
+
+Choose fields that explain the failure; reflection customizes diagnostic output,
+not equality or assertion success. Verify the actual failed-expression output
+with the selected runner. See [ST-0022](https://github.com/swiftlang/swift-evolution/blob/main/proposals/testing/0022-customtestreflectable.md).
+
 
 ## Raw identifiers
 
@@ -194,15 +249,16 @@ As an example, we could define a simple `Character` struct such as this one:
 
 ```swift
 import Foundation
-import Testing
 
-struct Character: Attachable, Codable {
+struct Character: Codable {
     var id = UUID()
     var name: String
 }
 ```
 
-That conforms to the `Attachable` protocol, and because it also imports Foundation *and* conforms to `Codable`, Swift Testing can encode instances of our struct to attach to tests.
+Keep the domain type independent of `Testing`. In its test target, add
+`Attachable` conformance; Foundation's default implementation can encode the
+`Codable` value.
 
 We can then use that in a function in our production code:
 
@@ -215,6 +271,11 @@ func makeCharacter() -> Character {
 When it comes to writing a test, make sure the default name matches the value we expect, but also make whatever character is returned from `makeCharacter()` an attachment with the label "Character":
 
 ```swift
+import Foundation
+import Testing
+
+extension Character: Attachable {}
+
 @Test func defaultCharacterNameIsCorrect() {
     let result = makeCharacter()
     #expect(result.name == "Rem")
@@ -228,6 +289,36 @@ That test will fail when it runs because the character name is different, and Sw
 Out of the box, Swift Testing provides support for attaching `String`, `Data`, and anything that conforms to `Encodable`. Unless the user has Swift 6.3 available, it does *not* support attaching images.
 
 **Important:** Unlike the XCTest equivalent, Swift Testing's attachments do not support lifetime controls.
+
+### Transferable values on Apple platforms
+
+**Requires Swift 6.4 and macOS 15.2, iOS/iPadOS 18.2, tvOS 18.2,
+watchOS 11.2, or visionOS 2.2 or later.** Check the selected Testing library
+and SDK; retain the existing `Attachable`/encoding path for other environments.
+
+For a value already conforming to `CoreTransferable.Transferable`, construct
+the attachment asynchronously, then record it:
+
+```swift
+import CoreTransferable
+import UniformTypeIdentifiers
+import Testing
+
+let attachment = try await Attachment(
+    exporting: trace,
+    as: .plainText,
+    named: "trace.txt"
+)
+Attachment.record(attachment)
+```
+
+Request a supported export content type. With `as: nil`, the library chooses
+the first exported type conforming to `UTType.data`. Handle export errors at
+construction; do not assume an exporter error retains its original type.
+For SwiftPM output, pass an existing writable directory to
+`swift test --attachments-path <directory>` and check the saved bytes; without
+that option the runner discards attachments. See
+[ST-0023](https://github.com/swiftlang/swift-evolution/blob/main/proposals/testing/0023-attachments-transferable.md).
 
 
 ## Evaluating ConditionTrait

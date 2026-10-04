@@ -1,19 +1,13 @@
 ---
 name: certificate-trust-patterns
-description: >-
-  Use for Apple certificate trust and TLS trust in Swift: SecTrust,
-  SecCertificate, SecIdentity, URLSession authentication challenges,
-  certificate/SPKI/CA/leaf pinning, NSPinnedDomains, client certificates,
-  PKCS#12, mTLS, trust debugging, SecTrustEvaluate migration, and rotation. Do
-  not use for Keychain storage, CryptoKit algorithms, App Transport Security, or
-  server TLS deployment.
+description: "Use for Apple certificate trust and TLS trust in Swift: SecTrust, SecCertificate, SecIdentity, URLSession authentication challenges, certificate/SPKI/CA/leaf pinning, NSPinnedDomains, client certificates, PKCS#12, mTLS, trust debugging, SecTrustEvaluate migration, and rotation. Do not use for Keychain storage, CryptoKit algorithms, App Transport Security, or server TLS deployment."
 ---
 
 # Certificate Trust Patterns
 
 Use this skill for certificate trust evaluation, pinning, client certificates,
-and URLSession trust handling on Apple platforms. Keep Keychain storage and
-general cryptography routed to the sibling skills.
+and URLSession trust handling on Apple platforms. Keychain storage and general
+cryptography are out of scope.
 
 ## Workflow
 
@@ -36,15 +30,15 @@ general cryptography routed to the sibling skills.
   `SecTrustEvaluate` patterns.
 - Run trust evaluation away from the main thread when the code path can block.
 - Plan pin rotation and backup pins before shipping a pinning strategy.
-- Treat client certificate private keys as sensitive credentials; use
-  `keychain-patterns` for persistent storage details.
+- Treat client certificate private keys as sensitive credentials; persistent
+  Keychain storage details are out of scope.
 
 ## Coordination
 
-- Use `keychain-patterns` for storing client certificate identities, private
-  keys, credentials, access groups, and Keychain troubleshooting.
-- Use `cryptokit-patterns` for hashing, key agreement, signatures, or custom
-  cryptographic protocols.
+- Storing client certificate identities, private keys, credentials, access
+  groups, and Keychain troubleshooting is out of scope.
+- Hashing, key agreement, signatures, and custom cryptographic protocols are
+  out of scope.
 - Use Apple networking or platform documentation directly for App Transport
   Security and server-side TLS deployment; those are outside this skill.
 

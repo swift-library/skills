@@ -2,8 +2,7 @@
 
 Use this file for pattern-level SwiftUI app shell, TabView, NavigationStack,
 and deep-link wiring when the project's architecture is already established.
-Use `swiftui-architecture` when the task is to choose, migrate, or validate an
-app-wide architecture.
+Choosing, migrating, or validating an app-wide architecture is out of scope.
 
 ## App Shell
 
@@ -56,8 +55,9 @@ app-wide architecture.
 ## Boundary Checks
 
 - If the work changes feature ownership, dependency lifetime, state model, or
-  navigation architecture, route to `swiftui-architecture`.
+  navigation architecture, treat it as architecture work, which is out of
+  scope.
 - If the work is only wiring a known TabView, NavigationStack, deep link, or
-  sheet pattern into existing architecture, keep it in `swiftui-patterns`.
-- If source-level performance symptoms appear during routing changes, use
-  `swiftui-performance` for performance diagnosis and remediation.
+  sheet pattern into existing architecture, keep it here.
+- If source-level performance symptoms appear during routing changes, treat
+  dedicated performance diagnosis and remediation as out of scope.

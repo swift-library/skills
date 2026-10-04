@@ -26,12 +26,12 @@ real-time multiplayer, turn-based matches, saved games, and social features.
 
 ## When Not To Use
 
-- Do not use for SpriteKit, SceneKit, or RealityKit rendering mechanics; use the
-  matching rendering skill.
+- Do not use for SpriteKit, SceneKit, or RealityKit rendering mechanics;
+  rendering is out of scope.
 - Do not use for browser games or web multiplayer.
 - Do not use for generic socket/network transport unless GameKit owns the match.
-- Do not use for purchases, subscriptions, or app commerce; use
-  `storekit-patterns`.
+- Do not use for purchases, subscriptions, or app commerce; StoreKit commerce is
+  out of scope.
 
 ## Inputs To Inspect
 

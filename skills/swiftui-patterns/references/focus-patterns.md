@@ -1,26 +1,20 @@
-# SwiftUI Focus Route
+# SwiftUI Focus Basics
 
-SwiftUI focus knowledge belongs to `focus-engine-patterns`.
-
-Use this route only when ordinary SwiftUI implementation touches a small
+Use this file only when ordinary SwiftUI implementation touches a small
 `@FocusState` or focused-value detail and the task has not become a dedicated
 focus review.
 
-## Route
+## Out Of Scope
 
-- SwiftUI `@FocusState`, focusable views, focused values, search focus, focus
-  sections, default focus, move/exit commands, hover effects, or common
-  pitfalls:
-  `../focus-engine-patterns/references/swiftui-focus.md`
-- Focus restoration after navigation, data reloads, sheets, or async updates:
-  `../focus-engine-patterns/references/focus-restoration.md`
-- Async focus timing, main-actor focus updates, cancellation, or scroll
-  feedback loops:
-  `../focus-engine-patterns/references/async-focus.md`
-- Focus styling, custom rings, hover/focus visual feedback:
-  `../focus-engine-patterns/references/focus-styling.md`
-- Dedicated focus debugging or platform focus behavior:
-  use the `focus-engine-patterns` skill.
+Dedicated focus work stays outside this skill:
+
+- focusable views, focused values, search focus, focus sections, default focus,
+  move/exit commands, hover effects, or focus pitfalls beyond a local edit
+- focus restoration after navigation, data reloads, sheets, or async updates
+- async focus timing, main-actor focus updates, cancellation, or scroll
+  feedback loops
+- focus styling, custom rings, or hover/focus visual feedback
+- focus debugging or platform focus behavior
 
 ## Local Reminder
 

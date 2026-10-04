@@ -30,7 +30,7 @@ product copy or designing an onboarding flow.
 
 - Do not use for generic onboarding, walkthroughs, empty states, or promotional
   prompts that do not use TipKit.
-- Do not use for interface wording only; use `interface-writing`.
+- Do not use for interface wording only.
 - Do not use for ordinary SwiftUI layout or architecture unless TipKit
   placement, task timing, or view lifecycle is the issue.
 - Do not use tips for critical instructions, consent, errors, or required task
@@ -73,8 +73,8 @@ product copy or designing an onboarding flow.
 - Do not couple tip eligibility directly to transient view recomputation.
 - Do not assume datastore, CloudKit sync, testing helper, or display-frequency
   behavior without current documentation or local SDK verification.
-- Keep text quality review in `interface-writing` when wording is the main
-  task.
+- Leave text quality review to general UI copy guidance when wording is the
+  main task.
 
 ## Validation
 

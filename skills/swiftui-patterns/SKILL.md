@@ -1,6 +1,6 @@
 ---
 name: swiftui-patterns
-description: Use this skill for SwiftUI view implementation, ordinary review, focused view cleanup/refactoring, and debugging of state/data flow, view structure, layout, lists, navigation and presentation, toolbars, controls/forms, scrolling, text/images, SwiftUI text localization slices, animation, macOS SwiftUI, MenuBarExtra, or Liquid Glass. Do not use for dedicated sibling-domain work such as architecture selection, performance diagnosis, accessibility audits, focus-system audits, Instruments traces, Swift Charts, persistence, networking, package architecture, Xcode localization resource workflows, or concurrency migration.
+description: Use this skill for SwiftUI view implementation, ordinary review, focused view cleanup/refactoring, and debugging of state/data flow, view structure, layout, lists, navigation and presentation, toolbars, controls/forms, Form/Section/LabeledContent implementation, native control primitive refactors, scrolling, text/images, SwiftUI text localization slices, animation, macOS SwiftUI, MenuBarExtra, or Liquid Glass. Do not use for dedicated work on architecture selection, performance diagnosis, accessibility audits, focus-system audits, Instruments traces, Swift Charts, persistence, networking, package architecture, Xcode localization resource workflows, or concurrency migration.
 ---
 
 # SwiftUI Patterns
@@ -23,41 +23,49 @@ platform-specific SwiftUI APIs.
   `AnyView`, or using `@ViewBuilder` correctly.
 - Fixing list, `ForEach`, table, scroll, app shell, TabView, deep-link,
   navigation, toolbar, sheet, inspector, or simple in-view form focus behavior.
+- Implementing or refactoring native SwiftUI primitives such as `Form`,
+  `Section`, `LabeledContent`, `Label`, `Toggle`, `Picker`, `TextField`,
+  `Button`, `Menu`, `NavigationLink`, `List`, or `Table`, including replacing
+  manual rows with system primitives while preserving state, bindings,
+  availability, previews, and validation.
 - Noticing small invalidation, identity, or image-loading issues while already
   working on ordinary SwiftUI implementation.
 - Implementing or reviewing animations, transitions, tap targets, system
-  controls, text localization, macOS SwiftUI windows, `MenuBarExtra`
-  utilities, or iOS 26+ Liquid Glass.
+  controls, simple `.sensoryFeedback` state-triggered haptics, text
+  localization, macOS SwiftUI windows, `MenuBarExtra` utilities, or platform
+  SDK 26+ Liquid Glass.
 
 ## When Not To Use
 
-- Do not use for Core Data persistence; use `core-data-patterns`.
+- Do not use for Core Data persistence.
 - Do not use for SwiftData schema design or custom DataStore work.
 - Do not use for Xcode Instruments `.trace`, `xctrace`, trace recording, or
-  trace analysis work; use `xcode-instruments`.
+  trace analysis work.
 - Do not use for a dedicated SwiftUI performance review focused on slow
   rendering, janky scrolling, high CPU/memory, excessive updates, or layout
-  thrash; use `swiftui-performance`.
-- Do not use for Swift Charts; use `swift-charts-patterns`.
+  thrash.
+- Do not use for Swift Charts.
 - Do not use for broad Swift Concurrency migration, actor-isolation design,
-  `Sendable` fixes, or data-race work; use `swift-concurrency-patterns`.
+  `Sendable` fixes, or data-race work.
 - Do not use for dedicated accessibility audits, VoiceOver, Voice Control,
   Switch Control, Full Keyboard Access, Dynamic Type accessibility reviews,
   WCAG mapping, Accessibility Inspector workflows, or App Store Accessibility
-  Nutrition Labels; use `accessibility-patterns`.
+  Nutrition Labels.
 - Do not use for dedicated Focus Engine audits, tvOS remote focus, UIKit/AppKit
   focus systems, RealityKit hover/focus, Digital Crown focus, focus
-  restoration, or focus debugging; use `focus-engine-patterns`.
+  restoration, or focus debugging.
 - Do not use for SwiftUI app or feature architecture selection, architecture
   migration, MVVM, MVI, TCA, Clean Architecture presentation adapters, or
-  Coordinator-style navigation ownership; use `swiftui-architecture`.
+  Coordinator-style navigation ownership.
 - Do not use for networking architecture, package architecture, dependency
   replacement, or repository documentation.
 - Do not use for Xcode String Catalogs, translator export/import,
   pseudolocalization, localized package/framework resources, bundle lookup, or
-  locale UI test planning; use `xcode-localization-patterns`.
+  locale UI test planning.
 - Do not use for lightweight old-API checks when no deeper SwiftUI design or
-  behavior question exists; use `swift-programming-language`.
+  behavior question exists.
+- Do not use for custom Core Haptics engines, AHAP files, advanced haptic
+  players, or audio-haptic pattern authoring.
 
 ## Inputs To Inspect
 
@@ -83,21 +91,22 @@ platform-specific SwiftUI APIs.
    `references/_index.md` only if routing is unclear.
 5. If the task is dedicated focus management across Focus Engine, tvOS,
    UIKit/AppKit, RealityKit, Digital Crown, restoration, or focus debugging,
-   route that part to `focus-engine-patterns`.
+   treat that part as out of scope and keep only local SwiftUI focus edits.
 6. If the task is a dedicated accessibility audit or mentions VoiceOver, Voice
    Control, Switch Control, Full Keyboard Access, WCAG, Accessibility
-   Inspector, or Nutrition Labels, route that part to `accessibility-patterns`.
+   Inspector, or Nutrition Labels, treat that part as out of scope and keep
+   only basic SwiftUI accessibility modifiers.
 7. If the task references `.trace`, `xctrace`, Instruments, trace recording, or
-   trace analysis, route that part to `xcode-instruments`.
+   trace analysis, leave trace capture and analysis out of scope and use only
+   the resulting findings.
 8. Prefer native SwiftUI APIs over UIKit/AppKit bridging unless bridging is
    required or already established locally.
 9. Preserve the project's architecture and style. Improve local data flow and
    testability without mandating MVVM, VIPER, TCA, or another architecture. If
-   the user asks to choose, validate, or migrate a SwiftUI architecture, route
-   that work to `swiftui-architecture`.
+   the user asks to choose, validate, or migrate a SwiftUI architecture, treat
+   that work as out of scope.
 10. Validate with build, previews, targeted tests, accessibility checks,
-   screenshots, benchmarks, or trace findings from `xcode-instruments`
-   as appropriate.
+   screenshots, benchmarks, or Instruments trace findings as appropriate.
 
 ## Reference Files To Consult
 
@@ -122,7 +131,8 @@ platform-specific SwiftUI APIs.
 - `references/animation-basics.md`: implicit and explicit animations.
 - `references/animation-transitions.md`: transitions and matched geometry.
 - `references/animation-advanced.md`: phase/keyframe/advanced animation APIs.
-- `references/liquid-glass.md`: iOS 26+ Liquid Glass and fallback patterns.
+- `references/liquid-glass.md`: platform SDK 26+ Liquid Glass and fallback
+  patterns.
 - `references/macos-scenes.md`: macOS scenes, `MenuBarExtra`, menu-bar-only
   utilities, and multi-window setup.
 - `references/macos-window-styling.md`: window and toolbar styling.
@@ -130,12 +140,12 @@ platform-specific SwiftUI APIs.
 
 Use these only as light reminders during ordinary SwiftUI implementation:
 
-- `references/focus-patterns.md`: route stub for SwiftUI focus knowledge owned
-  by `focus-engine-patterns`.
-- `references/accessibility-patterns.md`: route stub for SwiftUI accessibility
-  knowledge owned by `accessibility-patterns`.
-- `references/performance-patterns.md`: route stub for SwiftUI source-level
-  performance knowledge owned by `swiftui-performance`.
+- `references/focus-patterns.md`: basic SwiftUI `@FocusState` reminders and
+  the dedicated-focus boundary.
+- `references/accessibility-basics.md`: basic SwiftUI accessibility reminders
+  and the dedicated-audit boundary.
+- `references/performance-patterns.md`: incidental SwiftUI performance
+  reminders and the dedicated-performance boundary.
 
 ## Decision Rules
 
@@ -149,12 +159,15 @@ Use these only as light reminders during ordinary SwiftUI implementation:
 - Prefer `Button` over `onTapGesture` for ordinary tappable controls.
 - Prefer native SwiftUI navigation, presentation, layout, and accessibility
   APIs before bridging.
+- If the main question is which visible control primitive fits the UI, that
+  visual-design choice is out of scope; after the primitive is chosen,
+  implement or refactor it here.
 - Gate version-specific APIs with `#available` and provide sensible fallbacks.
 - Adopt Liquid Glass only when explicitly requested or already used by the
   project.
 - Treat performance observations as hypotheses unless measured by local
-  evidence. Use `swiftui-performance` or `xcode-instruments` when
-  performance becomes the primary task.
+  evidence. Dedicated performance diagnosis and trace analysis are out of
+  scope when performance becomes the primary task.
 
 ## Validation Rules
 
@@ -162,11 +175,11 @@ Use these only as light reminders during ordinary SwiftUI implementation:
 - Render previews or use screenshots for UI behavior and layout-sensitive work
   when feasible.
 - Check Dynamic Type, VoiceOver labels, and image-only controls for
-  basic SwiftUI accessibility-sensitive changes. Use `accessibility-patterns`
-  for dedicated audits or assistive-technology workflows.
+  basic SwiftUI accessibility-sensitive changes. Dedicated audits and
+  assistive-technology workflows are out of scope.
 - Verify navigation and presentation state through the user path being changed.
 - For performance work, use `_logChanges()`, a project-local benchmark, or
-  trace findings from `xcode-instruments` before claiming improvement.
+  Instruments trace findings before claiming improvement.
 
 ## Output Format
 
@@ -186,11 +199,11 @@ For reviews or implementation recommendations, return:
 - If platform or deployment target is unknown, report that before recommending
   availability-sensitive APIs.
 - If the request becomes a dedicated accessibility audit, keep SwiftUI source
-  observations concise and route the accessibility-specific work to
-  `accessibility-patterns`.
+  observations concise and state that the accessibility-specific audit is out
+  of scope.
 - If a design request crosses into architecture choice, state management
   framework selection, or app-wide routing design, keep the recommendation
   incremental and ask before imposing a new architecture.
-- If a performance task needs Instruments evidence, use
-  `xcode-instruments` for trace capture or analysis, then continue with the
-  relevant source-level SwiftUI skill where useful.
+- If a performance task needs Instruments evidence, ask for trace findings
+  rather than capturing or analyzing traces here, then continue with
+  source-level SwiftUI changes where useful.

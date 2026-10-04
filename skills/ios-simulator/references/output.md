@@ -34,26 +34,24 @@ For erase/delete/reset operations:
 
 ## Handoff
 
-Simulator evidence can identify where to look, but source fixes belong in the
-appropriate skill:
+Simulator evidence can identify where to look, but source fixes are out of
+scope. Report the evidence and name the affected area:
 
-- SwiftUI source behavior: `swiftui-patterns`.
-- Visual SwiftUI polish: `swiftui-design`.
-- Dedicated accessibility issues: `accessibility-patterns`.
-- Focus behavior: `focus-engine-patterns`.
-- Performance trace work: `xcode-instruments`.
-- Persistence issues: `swiftdata-patterns` or `core-data-patterns`.
+- SwiftUI source behavior.
+- Visual SwiftUI polish.
+- Dedicated accessibility issues.
+- Focus behavior.
+- Performance trace work.
+- Core Data or SwiftData persistence issues.
 
 ## Script Mapping
 
-- Upstream-style build/test and progressive disclosure:
-  `scripts/xcode_build.py`.
-- Upstream-style simulator lifecycle, app lifecycle, log monitor, clipboard,
-  privacy, push, status bar, selector, and health check: `scripts/sim.py`.
-- Upstream-style screen mapper, navigator, gesture, keyboard, and lightweight
+- Build/test and result drill-down: `scripts/xcode_build.py`.
+- Simulator lifecycle, app lifecycle, log monitor, clipboard, privacy, push,
+  status bar, selector, and health check: `scripts/sim.py`.
+- Screen mapper, navigator, gesture, keyboard, and lightweight
   accessibility-tree audit: `scripts/idb_ui.py`.
-- Upstream-style app state capture: `scripts/state_capture.py`.
-- Upstream-style test recorder: `scripts/test_recorder.py`.
-- Upstream-style visual diff: `scripts/visual_diff.py`.
-- Upstream-style Core Data / SwiftData model inspection:
-  `scripts/model_inspector.py`.
+- App state capture: `scripts/state_capture.py`.
+- Test recorder: `scripts/test_recorder.py`.
+- Visual diff: `scripts/visual_diff.py`.
+- Core Data / SwiftData model inspection: `scripts/model_inspector.py`.

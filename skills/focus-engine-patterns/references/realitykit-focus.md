@@ -53,7 +53,7 @@ entity.components.set(HoverEffectComponent())  // System default highlight
 
 ```swift
 entity.components.set(HoverEffectComponent(
-    .spotlight(SpotlightHoverEffectStyle(
+    .spotlight(HoverEffectComponent.SpotlightHoverEffectStyle(
         color: .white,
         strength: 1.0
     ))
@@ -86,7 +86,7 @@ entity.components.set(HoverEffectComponent(.shader(.default)))
 
 ```swift
 entity.components.set(HoverEffectComponent(
-    .highlight(HighlightHoverEffectStyle(
+    .highlight(HoverEffectComponent.HighlightHoverEffectStyle(
         color: .systemBlue,
         strength: 0.8
     ))

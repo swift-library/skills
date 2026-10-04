@@ -17,6 +17,6 @@ the task requires tests.
 | `testing-security-code.md` | Protocol-based keychain tests, simulator/device split, CI handling |
 | `compliance-owasp-mapping.md` | OWASP Mobile Top 10, MASVS, and MASTG audit mapping |
 
-Some copied references mention CryptoKit or certificate trust as neighboring
-security topics. For deep work in those areas, use `cryptokit-patterns` or
-`certificate-trust-patterns` rather than expanding this skill's scope.
+Some references mention CryptoKit or certificate trust as neighboring security
+topics. Deep work in those areas is out of scope; do not expand this skill to
+cover it.

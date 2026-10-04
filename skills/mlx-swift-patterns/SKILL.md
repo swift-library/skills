@@ -27,10 +27,8 @@ experimentation and inference.
 ## When Not To Use
 
 - Do not treat MLX Swift as an Apple SDK framework. It is a Swift package.
-- Do not use for Core ML model conversion, deployment, or `MLModel` prediction;
-  use `core-ml-patterns`.
-- Do not use for Foundation Models generation sessions; use
-  `foundation-models-patterns`.
+- Do not use for Core ML model conversion, deployment, or `MLModel` prediction.
+- Do not use for Foundation Models generation sessions.
 - Do not use for llama.cpp C/C++ runtime implementation, GGUF internals, or CLI
   server operation unless the task is only choosing a Swift-app backend.
 - Do not use for server model APIs, cloud training, or generic ML theory.

@@ -4,7 +4,8 @@
   Reactive overlay from local constraints.
 - `mvvm.md`: screen and feature state with ViewModel boundaries.
 - `mvi.md`: strict unidirectional state machine without a TCA dependency.
-- `tca.md`: TCA feature shape, dependencies, navigation, and testing.
+- `tca.md`: TCA fit-check and the boundary where detailed TCA work leaves
+  this skill.
 - `clean-architecture.md`: domain/data isolation with SwiftUI presentation
   adapters.
 - `navigation-coordinator.md`: SwiftUI flow state, deep links, and mixed

@@ -14,8 +14,7 @@ constructed and locally valid.
 ## Entitlements
 
 - The scripts use `APP_ENTITLEMENTS` and default to
-  `.build/entitlements/<AppName>.entitlements`, matching the upstream skill
-  contract.
+  `.build/entitlements/<AppName>.entitlements`.
 - Use `assets/templates/App.entitlements` as a starting point when the app
   needs an explicit project-local entitlements plist.
 - For Developer ID distribution, do not assume App Sandbox is required. Add

@@ -23,10 +23,9 @@ physical tag validation.
 
 ## When Not To Use
 
-- Do not use for Bluetooth or accessory setup; use the relevant Bluetooth or
-  AccessorySetupKit skill.
+- Do not use for Bluetooth or accessory setup.
 - Do not use for PassKit checkout or Apple Pay token handling.
-- Do not use for QR/barcode scanning; use `vision-patterns`.
+- Do not use for QR/barcode scanning.
 - Do not use for generic hardware strategy without Core NFC code.
 - Do not invent NFC format support, entitlement requirements, or background tag
   behavior. Verify current Apple documentation and physical device behavior.

@@ -20,5 +20,4 @@ Use this index only when `SKILL.md` routing is not enough.
   `trace-analysis.md`.
 - User asks to record, profile, attach, launch, list devices, or list
   Instruments templates: `trace-recording.md`.
-- Source-only SwiftUI performance issue without trace evidence:
-  `swiftui-patterns`.
+- Source-only SwiftUI performance issue without trace evidence: out of scope.

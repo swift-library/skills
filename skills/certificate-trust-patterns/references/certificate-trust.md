@@ -197,8 +197,6 @@ Hashes the SubjectPublicKeyInfo (SPKI) structure. When certificates renew **with
 
 **Critical correctness issue**: `SecKeyCopyExternalRepresentation` returns raw key bytes **without** the ASN.1 SPKI header. You must prepend the correct header before hashing. Omitting this produces incorrect hashes that won't match pins generated via OpenSSL.
 
-> ⚠️ **Cross-validation note**: One comparison source omits the ASN.1 header prepend step and uses deprecated `SecTrustGetCertificateAtIndex`. The code below uses the correct modern APIs with proper SPKI construction.
-
 ```swift
 // ✅ CORRECT: SPKI hash pinning with ASN.1 header and modern APIs
 class SPKIPinningDelegate: NSObject, URLSessionDelegate {
@@ -520,9 +518,9 @@ Use `nscurl --ats-diagnostics https://your-server.com` on macOS to diagnose ATS 
 | iOS 12 / macOS 10.14 | 2018 | `SecTrustEvaluateWithError` introduced; Certificate Transparency enforced (iOS 12.1.1) |
 | iOS 13 / macOS 10.15 | 2019 | `SecTrustEvaluateAsyncWithError` introduced; `SecTrustEvaluate` deprecated             |
 | iOS 14 / macOS 11    | 2020 | **`NSPinnedDomains`** introduced; `SecTrustCopyKey` replaces `SecTrustCopyPublicKey`   |
-| iOS 15 / macOS 12    | 2021 | **`SecTrustCopyCertificateChain`** replaces `SecTrustGetCertificateAtIndex`/`Count`    |
+| iOS 15 / macOS 12    | 2021 | **`SecTrustCopyCertificateChain`** replaces `SecTrustGetCertificateAtIndex`            |
 | iOS 17 / macOS 14    | 2023 | ATS enforced for IP addresses; EAP-TLS 1.3 support                                     |
-| iOS 18 / macOS 15    | 2024 | Swift 6 strict concurrency affects callback-based Security code; no new SecTrust APIs  |
+| iOS 18 / macOS 15    | 2024 | Swift 6 strict concurrency affects callback-based Security code                        |
 
 ---
 
@@ -532,7 +530,7 @@ Use `nscurl --ats-diagnostics https://your-server.com` on macOS to diagnose ATS 
 - Different `SecTrust` objects can be evaluated concurrently on different threads.
 - On iOS, all Certificate/Key/Trust Services functions are thread-safe and reentrant.
 - On macOS, trust evaluation can **block on user interaction** (keychain unlock dialogs) — always evaluate on background threads.
-- `SecTrust`, `SecCertificate`, and `SecKey` are **not** marked `Sendable`. With Swift 6 strict concurrency, use `@unchecked Sendable` wrappers or explicit actor isolation.
+- `SecTrust` and `SecKey` are **not** marked `Sendable`; the iOS 27 SDK marks only `SecCertificate` as `Sendable`. With Swift 6 strict concurrency, use `@unchecked Sendable` wrappers or explicit actor isolation for the others.
 
 ---
 
@@ -543,26 +541,6 @@ Use `nscurl --ats-diagnostics https://your-server.com` on macOS to diagnose ATS 
 - **Enforce** that any `NSPinnedDomains` entry contains at least two SPKI hashes (backup pin requirement).
 - **Scan** for deprecated APIs: `SecTrustEvaluate(`, `SecTrustGetCertificateAtIndex(`, `SecTrustCopyPublicKey(`.
 - **Test** pinning with certificate rotation in staging before production deployment.
-
----
-
-## Cross-Validation Notes
-
-Both research sources agree on all major recommendations. Key discrepancies in the parallel source (corrected in this file):
-
-1. **Deprecated API in code example**: one comparison source uses `SecTrustGetCertificateAtIndex(trust, 0)` — deprecated iOS 15. Corrected to `SecTrustCopyCertificateChain`.
-2. **Missing ASN.1 header**: one comparison source hashes raw key bytes without prepending the SPKI ASN.1 header, producing incorrect hashes. Corrected with explicit header prepend.
-3. **Deprecated `SecTrustCopyPublicKey` reference**: one comparison source references this API — deprecated iOS 14. Corrected to `SecCertificateCopyKey`.
-4. **Main queue evaluation**: one comparison source evaluates on `.main` queue. Corrected to background queue.
-
----
-
-## Cross-References
-
-- `keychain-item-classes.md` — `kSecClassCertificate` and `kSecClassIdentity` storage, PKCS#12 import patterns
-- `keychain-fundamentals.md` — SecItem CRUD patterns for certificate and identity persistence
-- `cryptokit-public-key.md` — PEM/DER key interoperability, curve selection for client certificates
-- `compliance-owasp-mapping.md` — M5 (Insecure Communication) trust evaluation requirements
 
 ---
 

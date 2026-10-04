@@ -25,8 +25,7 @@ motorized stands, system tracking, custom tracking, and camera coordination.
 
 - Do not use for generic camera capture or AVFoundation pipeline work unless
   dock control is the concrete issue.
-- Do not use for Vision recognition without DockKit accessory movement; use
-  `vision-patterns`.
+- Do not use for Vision recognition without DockKit accessory movement.
 - Do not use for Core Motion sensors or generic accessory setup.
 - Do not use for product video strategy without DockKit implementation.
 - Do not invent accessory support, permission behavior, or tracking semantics.

@@ -27,10 +27,10 @@ sandboxing, rendering, text input, networking, and process lifecycle.
 ## When Not To Use
 
 - Do not use for `WKWebView`, SwiftUI `WebView`, `WebPage`, or ordinary WebKit
-  embedding; use `webkit-patterns`.
+  embedding.
 - Do not use for generic XPC services without BrowserEngineKit.
-- Do not use for generic HTTP clients; use `foundation-urlsession-patterns` or
-  `network-framework-patterns`.
+- Do not use for generic HTTP clients built on URLSession or the Network
+  framework.
 - Do not use for web app content design or JavaScript debugging unless
   BrowserEngineKit architecture is the task.
 
@@ -63,7 +63,7 @@ sandboxing, rendering, text input, networking, and process lifecycle.
 
 ## Review Rules
 
-- Do not route non-WebKit browser engine work to `webkit-patterns`.
+- Do not treat non-WebKit browser engine work as WebKit embedding.
 - Do not treat BrowserEngineKit entitlements or eligibility as generally
   available without current verification.
 - Do not let extension processes access more file, network, or rendering

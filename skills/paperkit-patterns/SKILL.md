@@ -24,15 +24,16 @@ rendering, insertion UI, and compatibility handling.
 
 ## When Not To Use
 
-- Do not use for freeform drawing with PencilKit only; use
-  `pencilkit-patterns`.
-- Do not use for PDF document display, forms, search, or PDF permissions; use
-  `pdfkit-patterns`.
+- Do not use for freeform drawing with PencilKit only; PencilKit-only canvas
+  work is out of scope.
+- Do not use for PDF document display, forms, search, or PDF permissions;
+  PDFKit document work is out of scope.
 - Do not use for generic document storage unless PaperKit markup is the main
   data.
-- Do not present beta/new API behavior as stable. Verify current Apple
-  documentation, Xcode, and SDK symbols before relying on PaperKit API names,
-  availability, feature sets, or persistence formats.
+- Do not assume PaperKit behavior from memory. PaperKit requires iOS 26,
+  macOS 26, or visionOS 26 and later; verify current Apple documentation,
+  Xcode, and SDK symbols before relying on PaperKit API names, availability,
+  feature sets, or persistence formats.
 
 ## Inputs To Inspect
 

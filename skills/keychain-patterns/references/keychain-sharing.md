@@ -279,7 +279,7 @@ Two ways to target the data protection keychain on macOS: set `kSecUseDataProtec
 | **Mac Catalyst**   | Data Protection   | Yes                     | None                                  |
 | **macOS (AppKit)** | Legacy file-based | No (by default)         | `kSecUseDataProtectionKeychain: true` |
 
-Apple's TN3137 states the file-based keychain is **"on the road to deprecation."** `SecKeychainCreate` was deprecated in the macOS 12 SDK. New code should target data protection exclusively, with the sole exception of `launchd` daemons that lack a user context.
+Apple's TN3137 states the file-based keychain is **"on the road to deprecation."** `SecKeychainCreate` is deprecated as of macOS 10.10. New code should target data protection exclusively, with the sole exception of `launchd` daemons that lack a user context.
 
 ---
 

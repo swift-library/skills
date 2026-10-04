@@ -12,5 +12,5 @@ review, testing, or compliance references only when the task calls for them.
 | `testing-security-code.md` | CryptoKit round-trip tests, Secure Enclave test strategy, CI/device split |
 | `compliance-owasp-mapping.md` | OWASP Mobile Top 10, MASVS, and MASTG cryptography mapping |
 
-Some copied references mention Keychain storage because persistent keys need a
-secure store. Use `keychain-patterns` for the storage implementation.
+Some references mention Keychain storage because persistent keys need a secure
+store; the storage implementation itself is out of scope.

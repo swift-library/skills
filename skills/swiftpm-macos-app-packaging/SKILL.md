@@ -13,12 +13,8 @@ optional appcast surface needed to turn a SwiftPM executable into a distributabl
 macOS `.app`.
 
 This is a packaging skill, not a SwiftUI architecture or source-code design
-skill. Keep implementation guidance in the relevant source skill after
-packaging evidence identifies a code problem.
-
-The local skill name is `swiftpm-macos-app-packaging`. It covers the same
-macOS SwiftPM packaging surface while following this collection's `swiftpm-*`
-naming convention.
+skill. When packaging evidence identifies a code problem, report it as a
+source-level follow-up outside packaging scope.
 
 ## When To Use
 
@@ -38,12 +34,11 @@ naming convention.
 ## When Not To Use
 
 - Do not use for Xcode app target packaging or project signing setup.
-- Do not use for iOS Simulator operations; use `ios-simulator`.
-- Do not use for Instruments `.trace` recording or analysis; use
-  `xcode-instruments`.
+- Do not use for iOS Simulator operations.
+- Do not use for Instruments `.trace` recording or analysis.
 - Do not use for SwiftUI source architecture, visual design, or view
-  refactoring; use the relevant SwiftUI skill.
-- Do not use for Swift Package architecture; use `swiftpm-architecture`.
+  refactoring.
+- Do not use for Swift Package architecture.
 
 ## Inputs To Inspect
 
@@ -68,6 +63,36 @@ naming convention.
 5. Keep local signing and notarization secrets out of repository files. Use
    environment variables or local notarytool keychain profiles.
 6. Validate the bundle mechanically before claiming success.
+
+## Version and Artifact Identity
+
+Read the project's version/release policy and existing declaration before
+packaging. Record the source of product version and build number, the candidate
+commit, dependency lock and target configuration. Derive Info.plist and runtime
+display from that authority; prefer existing generation and read-only checks.
+An installed app, stale build directory or template default is not the version
+source for a distribution build. Missing or conflicting values must fail.
+
+The bootstrap template supplies an explicit `version.env` for a new project.
+When adapting the packaging script to a project with another authority, replace
+that input with the real source rather than adding a second declaration. The
+packaging template requires its source file and does not guess version values.
+
+After signing and notarization, verify the actual bundle's product/build
+metadata, executable identity, signature and distribution archive digest.
+Bind installation and runtime acceptance to those exact bytes, including a run
+without the source/build directories available. Promote the accepted artifact
+without rebuilding it. Rebuilds, re-signing, entitlements or packaging changes
+invalidate affected evidence; changed toolchain/configuration also invalidates
+the stages that used it. Retain original failure logs and resume only with
+trusted matching evidence.
+
+Separate artifact identity from checker identity. A check-only correction does
+not itself require rebuilding, re-signing or a new product version; validate
+the correction and rerun affected checks against the same identified artifact.
+Source, dependency, build, packaging or signing changes may affect that artifact.
+Follow project policy and investigate uncertain inputs; do not exempt files
+merely because they are scripts.
 
 ## Reference Files To Consult
 
@@ -101,8 +126,7 @@ naming convention.
   a Developer ID Application identity for distribution outside the Mac App
   Store.
 - Use `APP_ENTITLEMENTS` for explicit entitlements. Scripts default to
-  `.build/entitlements/<AppName>.entitlements` so the signing interface stays
-  aligned with the local skill.
+  `.build/entitlements/<AppName>.entitlements`.
 - Use `ARCHES="arm64 x86_64"` for universal release builds.
 - Use `MENU_BAR_APP=1` only when the app should run as a menu bar / agent-style
   app with `LSUIElement`.
@@ -150,7 +174,7 @@ Scripts/compile_and_run.sh
 
 | Symptom | Likely Cause | Recovery |
 |---|---|---|
-| `The software asset has already been uploaded` | Duplicate submission for same version | Bump `BUILD_NUMBER` in `version.env` and repackage. |
+| `The software asset has already been uploaded` | Existing submission for the same artifact | Inspect the submission ID, status and log; resume or reuse acceptance only for identical bytes. Rebuild and advance candidate/build identity only when the artifact must change. |
 | `Package Invalid: Invalid Code Signing Entitlements` | Entitlements in `.entitlements` do not match provisioning or allowed capabilities | Audit entitlements and remove unsupported keys. |
 | `The executable does not have the hardened runtime enabled` | Missing `--options runtime` in distribution signing | Use the release signing path with Developer ID identity. |
 | Notarization hangs or no status email arrives | `xcrun notarytool` network or credential issue | Run `xcrun notarytool history` and refresh App Store Connect credentials. |

@@ -9,8 +9,8 @@ description: Use this skill for MetricKit implementation and review across MXMet
 
 Guide implementation, review, and troubleshooting for MetricKit telemetry in
 Apple-platform apps. This skill owns runtime metrics and diagnostics delivered
-by the system; interactive profiling and `.trace` analysis stay in
-`xcode-instruments`.
+by the system; interactive Instruments profiling and `.trace` analysis are out
+of scope.
 
 ## When To Use
 
@@ -25,7 +25,7 @@ by the system; interactive profiling and `.trace` analysis stay in
 
 ## When Not To Use
 
-- Do not use for recording or parsing `.trace` bundles; use `xcode-instruments`.
+- Do not use for recording or parsing Instruments `.trace` bundles.
 - Do not use for source-only SwiftUI or general performance refactors without
   MetricKit payload evidence.
 - Do not use for generic analytics event taxonomy unless MetricKit payloads are
@@ -49,18 +49,24 @@ by the system; interactive profiling and `.trace` analysis stay in
 
 1. Confirm the task is MetricKit telemetry, not interactive Instruments
    profiling.
-2. Register subscribers early enough for the app lifecycle being measured.
-3. Persist payloads before expensive processing or upload so delivery is not
+2. Check the deployment target before choosing the API family. The iOS 27 and
+   macOS 27 SDKs mark the Objective-C `MX*` manager, subscriber, and payload
+   types as to be deprecated and name Swift `MetricManager`
+   (`metricReports`, `diagnosticReports`), `MetricReport`, `DiagnosticReport`,
+   and `CallStackTree` as replacements. Keep `MX*` code for earlier deployment
+   targets.
+3. Register subscribers early enough for the app lifecycle being measured.
+4. Persist payloads before expensive processing or upload so delivery is not
    lost during app termination.
-4. Keep metrics and diagnostics separate: metrics are aggregate reports, while
+5. Keep metrics and diagnostics separate: metrics are aggregate reports, while
    diagnostics are issue-specific payloads with stack and context data.
-5. Export JSON or dictionaries only after deciding what data must be redacted,
+6. Export JSON or dictionaries only after deciding what data must be redacted,
    sampled, retained, or uploaded.
-6. Correlate MetricKit payloads with app versions, build numbers, device/OS
+7. Correlate MetricKit payloads with app versions, build numbers, device/OS
    metadata, signposts, and source changes.
-7. For custom metrics, verify signpost category/name consistency and avoid
+8. For custom metrics, verify signpost category/name consistency and avoid
    over-instrumenting hot paths.
-8. Treat delivery timing, diagnostic availability, stack formats, and Organizer
+9. Treat delivery timing, diagnostic availability, stack formats, and Organizer
    behavior as current-documentation and local-device gated.
 
 ## Review Rules

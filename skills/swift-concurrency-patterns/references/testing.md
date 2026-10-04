@@ -221,7 +221,7 @@ func isLoadingState() async throws {
 
 Use a deterministic scheduling helper only when the project already provides
 one or the developer explicitly approves adding one. Do not introduce a
-third-party test dependency as a default for this skill or this collection.
+third-party test dependency by default.
 
 ```swift
 @Test

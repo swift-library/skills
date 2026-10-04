@@ -50,7 +50,7 @@ public class Article: NSManagedObject {
 extension NSManagedObjectContext {
     func perform<T>(
         schedule: ScheduledTaskType = .immediate,
-        _ block: @escaping () throws -> T
+        _ block: @escaping @Sendable () throws -> T
     ) async rethrows -> T
 }
 ```

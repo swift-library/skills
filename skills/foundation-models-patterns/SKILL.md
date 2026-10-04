@@ -1,6 +1,6 @@
 ---
 name: foundation-models-patterns
-description: Use this skill for Apple Foundation Models implementation and review across SystemLanguageModel availability, Apple Intelligence gating, LanguageModelSession state, prompts, instructions, transcripts, prewarming, generation options, structured output, @Generable, @Guide, streaming, tool calling, adapters, guardrails, and on-device generative fallback decisions. Do not use for Core ML model inference, MLX Swift package runtime work, Vision recognition, Natural Language deterministic text analysis, server AI products, or prompt marketing copy.
+description: Use this skill to implement or review Apple Foundation Models sessions, model availability, structured generation, streaming, tool calling, and LanguageModel provider integration. Covers on-device and framework-supported cloud paths with explicit privacy and fallback checks. Do not use for standalone Core ML or MLX inference, Vision recognition, deterministic Natural Language analysis, unrelated server AI APIs, or marketing copy.
 ---
 
 # Foundation Models Patterns
@@ -8,8 +8,10 @@ description: Use this skill for Apple Foundation Models implementation and revie
 ## Purpose
 
 Guide implementation, review, and troubleshooting for apps that use Apple's
-Foundation Models framework for on-device language understanding, generation,
-structured output, and tool-backed tasks.
+Foundation Models framework for language understanding, generation, structured
+output, and tool-backed tasks. The framework boundary includes its on-device
+model and supported cloud/provider integrations, with distinct data and
+availability constraints.
 
 ## When To Use
 
@@ -23,17 +25,18 @@ structured output, and tool-backed tasks.
   persistence, or adapter-backed customization.
 - Reviewing privacy, resource use, context handling, guardrails, and app-state
   integration around local generation.
+- Implementing OS-gated `LanguageModel` / `Executor` providers, framework cloud
+  models, or capability-aware session selection.
 
 ## When Not To Use
 
-- Do not use for Core ML model loading, conversion, prediction, or deployment;
-  use `core-ml-patterns`.
-- Do not use for MLX Swift package integration, arrays, or model examples; use
-  `mlx-swift-patterns`.
+- Do not use for Core ML model loading, conversion, prediction, or deployment.
+- Do not use for MLX Swift package integration, arrays, or model examples.
 - Do not use for Vision, Natural Language, Translation, or Speech framework
   work unless Foundation Models generation is the primary issue.
-- Do not use for server AI products, web API prompt engineering, marketplace
-  claims, or product copy.
+- Do not use for standalone server AI APIs without Foundation Models
+  integration, unrelated web API prompt engineering, marketplace claims, or
+  product copy.
 - Do not invent availability, Apple Intelligence eligibility, model capability,
   or new API behavior. Verify current Apple documentation and the local SDK.
 
@@ -52,7 +55,7 @@ structured output, and tool-backed tasks.
 
 1. Confirm the feature is generation or language understanding through the
    Foundation Models framework, not a Core ML, MLX, Vision, Natural Language,
-   Speech, or server-AI task.
+   Speech, or unrelated server-AI task.
 2. Check availability before designing the happy path. Treat unavailable,
    disabled, unsupported, restricted, and loading states as first-class UI and
    control-flow states.
@@ -70,6 +73,10 @@ structured output, and tool-backed tasks.
    model capability when feasible.
 
 ## Review Rules
+
+For model/provider integration and version-sensitive APIs, read
+`references/model-integration.md`. For source refresh, use
+`references/official-sources.md`.
 
 - Treat Foundation Models API names, availability, and capability claims as
   current-source gated.

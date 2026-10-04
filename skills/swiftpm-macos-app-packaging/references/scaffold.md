@@ -113,6 +113,6 @@ app.run()
 - If the app needs Xcode-only capabilities, document that the SwiftPM-only
   path may be insufficient.
 - If the task is about UI architecture, do not solve it here; package the
-  existing executable and route source decisions to the relevant skill.
+  existing executable and leave source decisions outside packaging scope.
 - If the app needs sandbox, network, file, or automation entitlements, keep
   entitlements explicit and review them before signing.

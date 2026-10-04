@@ -40,11 +40,11 @@ backgroundContext.perform {
 - When using async `context.perform`, keep the context as the isolation point
   for Core Data work.
 
-## Routing Boundary
+## Scope Boundary
 
 Stay in this skill for Core Data context confinement, object-ID handoff, and
 managed-object access patterns.
 
-Route to `swift-concurrency-patterns` when the task becomes broad actor
-isolation design, strict-concurrency migration, `Sendable` modeling outside
-Core Data, task cancellation architecture, or general data-race debugging.
+Broad actor isolation design, strict-concurrency migration, `Sendable` modeling
+outside Core Data, task cancellation architecture, and general data-race
+debugging are out of scope.

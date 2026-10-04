@@ -1,13 +1,13 @@
 # SwiftUI Advanced Animations
 
-Transactions, phase animations (iOS 17+), keyframe animations (iOS 17+), completion handlers (iOS 17+), and `@Animatable` macro (iOS 26+).
+Transactions, phase animations (iOS 17+), keyframe animations (iOS 17+), completion handlers (iOS 17+), and the back-deployed `@Animatable` macro.
 
 ## Table of Contents
 - [Transactions](#transactions)
 - [Phase Animations (iOS 17+)](#phase-animations-ios-17)
 - [Keyframe Animations (iOS 17+)](#keyframe-animations-ios-17)
 - [Animation Completion Handlers (iOS 17+)](#animation-completion-handlers-ios-17)
-- [@Animatable Macro (iOS 26+)](#animatable-macro-ios-26)
+- [@Animatable Macro (iOS 13+)](#animatable-macro-ios-13)
 
 ---
 
@@ -323,9 +323,9 @@ Circle()
 
 ---
 
-## @Animatable Macro (iOS 26+)
+## @Animatable Macro (iOS 13+)
 
-The `@Animatable` macro auto-synthesizes `animatableData` from all animatable stored properties, eliminating verbose manual conformance. Use `@AnimatableIgnored` to exclude properties that should not animate.
+The `@Animatable` macro auto-synthesizes `animatableData` from all animatable stored properties, eliminating verbose manual conformance. Use `@AnimatableIgnored` to exclude properties that should not animate. The SDK declares the macro for iOS 13, macOS 10.15, tvOS 13, watchOS 6, and visionOS 1 and later.
 
 ### Before (Manual)
 
@@ -397,7 +397,7 @@ struct Wedge: Shape {
 - Use `.transaction(value:)` for handlers that should refire on every value change
 - Without `value:` parameter, completion only fires once
 
-### @Animatable Macro (iOS 26+)
+### @Animatable Macro (iOS 13+)
 - Use `@Animatable` to auto-synthesize `animatableData` from stored properties
 - Use `@AnimatableIgnored` to exclude non-animatable properties
 - Replaces verbose manual `animatableData` getters/setters

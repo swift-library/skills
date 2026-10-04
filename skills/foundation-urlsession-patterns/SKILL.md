@@ -28,11 +28,11 @@ background transfer handoff.
 ## When Not To Use
 
 - Do not use for `NWConnection`, `NWListener`, `NWBrowser`, local network
-  discovery, or path monitoring; use `network-framework-patterns`.
-- Do not use for OS task scheduling; use `background-tasks-patterns` unless
-  the task is only a background `URLSession` transfer.
+  discovery, or path monitoring.
+- Do not use for OS task scheduling unless the task is only a background
+  `URLSession` transfer.
 - Do not use for certificate pinning or trust-chain rules without URLSession
-  integration; use `certificate-trust-patterns`.
+  integration.
 - Do not use for generic package architecture or API-surface review.
 - Do not invent protocol, ATS, background transfer, or WebSocket behavior.
   Verify current Apple documentation and the local SDK.

@@ -25,12 +25,9 @@ features, including HomeKit data modeling and Matter commissioning flows.
 
 ## When Not To Use
 
-- Do not use for generic Bluetooth communication; use
-  `core-bluetooth-patterns`.
-- Do not use for generic transport or Bonjour networking; use
-  `network-framework-patterns`.
-- Do not use for AccessorySetupKit picker flows outside HomeKit/Matter handoff;
-  use `accessorysetupkit-patterns`.
+- Do not use for generic Core Bluetooth communication.
+- Do not use for generic transport or Bonjour networking.
+- Do not use for AccessorySetupKit picker flows outside HomeKit/Matter handoff.
 - Do not use for SwiftUI app architecture unless the HomeKit integration is the
   reason for the task.
 

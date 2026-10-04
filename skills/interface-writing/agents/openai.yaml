@@ -1,7 +1,7 @@
 interface:
   display_name: "Writing for Interfaces"
-  short_description: "Interface text, UX writing, and product microcopy guidance"
+  short_description: "UI copy, microcopy, strings, and labels"
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $interface-writing to review or improve interface text for buttons, alerts, errors, empty states, onboarding, settings, notifications, CLI output, and terminology consistency."
+  default_prompt: "Use $interface-writing to review or improve UX writing, UI copy, microcopy, buttons, alerts, errors, empty states, onboarding, settings, notifications, CLI output, accessibility labels, source strings, localization-risk notes, and terminology consistency."

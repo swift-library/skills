@@ -2,7 +2,7 @@
 
 > **Scope:** The 10 most dangerous security anti-patterns that AI coding assistants generate for iOS apps. Each entry includes the vulnerability explanation, realistic ❌ insecure code, ✅ correct replacement, detection heuristic, and OWASP risk mapping. This is the skill's backbone — the single most important file for correcting AI-generated security code.
 >
-> **Cross-references:** `biometric-authentication.md` (anti-pattern #3 deep dive), `keychain-fundamentals.md` (anti-pattern #4 CRUD patterns), `keychain-access-control.md` (anti-pattern #5 protection classes), `cryptokit-symmetric.md` (anti-patterns #6–7), `credential-storage-patterns.md` (anti-patterns #1–2 token lifecycle), `migration-legacy-stores.md` (anti-pattern #9 first-launch cleanup), `compliance-owasp-mapping.md` (full OWASP/MASVS mapping).
+> **Cross-references:** `biometric-authentication.md` (anti-pattern #3 deep dive), `keychain-fundamentals.md` (anti-pattern #4 CRUD patterns), `keychain-access-control.md` (anti-pattern #5 protection classes), `credential-storage-patterns.md` (anti-patterns #1–2 token lifecycle), `migration-legacy-stores.md` (anti-pattern #9 first-launch cleanup), `compliance-owasp-mapping.md` (full OWASP/MASVS mapping).
 
 ---
 
@@ -356,7 +356,7 @@ grep -rn "kSecAttrAccessibleWhenUnlocked\b" --include="*.swift" | \
 
 **Severity:** CRITICAL | **OWASP:** M10 (Insufficient Cryptography) | **Fix effort:** Medium
 
-Reusing a nonce with the same key in AES-GCM is a complete cryptographic break. Identical nonces produce identical keystreams, enabling plaintext recovery via `C1 ⊕ C2 = P1 ⊕ P2` and authentication key recovery via polynomial factorization ("forbidden attack," Joux 2006). CryptoKit's `AES.GCM.seal` has a safe default: omitting the `nonce` parameter auto-generates a random 12-byte nonce. Danger occurs when AI explicitly constructs nonces. Full patterns: see `cryptokit-symmetric.md`.
+Reusing a nonce with the same key in AES-GCM is a complete cryptographic break. Identical nonces produce identical keystreams, enabling plaintext recovery via `C1 ⊕ C2 = P1 ⊕ P2` and authentication key recovery via polynomial factorization ("forbidden attack," Joux 2006). CryptoKit's `AES.GCM.seal` has a safe default: omitting the `nonce` parameter auto-generates a random 12-byte nonce. Danger occurs when AI explicitly constructs nonces.
 
 **❌ Insecure — AI-generated patterns:**
 
@@ -444,10 +444,9 @@ func authenticate(_ data: Data, key: SymmetricKey) -> Data {
 // Password storage — NEVER raw hashes. Use a KDF:
 // Server-side: Argon2id, bcrypt, or scrypt
 // On-device: PBKDF2 with ≥600,000 iterations (OWASP 2023 minimum for HMAC-SHA256)
-// See cryptokit-symmetric.md for full PBKDF2 implementation
 ```
 
-iOS 18 adds SHA-3 family (`SHA3_256`, `SHA3_384`, `SHA3_512`) in CryptoKit. WWDC 2025-314 covers post-quantum additions (ML-KEM, ML-DSA), not SHA-3.
+iOS 26 adds SHA-3 family (`SHA3_256`, `SHA3_384`, `SHA3_512`) in CryptoKit. WWDC 2025-314 covers post-quantum additions (ML-KEM, ML-DSA), not SHA-3.
 
 **MASTG test:** MASTG-TEST-0211. **MASTG demos:** MASTG-DEMO-0015, MASTG-DEMO-0016. **Legacy:** MSTG-CRYPTO-1.
 
@@ -666,7 +665,7 @@ Recommended: Semgrep on every PR + post-build binary scanning. CodeQL nightly fo
 WWDC 2025-314 introduced the most significant CryptoKit expansion since 2019:
 
 - **Symmetric keys:** `.bits256` recommended over `.bits128` for quantum resistance (anti-patterns #6, #10)
-- **Hashing:** SHA-3 family (`SHA3_256/384/512`) in CryptoKit on iOS 18+ (anti-pattern #7)
+- **Hashing:** SHA-3 family (`SHA3_256/384/512`) in CryptoKit on iOS 26+ (anti-pattern #7)
 - **Post-quantum:** ML-KEM 768/1024, ML-DSA 65/87, X-Wing — all with Secure Enclave support
 - **TLS:** `X25519MLKEM768` enabled by default for `URLSession` in iOS 26
 - **Secure Enclave:** Hardware post-quantum key creation strengthens anti-patterns #3 and #5 fixes
@@ -683,7 +682,7 @@ When reviewing iOS code for security anti-patterns, verify each item:
 1. **All SecItem calls checked** — `SecItemAdd` handles `errSecDuplicateItem` with `SecItemUpdate` fallback; `SecItemCopyMatching` handles `errSecItemNotFound`; no discarded `OSStatus` return values
 1. **Explicit data protection class** — every `SecItemAdd` includes `kSecAttrAccessible` or `kSecAttrAccessControl`; no `kSecAttrAccessibleAlways`; `ThisDeviceOnly` variants used for non-syncing items
 1. **No nonce reuse** — `AES.GCM.seal` called without explicit `nonce:` parameter (auto-random); no stored/global/counter-based nonce variables
-1. **No broken hashes** — no `Insecure.MD5`, `Insecure.SHA1`, `CC_MD5`, `CC_SHA1` for security purposes; passwords use KDF (Argon2id, bcrypt, PBKDF2 with ≥310,000 iterations)
+1. **No broken hashes** — no `Insecure.MD5`, `Insecure.SHA1`, `CC_MD5`, `CC_SHA1` for security purposes; passwords use KDF (Argon2id, bcrypt, PBKDF2-HMAC-SHA256 with ≥600,000 iterations)
 1. **No sensitive data in logs** — `print()` and `NSLog()` never contain tokens, keys, or credentials; `os_log` uses `%{private}@`; `Logger` uses `.private` or `.private(mask: .hash)`
 1. **First-launch keychain cleanup** — `UserDefaults` flag + `SecItemDelete` for all classes runs before SDK initialization at app startup
 1. **Cryptographic RNG only** — `SecRandomCopyBytes` or CryptoKit APIs for tokens, nonces, salts, keys; no `arc4random` / `rand()` / `drand48()` / GameplayKit RNG in security contexts

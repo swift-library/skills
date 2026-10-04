@@ -34,8 +34,7 @@ persistence framework.
 
 - Do not use for ordinary SwiftData or Core Data model work unless direct
   CloudKit schema, sharing, or sync diagnostics are part of the task.
-- Do not use for credential storage or authentication; use `keychain-patterns`
-  or `authenticationservices-patterns`.
+- Do not use for Keychain credential storage or system authentication flows.
 - Do not use for generic push notification handling unless the push is a
   CloudKit subscription/change-delivery concern.
 - Do not use for market, account, or support messaging about iCloud.
@@ -101,7 +100,7 @@ persistence framework.
 
 Return:
 
-1. CloudKit ownership and adjacent-skill boundary
+1. CloudKit ownership and persistence-framework boundary
 2. Container/database/schema assessment
 3. Record, sync, sharing, or iCloud coordination findings
 4. Error, conflict, privacy, and recovery notes

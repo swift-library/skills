@@ -32,13 +32,13 @@ Crown focus, and visionOS hover/focus coordination.
 ## When Not To Use
 
 - Do not use for visual polish, spacing, typography, color, or native UI
-  design; use `swiftui-design` or `widgetkit-design`.
+  design; visual design is out of scope.
 - Do not use for general SwiftUI state, layout, navigation, performance, or
-  source-level refactoring when focus is not the concrete issue; use
-  `swiftui-patterns`.
+  source-level refactoring when focus is not the concrete issue; leave that to
+  general SwiftUI implementation guidance.
 - Do not use for dedicated accessibility audits where focus is only one part
   of VoiceOver, Voice Control, Switch Control, WCAG, or Nutrition Label work;
-  use `accessibility-patterns`.
+  full accessibility audits are out of scope.
 - Do not use for SwiftData, Core Data, networking, package architecture,
   dependency replacement, or repository documentation.
 

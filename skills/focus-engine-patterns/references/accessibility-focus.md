@@ -83,35 +83,20 @@ Full Keyboard Access (Settings > Accessibility > Keyboards) enables Tab/arrow na
 ### Focus Groups with Full Keyboard Access
 
 ```swift
-VStack {
-    // Group 1: Navigation
-    HStack {
-        Button("Home") { }
-        Button("Search") { }
-        Button("Settings") { }
-    }
-    .focusSection()
-
-    // Group 2: Content
-    LazyVGrid(columns: columns) {
-        ForEach(items) { item in
-            CardView(item: item)
-        }
-    }
-    .focusSection()
-}
+// UIKit (iOS 14+): set on the common ancestor of each region
+navigationContainer.focusGroupIdentifier = "com.myapp.navigation"  // Group 1
+contentGrid.focusGroupIdentifier = "com.myapp.content"             // Group 2
 ```
 
-Tab moves between groups. Arrow keys move within a group. Without `.focusSection()`, Tab moves through every individual element.
+Tab moves between groups. Arrow keys move within a group. SwiftUI `.focusSection()` is unavailable on iOS; UIKit infers groups from the view hierarchy, so set `focusGroupIdentifier` only when the default grouping is wrong.
 
 ### UIFocusGroupPriority (UIKit)
 
-Controls which focus group receives initial focus when multiple groups exist:
+Raises an item's priority within its focus group; the highest-priority item is most likely to receive focus when focus moves into the group:
 
 ```swift
-// Higher priority = gets focus first
-navigationBar.focusGroupPriority = .prioritized  // .prioritized > .default > .ignored
-contentArea.focusGroupPriority = .default
+// Higher priority = more likely to get focus when entering the group
+searchButton.focusGroupPriority = .prioritized  // .prioritized > .previouslyFocused > .ignored
 ```
 
 ## Switch Control

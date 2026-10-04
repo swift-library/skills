@@ -215,7 +215,7 @@ Both are correct. Pick one style and use it consistently across your codebase.
 
 ## Centralized Query Builder
 
-Both research sources recommend centralizing query construction to prevent flag omissions and key typos:
+Centralize query construction to prevent flag omissions and key typos:
 
 ```swift
 enum KeychainQueryBuilder {
@@ -256,9 +256,9 @@ Never treat all non-zero `OSStatus` values as fatal errors. Several codes repres
 | `-25299`      | `errSecDuplicateItem`         | Item already exists (on add)                       | Fall back to `SecItemUpdate`               |
 | `-25300`      | `errSecItemNotFound`          | No matching item found                             | Return `nil` / treat as success for delete |
 | `-25308`      | `errSecInteractionNotAllowed` | Device locked, data protection active              | Retry later — **never delete**             |
-| `-25293`      | `errSecUserCanceled`          | User cancelled biometric prompt                    | Propagate cancellation to UI               |
+| `-128`        | `errSecUserCanceled`          | User cancelled biometric prompt                    | Propagate cancellation to UI               |
 | `-50`         | `errSecParam`                 | Invalid parameter / wrong dictionary keys          | Developer error — fix query                |
-| `-25244`      | `errSecNoSuchAttr`            | Attribute not supported (data protection keychain) | Check for unsupported attributes           |
+| `-25303`      | `errSecNoSuchAttr`            | Attribute not supported (data protection keychain) | Check for unsupported attributes           |
 
 Map raw codes to a domain-specific Swift error:
 
@@ -277,7 +277,7 @@ struct KeychainError: Error, CustomStringConvertible {
 
 ---
 
-## Actor-Isolated Keychain Manager (iOS 17+ / macOS 14+)
+## Actor-Isolated Keychain Manager (iOS 13+ / macOS 10.15+)
 
 Every `SecItem*` function blocks the calling thread due to IPC to `securityd` and potential Secure Enclave round-trips. For biometry-protected items, the block can last several seconds during user authentication (WWDC 2014 Session 711).
 
@@ -443,7 +443,7 @@ class AuthViewModel: ObservableObject {
 
 ### Why Actors over GCD
 
-| Dimension             | Actor (iOS 17+)                   | GCD Serial Queue                        |
+| Dimension             | Actor                             | GCD Serial Queue                        |
 | --------------------- | --------------------------------- | --------------------------------------- |
 | UI blocking           | Low — compiler-enforced isolation | Low (if dispatched correctly)           |
 | Thread safety         | Serialized by actor runtime       | Manual — developer discipline           |
@@ -451,7 +451,7 @@ class AuthViewModel: ObservableObject {
 | Compiler guarantees   | Enforced `Sendable` + isolation   | None — silent data races possible       |
 | Swift 6 compatibility | Native — actors are `Sendable`    | Requires manual `@Sendable` annotations |
 
-### Legacy GCD Pattern (iOS 13–16 codebases)
+### Legacy GCD Pattern (pre-concurrency codebases)
 
 ```swift
 class LegacyKeychainManager {
@@ -495,7 +495,7 @@ Keychain access during app launch is a measurable performance risk:
 
 ### Batch Operations
 
-There is **no batch API** for SecItem. Each function operates individually with one partial exception: `SecItemAdd` supports `kSecUseItemList` to add multiple certificates or keys (not passwords) in a single call. For batch reads, `SecItemCopyMatching` with `kSecMatchLimitAll` retrieves all matching items at once.
+There is **no batch API** for SecItem; each function operates individually. `kSecUseItemList` is macOS-only: the iOS, tvOS, and watchOS SDKs mark it deprecated as "Not implemented on this platform". For batch reads, `SecItemCopyMatching` with `kSecMatchLimitAll` retrieves all matching items at once.
 
 ---
 
@@ -522,7 +522,7 @@ query[kSecUseDataProtectionKeychain] = true
 #endif
 ```
 
-The file-based keychain's shim layer has documented bugs — it silently ignores unsupported attributes where the data protection keychain correctly returns `errSecNoSuchAttr` (-25244). Debugging keychain issues on macOS often starts with confirming which implementation is in use.
+The file-based keychain's shim layer has documented bugs — it silently ignores unsupported attributes where the data protection keychain correctly returns `errSecNoSuchAttr` (-25303). Debugging keychain issues on macOS often starts with confirming which implementation is in use.
 
 ---
 
@@ -546,7 +546,6 @@ The `kSecAttrAccessible` attribute controls when a keychain item's secret data c
 - **Item class deep dive** (required vs optional attributes per kSecClass) → `keychain-item-classes.md`
 - **Access control flags and SecAccessControl** → `keychain-access-control.md`
 - **Biometric-gated keychain access** (LAContext integration) → `biometric-authentication.md`
-- **Secure Enclave key storage** → `secure-enclave.md`
 - **Credential lifecycle patterns** (OAuth tokens, API keys) → `credential-storage-patterns.md`
 - **Access groups and sharing** → `keychain-sharing.md`
 - **Testing keychain code** (mocks, CI/CD) → `testing-security-code.md`
@@ -567,18 +566,6 @@ The `kSecAttrAccessible` attribute controls when a keychain item's secret data c
 
 ---
 
-## Contradictions Between Research Sources
-
-During cross-validation of research inputs, the following discrepancies were noted:
-
-1. **Dictionary key type convention:** the documented API source uses `[CFString: Any]`; one comparison source uses `[String: Any]` with `kSec* as String` casts. **Resolution:** Both are correct. The `[CFString: Any]` style is slightly more concise; the `[String: Any]` style is more common in community code. This file uses `[CFString: Any]` for conciseness but shows both styles in the String Keys section.
-
-2. **Default accessibility recommendation:** the documented API source cites OWASP recommending `kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly` for highly sensitive data; one comparison source defaults to `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`. **Resolution:** Both are valid for different threat models. `WhenPasscodeSet` is strongest but items are deleted if the user removes their passcode. `WhenUnlockedThisDeviceOnly` is the safe general default for foreground-only access. The actor manager example uses `AfterFirstUnlockThisDeviceOnly` for background compatibility while remaining device-bound.
-
-3. **`kSecReturnData` + `kSecMatchLimitAll` restriction:** one comparison source claims this combination is restricted for password classes. the documented API source does not mention this. **Resolution:** This restriction exists in some OS versions / keychain implementations. Safest practice is to use `kSecReturnRef` or `kSecReturnAttributes` with `LimitAll`, then fetch data per-item. Noted in the Return Type Cheat Sheet.
-
----
-
 ## Summary Checklist
 
 Before shipping keychain code, verify:
@@ -587,7 +574,7 @@ Before shipping keychain code, verify:
 2. **Add-or-update pattern implemented** — `SecItemAdd` catches `-25299` and falls back to `SecItemUpdate`; duplicate saves never crash or silently fail
 3. **Return flags explicitly set** — every `SecItemCopyMatching` call includes at least one `kSecReturn*` flag; no "success but nil" bugs
 4. **CFTypeRef cast matches flags** — cast type corresponds to the combination of return flags and match limit (see Return Type Cheat Sheet)
-5. **Zero SecItem calls on @MainActor** — all keychain access isolated in a dedicated `actor` (iOS 17+) or serial `DispatchQueue` (iOS 13–16)
+5. **Zero SecItem calls on @MainActor** — all keychain access isolated in a dedicated `actor` or, in pre-concurrency code, a serial `DispatchQueue`
 6. **Fresh dictionaries per call** — no dictionary reuse across SecItem functions; add dict, query dict, and update dict are separate
 7. **kSec\* constants used** — no raw string literals for dictionary keys; using either `[CFString: Any]` or `[String: Any]` with `as String` casts
 8. **Queries are specific** — `kSecAttrService` + `kSecAttrAccount` included for GenericPassword; `kSecMatchLimitOne` used unless enumeration is needed

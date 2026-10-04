@@ -24,11 +24,10 @@ network discovery, and transport-level behavior.
 
 ## When Not To Use
 
-- Do not use for ordinary HTTP API clients or REST/GraphQL calls; use
-  `foundation-urlsession-patterns`.
-- Do not use for background task scheduling; use `background-tasks-patterns`.
+- Do not use for ordinary HTTP API clients or REST/GraphQL calls.
+- Do not use for background task scheduling.
 - Do not use for certificate trust and pinning rules without Network.framework
-  transport integration; use `certificate-trust-patterns`.
+  transport integration.
 - Do not use for generic package architecture, UI state, or app feature design.
 - Do not invent transport, QUIC, local network privacy, or platform behavior.
   Verify current Apple documentation and the local SDK.

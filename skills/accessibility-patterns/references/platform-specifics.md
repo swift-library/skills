@@ -97,7 +97,7 @@ var component = AccessibilityComponent()
 component.label = "Spinning Globe"
 component.value = "Currently rotating"
 component.isAccessibilityElement = true
-component.traits = [.isButton]
+component.traits = [.button]
 entity.components.set(component)
 ```
 

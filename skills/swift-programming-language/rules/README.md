@@ -10,4 +10,4 @@ This rule set is intentionally small.
 - `../references/google-swift-style.md` covers Google Swift style only when the
   repository or user explicitly asks for that overlay.
 - This skill should not grow into many framework-specific rule files.
-- Deeper framework guidance belongs in separate skills.
+- Deeper framework guidance is out of scope.

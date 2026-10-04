@@ -196,18 +196,18 @@ expectation.
 - **25–75%** → mix. Usually computation plus intermittent I/O; show both
   hot symbols and note that main was partially blocked.
 
-### High-severity SwiftUI events → reference routing
+### High-severity SwiftUI events → remediation focus
 
 When `swiftui.high_severity_events[].description` is one of:
 
-| description      | Likely cause              | Route to                            |
+| description      | Likely cause              | Source-level remediation focus      |
 |------------------|---------------------------|-------------------------------------|
-| `onChange`       | Expensive `.onChange` body | `swiftui-performance` for source-level remediation |
-| `Gesture`        | Heavy gesture handler     | `swiftui-performance` for source-level remediation |
-| `Action Callback`| Button/tap handler work   | `swiftui-performance` for source-level remediation |
-| `Update`         | View body recomputation   | `swiftui-performance` for update fan-out and body-cost remediation |
-| `Creation`       | View init cost            | `swiftui-performance` for creation/body-cost remediation |
-| `Layout`         | GeometryReader churn      | `swiftui-performance` for layout-thrash remediation |
+| `onChange`       | Expensive `.onChange` body | Handler work                       |
+| `Gesture`        | Heavy gesture handler     | Handler work                        |
+| `Action Callback`| Button/tap handler work   | Handler work                        |
+| `Update`         | View body recomputation   | Update fan-out and body cost        |
+| `Creation`       | View init cost            | Creation and body cost              |
+| `Layout`         | GeometryReader churn      | Layout thrash                       |
 
 ### Mapping trace findings to source code
 
@@ -248,17 +248,16 @@ Signatures to watch for in `top_sources`:
   entries with thousands of edges each, you have a feedback storm. Fix
   by reading each key once at a high level and passing values down, or
   wrapping settings in a single `@Observable` so only genuine readers
-  invalidate. Route source-level fixes to `swiftui-patterns` state management
-  and performance references.
+  invalidate. The source-level fix is SwiftUI state-management work.
 - **`EnvironmentWriter: …`** with thousands of edges — a modifier (often
   `.hoverEffect`, custom environment keys) is applied too widely and
-  being re-installed during every layout pass. Route source-level fixes to
-  `swiftui-patterns` view-structure references.
+  being re-installed during every layout pass. The source-level fix is
+  view-structure work.
 - **`View Creation / Reuse`** as the #1 source — the hierarchy is
   replacing children rather than mutating in place. Look for ID
   instability (missing/unstable `.id(…)` on ForEach, type-erased
-  `AnyView` wrappers, conditional structure swaps). Route source-level fixes
-  to `swiftui-patterns` list and view-structure references.
+  `AnyView` wrappers, conditional structure swaps). The source-level fix is
+  list and view-structure work.
 
 When a specific view in `swiftui.high_severity_events` keeps showing up,
 run `--fanin-for "<view name>"` to see the ranked list of sources
@@ -291,5 +290,5 @@ Prioritise from most actionable to least:
 After running the parser, structure your response as:
 
 1. **One-line summary** — "Found N hangs, worst Wms; K hitches; J high-severity SwiftUI updates."
-2. **Root-cause findings** — per prioritised target (see above), one paragraph with the trace evidence (coverage %, hot symbol, overlapping view) and a citation from `references/…` for the fix pattern.
+2. **Root-cause findings** — per prioritised target (see above), one paragraph with the trace evidence (coverage %, hot symbol, overlapping view) and the fix pattern it points to.
 3. **Plan** — numbered, file-specific edits. Cite line numbers in the user's Swift file when you know them. Don't edit the file unless the user asked for edits.

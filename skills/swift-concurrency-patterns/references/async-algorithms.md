@@ -2,7 +2,7 @@
 
 Use this when:
 
-- You need time-based operators (debounce, throttle, timers).
+- You need time-based operators (debounce, timers) or rate limiting.
 - You need to combine multiple async sequences (merge, combineLatest, zip).
 - You are migrating from Combine or RxSwift operators to Swift Concurrency equivalents.
 
@@ -33,26 +33,28 @@ for await query in searchQueryStream.debounce(for: .milliseconds(500)) {
     await performSearch(query)
 }
 
-// 2. Throttle repeated actions
-for await _ in buttonClicks.throttle(for: .seconds(1)) {
-    await performAction()
+// 2. Repeat work on a timer
+for await _ in AsyncTimerSequence.repeating(every: .seconds(30)) {
+    await refreshFeed()
 }
 
 // 3. Merge multiple independent streams
-for await message in chat1Messages.merge(chat2Messages) {
+for await message in merge(chat1Messages, chat2Messages) {
     display(message)
 }
 
 // 4. Combine dependent values
-for await (username, email) in usernameStream.combineLatest(emailStream) {
+for await (username, email) in combineLatest(usernameStream, emailStream) {
     validateForm(username: username, email: email)
 }
 
 // 5. Zip paired operations
-for await (image, metadata) in imageStream.zip(metadataStream) {
+for await (image, metadata) in zip(imageStream, metadataStream) {
     await cache(image: image, metadata: metadata)
 }
 ```
+
+`merge`, `combineLatest`, `zip`, and `chain` are free functions that take two or three sequences, not methods on `AsyncSequence`.
 
 > **See**: [AsyncAlgorithms on GitHub](https://github.com/apple/swift-async-algorithms)
 
@@ -65,9 +67,10 @@ for await (image, metadata) in imageStream.zip(metadataStream) {
 Extends Swift's AsyncSequence with time-based operators, stream combination tools, and multi-consumer primitives.
 
 **Use for**:
-- Time-based operations: debounce, throttle, timers
+- Time-based operations: debounce, timers (throttling exists only as underscored `_throttle` in 1.x)
 - Combining streams: merge, combineLatest, zip, chain
-- Multi-consumer scenarios: AsyncChannel for backpressure
+- Task-to-task handoff with backpressure: AsyncChannel
+- Broadcasting one sequence to multiple consumers: share() (1.1+)
 - Specific operators: removeDuplicates, chunks, adjacentPairs, compacted
 
 **Use standard library for**:
@@ -111,26 +114,19 @@ Wait for inactivity before emitting. Use for rapid inputs like search fields.
 ```swift
 import AsyncAlgorithms
 
-@Observable
+@MainActor @Observable
 final class ArticleSearcher {
-    @MainActor private(set) var results: [Article] = []
-    private var searchQueryContinuation: AsyncStream<String>.Continuation?
-
-    private lazy var searchQueryStream: AsyncStream<String> = {
-        AsyncStream { continuation in
-            searchQueryContinuation = continuation
-        }
-    }()
+    private(set) var results: [Article] = []
+    private let queries = AsyncStream.makeStream(of: String.self)
 
     func search(_ query: String) {
-        searchQueryContinuation?.yield(query)
+        queries.continuation.yield(query)
     }
 
     func startDebouncedSearch() {
-        Task { @MainActor in
-            for await query in searchQueryStream.debounce(for: .milliseconds(500)) {
-                self.results = []
-                self.results = await APIClient.searchArticles(query)
+        Task {
+            for await query in queries.stream.debounce(for: .milliseconds(500)) {
+                results = await APIClient.searchArticles(query)
             }
         }
     }
@@ -157,36 +153,35 @@ func search(_ query: String) {
 
 ---
 
-### throttle(for:clock:reducing:)
+### Throttling (no stable operator)
 
-Emit at most one value per interval. Use for repeated actions like button taps.
+swift-async-algorithms 1.1.7 has no public `throttle`. Throttling ships only as underscored `_throttle(for:clock:latest:)`, `_throttle(for:latest:)`, `_throttle(for:clock:reducing:)`, and `_throttle(for:reducing:)`, which sit outside the package's stable API and can change in any release. In those overloads the first element is emitted immediately; elements arriving less than one interval after the last emission are folded into a pending value, which is emitted when the next element arrives after the interval has passed (or when the base finishes). With `latest: true` (the default) the emitted value is the most recent element; with `latest: false` it is the first element received since the previous emission. The `reducing:` overloads take a `(Reduced?, Element) async -> Reduced` closure instead.
+
+For repeated actions like button taps, gate on the last accepted instant. Use `debounce(for:)` instead when waiting for input to settle is acceptable.
 
 #### Example: Like Button
 
 ```swift
-import AsyncAlgorithms
+import SwiftUI
 
 struct LikeButton: View {
-    @State private var tapStream = AsyncStream<Void> { continuation in
-        // Continuation stored externally
-    }
     @State private var isLiked = false
+    @State private var lastAcceptedTap: ContinuousClock.Instant?
+    private let minimumInterval: Duration = .seconds(1)
 
     var body: some View {
-        Button(action: {
-            tapStream.continuation?.yield()
-        }) {
+        Button(action: handleTap) {
             Image(systemName: isLiked ? "heart.fill" : "heart")
-        }
-        .task {
-            await handleThrottledTaps()
         }
     }
 
-    private func handleThrottledTaps() async {
-        for await _ in tapStream.throttle(for: .seconds(1)) {
-            await toggleLike()
+    private func handleTap() {
+        let now = ContinuousClock.now
+        if let lastAcceptedTap, lastAcceptedTap.duration(to: now) < minimumInterval {
+            return
         }
+        lastAcceptedTap = now
+        Task { await toggleLike() }
     }
 
     private func toggleLike() async {
@@ -196,30 +191,13 @@ struct LikeButton: View {
 }
 ```
 
-#### Understanding reducing Parameter
-
-```swift
-// .latest (default): Keep most recent value
-for await value in events.throttle(for: .seconds(1)) {
-    process(value)
-}
-
-// .oldest: Keep first value
-for await value in events.throttle(for: .seconds(1), reducing: .oldest) {
-    process(value)
-}
-
-// Custom: Sum all values
-for await value in events.throttle(for: .seconds(1)) { $0 + $1 } {
-    process(value)
-}
-```
+**Behavior**: The first tap acts immediately; taps within one second of the last accepted tap are dropped. No stream or long-lived task is needed.
 
 ---
 
 ### AsyncTimerSequence
 
-Emit values at regular intervals. Use for periodic refresh or countdown timers.
+Emit values at regular intervals. Use for periodic refresh or countdown timers. `repeating(every:)` uses `SuspendingClock`; `init(interval:tolerance:clock:)` requires an explicit clock.
 
 #### Example: Feed Refresh
 
@@ -233,7 +211,7 @@ final class FeedViewModel {
 
     func startAutoRefresh() {
         refreshTask = Task {
-            for await _ in AsyncTimerSequence(interval: .seconds(30)) {
+            for await _ in AsyncTimerSequence.repeating(every: .seconds(30)) {
                 await refreshFeed()
             }
         }
@@ -265,11 +243,11 @@ func startTimer() {
 
 ## Combining Operators
 
-### merge(_:...)
+### merge(_:_:)
 
 Combine sequences into one, emitting as they arrive. **Stable operator ✅**
 
-Use for independent data sources that don't depend on each other.
+Use for independent data sources that don't depend on each other. `merge` is a free function for two or three sequences with the same element type: `merge(a, b)` or `merge(a, b, c)`. There is no array or variadic overload in 1.x, so merge a dynamic number of streams with a task group, as in this example.
 
 #### Example: Multi-Room Chat
 
@@ -291,7 +269,21 @@ actor ChatManager {
 
     func startMonitoring(rooms: [String]) -> AsyncStream<ChatMessage> {
         let streams = rooms.map { getMessagesStream(roomID: $0) }
-        return streams.merge()
+        let (merged, continuation) = AsyncStream.makeStream(of: ChatMessage.self)
+        let task = Task {
+            await withTaskGroup(of: Void.self) { group in
+                for stream in streams {
+                    group.addTask {
+                        for await message in stream {
+                            continuation.yield(message)
+                        }
+                    }
+                }
+            }
+            continuation.finish()
+        }
+        continuation.onTermination = { _ in task.cancel() }
+        return merged
     }
 }
 
@@ -308,21 +300,25 @@ for await message in mergedMessages {
 
 ---
 
-### combineLatest(_:...)
+### combineLatest(_:_:)
 
 Combine sequences, emitting tuple when any source emits. Always uses latest values. **Stable operator ✅**
 
-Use for dependent values that need synchronization.
+Use for dependent values that need synchronization. A free function for two or three sequences: `combineLatest(a, b)` or `combineLatest(a, b, c)`. It emits only after every base has produced at least one value.
 
 #### Example: Form Validation
 
 ```swift
 import AsyncAlgorithms
+import SwiftUI
 
 struct SignupForm: View {
-    @State private var usernameStream = AsyncStream<String> { /* ... */ }
-    @State private var emailStream = AsyncStream<String> { /* ... */ }
-    @State private var passwordStream = AsyncStream<String> { /* ... */ }
+    @State private var username = ""
+    @State private var email = ""
+    @State private var password = ""
+    @State private var usernameInput = AsyncStream.makeStream(of: String.self)
+    @State private var emailInput = AsyncStream.makeStream(of: String.self)
+    @State private var passwordInput = AsyncStream.makeStream(of: String.self)
     @State private var formState = FormState.incomplete
 
     var body: some View {
@@ -331,6 +327,9 @@ struct SignupForm: View {
             TextField("Email", text: $email)
             SecureField("Password", text: $password)
         }
+        .onChange(of: username, initial: true) { usernameInput.continuation.yield(username) }
+        .onChange(of: email, initial: true) { emailInput.continuation.yield(email) }
+        .onChange(of: password, initial: true) { passwordInput.continuation.yield(password) }
         .task {
             await validateForm()
         }
@@ -338,7 +337,7 @@ struct SignupForm: View {
 
     private func validateForm() async {
         for await (username, email, password) in
-                usernameStream.combineLatest(emailStream, passwordStream)
+                combineLatest(usernameInput.stream, emailInput.stream, passwordInput.stream)
         {
             formState = await validate(
                 username: username,
@@ -369,9 +368,9 @@ actor FormValidator {
 
 ---
 
-### zip(_:...)
+### zip(_:_:)
 
-Combine sequences by pairing elements in order. **Stable operator ✅**
+Combine sequences by pairing elements in order. **Stable operator ✅** A free function for two or three sequences: `zip(a, b)` or `zip(a, b, c)`.
 
 #### Example: Image + Metadata
 
@@ -401,7 +400,7 @@ struct ImageLoader {
         }
 
         var results: [LoadedImage] = []
-        for try await (image, metadata) in imageStream.zip(metadataStream) {
+        for try await (image, metadata) in zip(imageStream, metadataStream) {
             results.append(LoadedImage(image: image, metadata: metadata))
         }
         return results
@@ -413,9 +412,9 @@ struct ImageLoader {
 
 ---
 
-### chain(_:...)
+### chain(_:_:)
 
-Concatenate sequences sequentially. **Stable operator ✅**
+Concatenate sequences sequentially. **Stable operator ✅** A free function for two or three sequences with the same element type: `chain(a, b)` or `chain(a, b, c)`.
 
 #### Example: Paginated Loading
 
@@ -441,7 +440,7 @@ struct ArticlePaginator {
 }
 
 // Usage: Chain cache + network
-for await articles in loadFromCacheStream().chain(loadFromNetworkStream()) {
+for await articles in chain(loadFromCacheStream(), loadFromNetworkStream()) {
     display(articles)
 }
 ```
@@ -460,9 +459,9 @@ Remove adjacent duplicates. **Stable operator ✅**
 import AsyncAlgorithms
 
 actor ChatHistory {
-    private var messageStream = AsyncStream<ChatMessage> { /* ... */ }
+    private var messageStream = AsyncStream<ChatMessage> { _ in /* ... */ }
 
-    func getUniqueMessages() -> AsyncStream<ChatMessage> {
+    func getUniqueMessages() -> AsyncRemoveDuplicatesSequence<AsyncStream<ChatMessage>> {
         messageStream.removeDuplicates()
     }
 }
@@ -479,13 +478,13 @@ import AsyncAlgorithms
 
 struct BatchProcessor {
     func processLargeDataset(dataStream: AsyncStream<DataItem>) async {
-        for await batch in dataStream.chunks(count: 100) {
+        for await batch in dataStream.chunks(ofCount: 100) {
             await processBatch(batch)
         }
     }
 
     func chunkedByTime(dataStream: AsyncStream<DataItem>) async {
-        for await batch in dataStream.chunked(by: .seconds(5)) {
+        for await batch in dataStream.chunked(by: AsyncTimerSequence.repeating(every: .seconds(5))) {
             await processBatch(batch)
         }
     }
@@ -518,7 +517,7 @@ for await (previous, current) in valuesStream.adjacentPairs() {
 
 AsyncSequence with backpressure. **Stable operator ✅**
 
-Use for producer-consumer patterns with flow control.
+Use for producer-consumer patterns with flow control. `send(_:)` suspends until a consumer takes the value. Each value goes to exactly one awaiting consumer; the channel does not broadcast.
 
 #### Example: Message Queue
 
@@ -528,7 +527,7 @@ import AsyncAlgorithms
 actor MessageQueue {
     private let channel = AsyncChannel<Message>()
 
-    func getMessages() -> AsyncStream<Message> {
+    func getMessages() -> AsyncChannel<Message> {
         channel
     }
 
@@ -549,7 +548,7 @@ actor MessageQueue {
 let queue = MessageQueue()
 Task { await queue.enqueue(Message(type: .userAction, content: "tap")) }
 Task { await queue.enqueue(Message(type: .network, content: "data")) }
-queue.startProcessing()
+await queue.startProcessing()
 ```
 
 #### ❌ Anti-Pattern
@@ -567,15 +566,24 @@ Task { for await value in stream { print("Consumer 1: \(value)") } }
 Task { for await value in stream { print("Consumer 2: \(value)") } }
 ```
 
-**Problem**: Each value goes to only one consumer.
+**Problem**: Each value goes to only one consumer. `AsyncChannel` behaves the same way.
 
-**Solution**: Use `AsyncChannel` for multi-consumer scenarios.
+**Solution**: To deliver every value to every consumer, use `share()` (swift-async-algorithms 1.1+, Swift 6.2 compiler, macOS 15 / iOS 18 / tvOS 18 / watchOS 11 / visionOS 2 or later):
+
+```swift
+let shared = stream.share()
+
+Task { for await value in shared { print("Consumer 1: \(value)") } }
+Task { for await value in shared { print("Consumer 2: \(value)") } }
+```
+
+Consumers do not get a replay of values produced before they start iterating. The default `bufferingPolicy: .bounded(1)` lets the slowest consumer pace the source.
 
 ---
 
 ### AsyncThrowingChannel
 
-Like AsyncChannel but can emit errors. **Stable operator ✅**
+Like AsyncChannel but can finish with an error through `fail(_:)`. **Stable operator ✅**
 
 #### Example: WebSocket
 
@@ -585,7 +593,7 @@ import AsyncAlgorithms
 actor WebSocketConnection {
     private let channel = AsyncThrowingChannel<WebSocketMessage, Error>()
 
-    func getMessages() -> AsyncThrowingStream<WebSocketMessage, Error> {
+    func getMessages() -> AsyncThrowingChannel<WebSocketMessage, Error> {
         channel
     }
 
@@ -593,14 +601,15 @@ actor WebSocketConnection {
         await channel.send(message)
     }
 
-    func reportError(_ error: Error) async {
-        await channel.finish(throwing: error)
+    func reportError(_ error: Error) {
+        channel.fail(error)
     }
 }
 
 // Usage
+let connection = WebSocketConnection()
 do {
-    for await message in connection.getMessages() {
+    for try await message in await connection.getMessages() {
         handle(message)
     }
 } catch {
@@ -617,17 +626,19 @@ do {
 | Combine | AsyncAlgorithms | Status | Alternative |
 |---------|-----------------|---------|-------------|
 | `.debounce()` | `debounce()` | ✅ Stable | - |
-| `.throttle()` | `throttle()` | ✅ Stable | - |
-| `.merge()` | `merge()` | ✅ Stable | - |
-| `.combineLatest()` | `combineLatest()` | ✅ Stable | - |
-| `.zip()` | `zip()` | ✅ Stable | - |
-| `.concat()` | `chain()` | ✅ Stable | - |
+| `.throttle()` | `_throttle()` only | Underscored, not stable | Last-accepted-instant guard, or `debounce()` |
+| `.merge()` | `merge(a, b)` | ✅ Stable | Task group for more than three sources |
+| `.combineLatest()` | `combineLatest(a, b)` | ✅ Stable | - |
+| `.zip()` | `zip(a, b)` | ✅ Stable | - |
+| `.append()` | `chain(a, b)` | ✅ Stable | - |
 | `.removeDuplicates()` | `removeDuplicates()` | ✅ Stable | - |
-| `.timer()` | `AsyncTimerSequence` | ✅ Stable | - |
-| `.share()` | - | - | `AsyncChannel` |
+| `Timer.publish(every:on:in:)` | `AsyncTimerSequence` | ✅ Stable | - |
+| `.share()` | `share()` | ✅ Stable (1.1+) | - |
 | `.flatMap()` | - | - | `TaskGroup` |
 | `.receive(on:)` | - | - | `Task` / `@MainActor` |
 | `.eraseToAnyPublisher()` | - | - | `any AsyncSequence` |
+
+`merge`, `combineLatest`, `zip`, and `chain` are free functions that take two or three sequences. `share()` requires swift-async-algorithms 1.1+, a Swift 6.2 compiler, and macOS 15 / iOS 18 / tvOS 18 / watchOS 11 / visionOS 2 or later. `AsyncChannel` is not a substitute for `.share()`: it hands each value to one consumer.
 
 ---
 
@@ -663,31 +674,25 @@ final class ArticleSearcher: ObservableObject {
 ```swift
 import AsyncAlgorithms
 
-@Observable
+@MainActor @Observable
 final class ArticleSearcher {
-    @MainActor private(set) var results: [Article] = []
-    private var searchQueryContinuation: AsyncStream<String>.Continuation?
-
-    private lazy var searchQueryStream: AsyncStream<String> = {
-        AsyncStream { continuation in
-            searchQueryContinuation = continuation
-        }
-    }()
+    private(set) var results: [Article] = []
+    private let queries = AsyncStream.makeStream(of: String.self)
 
     func search(_ query: String) {
-        searchQueryContinuation?.yield(query)
+        queries.continuation.yield(query)
     }
 
     func startDebouncedSearch() {
-        Task { @MainActor in
-            for await query in searchQueryStream
+        Task {
+            for await query in queries.stream
                 .debounce(for: .milliseconds(500))
                 .removeDuplicates()
             {
                 do {
-                    self.results = try await APIClient.searchArticles(query)
+                    results = try await APIClient.searchArticles(query)
                 } catch {
-                    self.results = []
+                    results = []
                 }
             }
         }
@@ -776,61 +781,69 @@ final class FormValidator: ObservableObject {
 }
 ```
 
-**After: AsyncAlgorithms or async let**
+**After: AsyncAlgorithms or a direct call**
 
 ```swift
 import AsyncAlgorithms
 
-@Observable
+@MainActor @Observable
 final class FormValidator {
-    var username = ""
-    var email = ""
+    private(set) var username = ""
+    private(set) var email = ""
+    private(set) var formState: FormState = .incomplete
 
-    @MainActor private(set) var formState: FormState = .incomplete
+    private let usernameInput = AsyncStream.makeStream(of: String.self)
+    private let emailInput = AsyncStream.makeStream(of: String.self)
 
-    // Option 1: combineLatest for stream-based validation
+    func update(username: String) {
+        self.username = username
+        usernameInput.continuation.yield(username)
+    }
+
+    func update(email: String) {
+        self.email = email
+        emailInput.continuation.yield(email)
+    }
+
+    // Option 1: combineLatest for continuous validation
     func startStreamValidation() {
-        Task { @MainActor in
+        Task {
             for await (username, email) in
-                    usernameStream.combineLatest(emailStream)
+                    combineLatest(usernameInput.stream, emailInput.stream)
             {
-                self.formState = validate(
-                    username: username,
-                    email: email
-                )
+                formState = validate(username: username, email: email)
             }
         }
     }
 
-    // Option 2: async let for simple validation
-    func validateForm() async {
-        let (username, email) = await (username, email)
-        formState = validate(
-            username: username,
-            email: email
-        )
+    // Option 2: validate once, for example on submit
+    func validateForm() {
+        formState = validate(username: username, email: email)
     }
 }
 ```
 
 **Choose**:
-- `combineLatest()`: Continuous validation as fields change
-- `async let`: One-time validation when all values available
+- `combineLatest()`: Continuous validation as fields change; it emits only
+  after both fields have produced a value
+- Direct call: One-time validation when the user submits
 
 ---
 
 ## Common Mistakes Agents Make
 
 - **Manual debounce with `Task.sleep`**: This creates multiple concurrent tasks and risks out-of-order results. Use the stream-based `debounce(for:)` operator from AsyncAlgorithms instead.
-- **Sharing `AsyncStream` across multiple consumers**: Values split unpredictably between consumers. Use `AsyncChannel` for multi-consumer scenarios with backpressure. Note: `AsyncChannel` is point-to-point, not broadcast like Combine's `.share()`.
+- **Sharing `AsyncStream` across multiple consumers**: Values split unpredictably between consumers. Use `share()` (swift-async-algorithms 1.1+) to broadcast. `AsyncChannel` is point-to-point, not broadcast like Combine's `.share()`.
+- **Calling `merge`, `combineLatest`, `zip`, or `chain` as methods**: In 1.x they are free functions taking two or three sequences, such as `merge(a, b)`. There is no overload for an array of sequences.
+- **Using `throttle(for:)`**: 1.x has no stable throttle, only underscored `_throttle`. Use a last-accepted-instant guard or `debounce(for:)`.
 - **Looking for a `.flatMap` equivalent**: Use `TaskGroup` for fan-out; the semantics differ from Combine/Rx `flatMap`.
 - **Looking for `.receive(on:)` equivalent**: Use `@MainActor` or `Task` context for isolation instead.
 
 ## Best Practices
 
-1. **Use time-based operators** for rapid inputs: debounce() for search, throttle() for buttons
+1. **Use time-based operators** for rapid inputs: debounce() for search; for buttons, a last-accepted-instant guard (1.x has no stable throttle)
 2. **Combine streams** with merge/combineLatest instead of manual state management
-3. **Use AsyncChannel** for multi-consumer scenarios with backpressure
+3. **Use AsyncChannel** for task-to-task handoff with backpressure, and share() to broadcast to multiple consumers
 4. **Ensure Sendable conformance** when using operators across isolation boundaries
 5. **Leverage cancellation** - Task cancellation propagates through all operators
 6. **Choose right tool**: AsyncAlgorithms for complex streams, AsyncStream for bridging callbacks

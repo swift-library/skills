@@ -24,8 +24,8 @@ features that use EventKit and EventKitUI inside Apple-platform apps.
 ## When Not To Use
 
 - Do not use for generic scheduling data models that do not touch EventKit.
-- Do not use for notification delivery; use `user-notifications-patterns`.
-- Do not use for copywriting permission prompts only; use `interface-writing`.
+- Do not use for notification delivery.
+- Do not use for copywriting permission prompts only.
 - Do not use for CalDAV/server calendar sync unless EventKit app behavior is in
   scope.
 - Do not invent access-level behavior, deprecated request behavior, or

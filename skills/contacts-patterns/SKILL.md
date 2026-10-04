@@ -26,7 +26,7 @@ inside Apple-platform apps.
 ## When Not To Use
 
 - Do not use for generic person/address models that do not touch Contacts.
-- Do not use for privacy or permission copy only; use `interface-writing`.
+- Do not use for privacy or permission copy only.
 - Do not use for account sync backend design unless Contacts framework behavior
   is in scope.
 - Do not use for Keychain credential storage, authentication, or payment

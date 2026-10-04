@@ -1,15 +1,6 @@
 ---
 name: figma-swiftui
-description: >-
-  Use this skill when converting Figma URLs, nodes, selected Figma desktop
-  nodes, screenshots, source briefs, design tokens, variants, or assets into
-  production SwiftUI for iOS, iPadOS, macOS, watchOS, tvOS, or visionOS using
-  Figma MCP context. Covers Figma-to-SwiftUI visual fidelity, Auto Layout to
-  SwiftUI layout, Asset Catalog export, responsive device frames, component
-  variants, existing-screen adaptation audits, and project-aware native SwiftUI
-  implementation. Do not use for web, React, Tailwind implementation, generic
-  Figma MCP setup alone, UIKit-only implementation, SwiftUI architecture choice,
-  or visual design critique without Figma implementation.
+description: Use this skill when converting Figma URLs, nodes, selected Figma desktop nodes, screenshots, source briefs, design tokens, variants, or assets into production SwiftUI for iOS, iPadOS, macOS, watchOS, tvOS, or visionOS using Figma MCP context. Covers Figma-to-SwiftUI visual fidelity, Auto Layout to SwiftUI layout, Asset Catalog export, responsive device frames, component variants, existing-screen adaptation audits, and project-aware native SwiftUI implementation. Do not use for web, React, Tailwind implementation, generic Figma MCP setup alone, UIKit-only implementation, SwiftUI architecture choice, or visual design critique without Figma implementation.
 ---
 
 # Figma SwiftUI
@@ -21,19 +12,21 @@ Apple-platform code style, project conventions, asset fidelity, and visual
 parity. This skill builds on the general Figma MCP workflow but owns the
 SwiftUI-specific translation layer.
 
-## Relationship To Other Skills
+## Scope Boundaries
 
-- Use `figma` for generic Figma MCP setup, tool troubleshooting, metadata,
-  screenshots, variables, and asset retrieval.
-- Use `figma-implement-design` for generic Figma-to-code workflows outside
-  Apple-platform SwiftUI.
+- Follow the installed Figma MCP tooling's own guidance for setup,
+  troubleshooting, metadata, screenshots, variables, asset retrieval, and any
+  prerequisites it declares before `get_design_context`.
+- The generic, framework-neutral design-to-code workflow belongs to that
+  tooling; this skill adds the Apple-platform SwiftUI translation rules.
 - Use this skill when the target implementation is SwiftUI or an Apple-platform
   SwiftUI component/screen.
-- Use `swiftui-patterns` for SwiftUI API behavior not driven by a Figma design.
-- Use `swiftui-design` for visual design critique or polish when the task is
-  not Figma-to-code implementation.
-- Use `swiftui-architecture` when the Figma task becomes a feature architecture
-  choice such as MVVM, MVI, TCA, Clean Architecture, or Coordinator ownership.
+- SwiftUI API behavior not driven by a Figma design is out of scope.
+- Visual design critique or polish without Figma-to-code implementation is out
+  of scope.
+- When the Figma task becomes a feature architecture choice such as MVVM, MVI,
+  TCA, Clean Architecture, or Coordinator ownership, treat that choice as
+  separate architecture work.
 
 ## When To Use
 
@@ -51,11 +44,11 @@ SwiftUI-specific translation layer.
 ## Do Not Use When
 
 - The output target is web, React, Tailwind, HTML, or CSS.
-- The task is only Figma MCP setup or login troubleshooting; use `figma`.
-- The task is only visual critique with no implementation; use `swiftui-design`.
-- The task is UIKit-only implementation; use project context or a UIKit-specific
-  skill if one exists.
-- The task is choosing SwiftUI feature architecture; use `swiftui-architecture`.
+- The task is only Figma MCP setup or login troubleshooting; use the installed
+  Figma tool owner's setup guidance.
+- The task is only visual critique with no implementation.
+- The task is UIKit-only implementation.
+- The task is choosing SwiftUI feature architecture.
 - The Figma link is a prototype or FigJam board rather than a design node; ask
   for a `/design/` or legacy `/file/` node link.
 

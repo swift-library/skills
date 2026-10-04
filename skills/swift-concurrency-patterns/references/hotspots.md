@@ -8,8 +8,7 @@ Use this when:
 
 Skip this file if:
 
-- You already have a specific compiler diagnostic. Start from `../SKILL.md`
-  or `diagnostics.md` if present.
+- You already have a specific compiler diagnostic. Start from `../SKILL.md`.
 
 ## Search First
 

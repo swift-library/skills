@@ -20,6 +20,13 @@ when source category or authority needs to be classified.
   SPI profile and verify repository source before adoption.
 - `target_package_source`: the local package being audited.
 
+## Tool References
+
+- `swift_package_collection_generator`:
+  `swiftlang/swift-package-collection-generator` fixed runtime tool backend for
+  package collection JSON generation, validation, diffing, and signing. It is
+  not a source category, authority tier, or package adoption candidate.
+
 ## Authority Summary
 
 - P0: local package source

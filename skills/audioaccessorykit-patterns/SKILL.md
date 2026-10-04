@@ -23,11 +23,9 @@ for automatic audio switching.
 
 ## When Not To Use
 
-- Do not use for AVKit playback or media-player UI; use `avkit-patterns`.
-- Do not use for AccessorySetupKit picker/pairing setup; use
-  `accessorysetupkit-patterns`.
-- Do not use for generic Core Bluetooth runtime communication; use
-  `core-bluetooth-patterns`.
+- Do not use for AVKit playback or media-player UI.
+- Do not use for AccessorySetupKit picker/pairing setup.
+- Do not use for generic Core Bluetooth runtime communication.
 - Do not use for generic `AVAudioSession` routing without AudioAccessoryKit.
 - Do not invent distribution, region, device, or App Store behavior. Verify
   current Apple documentation and portal state.

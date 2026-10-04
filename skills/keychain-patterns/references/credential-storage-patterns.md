@@ -239,8 +239,8 @@ struct OAuthTokens: Codable {
     }
 
     /// Proactive refresh before expiry.
-    /// Both providers agree: refresh at 75–90% of lifetime or with a fixed
-    /// buffer (e.g., 60 seconds) to account for network latency and clock skew.
+    /// Refresh at 75–90% of lifetime or with a fixed buffer (e.g., 60 seconds)
+    /// to account for network latency and clock skew.
     var shouldRefresh: Bool {
         let buffer: TimeInterval = 60
         return Date() >= expiresAt.addingTimeInterval(-buffer)
@@ -620,7 +620,7 @@ For user-initiated, high-value operations (e.g., payment authorization, viewing 
 
 ```swift
 // ✅ CORRECT — Maximum OWASP MASTG L2 compliance configuration
-// Requires: iOS 11.3+ (for .or compound constraint)
+// Requires: iOS 11.3+ (for .biometryCurrentSet)
 func createHighSecurityKeychainItem(account: String, secret: Data) throws {
     var error: Unmanaged<CFError>?
     guard let accessControl = SecAccessControlCreateWithFlags(

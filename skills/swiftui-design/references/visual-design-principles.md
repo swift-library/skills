@@ -114,9 +114,21 @@ keep the header compact enough to feel like chrome rather than content.
 
 Use system controls with their labels and semantics intact:
 
+- Use `Form` and `Section` for settings, preferences, inspectors, and
+  structured input when native grouped layout is wanted.
+- Use `LabeledContent` for title-value rows, metadata rows, settings or
+  inspector rows with value-bearing content, and form controls that need
+  label/value alignment.
 - Use `Toggle(isOn:) { Text(...) }` instead of hiding the toggle label and
   building a manual row.
 - Use `Label` for icon + text rows.
+- Use `Picker` for selecting one value from a known option set; choose the
+  picker style that fits the platform, density, and number of choices.
+- Use `Button` for immediate actions, not for persistent state.
+- Use `Menu` for overflow or secondary command groups, not for primary visible
+  choices.
+- Use `List` for grouped or hierarchical row collections and `Table` for
+  sortable multi-column data.
 - Use one selected enum/value for mutually exclusive options instead of
   several independent booleans.
 - Use `contentTransition(.numericText())` for changing numbers when the

@@ -29,7 +29,7 @@ The 2024 edition is a complete overhaul. Four categories are entirely new, two p
 
 ## Master Traceability Matrix
 
-This matrix links each OWASP 2024 category to its MASVS controls, MASTG test cases, iOS APIs, and required audit evidence. Both research sources agree on the core mappings; this table unifies them.
+This matrix links each OWASP 2024 category to its MASVS controls, MASTG test cases, iOS APIs, and required audit evidence.
 
 | OWASP 2024                        | MASVS v2 Controls                             | Key MASTG Tests (New IDs)                                        | iOS APIs / Flags                                                                        | Required Evidence                                                   |
 | --------------------------------- | --------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
@@ -350,14 +350,14 @@ print("Password entered: \(password)")
 
 | Category       | ❌ Deprecated/Broken              | ✅ Approved (CryptoKit, iOS 13+)                               |
 | -------------- | --------------------------------- | -------------------------------------------------------------- |
-| Hashing        | MD5, SHA-1 (for security)         | SHA256, SHA384, SHA512; SHA3 (iOS 18+)                         |
+| Hashing        | MD5, SHA-1 (for security)         | SHA256, SHA384, SHA512; SHA3 (iOS 26+)                         |
 | Symmetric      | DES, 3DES, RC4, Blowfish, AES-ECB | AES.GCM (AES-256-GCM), ChaChaPoly                              |
 | Asymmetric     | RSA < 2048 bits                   | P256, P384, P521, Curve25519, Ed25519                          |
 | Key derivation | Simple SHA hash of password       | HKDF; Argon2/bcrypt/scrypt server-side                         |
 | RNG            | `rand()`, `random()`, `srand()`   | `SecRandomCopyBytes` (iOS 2+), CryptoKit auto-nonces (iOS 13+) |
 | Post-quantum   | All classical PKC (by 2030)       | ML-KEM, ML-DSA, X-Wing (iOS 26+)                               |
 
-**`arc4random()` nuance:** On modern Apple platforms, `arc4random()` uses a CSPRNG internally (not broken RC4). It is technically secure on iOS. However, `SecRandomCopyBytes` remains recommended for explicit cryptographic use — its security guarantees are documented and cross-platform portable. See `cryptokit-symmetric.md` for detailed algorithm guidance.
+**`arc4random()` nuance:** On modern Apple platforms, `arc4random()` uses a CSPRNG internally (not broken RC4). It is technically secure on iOS. However, `SecRandomCopyBytes` remains recommended for explicit cryptographic use — its security guarantees are documented and cross-platform portable.
 
 **AES-GCM nonce reuse is catastrophic:** A single reuse with the same key destroys both confidentiality (XOR of ciphertexts reveals XOR of plaintexts) and authentication (leaks GHASH key `H`, enabling arbitrary forgery). CryptoKit mitigates this by auto-generating random nonces when `AES.GCM.seal()` is called without an explicit nonce.
 
@@ -377,7 +377,7 @@ print("Password entered: \(password)")
 
 ### Compliant: CryptoKit encryption
 
-Canonical full round-trip patterns are in `cryptokit-symmetric.md` and anti-pattern #6 in `common-anti-patterns.md`. This compliance snippet stays minimal to avoid duplicating canonical crypto guidance.
+The canonical full round-trip pattern is anti-pattern #6 in `common-anti-patterns.md`. This compliance snippet stays minimal to avoid duplicating canonical crypto guidance.
 
 ```swift
 import CryptoKit
@@ -437,7 +437,7 @@ Keychain accessibility is the single most important iOS security decision — it
 
 **Critical:** `kSecAttrAccessible` and `kSecAttrAccessControl` are mutually exclusive. When using `SecAccessControlCreateWithFlags`, the accessibility level is the function's first parameter — do not also set `kSecAttrAccessible` in the query dictionary, or you get `errSecParam (-50)`. See `keychain-access-control.md`.
 
-> **Cross-validation note:** One comparison source recommends `kSecAttrAccessibleWhenUnlockedThisDeviceOnly` as the standard; the documented API source recommends `kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly`. Both are valid. The `WhenPasscodeSet` variant is strictly more secure (items are deleted if passcode is removed) but may surprise users. Choose based on threat model: `WhenPasscodeSet` for high-security credentials, `WhenUnlocked` for general sensitive data.
+> **Choosing a device-only default:** `kSecAttrAccessibleWhenUnlockedThisDeviceOnly` and `kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly` are both valid. The `WhenPasscodeSet` variant is strictly more secure (items are deleted if passcode is removed) but may surprise users. Choose based on threat model: `WhenPasscodeSet` for high-security credentials, `WhenUnlocked` for general sensitive data.
 
 ---
 
@@ -478,7 +478,7 @@ Auditors evaluate against MAS Testing Profiles: **L1 (standard)** for low-risk a
 
 ### Jailbreak-Era Testing (2025–2026)
 
-As of iOS 26, zero jailbreakable devices exist for current versions. Auditors use non-jailbreak techniques: objection with Frida Gadget injection into repackaged IPAs, Corellium virtual devices, or iMazing for backup extraction. This makes automated static analysis (MobSF, semgrep) and Frida Gadget–based dynamic testing the primary assessment paths.
+Public jailbreaks usually lag the current iOS release, so a jailbroken test device is often unavailable. Auditors use non-jailbreak techniques: objection with Frida Gadget injection into repackaged IPAs, Corellium virtual devices, or iMazing for backup extraction. This makes automated static analysis (MobSF, semgrep) and Frida Gadget–based dynamic testing the primary assessment paths.
 
 ---
 
@@ -496,7 +496,7 @@ Apple announced PQC support at WWDC 2025 (Session 314: "Get ahead with quantum-s
 | 2030 (NIST target)       | Classical public-key crypto deprecated                                                |
 | 2035 (CNSA 2.0)          | Classical algorithms disallowed for National Security Systems                         |
 
-Apple uses hybrid cryptography — combining post-quantum and classical algorithms so updates never reduce security below the classical baseline. Build crypto agility now: abstract cryptographic interfaces behind protocols to allow configuration-level switches when PQC adoption becomes mandatory. See `cryptokit-public-key.md` for ML-KEM/ML-DSA implementation details.
+Apple uses hybrid cryptography — combining post-quantum and classical algorithms so updates never reduce security below the classical baseline. Build crypto agility now: abstract cryptographic interfaces behind protocols to allow configuration-level switches when PQC adoption becomes mandatory.
 
 ---
 
@@ -506,11 +506,11 @@ Apple uses hybrid cryptography — combining post-quantum and classical algorith
 | --------------------------------------------------------- | --- | --- | --- | ---------------- | -------------------------------- |
 | Keychain + `WhenPasscodeSetThisDeviceOnly`                | ✅  | —   | ✅  | ✅ (key storage) | `keychain-access-control.md`     |
 | `SecAccessControlCreateWithFlags` + `.biometryCurrentSet` | ✅  | ✅  | ✅  | —                | `biometric-authentication.md`    |
-| CryptoKit AES.GCM with auto-nonce                         | —   | —   | ✅  | ✅               | `cryptokit-symmetric.md`         |
+| CryptoKit AES.GCM with auto-nonce                         | —   | —   | ✅  | ✅               | `common-anti-patterns.md`        |
 | `NSFileProtectionComplete`                                | —   | —   | ✅  | —                | `keychain-access-control.md`     |
-| `SecRandomCopyBytes` for key/token generation             | ✅  | ✅  | —   | ✅               | `cryptokit-symmetric.md`         |
+| `SecRandomCopyBytes` for key/token generation             | ✅  | ✅  | —   | ✅               | `common-anti-patterns.md`        |
 | App Attest for credential provisioning                    | ✅  | ✅  | —   | —                | `credential-storage-patterns.md` |
-| ML-KEM/ML-DSA (iOS 26+)                                   | —   | —   | —   | ✅               | `cryptokit-public-key.md`        |
+| ML-KEM/ML-DSA (iOS 26+)                                   | —   | —   | —   | ✅               | `common-anti-patterns.md`        |
 
 ---
 

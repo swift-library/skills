@@ -1,7 +1,7 @@
 interface:
   display_name: "SwiftUI Patterns"
-  short_description: "SwiftUI state, layout, macOS scenes, and API patterns"
+  short_description: "SwiftUI state, layout, controls, and APIs"
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $swiftui-patterns to review or improve SwiftUI code for state flow, view structure, navigation, layout, component patterns, macOS scenes/MenuBarExtra utilities, or modern API usage."
+  default_prompt: "Use $swiftui-patterns to review or improve SwiftUI code for state flow, view structure, navigation, layout, controls/forms, Form/Section/LabeledContent implementation, macOS scenes/MenuBarExtra utilities, or modern API usage."

@@ -3,6 +3,11 @@
 Use this file for pattern-specific interface text guidance. Apply each pattern
 through the product voice and the clarity-first rule in `voice-and-tone.md`.
 
+When design-side UX writing shapes the product-facing copy, use this file to
+check implementation-facing risks:
+source string context, CLI context, localization expansion, placeholders,
+accessibility-label wording, and terminology consistency.
+
 ## Alerts And Dialogs
 
 Use alerts sparingly. They interrupt the user and should justify that
@@ -146,8 +151,8 @@ Rules:
 - Keep common controls short, but allow richer descriptions for expressive
   visual content when it improves equivalence.
 
-Use `accessibility-patterns` for behavior, audits, inspector workflows, WCAG,
-or Nutrition Labels.
+Accessibility behavior, audits, inspector workflows, WCAG, and Nutrition Labels
+are out of scope.
 
 ## Buttons And Actions
 
@@ -209,7 +214,7 @@ Rules:
 Prefer:
 
 ```text
-No package index found. Run `swiftpm-index update` to create one.
+No package index found. Run `pkgindex update` to create one.
 ```
 
 Avoid:

@@ -45,7 +45,7 @@ Before interpreting diagnostics or choosing a fix, confirm the target/module set
 
 | Setting / feature | Where to check | Why it matters |
 |---|---|---|
-| Swift language mode (Swift 5.x vs Swift 6) | Xcode build settings (`SWIFT_VERSION`) / SwiftPM `// swift-tools-version:` | Swift 6 turns many warnings into errors and enables stricter defaults. |
+| Swift language mode (Swift 5.x vs Swift 6) | Xcode `SWIFT_VERSION` / SwiftPM `swiftLanguageModes`, target `.swiftLanguageMode(...)`, or compiler `-swift-version` | Swift 6 turns many warnings into errors and enables stricter defaults; tools-version selects manifest features and defaults, not a per-file language mode. |
 | Strict concurrency checking | Xcode: Strict Concurrency Checking (`SWIFT_STRICT_CONCURRENCY`) / SwiftPM: strict concurrency flags | Controls how aggressively Sendable + isolation rules are enforced. |
 | Default actor isolation | Xcode: Default Actor Isolation (`SWIFT_DEFAULT_ACTOR_ISOLATION`) / SwiftPM: `.defaultIsolation(MainActor.self)` | Changes the default isolation of declarations; can reduce migration noise but changes behavior and requirements. |
 | `NonisolatedNonsendingByDefault` | Xcode upcoming feature / SwiftPM `.enableUpcomingFeature("NonisolatedNonsendingByDefault")` | Changes how nonisolated async functions execute (can inherit the caller’s actor unless explicitly marked `@concurrent`). |
@@ -104,12 +104,15 @@ It's easier to design for concurrency upfront than to retrofit it later.
 
 ### 3. Use Swift 6 for New Projects and Packages
 
-For new projects, packages, or files:
+For new projects, packages, or targets:
 - Enable Swift 6 language mode from the start
 - Use Swift Concurrency features (async/await, actors)
 - Reduce technical debt before it accumulates
 
-You can enable Swift 6 for individual files in a Swift 5 project to prevent scope creep.
+Select language mode at the target/module boundary. Individual files can be
+repaired incrementally within that target, but they do not independently switch
+the module's language mode. Preserve older manifest spelling when required by
+the project's supported tools version.
 
 ### 4. Resist the Urge to Refactor
 
@@ -310,8 +313,8 @@ Swift 6.2+ includes **semi-automatic migration** for upcoming features.
 **Example warning**:
 ```swift
 // ⚠️ Use of protocol 'Error' as a type must be written 'any Error'
-func fetchData() throws -> Data  // Before
-func fetchData() throws -> any Data  // After applying fix
+var lastError: Error?        // Before
+var lastError: (any Error)?  // After applying fix
 ```
 
 ### Package Migration
@@ -336,10 +339,13 @@ The tool automatically:
 - Applies all fix-its
 - Updates `Package.swift` to enable the feature
 
-**Available migrations** (as of Swift 6.2):
+**Available migrations**: `swiftc -print-supported-features` marks each
+migratable feature with `"migratable": true`. Swift 6.4 lists:
 - `ExistentialAny` (SE-335)
+- `MemberImportVisibility` (SE-444)
 - `InferIsolatedConformances` (SE-470)
-- More features will add migration support over time
+- `NonisolatedNonsendingByDefault` (SE-461)
+- `StrictMemorySafety` (SE-458, optional feature)
 
 **Additional resource**: [Migration Tooling Video](https://youtu.be/FK9XFxSWZPg?si=2z_ybn1t1YCJow5k)
 
@@ -447,10 +453,10 @@ The compiler will warn if `@preconcurrency` is unused:
 
 ### Observation Alternative
 
-Swift 6 will include **Transactional Observation** (SE-475):
+Swift 6.2 adds **Transactional Observation** (SE-475) through `Observations`,
+available on iOS 26, macOS 26, and the other OS 26 releases:
 
 ```swift
-// Future API (not yet implemented)
 let names = Observations { person.name }
 
 Task.detached {
@@ -460,7 +466,7 @@ Task.detached {
 }
 ```
 
-**Current alternatives**:
+**Alternatives for earlier deployment targets**:
 - Use `@Observable` macro for SwiftUI
 - Use `AsyncStream` for custom observation
 - Consider [AsyncExtensions](https://github.com/sideeffect-io/AsyncExtensions) package
@@ -590,9 +596,9 @@ When migrating from Combine or RxSwift, you have multiple options for handling a
 
 ### Use AsyncAlgorithms for:
 
-- **Time-based operations**: debounce, throttle, timers
+- **Time-based operations**: debounce, timers (1.x has no stable throttle, only underscored `_throttle`)
 - **Combining multiple async sequences**: merge, combineLatest, zip
-- **Multi-consumer scenarios**: AsyncChannel for backpressure
+- **Task-to-task handoff**: AsyncChannel with backpressure; `share()` (1.1+) to broadcast to multiple consumers
 - **Complex operator chains**: FRP-like patterns in Swift Concurrency
 - **Specific operators**: removeDuplicates, chunks, adjacentPairs, compacted
 
@@ -663,26 +669,19 @@ struct SearchView: View {
 ```swift
 import AsyncAlgorithms
 
-@Observable
+@MainActor @Observable
 final class ArticleSearcher {
-    @MainActor private(set) var results: [Article] = []
-    private var searchQueryContinuation: AsyncStream<String>.Continuation?
-
-    private lazy var searchQueryStream: AsyncStream<String> = {
-        AsyncStream { continuation in
-            searchQueryContinuation = continuation
-        }
-    }()
+    private(set) var results: [Article] = []
+    private let queries = AsyncStream.makeStream(of: String.self)
 
     func search(_ query: String) {
-        searchQueryContinuation?.yield(query)
+        queries.continuation.yield(query)
     }
 
     func startDebouncedSearch() {
-        Task { @MainActor in
-            for await query in searchQueryStream.debounce(for: .milliseconds(500)) {
-                self.results = []
-                self.results = await APIClient.searchArticles(query)
+        Task {
+            for await query in queries.stream.debounce(for: .milliseconds(500)) {
+                results = await APIClient.searchArticles(query)
             }
         }
     }
@@ -757,7 +756,7 @@ final class NotificationObserver {
 
 **When to use each approach**:
 - Use `notifications(named:)` for standard system notifications
-- Use `AsyncChannel` for custom multi-consumer notification scenarios
+- Use `share()` (swift-async-algorithms 1.1+) when several consumers need every notification; `AsyncChannel` hands each value to one consumer
 - Use `@Observable` + SwiftUI for UI state updates
 
 ### Example: Multi-Source Data Loading
@@ -801,17 +800,14 @@ final class MultiSourceLoader {
     @MainActor private(set) var items: [Item] = []
 
     func loadFromAllSources() async {
-        let sources = [
-            APIClient.fetchItems(from: .source1),
-            APIClient.fetchItems(from: .source2),
-            APIClient.fetchItems(from: .source3)
-        ]
+        // merge requires Sendable bases; Combine's `.values` (AsyncPublisher) is not Sendable.
+        let source1: AsyncStream<[Item]> = APIClient.itemUpdates(from: .source1)
+        let source2: AsyncStream<[Item]> = APIClient.itemUpdates(from: .source2)
+        let source3: AsyncStream<[Item]> = APIClient.itemUpdates(from: .source3)
 
         Task { @MainActor in
-            for await stream in sources.map { $0.values }.merge() {
-                for await newItems in stream {
-                    self.items.append(contentsOf: newItems)
-                }
+            for await newItems in merge(source1, source2, source3) {
+                self.items.append(contentsOf: newItems)
             }
         }
     }
@@ -840,7 +836,7 @@ final class MultiSourceLoader {
 ```
 
 **Key differences**:
-- Combine `merge()` combines publishers; AsyncAlgorithms `merge()` combines sequences
+- Combine `merge()` combines publishers; AsyncAlgorithms `merge(_:_:)` / `merge(_:_:_:)` is a free function that combines two or three `Sendable` sequences
 - For parallel execution, use `TaskGroup` instead of `flatMap`
 - State updates can use `@MainActor` instead of `.receive(on:)`
 
@@ -907,7 +903,7 @@ actor FormValidator {
 
 **Solution**: Use `combineLatest()` for cleaner, composable validation.
 
-### ❌ Don't Share Streams Without AsyncChannel
+### ❌ Don't Share One Stream Across Consumers
 
 ```swift
 // ❌ Bad: Multiple consumers sharing same stream
@@ -933,7 +929,7 @@ Task {
 
 **Problem**: Values are split between consumers unpredictably. Each value goes to only one consumer.
 
-**Solution**: Use `AsyncChannel` for true multi-consumer scenarios with backpressure.
+**Solution**: Use `share()` (swift-async-algorithms 1.1+) so every consumer receives every value. `AsyncChannel` also delivers each value to only one consumer.
 
 ---
 
@@ -1031,7 +1027,7 @@ Break it down:
 ### "My Team Isn't Ready"
 
 Start small:
-- Enable Swift 6 for new files only
+- Enable Swift 6 for new targets only
 - Make new types `Sendable` by default
 - Share learnings in team meetings
 - Pair program on tricky migrations

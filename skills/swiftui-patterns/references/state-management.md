@@ -35,6 +35,25 @@
 
 ## @State
 
+### Xcode 27 State Initialization
+
+Xcode 27's `@State` macro can lazily initialize owned Observable reference
+state, including when deploying to iOS 17 or macOS 14. This is a toolchain
+change, not a reason to raise the app's minimum OS to 27. Keep inexpensive,
+side-effect-free view initializers and the existing state ownership rules.
+
+For initialization diagnostics, initialize ordinary stored properties before
+assigning state. If `init` supplies the initial value, remove the competing
+inline default. An initial value still does not continuously synchronize an
+external parent value; use the existing binding or injected-observable path
+for parent-owned data.
+
+Use [TN3211](https://developer.apple.com/documentation/technotes/tn3211-resolving-swiftui-source-incompatibilities-for-state-and-contentbuilder)
+for wrapper combinations, extension/memberwise initializers, and builder
+source incompatibilities. A missing macro implementation plugin is a toolchain
+limitation; do not misdiagnose it as an ownership error or claim a successful
+macro compilation from an SDK declaration alone.
+
 Always mark `@State` properties as `private`. Use for internal view state that triggers UI updates.
 
 ```swift
@@ -161,9 +180,9 @@ TextField("Score", value: $score, format: .number)
 
 ## @FocusState
 
-See `references/focus-patterns.md` to route SwiftUI focus questions to
-`focus-engine-patterns`, which owns `@FocusState`, `@FocusedValue`,
-`.focusable()`, default focus, and common pitfalls.
+See `references/focus-patterns.md` for basic `@FocusState` reminders.
+Dedicated focus work such as `@FocusedValue`, `.focusable()` design, default
+focus, and focus debugging is out of scope.
 
 Always mark `@FocusState` as `private`.
 

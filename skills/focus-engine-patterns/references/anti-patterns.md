@@ -1,6 +1,6 @@
 # Focus Anti-Patterns (All Platforms)
 
-These are critical mistakes that break focus navigation. Flag any occurrence immediately. Patterns 1-17 are the original tvOS patterns. Patterns 18-24 are macOS-specific. Patterns 25-29 are production tvOS patterns discovered during Fox News/Fox Weather development.
+These are critical mistakes that break focus navigation. Flag any occurrence immediately. Patterns 1-17 cover tvOS. Patterns 18-24 are macOS-specific. Patterns 25-29 cover tvOS sidebar, catalog, and transition focus.
 
 ## Blocking (must fix before ship)
 
@@ -14,7 +14,7 @@ Button("Watch") { ... }
     .disabled(isLoading)
 ```
 
-**There is no perfect SwiftUI replacement.** The commonly recommended `.allowsHitTesting(false)` is **unreliable on tvOS** — production testing revealed it may map to `isUserInteractionEnabled = false` under the hood, which anti-pattern #8 warns against. The Fox Weather CTV codebase documented this: `.disabled()` makes buttons non-focusable even when re-enabled, breaking diagonal navigation. But `.allowsHitTesting(false)` was inconclusive about keeping views focusable.
+**There is no perfect SwiftUI replacement.** The commonly recommended `.allowsHitTesting(false)` is **unreliable on tvOS** — it may map to `isUserInteractionEnabled = false` under the hood, which anti-pattern #8 warns against. `.disabled()` can leave buttons non-focusable even when re-enabled, breaking diagonal navigation, and `.allowsHitTesting(false)` does not reliably keep views focusable.
 
 **Recommended approaches, depending on context:**
 
@@ -39,7 +39,7 @@ Button("Watch") {
 // with all items enabled once focus is inside the container.
 ```
 
-UIKit equivalent: `UIButton.isEnabled = false` also makes the button unfocusable. The UIKit flagship pattern never disables individual items — it gates the container's `isUserInteractionEnabled` instead (see layout-patterns.md, UIKit Sidebar section).
+UIKit equivalent: `UIButton.isEnabled = false` also makes the button unfocusable. The UIKit sidebar pattern never disables individual items — it gates the container's `isUserInteractionEnabled` instead (see layout-patterns.md, UIKit Sidebar section).
 
 **For sidebar/list items with active selection state**, see anti-pattern #25 below — `.disabled()` on multiple items simultaneously is an even worse variant of this problem.
 
@@ -331,7 +331,7 @@ ScrollView {
 .focused($isContainerFocused)
 ```
 
-This "dual `@FocusState`" pattern (container + per-item) was discovered in production Fox News tvOS development. The key insight: `.disabled()` gating works when it only constrains ENTRY from outside, not when it toggles during active navigation within the list.
+In this "dual `@FocusState`" pattern (container + per-item), the key insight is: `.disabled()` gating works when it only constrains ENTRY from outside, not when it toggles during active navigation within the list.
 
 ### 26. `ScrollViewReader.scrollTo()` inside `onChange` creates feedback loops with focus engine
 
@@ -353,7 +353,7 @@ ScrollViewReader { proxy in
     }
 }
 
-// GOOD — declarative ScrollPosition (tvOS 17+, iOS 17+) doesn't fight the focus engine
+// GOOD — declarative ScrollPosition (tvOS 18+, iOS 18+) doesn't fight the focus engine
 @State private var scrollPosition = ScrollPosition(idType: String.self)
 
 ScrollView {
@@ -475,7 +475,7 @@ buttonB.nextKeyView = buttonC
 buttonC.nextKeyView = textField
 ```
 
-Alternative: Set `window.recalculatesKeyViewLoop = true` and let the system manage the loop geometrically. But never mix manual `nextKeyView` with `recalculatesKeyViewLoop`.
+Alternative: Set `window.autorecalculatesKeyViewLoop = true` and let the system manage the loop geometrically. But never mix manual `nextKeyView` with `autorecalculatesKeyViewLoop`.
 
 ### 20. Calling `becomeFirstResponder()` directly
 

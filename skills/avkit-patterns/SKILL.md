@@ -24,10 +24,9 @@ and related system playback surfaces.
 
 ## When Not To Use
 
-- Do not use for photo picking, photo capture, or photo-library workflows; use
-  `photokit-patterns`.
+- Do not use for photo picking, photo capture, or photo-library workflows.
 - Do not use for Apple Music catalog, MusicKit authorization, or subscription
-  playback; use `musickit-patterns`.
+  playback.
 - Do not use for generic audio DSP, recording, or synthesis without AVKit
   playback UI.
 - Do not use for visual polish only.

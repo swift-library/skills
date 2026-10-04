@@ -9,7 +9,9 @@ Use this file when writing assertions, migrating from `XCTAssert*`, testing thro
 - Use `#expect` for most assertions.
 - Pass natural Swift expressions (`==`, `>`, `.contains`, `.isEmpty`, etc.).
 - Rely on captured sub-expression values for rich diagnostics in Xcode.
-- Avoid old XCTest assertion families in Swift Testing tests.
+- Prefer native assertions in new tests. For deliberate reuse of XCTest
+  helpers, follow the version and failure-propagation checks in
+  `migration-from-xctest.md`.
 
 ### Example: expressive assertions
 
@@ -141,5 +143,6 @@ Issue.record("Unreachable")
 
 - Do use `#require` when later checks depend on a value.
 - Do keep `withKnownIssue` scopes narrow.
-- Don't use XCTest assertions in Swift Testing tests.
+- Don't mix assertion frameworks without verifying the selected toolchain's
+  interoperability mode and failure propagation.
 - Don't hide prerequisite failures inside later optional chaining.

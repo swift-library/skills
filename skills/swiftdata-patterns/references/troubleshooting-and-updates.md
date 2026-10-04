@@ -23,14 +23,14 @@
 - SwiftData base APIs (`@Model`, `ModelContainer`, `ModelContext`, `Query`): iOS 17+.
 - Persistent history descriptor and many history/data-store APIs: iOS 18+.
 - `#Unique` and `#Index` macros: iOS 18+.
-- Inheritance support is highlighted in June 2025 updates and iOS 26-era docs; always gate by deployment target.
+- Model inheritance: iOS 26+ (June 2025 updates); always gate by deployment target.
 
 ## Release-Aware Recommendations
 
 When advising changes:
 
 - avoid recommending `#Unique` or `#Index` on iOS 17-only apps;
-- avoid relying on newer history sort features unless iOS 26-era toolchains are present;
+- avoid relying on history sorting (`HistoryDescriptor.sortBy`, iOS 26+) unless the deployment target allows it;
 - provide fallback plans for older deployment targets.
 
 ## Primary Documentation

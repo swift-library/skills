@@ -28,10 +28,8 @@ fetch, cache, display, attribute, and validate Apple Weather data.
   data.
 - Do not use for non-WeatherKit providers unless the task compares an Apple app
   WeatherKit integration.
-- Do not use for Core Location-only behavior; use `mapkit-patterns` when the
-  feature is map/location centric.
-- Do not use for chart styling only; use `swift-charts-patterns` or design
-  skills.
+- Do not use for Core Location-only or map-centric behavior.
+- Do not use for chart styling or visual design with no WeatherKit data issue.
 - Do not invent dataset availability, attribution requirements, rate behavior,
   or regional alert/minute forecast coverage. Verify current Apple
   documentation and live behavior.

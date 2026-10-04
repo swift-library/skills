@@ -118,9 +118,11 @@ value when the deployment target supports it:
 private var assistiveAccessEnabled
 ```
 
-Gate this value for older targets. If the project supports iOS/iPadOS 17, a
-dedicated `AssistiveAccess` scene is usually a safer compatibility boundary
-than relying on the environment value throughout shared views.
+This value requires iOS/iPadOS 18. The `AssistiveAccess` scene,
+`assistiveAccessNavigationIcon`, `UIHostingSceneDelegate`, and the
+`.assistiveAccess` preview trait require iOS/iPadOS 26, so gate them on earlier
+deployment targets. A dedicated scene is still a safer boundary than relying on
+the environment value throughout shared views.
 
 ## Design Rules
 

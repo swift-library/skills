@@ -10,6 +10,19 @@
 
 ## AsyncImage Best Practices
 
+### OS 27 HTTP Caching And Request Configuration
+
+On OS 27, `AsyncImage` respects HTTP caching rules. This does not guarantee a
+cache hit for every response, nor replace decoded-image caching or downsampling.
+Use the response cache headers and actual request/session configuration when
+diagnosing reloads.
+
+The `AsyncImage(request:...)` and `.asyncImageURLSession(_:)` APIs require
+OS 27. Keep an availability branch and the existing loader on older systems.
+For authenticated requests, a fallback must preserve headers and authorization;
+do not silently turn the request into an unauthenticated URL-only load.
+See `official-sources.md` for the current source and SDK checks.
+
 ### Basic AsyncImage with Phase Handling
 
 ```swift
@@ -107,8 +120,7 @@ For production use, wrap the logic in an `actor` with scale-aware sizing and cac
 
 ```swift
 actor ImageProcessor {
-    func downsample(data: Data, targetSize: CGSize) -> UIImage? {
-        let scale = await UIScreen.main.scale
+    func downsample(data: Data, targetSize: CGSize, scale: CGFloat) -> UIImage? {
         let maxPixel = max(targetSize.width, targetSize.height) * scale
         let sourceOptions: [CFString: Any] = [kCGImageSourceShouldCache: false]
         guard let source = CGImageSourceCreateWithData(data as CFData, sourceOptions as CFDictionary) else { return nil }
@@ -124,7 +136,7 @@ actor ImageProcessor {
 }
 ```
 
-Key details: `kCGImageSourceShouldCache: false` on the source prevents the full-resolution image from being cached in memory. Multiplying `targetSize` by `UIScreen.main.scale` ensures the thumbnail is sharp on Retina displays. `kCGImageSourceShouldCacheImmediately: true` on the thumbnail forces decoding at creation time rather than at first render.
+Key details: `kCGImageSourceShouldCache: false` on the source prevents the full-resolution image from being cached in memory. Pass the target view's `@Environment(\.displayScale)` value into the actor; multiplying the point size by that scale sizes the thumbnail for the actual display. The synchronous actor method does not read UI-isolated screen state or contain `await`. `kCGImageSourceShouldCacheImmediately: true` on the thumbnail forces decoding at creation time rather than at first render.
 
 ### When to Suggest This Optimization
 

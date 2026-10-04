@@ -25,9 +25,9 @@ timeline implementation.
 
 ## When Not To Use
 
-- Do not use for visual-only WidgetKit review; use `widgetkit-design`.
+- Do not use for visual-only WidgetKit review.
 - Do not use for generic widget extension, timeline, reload, or App Group data
-  work; use `widgetkit-patterns`.
+  work.
 - Do not use for HealthKit or Core Location implementation unless the issue is
   specifically how those signals feed RelevanceKit.
 - Do not use for App Intent action/entity design unless the intent is part of
@@ -68,8 +68,8 @@ timeline implementation.
 - Do not request sensitive permissions solely to improve widget visibility.
 - Do not assume RelevanceKit affects non-watchOS platforms unless current
   documentation and local SDK behavior prove it.
-- Keep visual widget review and timeline mechanics in their own WidgetKit
-  skills.
+- Leave visual widget review and timeline mechanics to general WidgetKit
+  guidance.
 
 ## Validation
 

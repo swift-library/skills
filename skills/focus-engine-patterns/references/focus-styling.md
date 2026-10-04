@@ -71,7 +71,7 @@ struct IconButtonStyle: ButtonStyle {
 
 ## FocusBorder ViewModifier
 
-Reusable gradient border that appears on focus. From Fox Weather tvOS:
+Reusable gradient border that appears on focus on tvOS:
 
 ```swift
 struct FocusBorder: ViewModifier {
@@ -215,8 +215,9 @@ class CircularAvatarView: NSView {
     }
 
     // Notify AppKit when the mask shape changes (e.g., resize)
-    override func noteFocusRingChanged() {
-        super.noteFocusRingChanged()
+    override func setFrameSize(_ newSize: NSSize) {
+        super.setFrameSize(newSize)
+        noteFocusRingMaskChanged()
     }
 }
 ```
@@ -227,7 +228,7 @@ class CircularAvatarView: NSView {
 class CustomStyledView: NSView {
     override var focusRingType: NSFocusRingType { .none }
 
-    override func drawRect(_ dirtyRect: NSRect) {
+    override func draw(_ dirtyRect: NSRect) {
         // Draw custom focus indicator when focused
         if window?.firstResponder === self {
             NSColor.controlAccentColor.setStroke()

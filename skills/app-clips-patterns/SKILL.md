@@ -24,10 +24,9 @@ hand off cleanly to the installed app.
 
 ## When Not To Use
 
-- Do not use for App Store Connect metadata or marketing setup alone; use the
-  market operations collection.
+- Do not use for App Store Connect metadata or marketing setup alone.
 - Do not use for signing, provisioning, archive, or release artifact work
-  alone; use `apple-platform-release`.
+  alone.
 - Do not use for ordinary universal links or deep links without an App Clip
   target.
 - Do not use for broad SwiftUI architecture unless the App Clip/full-app split

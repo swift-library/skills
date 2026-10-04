@@ -25,9 +25,8 @@ serialize drawings, and integrate with SwiftUI or UIKit/AppKit surfaces.
 
 ## When Not To Use
 
-- Do not use for PaperKit structured markup; use `paperkit-patterns`.
-- Do not use for PDF document semantics, forms, search, or PDF permissions; use
-  `pdfkit-patterns`.
+- Do not use for PaperKit structured markup.
+- Do not use for PDF document semantics, forms, search, or PDF permissions.
 - Do not use for generic vector drawing frameworks unless PencilKit is the
   capture surface.
 - Do not use for visual design polish alone.

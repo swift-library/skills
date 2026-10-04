@@ -25,13 +25,10 @@ accessibility, fallback behavior, and API availability.
 ## When Not To Use
 
 - Do not use for general SwiftUI state, layout, navigation, sheets, lists,
-  focus, text, image, performance, macOS, or Liquid Glass work; use
-  `swiftui-patterns`.
-- Do not use for Core Data persistence; use `core-data-patterns`.
-- Do not use for SwiftData schema design or model lifecycle work; use
-  `swiftdata-patterns`.
-- Do not use for broad Swift Concurrency migration; use
-  `swift-concurrency-patterns`.
+  focus, text, image, performance, macOS, or Liquid Glass work.
+- Do not use for Core Data persistence.
+- Do not use for SwiftData schema design or model lifecycle work.
+- Do not use for broad Swift Concurrency migration.
 - Do not use for networking, package architecture, dependency replacement, or
   repository documentation.
 
@@ -48,8 +45,8 @@ accessibility, fallback behavior, and API availability.
 ## Workflow
 
 1. Read local project truth first.
-2. Confirm the task is actually about Swift Charts. Route non-chart SwiftUI
-   container work to `swiftui-patterns`.
+2. Confirm the task is actually about Swift Charts. Leave non-chart SwiftUI
+   container work to general SwiftUI implementation guidance.
 3. Classify the chart surface: marks/plots, axes/scales, styling/legends,
    selection/gestures, `ChartProxy`, `Chart3D`, accessibility, or fallback.
 4. Check API availability against the local deployment target before
@@ -110,6 +107,6 @@ For reviews or implementation recommendations, return:
 - If platform or deployment target is unknown, report that before recommending
   availability-sensitive chart APIs.
 - If the task needs broader SwiftUI layout, state, or navigation changes around
-  the chart, explicitly route that portion to `swiftui-patterns`.
+  the chart, call that portion out as outside Swift Charts scope.
 - If chart behavior cannot be reproduced locally, separate source-level
   findings from unverified runtime assumptions.

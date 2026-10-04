@@ -27,7 +27,7 @@ Spotlight, widgets, controls, Focus, and Live Activities.
 
 ## When Not To Use
 
-- Do not use for widget visual layout only; use `widgetkit-design`.
+- Do not use for widget visual layout only.
 - Do not use for general SwiftUI architecture or navigation without an App
   Intents surface.
 - Do not use for App Store metadata, pricing, release operations, or market

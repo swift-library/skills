@@ -43,6 +43,73 @@ Many common methods have no equivalent in SwiftData, and will not compile. For e
 Custom operators are also not allowed.
 
 
+## Captured custom value types
+
+Do not compare custom value objects directly against captured constants in a
+SwiftData predicate, even when the value type is `Codable`, `Hashable`, or a
+small nested wrapper around a primitive. SwiftData can reject the predicate at
+runtime because it cannot translate the captured custom value into a store
+query.
+
+For example, this model-level type is useful domain modeling:
+
+```swift
+@Model
+final class Item {
+    struct Identifier: Codable, Hashable {
+        var rawValue: String
+    }
+
+    var id: Identifier
+}
+```
+
+But this predicate is not safe:
+
+```swift
+let itemID = Item.Identifier(rawValue: "abc")
+
+let predicate = #Predicate<Item> { item in
+    item.id == itemID
+}
+```
+
+It can fail with an error such as:
+
+```text
+Unsupported Predicate: Captured/constant values of type 'Identifier' are not supported
+```
+
+Keep the semantic API typed outside the query layer, then compare a
+predicate-supported primitive member at the SwiftData boundary:
+
+```swift
+let rawItemID = itemID.rawValue
+
+let predicate = #Predicate<Item> { item in
+    item.id.rawValue == rawItemID
+}
+```
+
+This member-access pattern is valid when `id` is a stored SwiftData property
+and `rawValue` is a stored primitive value SwiftData can translate. If the typed
+identifier is exposed through a computed property, `@Transient` property, or
+other non-store-backed API, query the stored primitive backing column instead:
+
+```swift
+let rawItemID = itemID.rawValue
+
+let predicate = #Predicate<Item> { item in
+    item.identifier == rawItemID
+}
+```
+
+The captured-value limitation is not specific to nested types. A top-level
+custom struct has the same direct-comparison problem. Inline construction inside
+the predicate is not a workaround either, because predicate macros do not
+support arbitrary initializer calls.
+
+
 ## Dangerous predicates
 
 Some SwiftData predicates will compile cleanly then fail or even crash at runtime.
@@ -59,7 +126,10 @@ However, *this* query looks like it does the same thing, but will crash at runti
 @Query(filter: #Predicate<Movie> { $0.cast.isEmpty == false }, sort: \Movie.name) private var movies: [Movie]
 ```
 
-Never attempt to create query predicates that use computed properties, `@Transient` properties, or use custom `Codable` struct data. They might compile cleanly, but they will crash at runtime.
+Never attempt to create query predicates that use computed properties or
+`@Transient` properties. Avoid querying whole custom `Codable` values directly;
+compare a stored primitive member or a stored primitive backing column instead.
+Unsupported shapes might compile cleanly, but they can crash at runtime.
 
 All predicates must rely on data that is actually stored in the database as `@Model` classes.
 

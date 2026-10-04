@@ -28,9 +28,8 @@ and camera content.
 ## When Not To Use
 
 - Do not use for Core ML model loading or deployment without Vision request
-  semantics; use `core-ml-patterns`.
-- Do not use for Photos library access or media picking; use
-  `photokit-patterns`.
+  semantics.
+- Do not use for Photos library access or media picking.
 - Do not use for generic AVFoundation capture setup unless Vision frame
   analysis is the primary task.
 - Do not use for pure visual design, image editing, or product copy.
@@ -64,8 +63,8 @@ and camera content.
    or request results longer than needed.
 6. For VisionKit, test `isSupported`, `isAvailable`, delegate events, async
    recognized items, overlays, and camera-denied states.
-7. Route model loading/performance concerns to `core-ml-patterns` once the
-   Vision request integration is stable.
+7. Treat model loading and performance tuning beyond the Vision request as
+   general Core ML work once the Vision request integration is stable.
 
 ## Review Rules
 
