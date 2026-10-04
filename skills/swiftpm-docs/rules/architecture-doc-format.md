@@ -1,7 +1,7 @@
 # Architecture Doc Format
 
 Use this rule when writing or normalizing documents under
-`Docs/Architecture/*`.
+`Documentation/Architecture/*`.
 
 ## Purpose
 
@@ -33,8 +33,9 @@ Use this rule when writing or normalizing documents under
 
 ## Does Not Absorb Other Roles
 
-- Do not turn architecture docs into proposal comparison logs.
-- Do not turn architecture docs into migration diaries or archive dumps.
+- Do not turn architecture documentation into proposal comparison logs.
+- Do not turn architecture documentation into migration diaries or archive
+  dumps.
 - Do not use reference notes as a substitute for current structure.
 
 ## Basis

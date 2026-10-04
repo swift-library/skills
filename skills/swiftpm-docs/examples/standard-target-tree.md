@@ -7,11 +7,11 @@ repository.
 
 - Route: `AGENTS.md`
 - Index: root and directory `README` files
-- Proposal: `Docs/Proposals/*`
-- Truth: `Docs/Architecture/*`
-- History: `Docs/Decisions/*`, `Docs/Migrations/*`, `Docs/Archive/*`
+- Proposal: `Documentation/Proposals/*`
+- Truth: `Documentation/Architecture/*`
+- History: `Documentation/Decisions/*`, `Documentation/Migrations/*`, `Documentation/Archive/*`
 - Governance: `.github/*`
-- Reference: `Docs/Reference/*`
+- Reference: `Documentation/Reference/*`
 
 ```text
 <swift-package-repo>/
@@ -23,14 +23,14 @@ repository.
   SECURITY.md
   SUPPORT.md
   GOVERNANCE.md
-  CODEOWNERS
   Package.swift
   Sources/
   Tests/
-  Docs/
+  Documentation/
     README.md
     Architecture/
       README.md
+      VersioningAndRelease.md
       Package.md
       Modules.md
     Proposals/
@@ -44,7 +44,7 @@ repository.
     Reference/
       README.md
   .github/
-    README.md
+    CODEOWNERS
     ISSUE_TEMPLATE/
       bug.md
       feature.md

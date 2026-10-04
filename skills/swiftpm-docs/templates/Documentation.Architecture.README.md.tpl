@@ -1,5 +1,8 @@
 # Architecture
 
+- [Versioning and Release](VersioningAndRelease.md): component version authorities,
+  compatibility, release gates, evidence and retention rules.
+
 This directory holds the current truth for `<repo-name>` documentation
 structure.
 

@@ -2,13 +2,13 @@
 
 ## Problem
 
-`Docs/Architecture/Package.md` contains:
+`Documentation/Architecture/Package.md` contains:
 
 ```md
 ## Candidate Layout
 
-Option A keeps proposals under `Docs/Architecture/`.
-Option B creates `Docs/Proposals/`.
+Option A keeps proposals under `Documentation/Architecture/`.
+Option B creates `Documentation/Proposals/`.
 We should decide after the next refactor.
 ```
 
@@ -16,7 +16,7 @@ We should decide after the next refactor.
 
 - the content compares unresolved options
 - the content does not state the current canonical layout
-- `Docs/Architecture/*` is for current truth, not design-in-progress
+- `Documentation/Architecture/*` is for current truth, not design-in-progress
 
 ## Applicable Rules
 
@@ -24,12 +24,12 @@ We should decide after the next refactor.
 
 ## Normalized Outcome
 
-- move the unresolved options into `Docs/Proposals/package-docs-layout.md`
-- leave only the current accepted structure in `Docs/Architecture/Package.md`
+- move the unresolved options into `Documentation/Proposals/PackageDocsLayout.md`
+- leave only the current accepted structure in `Documentation/Architecture/Package.md`
 
 Example normalized truth:
 
 ```md
-Package documentation roles are defined under `Docs/Architecture/`.
-Design alternatives are kept under `Docs/Proposals/`.
+Package documentation roles are defined under `Documentation/Architecture/`.
+Design alternatives are kept under `Documentation/Proposals/`.
 ```

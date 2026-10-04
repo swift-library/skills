@@ -4,6 +4,14 @@
 
 <what must be true when this work is done>
 
+## Scope
+
+This is temporary agent execution state for the current documentation task. It
+lives under `.agent/` so it does not become repository documentation,
+architecture truth, GitHub governance, or `.codex` skill/capability
+configuration. `.agent/` stays out of Git through the local
+`.git/info/exclude`; it is never committed or pushed.
+
 ## Why This Needs A Plan
 
 <why the work is too large, risky, or long-running for a one-shot change>

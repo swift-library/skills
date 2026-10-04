@@ -20,7 +20,7 @@
 
 <alternatives>
 
-## Related Docs
+## Related Documentation
 
 - Date: <date>
-- Related architecture docs: <related-docs>
+- Related architecture documentation: <related-documentation>

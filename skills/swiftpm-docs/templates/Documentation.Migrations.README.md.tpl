@@ -6,7 +6,7 @@ This directory indexes migration and rollout records for `<repo-name>`.
 
 - transition plans for documentation structure changes
 - cutover notes and rollout checkpoints
-- records of how a docs reorganization was carried out
+- records of how a documentation reorganization was carried out
 
 ## Does Not Belong Here
 
