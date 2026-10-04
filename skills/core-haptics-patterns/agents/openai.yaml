@@ -1,0 +1,5 @@
+interface:
+  display_name: "Core Haptics Patterns"
+  short_description: "Implement and review Core Haptics engines, AHAP patterns, and haptic validation"
+  brand_color: "#FF2D55"
+  default_prompt: "Use $core-haptics-patterns for CHHapticEngine, CHHapticPattern, CHHapticEvent, AHAP files, advanced haptic players, dynamic parameters, engine reset/stopped recovery, custom audio-haptic patterns, and real-device haptic validation."

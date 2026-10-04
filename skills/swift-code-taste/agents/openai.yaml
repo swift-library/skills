@@ -1,0 +1,4 @@
+interface:
+  display_name: "Swift Code Taste"
+  short_description: "Apply Swift code taste while writing or reviewing code"
+  default_prompt: "Use $swift-code-taste to implement, edit, refactor, review, or audit Swift code for code elegance, clean code shape, semantic naming, comment quality, abstraction quality, ownership boundaries, public API hygiene, AI-shaped code, Apple, Swift, and reference-project alignment, and whether abstractions earn their existence instead of just wrapping or forwarding."

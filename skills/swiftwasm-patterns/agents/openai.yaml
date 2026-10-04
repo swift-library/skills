@@ -1,0 +1,5 @@
+interface:
+  display_name: "SwiftWasm Patterns"
+  short_description: "Build and port Swift with Wasm SDKs"
+  brand_color: "#F05138"
+  default_prompt: "Use $swiftwasm-patterns to audit and build this Swift package for WebAssembly/WASI with the current Swift SDK."

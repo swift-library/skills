@@ -1,0 +1,5 @@
+interface:
+  display_name: "Swift Design Tokens Patterns"
+  short_description: "Operate Swift design-token compiler packages"
+  brand_color: "#F05138"
+  default_prompt: "Use $swift-design-tokens-patterns to change or debug a swift-design-tokens compiler package, TokenTool, TokensPlugin, DTCG token config, or generated Apple-platform token outputs."
