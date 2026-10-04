@@ -1,0 +1,5 @@
+interface:
+  display_name: "Swift Python Patterns"
+  short_description: "Operate Swift PythonKit-style bridge packages"
+  brand_color: "#F05138"
+  default_prompt: "Use $swift-python-patterns to change or debug a Swift Python bridge package, PythonObject conversions, dynamic Python runtime loading, or numpy conversion behavior."

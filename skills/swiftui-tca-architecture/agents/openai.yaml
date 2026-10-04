@@ -1,0 +1,5 @@
+interface:
+  display_name: "SwiftUI TCA Architecture"
+  short_description: "Design and review SwiftUI TCA features"
+  brand_color: "#F05138"
+  default_prompt: "Use $swiftui-tca-architecture to design, implement, review, refactor, or test existing Point-Free ComposableArchitecture SwiftUI features with reducers, stores, effects, dependencies, navigation, shared state, performance, and TestStore."

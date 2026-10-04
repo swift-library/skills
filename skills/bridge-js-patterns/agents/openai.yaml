@@ -1,0 +1,5 @@
+interface:
+  display_name: "BridgeJS Patterns"
+  short_description: "Typed Swift-JavaScript bridge codegen"
+  brand_color: "#F05138"
+  default_prompt: "Use $bridge-js-patterns to implement or review BridgeJS @JS bindings, generated glue, and TypeScript interop for this Swift Wasm package."

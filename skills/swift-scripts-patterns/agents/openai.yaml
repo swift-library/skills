@@ -1,0 +1,5 @@
+interface:
+  display_name: "Swift Scripts"
+  short_description: "Write Swift scripts with swift-sh safely and portably."
+  brand_color: "#F05138"
+  default_prompt: "Use $swift-scripts-patterns to write or review Swift scripts that run through swift-sh, including runner invocation, dependency comments, local path dependencies, argument passthrough, stdout/stderr, exit codes, and validation."

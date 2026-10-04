@@ -1,0 +1,5 @@
+interface:
+  display_name: "macOS TCC Permissions Patterns"
+  short_description: "macOS privacy permission flows, System Settings guidance, and helper identity checks"
+  brand_color: "#007AFF"
+  default_prompt: "Use $macos-tcc-permissions-patterns for macOS TCC privacy permissions, System Settings deep links, drag-to-authorize app bundles, helper identity, and onboarding fallback behavior."
