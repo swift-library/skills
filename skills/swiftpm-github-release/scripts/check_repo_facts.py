@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
 """Compare a repository's public claims with the facts they must match.
 
-Usage: check_repo_facts.py REPO [--range REV_RANGE] [--allow-identity EMAIL ...] [--live]
+Usage: check_repo_facts.py REPO [--range REV_RANGE] [--allow-identity EMAIL ...]
+                           [--next-version X.Y.Z] [--live]
 
 Checks:
   install-owner     README GitHub URLs for this repository use the origin owner
   install-version   README dependency versions exist as tags
   surfaced-readme   no .github/README.md hides the root README (except a .github repository)
   workflow-branch   push-triggered workflows that filter branches include the default branch
+  spi-targets       .spi.yml documentation targets exist in Package.swift
+  version-bump      raising a deployment target or swift-tools-version is a breaking bump:
+                    MINOR during 0.x, MAJOR from 1.0. Checks the pending version (from
+                    --next-version, .github/release.json or VERSION) against the latest
+                    tag, or the latest tag against the one before it
   identity          commit authors and committers in --range are allowed identities
   ai-trailer        commit messages in --range carry no AI attribution trailers
   rendered-readme   (--live) GitHub renders the root README.md
@@ -26,6 +32,8 @@ AI_TOOLS = r"cursor|claude|anthropic|openai|codex|copilot|chatgpt|gemini|devin|a
 TRAILER = re.compile(rf"^(?:co-authored-by|generated-by|made-with|assisted-by)\s*:.*\b(?:{AI_TOOLS})\b", re.I | re.M)
 GENERATED = re.compile(rf"generated (?:with|by) \[?(?:{AI_TOOLS})", re.I)
 SEMVER = re.compile(r"^v?(\d+)\.(\d+)\.(\d+)$")
+TARGET = re.compile(r"\.(?:target|executableTarget|testTarget|macro|plugin|systemLibrary|binaryTarget)\(\s*name:\s*\"([^\"]+)\"")
+PLATFORM = re.compile(r"\.(\w+)\(\s*(?:\.v(\d+(?:_\d+)*)|\"([\d.]+)\")")
 PLATFORM_IDENTITIES = {
     "noreply@github.com",
     "41898282+github-actions[bot]@users.noreply.github.com",
@@ -51,11 +59,61 @@ def default_branch(repo):
     return ref.rsplit("/", 1)[-1] if ref else git(repo, "branch", "--show-current", check=False)
 
 
+def version_tuple(text):
+    return tuple(int(part) for part in re.split(r"[._]", text) if part)
+
+
+def manifest_floor(text):
+    tools = re.search(r"^//\s*swift-tools-version\s*:\s*([\d.]+)", text, re.M)
+    block = re.search(r"platforms:\s*\[(.*?)\]", text, re.S)
+    platforms = {}
+    for m in PLATFORM.finditer(block.group(1) if block else ""):
+        platforms[m.group(1)] = version_tuple(m.group(2) or m.group(3))
+    return (version_tuple(tools.group(1)) if tools else None), platforms
+
+
+def raised_floor(old, new):
+    raised = []
+    if old[0] and new[0] and new[0] > old[0]:
+        raised.append("swift-tools-version " + ".".join(map(str, old[0])) + " -> " + ".".join(map(str, new[0])))
+    for platform, version in sorted(new[1].items()):
+        before = old[1].get(platform)
+        if before is None or version > before:
+            shown = ".".join(map(str, before)) if before else "unset"
+            raised.append(f"{platform} {shown} -> " + ".".join(map(str, version)))
+    return raised
+
+
+def pending_version(repo, explicit):
+    if explicit:
+        return explicit.lstrip("v")
+    config = repo / ".github" / "release.json"
+    if config.exists():
+        data = json.loads(config.read_text())
+        source, pattern = data.get("version_file"), data.get("version_pattern")
+        if source and pattern and (repo / source).exists():
+            m = re.search(pattern, (repo / source).read_text())
+            if m:
+                return m.group(1)
+    version = repo / "VERSION"
+    return version.read_text().strip().lstrip("v") if version.exists() else None
+
+
+def spi_targets(text):
+    names = []
+    for m in re.finditer(r"documentation_targets:\s*\[([^\]]*)\]", text):
+        names += [n.strip().strip("'\"") for n in m.group(1).split(",") if n.strip()]
+    for m in re.finditer(r"documentation_targets:\s*\n((?:[ \t]+-[^\n]*\n?)+)", text):
+        names += [l.split("-", 1)[1].strip().strip("'\"") for l in m.group(1).splitlines() if l.strip().startswith("-")]
+    return names
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("repo")
     parser.add_argument("--range", help="commits to check for identity and trailers, e.g. origin/main..HEAD")
     parser.add_argument("--allow-identity", action="append", default=[], help="allowed author/committer email")
+    parser.add_argument("--next-version", help="version about to be released, when not readable from the repository")
     parser.add_argument("--live", action="store_true", help="also query GitHub with gh")
     args = parser.parse_args()
     repo = pathlib.Path(args.repo)
@@ -79,6 +137,33 @@ def main():
 
     if (repo / ".github" / "README.md").exists() and readme.exists() and name != ".github":
         findings.append(("surfaced-readme", ".github/README.md is rendered instead of the root README.md"))
+
+    manifest = repo / "Package.swift"
+    manifest_text = manifest.read_text() if manifest.exists() else ""
+    spi = repo / ".spi.yml"
+    if spi.exists() and manifest_text:
+        declared = set(TARGET.findall(manifest_text))
+        for target in spi_targets(spi.read_text()):
+            if target not in declared:
+                findings.append(("spi-targets", f".spi.yml documents {target}, which Package.swift does not declare"))
+
+    tag_for = {t.lstrip("v"): t for t in tags if SEMVER.match(t)}
+    ordered = sorted(versions, key=version_tuple)
+    pending = pending_version(repo, args.next_version)
+    base = head = None
+    if ordered and pending and SEMVER.match(pending) and version_tuple(pending) > version_tuple(ordered[-1]):
+        base, new = ordered[-1], pending
+    elif len(ordered) > 1:
+        base, head, new = ordered[-2], ordered[-1], ordered[-1]
+    if base and manifest_text:
+        old_v, new_v = version_tuple(base), version_tuple(new)
+        breaking = new_v[0] > old_v[0] or (new_v[0] == 0 and new_v[1] > old_v[1])
+        old_text = git(repo, "show", f"{tag_for[base]}:Package.swift", check=False)
+        new_text = git(repo, "show", f"{tag_for[head]}:Package.swift", check=False) if head else manifest_text
+        raised = raised_floor(manifest_floor(old_text), manifest_floor(new_text)) if old_text and new_text else []
+        if raised and not breaking:
+            level = "MINOR" if old_v[0] == 0 else "MAJOR"
+            findings.append(("version-bump", f"{base} -> {new} raises {', '.join(raised)}; that needs a {level} bump"))
 
     branch = default_branch(repo)
     for workflow in sorted((repo / ".github" / "workflows").glob("*.y*ml")):
