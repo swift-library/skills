@@ -126,6 +126,8 @@ Read only the files relevant to the selected operation:
   README, and architecture-rule ownership.
 - `rules/docc-placement.md`: target-level DocC catalog placement, generated
   archive boundaries, and DocC build expectations.
+- `rules/docc-landing-identity.md`: package icon and page color on DocC
+  landing pages.
 - `profiles/minimal.md` and `profiles/standard.md`: profile composition.
 - `examples/`: small reference previews and target-tree examples.
 - `references/codex-exec-plans.md`: when deciding whether a task needs a

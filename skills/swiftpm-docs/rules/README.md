@@ -46,6 +46,8 @@ Operational rules:
   canonical state, and historical record.
 - `docc-placement.md`: distinguish target-level DocC source catalogs from
   repository-level documentation and generated `.doccarchive` output.
+- `docc-landing-identity.md`: give each public module's DocC landing page the
+  package icon and page color.
 - `path-casing.md`: preserve canonical documentation path casing during
   scaffold, normalize, audit, and export work.
 - `readme-layering.md`: distinguish root README, documentation README, architecture
