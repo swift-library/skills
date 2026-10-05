@@ -41,6 +41,21 @@ CORRECTION_PATTERNS = (
 
 HISTORY_PARTS = {"decisions", "migrations", "archive", ".agent", ".git"}
 
+AGENT_GUIDE_BUDGET = 32 * 1024
+
+
+def review_rule_groups(text: str) -> int | None:
+    """Count `###` groups in the Code Review Rules section, or None when absent."""
+    lines = text.splitlines()
+    if "## Code Review Rules" not in lines:
+        return None
+    groups = 0
+    for line in lines[lines.index("## Code Review Rules") + 1 :]:
+        if line.startswith("## "):
+            break
+        groups += line.startswith("### ")
+    return groups
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
@@ -81,6 +96,16 @@ def main() -> int:
             if marker not in normalized:
                 failures.append(f"AGENTS.md misses {name}: {marker}")
         agent_text = agent_guide.read_text(encoding="utf-8")
+        groups = review_rule_groups(agent_text)
+        if groups is None:
+            failures.append("AGENTS.md misses the Code Review Rules section")
+        elif groups == 0:
+            failures.append("AGENTS.md Code Review Rules has no ### group")
+        size = len(agent_text.encode("utf-8"))
+        if size > AGENT_GUIDE_BUDGET:
+            failures.append(
+                f"AGENTS.md is {size} bytes; agents read at most {AGENT_GUIDE_BUDGET}"
+            )
         for pattern in CORRECTION_PATTERNS:
             match = pattern.search(agent_text)
             if match is not None:
