@@ -1,36 +1,19 @@
 # Rules
 
-This directory holds the stable invariants enforced by `swiftpm-docs`.
+This directory holds the stable invariants enforced by `swiftpm-docs`. Roles
+map to repository paths in the `SKILL.md` Role Model.
 
-Core role boundaries:
+Role rules, bundled from the `repository-docs` skill (edit them there and
+re-derive):
 
-- `AGENTS.md` is the high-signal agent guide: first-principles edit
-  guardrails, task route, authority boundaries, and concrete boundary checks.
-- `README`-class files are indexes/manuals, not agent route contracts.
-- root `README.md` is the GitHub-facing landing manual and entry index.
-- `Documentation/README.md` is the documentation reading index.
-- `Documentation/Architecture/README.md` is the architecture reading index.
-- `Documentation/Proposals/*` is Proposal space only.
-- `Documentation/Architecture/*` is current Truth.
-- `Documentation/Decisions/*`, `Documentation/Migrations/*`, and
-  `Documentation/Archive/*` are History.
-- `.github/*` is Governance.
-- `Documentation/Reference/*` is Reference.
-- `Sources/<Target>/<Target>.docc/*` is target-level DocC API documentation
-  source.
-- `.doccarchive` directories are generated DocC output unless a repository
-  explicitly governs them as published artifacts.
-- `templates/` in this skill holds the template sources.
-- exported outputs are generated artifacts, not authority.
-- canonical documentation role directory casing is
-  `Documentation/Architecture`, `Documentation/Proposals`,
-  `Documentation/Decisions`, `Documentation/Migrations`,
-  `Documentation/Archive`, and `Documentation/Reference`.
-- non-index Markdown documents under canonical `Documentation/` role directories
-  use PascalCase file stems, such as `Package.md`, `Modules.md`,
-  `PackageDocsLayout.md`, or `MigrationNotes.md`.
+- `route-vs-index.md`: document roles and authority, including agent route,
+  edit guardrails, review rules, and tool entry files.
+- `readme-layering.md`: root README, directory and documentation indexes, and
+  where detailed content belongs.
+- `code-review-rules.md`: the `## Code Review Rules` section and the files
+  that carry it to a specific reviewer.
 
-Operational rules:
+Swift package rules:
 
 - `architecture-description-primacy.md`: keep `Documentation/Architecture/*` as the
   primary current architecture description.
@@ -48,12 +31,8 @@ Operational rules:
   repository-level documentation and generated `.doccarchive` output.
 - `docc-landing-identity.md`: give each public module's DocC landing page the
   package icon and page color.
-- `path-casing.md`: preserve canonical documentation path casing during
-  scaffold, normalize, audit, and export work.
-- `readme-layering.md`: distinguish root README, documentation README, architecture
-  README, and architecture-rule ownership.
-- `route-vs-index.md`: classify agent guide content versus index and
-  placement guidance.
+- `path-casing.md`: canonical `Documentation/` role directory casing and
+  PascalCase document names.
 - `governance-vs-documentation-placement.md`: classify GitHub-facing governance
   files, root governance documentation, and internal documentation architecture.
 

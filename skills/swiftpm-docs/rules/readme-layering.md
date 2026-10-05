@@ -1,92 +1,88 @@
+<!-- Derived from repository-docs rules/readme-layering.md. Edit the source and run its scripts/derive_rules.py. -->
 # README Layering
 
-Use this rule when deciding how much responsibility a `README` file should
-carry.
-
-## Principle
-
-`README` files are entry points, but not all entry points have the same
-audience.
-
-- Root `README.md` is the GitHub-facing landing manual and entry index.
-- `Documentation/README.md` is the documentation reading index.
-- `Documentation/Architecture/README.md` is the architecture reading index.
-- `Documentation/Architecture/*.md` owns current architecture rules and descriptions.
-- `Sources/<Target>/<Target>.docc/` owns target-level API documentation for
-  Swift modules when DocC is present.
-
-GitHub recognizes README files in `.github`, root, and `docs` directories. For
-ordinary Swift package repositories, default to the root `README.md` as the
-surfaced repository landing page. Use `.github/README.md` only for special
-GitHub profile or default community-health repositories, or when the target
-explicitly wants that file to be surfaced.
+Use this rule for repository landing manuals, directory indexes, and links to
+deeper documentation. Choose layers by audience and purpose. Preserve the
+target's established paths, casing, and intentionally surfaced entry files.
 
 ## Root README
 
-Root `README.md` should answer:
+A root README should help the intended reader understand and enter the
+repository:
 
-- what this repository is
-- what it is for
-- how to install, run, or enter the project
-- the common happy-path usage or commands for the primary audience
-- the most important output, artifacts, or integration points
-- where to read next
+- identity, audience, purpose, and scope;
+- what capabilities or artifacts it provides and their supported limits;
+- requirements, installation/setup, and a representative happy path;
+- common commands, examples, outputs, or integration points;
+- the repository and documentation index, with ownership where helpful;
+- links to deeper development, architecture, reference, and governance docs.
 
-It may link to target-level DocC catalogs, but should not duplicate
-symbol-level API reference content.
+Adapt these questions to the repository. A workspace needs navigation and
+operation entry points; a skill collection needs discovery, installation, and
+use; an app, library, plugin, or tool needs its supported entry surface.
+Do not invent an installation flow for a repository that does not have one.
 
-For a user-facing package, CLI, tool, app, or library, do not reduce root
-`README.md` to a documentation-tree directory. Keep the install/setup/manual
-surface that a GitHub reader needs to try or evaluate the project. Concise
-means summarize and link out, not delete common usage.
+Keep common usage, concise development commands, and public safety guidance.
+A short architecture overview is useful when it helps readers understand the
+product or choose an integration. Root README can summarize and link to the
+current architecture without becoming its exhaustive specification.
 
-Root `README.md` may link to architecture, governance, and documentation
-indexes, but should not restate detailed architecture rules or internal
-ownership models. Full option tables, long troubleshooting catalogs,
-architecture truth, and symbol-level API reference should move to
-`Documentation/Reference/*`, `Documentation/Architecture/*`, or target-level
-DocC as appropriate, with a short summary retained in the root README.
+## Directory And Documentation Indexes
 
-## Documentation README
+A directory README explains the local area:
 
-`Documentation/README.md` should answer:
+- what it contains and the area's scope;
+- where its components or documents live;
+- which owner or document carries each concern;
+- where a reader should go next.
 
-- what documentation areas exist
-- where each documentation category belongs
-- which subtree to read for deeper context
+A documentation index explains available document categories. An architecture
+index maps concerns to named current architecture documents. A reference index
+maps commands, APIs, schemas, and deeper manuals to their owners.
 
-It may point readers to DocC catalogs under `Sources/<Target>/`, but DocC
-catalogs are not part of the `Documentation/` tree by default.
+Put the actual architecture and reference content in named documents. A
+directory README may include necessary local usage; an index-only document
+should not acquire the agent's task workflow or stop conditions.
 
-It is the reading index for documentation, not the public landing page.
+## Detailed Content And Other Owners
 
-## Architecture README
+| Content | Destination |
+| --- | --- |
+| Full module model, dependency direction, architecture contracts and rationale | Current architecture documents |
+| Exhaustive CLI flags, output schemas, long examples and troubleshooting catalogs | Reference/manual documents |
+| Authored or generated API reference | The project's established API documentation owner |
+| Contribution process, security reporting, release policy | Existing governance owners |
+| Agent edit route, required checks by change type, edit escalation | AGENTS.md |
+| Future design options | Existing proposal owner |
+| Accepted decisions, migrations, source attribution, release facts | Relevant durable history/provenance owner |
+| Local plans, raw run evidence and authoring iterations | Declared task-state owner |
 
-`Documentation/Architecture/README.md` should answer:
+Keep a common-case summary and a link in README when extracting detailed
+manual content. Generic layering does not choose a language-specific API
+generator, build workflow, naming convention, or new architecture.
 
-- what architecture documents exist
-- which file owns each current architecture concern
-- where to read current truth
+## Missing Or Multiple Entry Files
 
-It is an index for architecture files, not the architecture description itself.
+Report missing files in an audit. During authorized normalization, create a
+minimal README when real manual/index content needs an owner; create AGENTS
+when actual agent routes or guardrails need one. Missing files alone do not
+require boilerplate creation.
 
-## Normalization Guidance
+When several README files exist, establish their audience and published role
+before merging or removing them. Profile, community-health, package, and
+directory entry points can have distinct purposes. Preserve intentional
+surfaces and repair a genuine duplicated or competing landing manual with
+evidence. File location alone does not justify deletion.
 
-- Move public overview, install/setup instructions, quick start, common usage,
-  and representative examples to root `README.md`.
-- Remove `.github/README.md` from ordinary repositories when it collides with
-  the root landing manual.
-- Move documentation-tree navigation to `Documentation/README.md`.
-- Move architecture-file navigation to `Documentation/Architecture/README.md`.
-- Move current architecture rules into named files under
-  `Documentation/Architecture/`.
-- Preserve canonical documentation path casing such as
-  `Documentation/Architecture/` and `Documentation/Reference/` during tree
-  normalization, and use PascalCase Markdown document names for non-README
-  documentation in those role directories.
-- Move exhaustive CLI option tables, output contracts, and troubleshooting
-  catalogs to `Documentation/Reference/*`, while keeping a common-case summary
-  in root `README.md`.
-- Keep module API DocC catalogs colocated with SwiftPM targets, normally under
-  `Sources/<Target>/<Target>.docc/`.
-- Prefer a short link over duplicating architecture rules in root `README.md`.
+## Verification
+
+- Confirm relocated content remains reachable from the appropriate entry.
+- Preserve common installation and usage commands, supported limits, safety,
+  attribution, and useful architecture summaries.
+- Check links using the target's actual file locations and anchors.
+- Check documented command existence and relevant manifest/configuration
+  facts; do not run live operations merely to verify documentation.
+- Compare current statements across manuals, routes, and architecture owners.
+  Resolve contradictions from evidence or report the specific uncertainty.
+- For templates, inspect their emitted content and links using the target's
+  conventions. Template variables should supply target-dependent values.

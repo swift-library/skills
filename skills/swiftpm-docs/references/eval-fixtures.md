@@ -91,6 +91,50 @@ Owner notes:
   template. Swift implementation, tests, configuration, schemas, and generated
   source require their applicable implementation owner.
 
+## package-review-rules
+
+Target behavior: give a Swift package's agent guide review rules a reviewer
+can apply, written against the package's own documentation paths.
+
+Input prompt: "Our pull requests are reviewed automatically. Normalize the
+agent guide for this package."
+
+Context and files:
+
+- `AGENTS.md` has the canonical contract but no `## Code Review Rules`.
+- `Documentation/Architecture/VersioningAndRelease.md` defines the version
+  bump and the change record; DocC catalogs live under
+  `Sources/<Target>/<Target>.docc/`.
+- `Scripts/check` already runs formatting and a forbidden-path scan.
+
+Expected output:
+
+- `AGENTS.md` gains `## Code Review Rules` with `###` groups for compatibility
+  and versioning, claims, public documentation, and tests, each naming the
+  behavior, the reason, and the safe path.
+- The versioning rule routes to `VersioningAndRelease.md` instead of copying
+  its bump rules.
+- Formatting and forbidden paths are left to `Scripts/check`.
+- No `CLAUDE.md` or `REVIEW.md` is created.
+
+Forbidden behavior:
+
+- Review rules that restate `Scripts/check`, copy the versioning policy, or
+  name functions likely to move.
+
+Acceptance checks:
+
+- `scripts/validate_canonical_target.py` passes, including the review-rule
+  section and size budget.
+
+Evidence sources:
+
+- Target `AGENTS.md` diff and validator output.
+
+Owner notes:
+
+- The review-rule shape comes from the bundled `rules/code-review-rules.md`.
+
 ## Version and Release Scaffold Cases
 
 Run both minimal and standard profile export checks. Review filled output against

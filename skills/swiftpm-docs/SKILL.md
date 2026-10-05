@@ -89,8 +89,17 @@ project's release owner.
 
 ## Role Model
 
-- Agent Guide: `AGENTS.md`
-- Index: `README`-class files
+Each role from `rules/route-vs-index.md` maps to one location in a Swift
+package repository:
+
+- Agent Guide (agent route and edit guardrails): `AGENTS.md`
+- Review Rules: the `## Code Review Rules` section of the root `AGENTS.md`,
+  and of a nested `AGENTS.md` for one area
+- Tool Entry Files: none by default; a `CLAUDE.md` or `REVIEW.md` only when a
+  tool in use needs one, importing or derived from `AGENTS.md`
+- Reader Manual: root `README.md`, the GitHub-facing landing manual
+- Index: `Documentation/README.md`, `Documentation/Architecture/README.md`,
+  and directory `README.md` files
 - Proposal: `Documentation/Proposals/*`
 - Truth: `Documentation/Architecture/*`
 - History: `Documentation/Decisions/*`, `Documentation/Migrations/*`,
@@ -101,12 +110,16 @@ project's release owner.
 - Generated DocC Output: `.doccarchive` directories
 - Agent Temporary State: `.agent/*`, especially `.agent/PLANS.md`
 
+Role directories use the casing in `rules/path-casing.md`.
+
 ## Reference Files To Consult
 
 Read only the files relevant to the selected operation:
 
-- `rules/route-vs-index.md`: agent guide versus index
-  classification, including product-state documentation boundaries.
+- `rules/route-vs-index.md`: document roles and authority, including agent
+  route, edit guardrails, review rules, and tool entry files.
+- `rules/code-review-rules.md`: the `## Code Review Rules` section and the
+  files that carry it to a specific reviewer.
 - `rules/proposal-vs-truth-vs-history.md`: proposal, truth, and history
   classification.
 - `rules/architecture-description-primacy.md`: current architecture
@@ -122,8 +135,12 @@ Read only the files relevant to the selected operation:
   placement.
 - `rules/path-casing.md`: canonical documentation path casing for scaffold,
   normalize, and export work.
-- `rules/readme-layering.md`: root README, documentation README, architecture
-  README, and architecture-rule ownership.
+- `rules/readme-layering.md`: root README, directory and documentation
+  indexes, and where detailed content belongs.
+
+`route-vs-index.md`, `readme-layering.md`, and `code-review-rules.md` are
+bundled copies derived from the `repository-docs` skill; edit them there and
+re-derive.
 - `rules/docc-placement.md`: target-level DocC catalog placement, generated
   archive boundaries, and DocC build expectations.
 - `rules/docc-landing-identity.md`: package icon and page color on DocC
@@ -135,20 +152,27 @@ Read only the files relevant to the selected operation:
 - `scripts/validate_template_exports.py`: materialize the `minimal` and
   `standard` output maps and verify target `AGENTS.md` invariants.
 - `scripts/validate_canonical_target.py`: verify an edited target `AGENTS.md`
-  carries the complete contract and flag correction-shaped prose in active
-  documentation roles and DocC source.
+  carries the complete contract and Code Review Rules within the 32 KiB
+  budget, and flag correction-shaped prose in active documentation roles and
+  DocC source.
 
 External foundations:
 [ISO/IEC/IEEE 42010](https://www.iso-architecture.org/ieee-1471/ads/),
 [arc42](https://arc42.org/documentation/), [MADR/ADR](https://adr.github.io/madr/),
 and [Diataxis](https://diataxis.fr/) inform the skill's semantics and boundary
-rules. They do not directly dictate the repository tree.
+rules. They do not directly dictate the repository tree. Agent and reviewer
+file conventions follow the tools' own documentation: OpenAI's
+[AGENTS.md guide](https://developers.openai.com/codex/guides/agents-md) and
+[Codex code review](https://learn.chatgpt.com/docs/third-party/github), and
+Anthropic's [Claude Code memory](https://code.claude.com/docs/en/memory) and
+[Claude Code Review](https://code.claude.com/docs/en/code-review).
 
 ## Decision Rules
 
 - Keep Agent Guide and README entry roles separate. `AGENTS.md`
-  carries first-principles work, task route, authority boundaries, and boundary
-  guardrails; it does not explain the tree or serve as a user manual. `README`
+  carries first-principles work, task route, authority boundaries, boundary
+  guardrails, and Code Review Rules; it does not explain the tree or serve as
+  a user manual. `README`
   files explain public entry points, documentation indexes, and placement; they
   do not route agent work.
 - Keep root `README.md` as the GitHub-facing landing manual and entry index.
@@ -181,6 +205,10 @@ rules. They do not directly dictate the repository tree.
   Preserve those artifacts unless separate evidence changes their facts. If
   they are already correct and the task does not change their facts, leave
   their contents unchanged rather than polishing or restating them.
+- Keep Code Review Rules to judgments a reviewer must make about this
+  package, each with its reason and safe path. A deterministic check, such as
+  formatting, lint, forbidden paths, or availability, belongs in
+  `Scripts/check` or CI, not in the review rules.
 - When canonicalizing an existing `AGENTS.md`, replace correction-shaped
   feature guidance with the self-contained canonical-artifact contract carried
   by `templates/AGENTS.md.tpl`; do not treat a feature bullet such as
@@ -283,7 +311,8 @@ rules. They do not directly dictate the repository tree.
   internals.
 - `python3 scripts/validate_template_exports.py` materializes both profiles and
   verifies that each exported `AGENTS.md` carries the complete path-independent
-  canonical-artifact contract.
+  canonical-artifact contract and a Code Review Rules section with `###`
+  groups.
 - After canonicalizing an existing repository, run
   `python3 scripts/validate_canonical_target.py <repository>`. Use
   `--allow-path` only for a reviewed active file whose negative wording is
