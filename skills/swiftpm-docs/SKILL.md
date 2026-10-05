@@ -1,6 +1,6 @@
 ---
 name: swiftpm-docs
-description: Scaffold, audit, normalize, and export Swift package repository documentation structure. Use for repository documentation baselines, documentation drift audits, Route/Index separation, Documentation/Architecture current truth, DocC target catalog placement, Documentation/Proposals design-in-progress, Documentation/Decisions/Migrations/Archive history, Documentation/Reference placement, GitHub/community-health documentation, profile-based template output, and .agent/PLANS.md execution-state aids for large documentation migrations. Produces documentation findings, file edits, or target-repository template files. Do not use for general Swift coding, feature specs, product roadmaps, UI work, CI/release automation, or generic task orchestration.
+description: Scaffold, audit, normalize, and export Swift package repository documentation structure. Use for repository documentation baselines, documentation drift audits, Route/Index separation, AGENTS.md Code Review Rules, Documentation/Architecture current truth, DocC target catalog placement, Documentation/Proposals design-in-progress, Documentation/Decisions/Migrations/Archive history, Documentation/Reference placement, GitHub/community-health documentation, profile-based template output, and .agent/PLANS.md execution-state aids for large documentation migrations. Produces documentation findings, file edits, or target-repository template files. Do not use for general Swift coding, feature specs, product roadmaps, UI work, CI/release automation, or generic task orchestration.
 ---
 
 # SwiftPM Documentation
@@ -137,10 +137,6 @@ Read only the files relevant to the selected operation:
   normalize, and export work.
 - `rules/readme-layering.md`: root README, directory and documentation
   indexes, and where detailed content belongs.
-
-`route-vs-index.md`, `readme-layering.md`, and `code-review-rules.md` are
-bundled copies derived from the `repository-docs` skill; edit them there and
-re-derive.
 - `rules/docc-placement.md`: target-level DocC catalog placement, generated
   archive boundaries, and DocC build expectations.
 - `rules/docc-landing-identity.md`: package icon and page color on DocC
@@ -155,6 +151,10 @@ re-derive.
   carries the complete contract and Code Review Rules within the 32 KiB
   budget, and flag correction-shaped prose in active documentation roles and
   DocC source.
+
+`route-vs-index.md`, `readme-layering.md`, and `code-review-rules.md` are
+bundled copies derived from the `repository-docs` skill; edit them there and
+re-derive.
 
 External foundations:
 [ISO/IEC/IEEE 42010](https://www.iso-architecture.org/ieee-1471/ads/),
