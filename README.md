@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License: MIT"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0"></a>
 </p>
 
 [Overview](#overview) · [Install](#install) · [Skills](#skills) ·
@@ -321,4 +321,7 @@ Participation follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
-The skills are available under the MIT License. See [LICENSE](LICENSE).
+The skills are licensed under the Apache License 2.0 with the Swift Runtime
+Library Exception, so code copied from a skill into an app needs no
+attribution. See [LICENSE](LICENSE) and [NOTICE](NOTICE). Material from other
+authors keeps its own license, noted in the skill that includes it.
