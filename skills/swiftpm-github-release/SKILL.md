@@ -141,8 +141,10 @@ attachments. The scripts live in this skill's `scripts/` directory:
   CI-built evidence or files that pass the scan.
 - `check_repo_facts.py <repo> --range <published>..HEAD --allow-identity
   <maintainer email> --live` checks commit identities, AI attribution
-  trailers, install URLs and versions, workflow branches, and the README that
-  GitHub renders.
+  trailers, install URLs and versions, workflow branches, `.spi.yml`
+  documentation targets, deployment-target or tools-version raises hidden in a
+  non-breaking bump, and the README that GitHub renders. Pass `--next-version`
+  when the pending version is not in `.github/release.json` or `VERSION`.
 
 Pass `--local-name` for other machine or account names and `--deny-file` for
 internal names the maintainer lists. Then read shipped docs against the

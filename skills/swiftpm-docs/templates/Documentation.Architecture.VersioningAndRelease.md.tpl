@@ -6,6 +6,8 @@ This document owns the current version and release rules for <repo-name>.
 Operational command details belong in <existing release reference, or not
 established>. If an existing document already owns these rules, complete that
 document and route readers to it instead of maintaining two normative copies.
+<If the owning organization publishes a versioning standard, link it here and
+record only how this project applies it.>
 
 ## Components and Version Authority
 
