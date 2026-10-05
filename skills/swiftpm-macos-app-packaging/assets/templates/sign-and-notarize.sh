@@ -17,7 +17,7 @@ done
 ARCHES="${ARCHES_VALUE}" "$ROOT/Scripts/package_app.sh" release
 
 ENTITLEMENTS_DIR="$ROOT/.build/entitlements"
-APP_ENTITLEMENTS="${APP_ENTITLEMENTS:-${ENTITLEMENTS:-${ENTITLEMENTS_DIR}/${APP_NAME}.entitlements}}"
+APP_ENTITLEMENTS="${APP_ENTITLEMENTS:-${ENTITLEMENTS_DIR}/${APP_NAME}.entitlements}"
 
 codesign --force --timestamp --options runtime --sign "$APP_IDENTITY" \
   --entitlements "$APP_ENTITLEMENTS" \

@@ -48,13 +48,13 @@ for await (username, email) in combineLatest(usernameStream, emailStream) {
     validateForm(username: username, email: email)
 }
 
-// 5. Zip paired operations
-for await (image, metadata) in zip(imageStream, metadataStream) {
+// 5. Zip paired operations from throwing streams
+for try await (image, metadata) in zip(imageStream, metadataStream) {
     await cache(image: image, metadata: metadata)
 }
 ```
 
-`merge`, `combineLatest`, `zip`, and `chain` are free functions that take two or three sequences, not methods on `AsyncSequence`.
+`merge`, `combineLatest`, `zip`, and `chain` are free functions that take two or three sequences, not methods on `AsyncSequence`. They rethrow: when a base sequence can throw, iterate with `for try await`, and an error from any base sequence ends the iteration instead of being ignored.
 
 > **See**: [AsyncAlgorithms on GitHub](https://github.com/apple/swift-async-algorithms)
 
@@ -408,7 +408,7 @@ struct ImageLoader {
 }
 ```
 
-**Behavior**: Emits tuple when all sequences emit. Maintains order. Finishes when shortest sequence finishes.
+**Behavior**: Emits tuple when all sequences emit. Maintains order. Finishes when shortest sequence finishes. An error from either base sequence is rethrown and ends the zipped sequence.
 
 ---
 
@@ -422,30 +422,35 @@ Concatenate sequences sequentially. **Stable operator ✅** A free function for 
 import AsyncAlgorithms
 
 struct ArticlePaginator {
-    func loadAllArticles() -> AsyncStream<[Article]> {
-        AsyncStream { continuation in
-            Task {
-                var page = 1
-                var hasMore = true
-                while hasMore {
-                    let articles = try await fetchPage(page: page)
-                    continuation.yield(articles)
-                    hasMore = articles.count == 20
-                    page += 1
+    func loadAllArticles() -> AsyncThrowingStream<[Article], Error> {
+        AsyncThrowingStream { continuation in
+            let task = Task {
+                do {
+                    var page = 1
+                    var hasMore = true
+                    while hasMore {
+                        let articles = try await fetchPage(page: page)
+                        continuation.yield(articles)
+                        hasMore = articles.count == 20
+                        page += 1
+                    }
+                    continuation.finish()
+                } catch {
+                    continuation.finish(throwing: error)
                 }
-                continuation.finish()
             }
+            continuation.onTermination = { _ in task.cancel() }
         }
     }
 }
 
-// Usage: Chain cache + network
-for await articles in chain(loadFromCacheStream(), loadFromNetworkStream()) {
+// Usage: cached pages first, then network pages
+for try await articles in chain(loadFromCacheStream(), loadFromNetworkStream()) {
     display(articles)
 }
 ```
 
-**Behavior**: Emits all values from first sequence before starting second.
+**Behavior**: Emits all values from first sequence before starting second. An error from either base sequence is rethrown and ends the chained sequence, so the network pages never start if the cache stream fails.
 
 ---
 
