@@ -2,7 +2,7 @@
 
 > Scope: Maps Apple-platform client security patterns to OWASP Mobile Top 10 (2024), MASVS, and MASTG controls for audit and remediation workflows.
 
-**Most AI code generators still cite the 2016 OWASP Mobile Top 10 numbering — "M2: Insecure Data Storage," "M5: Insufficient Cryptography" — which was completely replaced in 2024.** This reference maps current iOS security practices to the OWASP Mobile Top 10 (2024), MASVS v2.1.0, and MASTG test cases for the 2024–2026 compliance window. It covers the four categories most relevant to Keychain & Security work: M1 (Improper Credential Usage), M3 (Insecure Authentication/Authorization), M9 (Insecure Data Storage), and M10 (Insufficient Cryptography). Cybernews analysis of 156,080 iOS apps (March 2025) found 71% leak at least one hardcoded secret — CISA/FBI jointly classified hardcoded credentials as a "dangerous" bad practice (CWE-798) in January 2025.
+**Older guidance still uses the 2016 OWASP Mobile Top 10 numbering — "M2: Insecure Data Storage," "M5: Insufficient Cryptography" — which the 2024 list replaced.** This reference maps current iOS security practices to the OWASP Mobile Top 10 (2024), MASVS v2.1.0, and MASTG test cases for the 2024–2026 compliance window. It covers the four categories most relevant to Keychain & Security work: M1 (Improper Credential Usage), M3 (Insecure Authentication/Authorization), M9 (Insecure Data Storage), and M10 (Insufficient Cryptography). Hardcoded credentials (CWE-798) are listed as a dangerous practice in CISA and FBI's Product Security Bad Practices guidance.
 
 ---
 
@@ -114,7 +114,7 @@ func storeCredential(account: String, secret: Data, service: String) throws {
 // Extractable via iTunes backup, iMazing, or objection
 UserDefaults.standard.set(apiToken, forKey: "auth_token")
 
-// ❌ WRONG — Hardcoded API key in source (found in 71% of iOS apps)
+// ❌ WRONG — Hardcoded API key in source
 let stripeKey = "sk_live_<redacted>"
 
 // ❌ WRONG — Secret in Info.plist (plaintext in IPA archive)

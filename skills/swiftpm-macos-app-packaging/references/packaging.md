@@ -88,7 +88,6 @@ Set them in the shell, `version.env`, or a project-local wrapper script.
   `.build/entitlements/<AppName>.entitlements`.
 - Set `APP_ENTITLEMENTS=App.entitlements` when the app needs a checked-in or
   project-local entitlements plist.
-- `ENTITLEMENTS` is accepted only as a compatibility alias.
 - Keep the entitlements plist minimal. Do not add sandbox, network, file,
   automation, or hardened-runtime exceptions unless the target app requires
   them.

@@ -1,6 +1,6 @@
 # Integration Testing
 
-Integration tests verify module interactions - the 15% of your testing pyramid.
+Integration tests verify module interactions, the middle layer of the testing pyramid.
 
 ## When to Write Integration Tests
 
@@ -152,7 +152,7 @@ swift test --filter integration
 - Use real network calls
 - Use real databases
 - Test third-party libraries
-- Write too many (15% of pyramid)
+- Write more of them than unit tests
 
 ## Test Organization
 

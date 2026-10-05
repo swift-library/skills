@@ -300,7 +300,7 @@ These are **hardware-backed**, not software-only. Apple confirmed SE support exp
 
 **Quantum-secure TLS by default:** `URLSession` and `Network.framework` automatically upgrade to quantum-secure TLS 1.3 using X-Wing (ML-KEM768 + X25519) in iOS 26. System services including CloudKit, Push Notifications, and Private Relay already use it. For most developers, no code changes are needed.
 
-**Custom end-to-end encryption:** Apple recommends hybrid constructions that combine post-quantum and classical algorithms. The `XWingMLKEM768X25519` type provides a hybrid KEM ciphersuite. For application-level encryption, use `SecureEnclave.MLKEM768.PrivateKey` to encapsulate/decapsulate shared secrets within the hardware boundary.
+**Custom end-to-end encryption:** prefer hybrid constructions that combine post-quantum and classical algorithms, as Apple's WWDC25 session "Get ahead with quantum-secure cryptography" describes. The `XWingMLKEM768X25519` type provides a hybrid KEM ciphersuite. For application-level encryption, use `SecureEnclave.MLKEM768.PrivateKey` to encapsulate/decapsulate shared secrets within the hardware boundary.
 
 **API evolution timeline:**
 

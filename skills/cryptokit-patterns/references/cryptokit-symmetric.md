@@ -221,13 +221,7 @@ The API mirrors AES-GCM exactly — same `seal`/`open` methods, same `SealedBox`
 
 ### Performance: AES-GCM vs ChaChaPoly on Apple Hardware
 
-On all Apple Silicon (A-series since A7, all M-series), **AES-GCM is significantly faster** due to dedicated hardware AES instructions:
-
-| Metric              | AES-256-GCM                                                   | ChaChaPoly  | Source                  |
-| ------------------- | ------------------------------------------------------------- | ----------- | ----------------------- |
-| Throughput (M2 Pro) | ~3–4 GB/s                                                     | ~1.5–2 GB/s | OpenSSL benchmarks      |
-| Relative speed      | 134%–236% faster                                              | Baseline    | Ashvardanian (2025)     |
-| Apple internal use  | Keychain encryption, file Data Protection, Watch↔iPhone comms | —           | Platform Security Guide |
+On Apple silicon, **AES-GCM is usually faster** than ChaChaPoly because the CPU has dedicated AES instructions. Exact throughput depends on the chip and message size, so measure with your own payloads when performance matters. Apple's own platform uses AES for Keychain encryption and file Data Protection, as described in the Apple Platform Security guide.
 
 **Default to AES-GCM on Apple hardware.** Choose ChaChaPoly when: targeting platforms without hardware AES acceleration, requiring guaranteed constant-time behavior independent of hardware, or interoperating with ChaCha20-based protocols (WireGuard, some TLS configurations).
 
@@ -330,7 +324,7 @@ HKDF follows RFC 5869 and supports one-shot `deriveKey()` and two-phase `extract
 let key = SymmetricKey(data: Data(base64Encoded: "c2VjcmV0S2V5MTIzNDU2Nzg5MDEyMzQ1Ng==")!)
 ```
 
-A Zimperium 2025 study found 48% of mobile apps contain hardcoded secrets. iOS binaries can be decrypted and analyzed with tools like Hopper or IDA Pro. **Store keys in the Keychain** with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`, derive them at runtime from user credentials, or fetch from a secure server.
+Hardcoded secrets are a recurring finding in mobile app security scans. iOS binaries can be decrypted and analyzed with tools like Hopper or IDA Pro. **Store keys in the Keychain** with `kSecAttrAccessibleWhenUnlockedThisDeviceOnly`, derive them at runtime from user credentials, or fetch from a secure server.
 
 **SymmetricKey memory behavior:** Keys live in regular process memory (not the Secure Enclave — only asymmetric `SecureEnclave.P256` keys are hardware-backed). CryptoKit automatically overwrites key material during deallocation. For persistent storage, serialize to the Keychain — never UserDefaults or files.
 

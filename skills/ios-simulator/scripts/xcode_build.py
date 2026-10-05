@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import sys
 import time
 from pathlib import Path
 from typing import Any
@@ -74,12 +73,20 @@ def resolve_scheme(args: argparse.Namespace) -> str:
     return schemes[0]
 
 
-def destination(args: argparse.Namespace) -> str:
+def destination(args: argparse.Namespace, action: str) -> str:
     if args.destination:
-        return args.destination
-    if args.simulator:
-        return f"platform=iOS Simulator,name={args.simulator}"
-    return "generic/platform=iOS Simulator"
+        chosen = args.destination
+    elif args.simulator:
+        chosen = f"platform=iOS Simulator,name={args.simulator}"
+    else:
+        chosen = "generic/platform=iOS Simulator"
+    if action == "test" and chosen.startswith("generic/"):
+        fail(
+            "Testing needs a concrete simulator. Pass --simulator NAME or "
+            "--destination 'platform=iOS Simulator,id=UDID'.",
+            json_output=args.json,
+        )
+    return chosen
 
 
 def result_id(action: str) -> str:
@@ -129,6 +136,7 @@ def result_entry(identifier: str, *, json_output: bool = False) -> dict[str, Any
 def cmd_build_or_test(args: argparse.Namespace) -> None:
     require_tool("xcodebuild", json_output=args.json)
     action = "test" if args.command == "test" or args.test else "build"
+    target = destination(args, action)
     scheme = resolve_scheme(args)
     rid = result_id(action)
     result_path = ensure_parent(args.result_bundle or RESULT_DIR / f"{rid}.xcresult")
@@ -139,7 +147,7 @@ def cmd_build_or_test(args: argparse.Namespace) -> None:
         cmd.append("clean")
     cmd.append(action)
     cmd.extend(project_args(args))
-    cmd.extend(["-scheme", scheme, "-configuration", args.configuration, "-destination", destination(args), "-resultBundlePath", str(result_path)])
+    cmd.extend(["-scheme", scheme, "-configuration", args.configuration, "-destination", target, "-resultBundlePath", str(result_path)])
     if args.suite:
         cmd.extend(["-only-testing", args.suite])
     for only_testing in args.only_testing or []:
@@ -158,7 +166,7 @@ def cmd_build_or_test(args: argparse.Namespace) -> None:
         "id": rid,
         "action": action,
         "scheme": scheme,
-        "destination": destination(args),
+        "destination": target,
         "returncode": result.returncode,
         "errors": errors,
         "warnings": warnings,
@@ -317,24 +325,6 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
-    if len(sys.argv) > 1:
-        legacy = sys.argv[1:]
-        if "--list-xcresults" in legacy:
-            sys.argv = [sys.argv[0], "list-results"] + [arg for arg in legacy if arg != "--list-xcresults"]
-        elif "--get-errors" in legacy:
-            index = legacy.index("--get-errors")
-            sys.argv = [sys.argv[0], "show-result", "--id", legacy[index + 1], "--errors"] + legacy[:index] + legacy[index + 2 :]
-        elif "--get-warnings" in legacy:
-            index = legacy.index("--get-warnings")
-            sys.argv = [sys.argv[0], "show-result", "--id", legacy[index + 1], "--warnings"] + legacy[:index] + legacy[index + 2 :]
-        elif "--get-log" in legacy:
-            index = legacy.index("--get-log")
-            sys.argv = [sys.argv[0], "show-result", "--id", legacy[index + 1], "--log"] + legacy[:index] + legacy[index + 2 :]
-        elif "--get-all" in legacy:
-            index = legacy.index("--get-all")
-            sys.argv = [sys.argv[0], "show-result", "--id", legacy[index + 1], "--all"] + legacy[:index] + legacy[index + 2 :]
-        elif sys.argv[1].startswith("-"):
-            sys.argv.insert(1, "build")
     parser = build_parser()
     args = parser.parse_args()
     args.func(args)

@@ -123,7 +123,7 @@ This confusion is the single most common keychain mistake for cryptographic keys
 
 ### SecKeyCreateRandomKey — The Preferred API
 
-`SecKeyCreateRandomKey` (iOS 10+, macOS 10.12+) generates keys atomically, returns a `SecKey` reference directly, auto-computes `kSecAttrApplicationLabel`, and supports Secure Enclave generation via `kSecAttrTokenID: kSecAttrTokenIDSecureEnclave`. Apple recommends storing **only the private key** and deriving the public key via `SecKeyCopyPublicKey()`.
+`SecKeyCreateRandomKey` (iOS 10+, macOS 10.12+) generates keys atomically, returns a `SecKey` reference directly, auto-computes `kSecAttrApplicationLabel`, and supports Secure Enclave generation via `kSecAttrTokenID: kSecAttrTokenIDSecureEnclave`. Store **only the private key** and derive the public key with `SecKeyCopyPublicKey()` when you need it, so the two cannot drift apart.
 
 ```swift
 // ✅ EC key creation with SecKeyCreateRandomKey

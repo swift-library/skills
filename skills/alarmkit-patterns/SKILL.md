@@ -59,6 +59,11 @@ and Live Activity presentation wiring.
 - Do not schedule alarms without handling denied authorization and invalid
   scheduling errors.
 - Do not assume an alarm missing from updates is still scheduled.
+- Build alert presentations with
+  `AlarmPresentation.Alert(title:secondaryButton:secondaryButtonBehavior:)`.
+  Initializers that take `stopButton:` are deprecated as of iOS 26.1; the
+  system provides the stop control. Apps that deploy to iOS 26.0 keep the
+  older initializer behind `if #available(iOS 26.1, *)`.
 - Do not put sensitive user content into alarm metadata or logs.
 - Treat Dynamic Island, Lock Screen, StandBy, paired watch forwarding, widget
   extension needs, and OS availability as current Apple documentation and SDK

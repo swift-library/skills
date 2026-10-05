@@ -8,7 +8,7 @@
 
 ## Why AI Generates Insecure iOS Code
 
-AI assistants optimize for functional correctness, not security — reproducing the most common patterns from training data, which are overwhelmingly insecure-by-default. Veracode's 2025 analysis: 45% of AI-generated code fails security tests. Cybernews: 815,000+ hardcoded secrets across 156,000 iOS apps (71% leaking ≥1 credential). Stanford: developers using AI write less secure code yet feel more confident.
+AI assistants optimize for functional correctness, not security, and tend to reproduce the most common patterns in their training data, many of which are insecure by default. Hardcoded secrets and plaintext credential storage remain recurring findings in scans of shipped iOS apps, so review generated security code line by line instead of trusting that it compiles and runs.
 
 Apple's security primitives (Keychain, CryptoKit, Secure Enclave) are excellent but AI consistently bypasses them. CISA/FBI classified hardcoded credentials as elevating "risk to national security" in their January 2025 Bad Practices v2.0 (CWE-798).
 

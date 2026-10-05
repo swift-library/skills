@@ -736,9 +736,9 @@ func testKeychainWritePerformance() {
 
 ### Mutation Testing
 
-Mutation testing introduces deliberate bugs (flipping `==` to `!=`, removing `SecItemDelete` calls, swapping `&&` to `||`) and checks whether your tests catch them. A project can have 81% code coverage but only 16% mutation score — tests execute security code without validating it does the right thing.
+Mutation testing introduces deliberate bugs (flipping `==` to `!=`, removing `SecItemDelete` calls, swapping `&&` to `||`) and checks whether your tests catch them. A project can have high line coverage and a low mutation score — tests execute security code without validating it does the right thing.
 
-**Muter** (`brew install muter-mutation-testing/muter/muter`) is the primary Swift mutation testing tool. Its `RelationalOperatorReplacement` operator catches authentication bypasses; `RemoveSideEffects` catches missing `SecItemDelete` calls in logout flows. For security code, target mutation score above **80%**.
+**Muter** (`brew install muter-mutation-testing/muter/muter`) is a mutation testing tool for Swift. Its `RelationalOperatorReplacement` operator catches authentication bypasses; `RemoveSideEffects` catches missing `SecItemDelete` calls in logout flows. For security code, set an explicit mutation-score threshold and raise it as surviving mutants are fixed.
 
 ### OWASP MASTG Keychain Validation
 
@@ -758,7 +758,7 @@ static func handleFreshInstall(keychain: KeychainServiceProtocol) {
 
 ## Conclusion
 
-Protocol-abstraction is non-negotiable for testable keychain code. Every `SecItem` call should be behind `KeychainServiceProtocol` so that 95%+ of your test suite runs against `MockKeychainService` with zero entitlement requirements and zero CI flakiness. Reserve real-keychain integration tests for a dedicated test plan on physical devices.
+Protocol-abstraction is non-negotiable for testable keychain code. Every `SecItem` call should be behind `KeychainServiceProtocol` so that most of your test suite runs against `MockKeychainService` with zero entitlement requirements and zero CI flakiness. Reserve real-keychain integration tests for a dedicated test plan on physical devices.
 
 Three insights most guides miss: (1) the simulator silently returns biometric-protected items without prompting — tests appear to validate biometric gates but test nothing; (2) TN3137's distinction between file-based and data protection keychains means `security create-keychain` in CI creates the wrong keychain type; (3) mutation testing reveals that even high-coverage suites fail to catch inverted conditionals and removed side effects — the exact mutations that create real vulnerabilities.
 
@@ -776,4 +776,4 @@ Three insights most guides miss: (1) the simulator silently returns biometric-pr
 8. **CryptoKit round-trips** — Encrypt→decrypt and sign→verify tests for AES-GCM, ChaChaPoly, P256, Curve25519; wrong-key failure tests included
 9. **Error path coverage** — Every `OSStatus` code the app can encounter has a corresponding test with injected mock failure
 10. **Migration testing** — UserDefaults→Keychain migration tested with isolated `UserDefaults(suiteName:)` and mock keychain; verifies source cleared after migration
-11. **Mutation testing baseline** — Muter mutation score ≥80% for security-critical code paths; `RelationalOperatorReplacement` and `RemoveSideEffects` operators enabled
+11. **Mutation testing baseline** — Muter mutation score tracked against an agreed threshold for security-critical code paths; `RelationalOperatorReplacement` and `RemoveSideEffects` operators enabled

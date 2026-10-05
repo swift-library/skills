@@ -70,7 +70,13 @@ real-time multiplayer, turn-based matches, saved games, and social features.
 
 - Do not assume the local player is authenticated or allowed to use every Game
   Center feature.
-- Do not store or transmit unscoped legacy player identifiers.
+- Do not store or transmit unscoped legacy player identifiers. Use
+  `gamePlayerID` or `teamPlayerID` instead of the deprecated `playerID`.
+- Submit and load scores with `GKLeaderboard` and `GKLeaderboard.Entry`, not
+  the deprecated `GKScore` APIs.
+- Verify identity on a server with
+  `GKLocalPlayer.fetchItems(forIdentityVerificationSignature:)`, not the
+  deprecated `generateIdentityVerificationSignature(completionHandler:)`.
 - Do not treat GameKit match data as unlimited or durable app storage.
 - Do not block the game loop on Game Center network calls.
 - Treat Game Center service behavior, identity verification, matchmaking,

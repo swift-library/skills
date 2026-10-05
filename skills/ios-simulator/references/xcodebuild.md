@@ -22,8 +22,10 @@ python3 "${SKILL_DIR}/scripts/xcode_build.py" test \
   --destination "platform=iOS Simulator,name=iPhone 16 Pro"
 ```
 
-If a scheme is not supplied, the script tries `xcodebuild -list -json` and uses
-the first shared scheme. Report the selected scheme.
+`test`, and `build --test`, need a concrete simulator from `--simulator` or
+`--destination`; the generic simulator destination only builds. If a scheme is
+not supplied, the script tries `xcodebuild -list -json` and uses the first
+shared scheme. Report the selected scheme.
 
 ## Drill Down
 

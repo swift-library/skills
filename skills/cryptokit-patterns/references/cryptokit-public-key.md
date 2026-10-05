@@ -350,7 +350,7 @@ let importedPub = try P256.Signing.PublicKey(derRepresentation: publicDER)
 
 ### Keychain Storage of CryptoKit Keys
 
-NIST curve keys (P-256/P-384/P-521) can be stored as `kSecClassKey` items in the keychain via their `SecKey` bridge. Curve25519 keys and Secure Enclave key blobs must be stored as `kSecClassGenericPassword` items using their `rawRepresentation` / `dataRepresentation`. Apple recommends implementing a `GenericPasswordConvertible` protocol for standardized conversion — see Apple's "Storing CryptoKit Keys in the Keychain" for the full pattern.
+NIST curve keys (P-256/P-384/P-521) can be stored as `kSecClassKey` items in the keychain via their `SecKey` bridge. Curve25519 keys and Secure Enclave key blobs must be stored as `kSecClassGenericPassword` items using their `rawRepresentation` / `dataRepresentation`. Apple's sample code for "Storing CryptoKit Keys in the Keychain" defines a `GenericPasswordConvertible` protocol for this conversion; follow that article for the full pattern.
 
 **Peer / recipient public keys** received from a server or counterpart (for ECDH, HPKE, or signature verification) must also be persisted in the keychain — never in UserDefaults, plain files, or hardcoded in source. For NIST curves, store them as `kSecClassKey` with `kSecAttrKeyClass: kSecAttrKeyClassPublic`. For Curve25519 and post-quantum public keys, store the `rawRepresentation` as a `kSecClassGenericPassword` item. Use `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly` for accessibility, and assign a distinct `kSecAttrApplicationTag` or `kSecAttrAccount` value (e.g., a `"peer-"` prefix) to separate received peer keys from your own key pairs.
 
