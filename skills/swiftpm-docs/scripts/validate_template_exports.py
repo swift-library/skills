@@ -39,6 +39,27 @@ def output_map(profile_path: Path) -> list[tuple[Path, Path]]:
     return rows
 
 
+def review_rule_groups(text: str) -> int | None:
+    """Count `###` groups in the Code Review Rules section, or None when absent."""
+    lines = text.splitlines()
+    if "## Code Review Rules" not in lines:
+        return None
+    groups = 0
+    for line in lines[lines.index("## Code Review Rules") + 1 :]:
+        if line.startswith("## "):
+            break
+        groups += line.startswith("### ")
+    return groups
+
+
+def validate_review_rules(text: str, profile_name: str) -> None:
+    groups = review_rule_groups(text)
+    if groups is None:
+        raise ValueError(f"{profile_name} exported AGENTS.md has no Code Review Rules section")
+    if groups == 0:
+        raise ValueError(f"{profile_name} exported AGENTS.md Code Review Rules has no ### group")
+
+
 def validate_agent_guide(text: str, profile_name: str) -> None:
     normalized = " ".join(text.split())
     checks = {
@@ -127,6 +148,7 @@ def main() -> None:
             if not agent_guide.is_file():
                 raise FileNotFoundError(f"{profile_name}: AGENTS.md was not exported")
             validate_agent_guide(agent_guide.read_text(encoding="utf-8"), profile_name)
+            validate_review_rules(agent_guide.read_text(encoding="utf-8"), profile_name)
             validate_release_policy(profile_root, profile_name)
             print(f"{profile_name}: template export passed")
 
