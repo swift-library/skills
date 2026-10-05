@@ -148,7 +148,8 @@ Pass `--local-name` for other machine or account names and `--deny-file` for
 internal names the maintainer lists. Then read shipped docs against the
 project's rule for public content: current product facts, without run notes or
 comparisons against other projects. Findings are blockers. For content that is
-already public, recommend a row from `references/cleanup-decisions.md`.
+already public, recommend a row from `references/cleanup-decisions.md`: rewrite
+and force-push by default, and delete a repository only on explicit request.
 
 ## Safety Rules
 
