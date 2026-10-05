@@ -1,0 +1,9 @@
+swift-library skills
+Copyright (c) 2026 Xudong Xu and the swift-library project authors
+
+Licensed under Apache License 2.0 with the Swift Runtime Library Exception.
+See LICENSE for the complete terms.
+
+Some skills include material from other authors under their own licenses.
+Those notices stay next to the material they cover: the LICENSE.* files in a
+skill's directory or its references/licenses.md.
