@@ -43,6 +43,10 @@ Each public module's landing page declares its identity in `@Metadata`:
 ## Multi-Module Packages
 
 - Every public module's landing page uses the package icon and color.
+- Use a distinct resource name for each module, such as `<module>-icon.png`.
+  `docc merge` rejects duplicate image reference identifiers across archives,
+  even when the images contain identical bytes. Validate the merge as well as
+  each individual catalog.
 - When archives are combined with `docc merge`, the combined landing page uses
   the same metadata.
 

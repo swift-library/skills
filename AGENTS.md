@@ -137,14 +137,10 @@ Read `README.md` first for the collection shape and authority model.
   and simple `.sensoryFeedback` state-triggered haptics. Use
   `swiftui-performance` for source-level SwiftUI performance guidance, review,
   diagnosis, or optimization before Instruments evidence is required.
-- Route WidgetKit extension targets, `Widget`, `WidgetBundle`,
-  `StaticConfiguration`, `AppIntentConfiguration`, `TimelineProvider`,
-  `AppIntentTimelineProvider`, `TimelineEntry`, reload policies,
-  `WidgetCenter`, interactive widgets, Control Center widgets, App Group data,
-  deep links, previews, snapshots, and extension constraints to
-  `widgetkit-patterns`. Keep visual-only widget polish in `widgetkit-design`,
-  Live Activity lifecycle in `activitykit-patterns`, and App Intent action
-  design in `app-intents-patterns`.
+- Route WidgetKit extensions, timelines, interactive widgets, Control Center
+  widgets and reload behavior to `widgetkit-patterns`. Visual polish belongs in
+  `widgetkit-design`, Live Activities in `activitykit-patterns`, and App Intent
+  actions in `app-intents-patterns`.
 - Route TipKit setup, `Tips.configure`, `Tip` definitions, `TipView`,
   `.popoverTip`, UIKit/AppKit tip views, `TipGroup`, rules, parameters, events,
   display frequency, datastore, CloudKit tip sync, tip actions, invalidation,
@@ -230,39 +226,23 @@ Read `README.md` first for the collection shape and authority model.
 - Route PassKit Apple Pay, Wallet passes, `PKPaymentRequest`, payment
   authorization, merchant/pass entitlements, and pass-library behavior to
   `passkit-patterns`.
-- Route AuthenticationServices flows, Sign in with Apple,
-  `ASAuthorizationAppleIDProvider`, `ASAuthorizationController`,
-  `ASWebAuthenticationSession`, SwiftUI `WebAuthenticationSession`, passkeys,
-  password AutoFill, associated domains, credential state, callback handling,
-  presentation contexts, and account-security upgrades to
-  `authenticationservices-patterns`. Keep generic credential storage and
-  biometric-protected local secrets in `keychain-patterns` unless the system
-  authentication flow is in scope.
+- Route Sign in with Apple, web authentication, passkeys, password AutoFill and
+  account-security upgrades to `authenticationservices-patterns`. Generic
+  credential storage and biometric-protected secrets belong in
+  `keychain-patterns` unless the authentication flow is in scope.
 - Route WeatherKit forecasts, alerts, availability, attribution, weather
   caching, location-backed weather data, and weather dashboard validation to
   `weatherkit-patterns`.
 - Route FinanceKit availability, managed entitlement gating, authorization,
   accounts, balances, transactions, history tokens, Wallet orders, background
   delivery, and financial-data privacy to `financekit-patterns`.
-- Route direct CloudKit/iCloud data work, iCloud containers,
-  public/private/shared databases, `CKRecord`, custom zones, queries,
-  subscriptions, silent-change delivery, `CKSyncEngine`, server change tokens,
-  `CKShare`, `UICloudSharingController`, `CKAsset`, account status, `CKError`,
-  conflict resolution, dashboard workflow, `NSUbiquitousKeyValueStore`, and
-  iCloud document coordination to `cloudkit-patterns`. Keep ordinary
-  SwiftData/Core Data CloudKit-backed persistence in the persistence skills
-  unless direct CloudKit schema, sharing, subscriptions, or dashboard behavior
-  is in scope.
-- Route Foundation Models generation, `SystemLanguageModel`,
-  `LanguageModelSession`, Apple Intelligence availability, prompts,
-  transcripts, `@Generable`, `@Guide`, streaming, tool calling, adapters,
-  guardrails, and on-device generative fallback decisions to
-  `foundation-models-patterns`.
-- Route Core ML model conversion with `coremltools`, loading, configuration,
-  prediction, deployment, profiling, `.mlmodel`/`.mlpackage`/`.mlmodelc`
-  handling, `MLTensor`, `MLMultiArray`, `VNCoreMLModel` integration,
-  quantization, palettization, pruning, and model performance to
-  `core-ml-patterns`.
+- Route direct CloudKit/iCloud databases, records, sync, sharing, accounts and
+  error handling to `cloudkit-patterns`. Ordinary SwiftData/Core Data
+  persistence stays in its owning skill unless direct CloudKit behavior is in scope.
+- Route Foundation Models availability, generation, structured output, tools,
+  sessions, adapters and safety behavior to `foundation-models-patterns`.
+- Route Core ML conversion, loading, prediction, deployment, optimization and
+  testing to `core-ml-patterns`.
 - Route MLX Swift package setup, MLX arrays, MLXNN, MLXOptimizers, MLXRandom,
   Apple silicon/Metal build constraints, model examples, memory pressure, and
   backend selection to `mlx-swift-patterns`.
@@ -391,13 +371,9 @@ Read `README.md` first for the collection shape and authority model.
   physics, collision/input targets, gestures, raycasting, scene understanding,
   ARKit sessions, tracking, spatial audio, synchronization, and spatial
   performance to `realitykit-patterns`.
-- Route SwiftLint setup/configuration governance, `.swiftlint.yml`,
-  disabled/opt-in/only/analyzer rules, included/excluded paths, baselines,
-  suppressions, reporters, custom regex/Swift rules, build tool/command
-  plugins, Xcode run scripts, CI/pre-commit, analyzer runs, autocorrection, and
-  rollout to `swiftlint-patterns`. Do not auto-route ordinary Swift style/code
-  review here unless the task is explicitly about SwiftLint enforcement or
-  configuration.
+- Route SwiftLint configuration, rules, diagnostics, baselines, integrations and
+  rollout to `swiftlint-patterns`. Ordinary style review belongs there only
+  when SwiftLint enforcement or configuration is in scope.
 - Route macOS TCC privacy permissions, Screen Recording, Accessibility trust,
   Input Monitoring, Full Disk Access, Automation, System Settings privacy deep
   links, drag-to-authorize app bundles, helper permission identity, and
@@ -525,3 +501,24 @@ Read `README.md` first for the collection shape and authority model.
   package source before treating memory or skill references as authoritative.
 - Keep changes minimal and boundary-first.
 - Do not turn this file into a directory catalog.
+
+## Code Review Rules
+
+### Trigger and ownership
+
+- Flag a skill description that promises work outside the skill's documented
+  boundary; it can route a request to the wrong owner. Safe path: align the
+  description, supported workflow and resource routes.
+
+### Reusable guidance
+
+- Flag guidance that turns a single organization's choices or one execution's
+  inputs into a reusable requirement. Safe path: accept the value as an input
+  or keep it in the example or owner that supplies it.
+
+### Evidence and coverage
+
+- Flag a capability claim without source support or an executable check where
+  one is available, and a changed workflow without an eval that distinguishes
+  the intended behavior. Safe path: verify the claim and add focused coverage
+  in the owning skill.
