@@ -1,0 +1,62 @@
+name: Skill collection validation
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  policy:
+    uses: swift-library/.github/.github/workflows/policy.yml@7badcc53166c6afcb265b39c789b8240d9a30233
+    with:
+      allow-terms: |
+        ChatGPT
+        Codex
+        Cursor
+        Claude
+
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check marketplace membership and source paths
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path.cwd()
+          plugins = json.loads((root / '.claude-plugin/marketplace.json').read_text())['plugins']
+          names = [plugin['name'] for plugin in plugins]
+          skills = {path.parent.name for path in (root / 'skills').glob('*/SKILL.md')}
+          if len(names) != len(set(names)) or set(names) != skills:
+              raise SystemExit('Marketplace membership differs from the skill directories')
+          for plugin in plugins:
+              expected = root / 'skills' / plugin['name']
+              if (root / plugin['source']).resolve() != expected.resolve():
+                  raise SystemExit('Unexpected marketplace source: ' + plugin['name'])
+          print('Marketplace sources checked:', len(names))
+          PY
+      - name: Validate documentation template exports
+        env:
+          TMPDIR: ${{ github.workspace }}/.build/check-tmp
+        run: |
+          mkdir -p "$TMPDIR"
+          python3 skills/swiftpm-docs/scripts/validate_template_exports.py
+
+  result:
+    needs: [policy, validate]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require successful collection validation
+        env:
+          POLICY: ${{ needs.policy.result }}
+          VALIDATE: ${{ needs.validate.result }}
+        run: |
+          test "$POLICY" = success
+          test "$VALIDATE" = success
