@@ -51,11 +51,17 @@ judgment in the rule.
 - **Codex** reads AGENTS.md files from the repository root down to the working
   directory, and its code review applies the `## Code Review Rules` section.
   Automatic review is turned on per repository in Codex settings.
-- **Claude Code** v2.1.277 and later reads AGENTS.md as project instructions
-  when no CLAUDE.md or CLAUDE.local.md exists in the working directory or
-  above it. An older version, or a repository that also needs CLAUDE.md, uses
-  a CLAUDE.md that starts with `@AGENTS.md` and adds only Claude-specific
-  instructions after the import.
+- **Claude Code** supports native AGENTS.md loading from v2.1.277 when its
+  built-in instruction reader is enabled. The default reads AGENTS.md when
+  no CLAUDE.md or CLAUDE.local.md exists in the working directory or above it.
+  Check Project instructions in `/config`: `claude-md-and-agents-md` loads
+  both, while `claude-md` or `managed-only` can exclude AGENTS.md.
+  Before v2.1.281, some Bedrock or telemetry-disabled sessions lack native
+  support; the first session after upgrading from v2.1.276 or earlier may
+  also need a new session. Where native loading is unavailable, or CLAUDE.md
+  is also needed, retain an `@AGENTS.md` import followed by Claude-specific
+  instructions. Check loaded memory with `/context` before removing an
+  existing entry file.
 - **Claude Code Review** reads CLAUDE.md files at every level as project
   context and reports newly introduced violations as nits. Review-only
   instructions go in a root `REVIEW.md`: severity, nit volume, skip rules,
