@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0"></a>
+  <a href="LICENSE.txt"><img src="https://img.shields.io/badge/license-Apache--2.0-blue" alt="License: Apache-2.0 WITH Swift-exception"></a>
 </p>
 
 [Overview](#overview) · [Install](#install) · [Skills](#skills) ·
@@ -313,15 +313,15 @@ claude plugin validate .
 claude plugin marketplace add ./
 ```
 
-Commit subjects follow Conventional Commits, and a pull request check enforces
-them. [SUPPORT.md](SUPPORT.md) covers questions and bug reports, and
+Commit subjects and pull request titles follow Conventional Commits. The shared
+policy checks pull request titles and added lines. [SUPPORT.md](SUPPORT.md) covers questions and bug reports, and
 [GOVERNANCE.md](GOVERNANCE.md) describes how decisions are made. Report
 vulnerabilities through the private route in [SECURITY.md](SECURITY.md).
-Participation follows the [Code of Conduct](CODE_OF_CONDUCT.md).
+Participation follows the [Code of Conduct](https://github.com/swift-library/.github/blob/master/CODE_OF_CONDUCT.md).
 
 ## License
 
 The skills are licensed under the Apache License 2.0 with the Swift Runtime
 Library Exception, so code copied from a skill into an app needs no
-attribution. See [LICENSE](LICENSE) and [NOTICE](NOTICE). Material from other
+attribution. See [LICENSE.txt](LICENSE.txt) and [NOTICE](NOTICE). Material from other
 authors keeps its own license, noted in the skill that includes it.
