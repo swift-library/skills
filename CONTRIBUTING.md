@@ -22,3 +22,11 @@ Keep changes small, boundary-first, and tied to the existing collection model.
 - If a template change alters intended structure, update rules or `SKILL.md`
   first.
 - Prefer minimal edits over speculative expansion.
+
+## Pull requests and signing
+
+External contributions are welcome. Use Conventional Commits for commit subjects
+and pull request titles. Pull requests are squash-merged after required checks
+pass, with the title as the commit subject and an empty body. See the organization
+[contribution guide](https://github.com/swift-library/.github/blob/master/CONTRIBUTING.md)
+and [signing instructions](https://github.com/swift-library/.github/blob/master/MAINTENANCE.md#signing).
