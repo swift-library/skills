@@ -150,16 +150,18 @@ Pass `--local-name` for other machine or account names and `--deny-file` for
 internal names the maintainer lists. Then read shipped docs against the
 project's rule for public content: current product facts, without run notes or
 comparisons against other projects. Findings are blockers. For content that is
-already public, recommend a row from `references/cleanup-decisions.md`: rewrite
-and force-push by default, and delete a repository only on explicit request.
+already public, use `references/cleanup-decisions.md`: rotate any exposed
+credential and prepare a forward fix. Published history and version tags remain
+immutable; removing visible content does not revoke a leaked credential.
 
 ## Safety Rules
 
 - Do not run `git tag`, `git push`, `gh release create`, or any command that
   publishes or mutates external state without explicit confirmation.
-- History rewrites, force pushes, repository deletion, visibility changes and
-  attachment replacement are recommendations until the maintainer explicitly
-  instructs them.
+- Never rewrite published history or move or delete published version tags.
+  Correct released source through a new version and rotate exposed credentials.
+- Repository deletion, visibility changes and attachment replacement require
+  explicit maintainer instructions; none revokes previously downloaded copies.
 - Do not infer legal, license, security-contact, or distribution ownership
   decisions. Report missing or inconsistent state.
 - If the current repository has no `Package.swift`, stop and say this skill
