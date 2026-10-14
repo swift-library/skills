@@ -1,5 +1,8 @@
 # Documentation
 
+- [Skill catalog](Catalog.md): choose by task.
+- [Installation](Installation.md): marketplace, agent directories, and app uploads.
+
 This directory holds documentation for the `swift-skills` collection itself.
 
 Read the root `README.md` first for the public overview, available skills, and
