@@ -1,0 +1,21 @@
+{
+  "name": "swift-skills",
+  "interface": {
+    "displayName": "Swift Skills"
+  },
+  "plugins": [
+    {
+      "name": "swift-skills",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/swift-library/skills.git",
+        "ref": "master"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

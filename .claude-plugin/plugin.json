@@ -1,0 +1,9 @@
+{
+  "name": "swift-skills",
+  "version": "0.2.0",
+  "description": "Build and maintain Swift packages and Apple apps with agent skills in a single plugin.",
+  "author": {
+    "name": "swift-library"
+  },
+  "license": "Apache-2.0 WITH Swift-exception"
+}
