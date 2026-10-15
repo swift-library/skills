@@ -7,7 +7,7 @@
 <h1 align="center">skills</h1>
 
 <p align="center">
-  Agent skills for Swift packages and Apple platforms, installable individually.
+  Build and maintain Swift packages and Apple apps with agent skills in a single plugin.
 </p>
 
 <p align="center">
@@ -30,20 +30,27 @@
 
 ## Overview
 
-Each skill packages its trigger, instructions, and supporting files in its own directory. Your agent host loads it when a task matches the trigger; the [catalog](Documentation/Catalog.md) helps you choose.
+The collection covers package architecture, Apple frameworks, interface design, developer tools, documentation, and release engineering. Each skill carries a focused trigger and supporting guidance; your agent selects it when a task matches, and the [catalog](Documentation/Catalog.md) helps you find the right workflow.
 
 ## Quick look
 
-Add the marketplace and install the documentation skill:
+Install the collection in Claude Code:
 
 ```sh
 claude plugin marketplace add swift-library/skills
-claude plugin install swiftpm-docs@swift-skills
+claude plugin install swift-skills@swift-skills
 ```
 
 ## Install
 
-Choose the [installation method](Documentation/Installation.md) for your agent host. Install an individual skill directory rather than the repository root.
+The `swift-skills` plugin installs the whole collection in Claude Code or Codex. For Codex:
+
+```sh
+codex plugin marketplace add swift-library/skills --ref master
+codex plugin add swift-skills@swift-skills
+```
+
+Restart your host after installing. The [installation guide](Documentation/Installation.md) covers updates and other hosts.
 
 > [!NOTE]
 > The collection has no tagged release. Installation uses the current `master` branch.
@@ -95,14 +102,11 @@ skill lives in `skills/<skill>/`:
 
 [Skill authoring](Documentation/Architecture/skill-authoring.md) defines the
 structure, trigger contract, and validation checklist for new or changed
-skills. `.claude-plugin/marketplace.json` lists the skills that the Claude Code
-marketplace publishes. To test changes, validate the catalog and add your
-clone as a local marketplace:
-
-```bash
-claude plugin validate .
-claude plugin marketplace add ./
-```
+skills. The Claude and Codex marketplaces each publish the root `swift-skills`
+plugin. Run `Scripts/check` before pushing; it validates both hosts' manifests,
+distribution regression tests, and documentation template exports. Use the
+[isolated installation checks](Documentation/Architecture/skill-authoring.md#plugin-distribution)
+when changing plugin distribution.
 
 Commit subjects and pull request titles follow Conventional Commits. The shared
 policy checks pull request titles and added lines. [SUPPORT.md](SUPPORT.md) covers questions and bug reports, and

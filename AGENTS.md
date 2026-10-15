@@ -460,8 +460,9 @@ Read `README.md` first for the collection shape and authority model.
 - `skills/*/templates/` holds skill-local template source material, report
   shapes, and scaffold fragments.
 - `skills/*/examples/` holds small reference examples.
-- `.claude-plugin/marketplace.json` is the discovery registry for the
-  collection.
+- `.claude-plugin/` and `.codex-plugin/` own the root plugin manifests.
+  `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`
+  publish the collection for their hosts.
 
 ## Boundary Guardrails
 

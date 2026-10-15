@@ -1,0 +1,11 @@
+#!/bin/sh
+# SPDX-License-Identifier: Apache-2.0 WITH Swift-exception
+set -eu
+cd "$(dirname "$0")/.."
+TMPDIR="$PWD/.build/check-tmp"
+export TMPDIR
+mkdir -p "$TMPDIR"
+python3 -B Scripts/validate-plugins.py
+python3 -B -m unittest discover -s Tests -v
+python3 -B skills/swiftpm-docs/scripts/validate_template_exports.py
+git diff --check HEAD

@@ -33,14 +33,10 @@ references, templates, or scripts needed for the current task.
   one.
 - `skills/*/agents/` is optional interface metadata for agent hosts. It is not
   the authoritative trigger or workflow source.
-- `.claude-plugin/marketplace.json` is the Claude marketplace discovery
-  registry for this collection. Each entry's `source` is `./skills/<name>`, so
-  the plugin root is the skill folder and the plugin loads that one skill. A
-  source at the repository root would make Claude Code scan the whole
-  `skills/` directory for every plugin. Because the plugin root is the skill
-  folder, a skill must not contain the plugin component locations
-  `commands/`, `hooks/`, `output-styles/`, `.mcp.json`, or Markdown files in
-  `agents/`.
+- `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` define the
+  root `swift-skills` plugin for their hosts.
+- `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`
+  publish the whole collection as `swift-skills`.
 
 ## Directory Shape
 
@@ -257,7 +253,7 @@ Avoid names that are too broad or ambiguous:
   performance
 
 The display name in `agents/openai.yaml` may be friendlier, but it must match
-the same concept as the `SKILL.md` name and marketplace entry.
+the same concept as the `SKILL.md` name.
 
 ## Progressive Disclosure
 
@@ -515,11 +511,11 @@ loop:
 5. Add or update `agents/openai.yaml` only after `SKILL.md` is stable.
 6. Apply the skill candidate review rules before adding, splitting, merging,
    adapting, incorporating, or registering a skill.
-7. Update `README.md`, `AGENTS.md`, and `.claude-plugin/marketplace.json` only
-   after the skill directory contains `SKILL.md`.
+7. Update discovery in `Documentation/Catalog.md` and routing in `AGENTS.md`
+   after the skill directory contains `SKILL.md`. The root plugin discovers
+   every skill under `skills/` automatically.
 8. Reconcile every advertised path before commit:
-   - every `skills/<name>` path in `README.md`, `AGENTS.md`, and
-     `.claude-plugin/marketplace.json` exists
+   - every advertised `skills/<name>` path exists
    - every advertised skill directory contains `SKILL.md`
    - every advertised skill directory is tracked or staged
    - every rename or split stages both the old-path deletion and new-path
@@ -555,9 +551,11 @@ Before publishing or materially changing a skill, check:
 - Custom `icon_small` and `icon_large` paths, if present, point to real
   skill-local assets. SVG icons are square and XML-valid; PNG icons are square
   valid PNG files.
-- `.claude-plugin/marketplace.json` points only to tracked skill directories.
-- `README.md`, `AGENTS.md`, and `.claude-plugin/marketplace.json` do not point
-  at untracked, missing, or partially renamed skill directories.
+- Both marketplaces install the root `swift-skills` plugin, exposing every
+  tracked skill directory through `skills/`.
+- Discovery and routing do not point at untracked, missing, or partially
+  renamed skill directories.
+- `Scripts/check` passes for collection distribution and template exports.
 - Route guidance in `AGENTS.md` stays short and does not duplicate full skill
   workflows.
 - Current-source verification is complete before Apple, Swift, Xcode,
@@ -579,3 +577,47 @@ Before publishing or materially changing a skill, check:
   update the nearest existing skill/reference first; create a new skill only
   when the source change creates a distinct trigger, workflow, validation
   rule, or output contract.
+
+## Plugin Distribution
+
+Claude Code and Codex install this repository as the `swift-skills` plugin.
+Claude discovers the default `skills/` directory from the repository root;
+Codex exposes the same directory through `skills: "./skills/"`.
+
+`.claude-plugin/plugin.json` owns the installation version. Its version,
+Claude marketplace `metadata.version`, and the Codex plugin version stay equal.
+Choose the next version under the organization's
+[versioning standard](https://github.com/swift-library/.github/blob/master/VERSIONING.md#choosing-the-next-version).
+
+Run `Scripts/check` for manifest and regression validation. For host checks,
+use isolated homes under the ignored `.build/` directory and confirm the real
+host configuration is unchanged afterward:
+
+```bash
+claude_test_home="$PWD/.build/plugin-check/claude"
+mkdir -p "$claude_test_home"
+CLAUDE_CONFIG_DIR="$claude_test_home" claude plugin validate .
+CLAUDE_CONFIG_DIR="$claude_test_home" claude plugin marketplace add "$PWD"
+CLAUDE_CONFIG_DIR="$claude_test_home" claude plugin install swift-skills@swift-skills
+CLAUDE_CONFIG_DIR="$claude_test_home" claude plugin list --json
+CLAUDE_CONFIG_DIR="$claude_test_home" claude plugin details swift-skills@swift-skills
+
+codex_test_home="$PWD/.build/plugin-check/codex"
+mkdir -p "$codex_test_home"
+CODEX_HOME="$codex_test_home" codex plugin marketplace add "$PWD"
+CODEX_HOME="$codex_test_home" codex plugin list --available --json
+```
+
+The Codex marketplace uses the published repository's Git root as its plugin
+source. Codex CLI 0.139.0 local sources require a normal nonempty subdirectory
+inside the marketplace. To test working-tree content, commit the candidate,
+export it with `git archive HEAD` into `.build/plugin-check/marketplace/release/`,
+and create a local marketplace in `.build/plugin-check/marketplace/` with the
+same name and policy, replacing the source with
+`{"source": "local", "path": "./release"}`. Add that marketplace in the isolated
+Codex home, install `swift-skills@swift-skills`, and compare the installed skill
+inventory with every `skills/*/SKILL.md`. Keep Git data and ignored files out of
+the export. Check the published Git source separately after merging.
+
+For both hosts, verify the installed version, every skill directory, and host
+loading errors. Remove the task's isolated homes and exports after verification.
