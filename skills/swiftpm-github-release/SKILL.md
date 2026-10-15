@@ -1,6 +1,6 @@
 ---
 name: swiftpm-github-release
-description: Audit and dry-run GitHub release readiness for SwiftPM packages and Swift command-line tools. Use for pre-tag release gates, SwiftPM package publication checks, GitHub release readiness, CI/repository hygiene review, version/tag consistency, CLI smoke planning, and publish-boundary checks before a repository goes public or release attachments are uploaded (history and asset leak scans, commit identity, install URLs, rendered README), with cleanup recommendations for content already public. Do not use for live tag pushes, GitHub release creation, external package-manager publishing, notarization/signing, App Store release work, or broad code fixes unless the user explicitly asks for those separate actions.
+description: Audit and dry-run GitHub release readiness for SwiftPM packages and Swift command-line tools. Use for pre-tag gates, version/tag consistency, dependency requirement review, interface evidence comparison, CLI smoke planning, publish-boundary checks, and local checkout closure after explicitly authorized publication. Produce readiness findings and exact next commands. Do not use for live tag pushes, GitHub release creation, external package-manager publishing, notarization/signing, App Store releases, or broad code fixes unless the user explicitly asks for those separate actions.
 ---
 
 # SwiftPM GitHub Release
@@ -51,6 +51,16 @@ distribution operations by default.
 - Git status, branch, remotes, tags, and the intended release version.
 - CI output or local validation command output, if the user provides it.
 - Release attachments planned for upload.
+- The canonical local checkout, which may differ from the audit or release
+  worktree, and the remote's actual default branch.
+
+For swift-library repositories, use the organization's
+[VERSIONING](https://github.com/swift-library/.github/blob/master/VERSIONING.md),
+[MAINTENANCE](https://github.com/swift-library/.github/blob/master/MAINTENANCE.md),
+and [Workflow Integration](https://github.com/swift-library/.github/blob/master/Documentation/Reference/WorkflowIntegration.md)
+as the shared authorities. Repository-local declarations supply package facts;
+do not copy shared policy or a workflow run's collector/configuration values
+into a package checklist.
 
 ## Workflow
 
@@ -61,6 +71,9 @@ distribution operations by default.
    - Product names and executable names.
    - GitHub owner/repository, if configured.
    - Intended version tag.
+   - Fetch the selected remote and tags before drawing conclusions about
+     published state. Record local and remote commit IDs; a stale checkout
+     cannot establish what was released.
 3. Check repository hygiene:
    - no accidental machine-local paths, credentials, generated user state, or
      ignored build output in release-facing files;
@@ -81,6 +94,11 @@ distribution operations by default.
    - check declared dependency ranges, locked revisions and public tag
      identities. Keep upstream protocol baselines separate from actual runtime
      versions, and record the combinations that were tested.
+   - prefer widening a dependency requirement to cover the previous and new
+     supported versions over a disjoint jump. Verify resolution, builds and
+     relevant tests at both ends; the lockfile alone tests only one resolution.
+     If both ends cannot be supported, classify the requirement change under
+     the applicable versioning policy before accepting the bump.
 5. Run or plan validation commands:
    - read repo-local CI workflows, release docs, scripts, or Makefile tasks and
      prefer their release-facing build/test/format/smoke commands when safe;
@@ -121,12 +139,50 @@ the project policy; it does not by itself consume a formal patch version.
 Published tags and artifacts remain immutable. Report absent automation
 accurately; this readiness skill does not implement a release scheduler.
 
+For a tagged mistake in swift-library, follow
+[Immutable tags](https://github.com/swift-library/.github/blob/master/VERSIONING.md#immutable-tags):
+prepare a new patch release and record the superseded version and correction
+in `CHANGELOG.md`. A failure before tagging and an interrupted publication have
+different recovery rules there; inspect tag and publication state first.
+
+Compare interface evidence only when both snapshots use the same collector
+version and compatible configuration and scope. Follow the shared
+[API evidence and comparison workflow](https://github.com/swift-library/.github/blob/master/Documentation/Reference/WorkflowIntegration.md#api-evidence-and-comparison)
+for baseline selection and recollection with the current pin. Never compare
+an old asset directly with a new collector's output. Failed recollection,
+missing evidence or incomplete collection leaves the comparison unavailable;
+it does not prove compatibility. Report collector identities and whether the
+baseline was reused or recollected, separately from the candidate result.
+
 Separate artifact identity from checker identity. A check-only correction does
 not itself require rebuilding, re-signing or a new product version; validate
 the correction and rerun affected checks against the same identified artifact.
 Source, dependency, build, packaging or signing changes may affect that artifact.
 Follow project policy and investigate uncertain inputs; do not exempt files
 merely because they are scripts.
+
+## Local Release Closure
+
+After explicitly authorized publication, close the release in the canonical
+local checkout as well as on the remote. A release worktree alone does not
+update the checkout used by subsequent audits.
+
+1. Verify the published release and its immutable tag's resolved commit. Record
+   the canonical checkout path, remote, default branch and starting local HEAD.
+2. In that checkout, fetch the selected remote and tags without forcing tag
+   updates. Inspect status and compare the local default branch with the fetched
+   default branch. Preserve unrelated edits, local commits and tag identities.
+3. When the checkout can be updated safely, switch to the default branch and
+   use `git merge --ff-only <remote>/<default-branch>`. Confirm its final HEAD
+   matches the fetched branch and contains the released tag commit. Verify the
+   local tag resolves to the same commit as the remote tag.
+4. If dirty state, a conflicting tag, divergence or another active worktree
+   prevents closure, report it with status, local/remote/tag commit IDs and
+   ahead/behind or ancestry evidence. Do not reset, force, discard work or
+   claim that the canonical checkout is current.
+
+For a readiness-only audit, report the closure commands as a plan. Keep
+publication status and local closure status separate in the handoff.
 
 ## Publish Boundary Gate
 
@@ -183,6 +239,7 @@ Package: <Package.swift name>
 Products: <products>
 Version/tag: <version or unknown>
 Evidence level: local validation / CI output / dry-run only
+Local release closure: current / planned / blocked, with commit evidence
 Publish surface: clean / <n> findings in history, tree, assets or facts
 
 Blocking issues:
@@ -200,6 +257,14 @@ Next safe commands:
 
 For command-plan-only requests, separate local validation commands from live
 commands and label live commands as requiring confirmation.
+
+## Validation Rules
+
+Exercise the applicable cases in
+[eval fixtures](references/eval-fixtures.md) when changing release behavior.
+Use actual Git state and check output as evidence; distinguish a command plan
+from an executed check. See the [reference index](references/_index.md) for
+publish-cleanup guidance.
 
 ## Decision Rules
 
