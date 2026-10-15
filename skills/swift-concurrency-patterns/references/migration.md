@@ -46,7 +46,7 @@ Before interpreting diagnostics or choosing a fix, confirm the target/module set
 | Setting / feature | Where to check | Why it matters |
 |---|---|---|
 | Swift language mode (Swift 5.x vs Swift 6) | Xcode `SWIFT_VERSION` / SwiftPM `swiftLanguageModes`, target `.swiftLanguageMode(...)`, or compiler `-swift-version` | Swift 6 turns many warnings into errors and enables stricter defaults; tools-version selects manifest features and defaults, not a per-file language mode. |
-| Strict concurrency checking | Xcode: Strict Concurrency Checking (`SWIFT_STRICT_CONCURRENCY`) / SwiftPM: strict concurrency flags | Controls how aggressively Sendable + isolation rules are enforced. |
+| Complete concurrency checking in a pre-Swift 6 language mode | Xcode `SWIFT_STRICT_CONCURRENCY=complete`; compiler `-strict-concurrency=complete`; SwiftPM feature setting for the manifest tools version | Surfaces data-race safety warnings before adopting Swift 6, where complete checking is unconditional. |
 | Default actor isolation | Xcode: Default Actor Isolation (`SWIFT_DEFAULT_ACTOR_ISOLATION`) / SwiftPM: `.defaultIsolation(MainActor.self)` | Changes the default isolation of declarations; can reduce migration noise but changes behavior and requirements. |
 | `NonisolatedNonsendingByDefault` | Xcode upcoming feature / SwiftPM `.enableUpcomingFeature("NonisolatedNonsendingByDefault")` | Changes how nonisolated async functions execute (can inherit the caller’s actor unless explicitly marked `@concurrent`). |
 | Approachable Concurrency | Xcode build setting / SwiftPM enables the underlying upcoming features | Bundles multiple upcoming features; recommended to migrate feature-by-feature first. |
@@ -216,25 +216,30 @@ This drastically reduces warnings in app code where most types need main thread 
 
 ### 5. Enable Strict Concurrency Checking
 
-**Xcode Build Settings**: Search for "Strict Concurrency Checking"
+For a target still using a pre-Swift 6 language mode, enable complete checking
+to assess data-race safety warnings. In Xcode, set Strict Concurrency Checking
+to Complete (`SWIFT_STRICT_CONCURRENCY=complete`). A direct compiler invocation
+uses `-strict-concurrency=complete`.
 
-Three levels available:
-
-- **Minimal**: Only checks code that explicitly adopts concurrency (`@Sendable`, `@MainActor`)
-- **Targeted**: Checks all code that adopts concurrency, including `Sendable` conformances
-- **Complete**: Checks entire codebase (matches Swift 6 behavior)
-
-**Swift Package Manager**:
+**Swift Package Manager, Swift 6.0+ manifest tools**:
 ```swift
 .target(
     name: "MyTarget",
     swiftSettings: [
-        .enableExperimentalFeature("StrictConcurrency=targeted")
+        .swiftLanguageMode(.v5),
+        .enableUpcomingFeature("StrictConcurrency")
     ]
 )
 ```
 
-**Strategy**: Start with Minimal → Targeted → Complete, fixing errors at each level.
+For Swift 5.9 or 5.10 manifest tools, use
+`.enableExperimentalFeature("StrictConcurrency")` in the target's settings
+and retain the manifest's supported language-mode declaration.
+
+Address warnings module by module, then adopt Swift 6 language mode. Swift 6
+enables complete checking unconditionally and needs no StrictConcurrency
+feature setting. The [data-race safety guide](https://www.swift.org/migration/documentation/swift-6-concurrency-migration-guide/enabledataracesafety/)
+owns the tools-version and language-mode distinction.
 
 ### 6. Add Sendable Conformances
 

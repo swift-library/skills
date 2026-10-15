@@ -30,13 +30,16 @@ For migration-sensitive guidance, inspect settings before diagnosing:
 | Setting | SwiftPM | Xcode |
 |---|---|---|
 | Language mode | `swiftLanguageModes`, target `.swiftLanguageMode(...)`, or `-swift-version`; older manifests use `swiftLanguageVersions` | Swift Language Version |
-| Strict concurrency | `.enableExperimentalFeature("StrictConcurrency=targeted")` | `SWIFT_STRICT_CONCURRENCY` |
+| Complete checking in a pre-Swift 6 language mode | Swift 6.0+ tools: `.enableUpcomingFeature("StrictConcurrency")`; Swift 5.9/5.10 tools: `.enableExperimentalFeature("StrictConcurrency")` | `SWIFT_STRICT_CONCURRENCY=complete` |
 | Default isolation | `.defaultIsolation(MainActor.self)` | `SWIFT_DEFAULT_ACTOR_ISOLATION` |
 | Upcoming features | `.enableUpcomingFeature(...)` | `SWIFT_UPCOMING_FEATURE_*` |
 
 `// swift-tools-version:` is not enough to infer Swift language mode. If these
 settings cannot be discovered locally, ask before giving migration-sensitive
-advice.
+advice. Swift 6 language mode enables complete checking unconditionally; the
+feature settings above let earlier language-mode targets assess data-race
+safety warnings before migration. See `references/migration.md` for adoption
+steps and `references/official-sources.md` for the migration guide.
 
 ## Guardrails
 
@@ -116,3 +119,6 @@ When changing concurrency code:
 4. Verify deallocation for long-lived tasks or streams.
 5. Check cancellation in long-running operations.
 6. Document any temporary unsafe escape hatch and its removal trigger.
+
+When changing build-setting guidance, exercise
+`references/eval-fixtures.md` against the selected compiler and manifest modes.
