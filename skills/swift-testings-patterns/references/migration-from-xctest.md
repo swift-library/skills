@@ -25,8 +25,9 @@ import Testing
 
 ### Swift 6.4 Interoperability
 
-Swift 6.4 supports deliberate XCTest/Swift Testing assertion interoperability.
-Inspect the toolchain, manifest tools version and
+Swift 6.4 supports deliberate XCTest/Swift Testing assertion interoperability
+on supporting runners. ST-0021 governs Corelibs XCTest; Xcode ships a separate
+XCTest implementation. Inspect the selected runner, toolchain, manifest tools version and
 `SWIFT_TESTING_XCTEST_INTEROP_MODE` before reusing helpers:
 
 - `limited`: default with older SwiftPM tools versions; Swift Testing assertions
@@ -39,8 +40,12 @@ Inspect the toolchain, manifest tools version and
 - `none`: disable interoperability support.
 
 The environment variable can select a supported mode without raising the
-package's tools version. Test the actual runner configuration with an
-intentionally failing helper: failure must still fail the test and CI process.
+package's tools version. Test the actual runner configuration with
+intentionally failing helpers in both assertion directions: failure must still
+fail the test and CI process. Verify the runner's misuse diagnostics too.
+A passing `strict` run alone does not prove every XCTest call was detected;
+combine runtime failure probes with source review when assessing migration
+completeness. The [eval fixture](eval-fixtures.md) covers this boundary.
 Keep older toolchains on the existing safe native-assertion path. Prefer
 `#expect`/`#require` for new Swift Testing code; interoperability allows gradual
 reuse and does not replace XCTest UI automation or metrics.
