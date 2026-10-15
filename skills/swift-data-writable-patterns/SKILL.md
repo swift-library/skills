@@ -41,8 +41,9 @@ Use it when the task involves:
 
 SwiftDataWritable defines the API surface, not the persistence truth. When the
 task asks whether a relationship append persists a new model, whether
-`context.insert` is required, or what save/delete/autosave does, let
-SwiftData's graph-root and `ModelContext` rules set the underlying behavior.
+`context.insert` is required, or what save/delete/autosave does, consult
+`swiftdata-patterns` and let SwiftData's graph-root and `ModelContext` rules set
+the underlying behavior before choosing the writable API surface.
 
 Do not use this skill when the request is only about SwiftData schema design,
 migrations, containers, CloudKit, predicates, custom stores, or query behavior

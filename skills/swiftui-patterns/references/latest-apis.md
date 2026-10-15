@@ -204,9 +204,9 @@ The deprecated variant passes only the new value. The modern variants provide ei
 **Prefer `sensoryFeedback(_:trigger:)` and related overloads instead of `UIImpactFeedbackGenerator`, `UISelectionFeedbackGenerator`, and `UINotificationFeedbackGenerator` in SwiftUI views.**
 
 Attach haptics declaratively to the view that owns the state change, rather than imperatively firing UIKit generators inside button actions.
-Custom tactile patterns, AHAP resources, synchronized audio-haptic playback,
-and `CHHapticEngine` lifecycle are out of scope; do not embed Core Haptics
-engine code in a SwiftUI view.
+For custom tactile patterns, AHAP resources, synchronized audio-haptic
+playback, or `CHHapticEngine` lifecycle, continue with `core-haptics-patterns`
+instead of embedding Core Haptics engine code in a SwiftUI view.
 
 ```swift
 @State private var isFavorite = false

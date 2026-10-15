@@ -63,6 +63,9 @@ labels, localization risk, CLI output, and terminology drift.
 2. Classify the task: new copy, review, rewrite, terminology cleanup,
    implementation stability, localization-risk handoff, accessibility-label
    wording, or pattern-specific guidance.
+   When the task needs design-side wording and implementation stability, use
+   the corresponding UX writing skill, if installed, for product-facing copy
+   and this skill for implementation risks.
 3. Identify the interface pattern and read only the matching reference section.
 4. Apply the precedence chain: clarity first, voice second, polish third.
 5. Rewrite element by element. Prefer concrete nouns and specific actions.

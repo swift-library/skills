@@ -84,8 +84,8 @@ configuration, prediction, deployment, profiling, and app-side model lifecycle.
    pruning from the model and device constraint, then re-check accuracy,
    latency, memory, and compute placement.
 9. Profile on representative hardware before making performance claims.
-10. Treat pure Vision request behavior as out of scope once the Core ML model
-    handoff is no longer the main issue.
+10. Continue with `vision-patterns` for pure Vision request behavior once the
+    Core ML model handoff is no longer the main issue.
 
 ## Review Rules
 

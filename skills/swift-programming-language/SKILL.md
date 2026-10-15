@@ -85,6 +85,9 @@ Apple or Swift code are out of scope.
    - string catalog usage
    - Xcode MCP availability
 3. Apply only compatible baseline rules.
+   Hand deeper code-shape, ownership, public API hygiene, AI-shaped code, or
+   alignment review against reference Apple or Swift code to
+   `swift-code-taste`.
 4. If local deployment targets or project constraints conflict with a modern
    API assumption, preserve local constraints and report the mismatch.
 5. Produce a concise review or change recommendation.

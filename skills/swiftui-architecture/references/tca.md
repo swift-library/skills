@@ -27,9 +27,9 @@ has moved beyond architecture selection.
 ## Handoff Boundary
 
 Once TCA is already present or explicitly accepted, stop using this general
-architecture skill for implementation details. Reducer, store, effect,
-dependency, navigation, presentation, shared-state, and `TestStore` work is
-detailed TCA implementation and out of scope here.
+architecture skill for implementation details. Continue with
+`swiftui-tca-architecture` for reducer, store, effect, dependency, navigation,
+presentation, shared-state, and `TestStore` work.
 
 ## Fit-Check Output
 

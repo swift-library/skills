@@ -125,7 +125,7 @@ querying, relationships, migrations, CloudKit sync, and concurrency boundaries.
 - When SwiftDataWritable also applies, first use SwiftData rules to determine
   persistence behavior, graph-root insertion, relationship traversal,
   `ModelContext.insert`, save/autosave, delete, and inverse behavior; then
-  choose the writable API surface separately.
+  use `swift-data-writable-patterns` to choose the writable API surface.
 - Do not require manual `context.insert(child)` solely because a newly created
   model is appended to an attached owner's relationship; first check whether the
   attached owner graph will be saved. Use explicit insert for independent graph

@@ -48,8 +48,9 @@ architecture decision, full view refactor, or dedicated design pass.
 - Avoid firing haptics from `body`, computed view properties, or repeatedly
   evaluated modifiers.
 - Gate platform-specific haptic APIs and provide a silent fallback.
-- Custom tactile patterns, AHAP resources, advanced players, synchronized
-  audio-haptic feedback, and Core Haptics engine lifecycle are out of scope.
+- Use `core-haptics-patterns` for custom tactile patterns, AHAP resources,
+  advanced players, synchronized audio-haptic feedback, or Core Haptics engine
+  lifecycle needed by the component.
 
 ## Theming And Dynamic Type
 

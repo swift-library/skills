@@ -64,8 +64,8 @@ out of scope.
    - `references/mvvm.md` for screen-level state and explicit ViewModel
      boundaries.
    - `references/mvi.md` for strict state machines without a TCA dependency.
-   - `references/tca.md` for deciding whether TCA fits and where detailed TCA
-     implementation leaves this skill's scope.
+   - `references/tca.md` for deciding whether TCA fits and when to hand off to
+     `swiftui-tca-architecture`.
    - `references/clean-architecture.md` for domain/data isolation.
    - `references/navigation-coordinator.md` for flow ownership, deep links, or
      centralized SwiftUI navigation state.
