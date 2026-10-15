@@ -247,7 +247,7 @@ func startTimer() {
 
 Combine sequences into one, emitting as they arrive. **Stable operator ✅**
 
-Use for independent data sources that don't depend on each other. `merge` is a free function for two or three sequences with the same element type: `merge(a, b)` or `merge(a, b, c)`. There is no array or variadic overload in 1.x, so merge a dynamic number of streams with a task group, as in this example.
+Use for independent data sources that don't depend on each other. `merge` is a free function for two or three sequences with the same element type: `merge(a, b)` or `merge(a, b, c)`. There is no array or variadic overload in 1.x, so merge a dynamic number of streams with a task group, as in this example. The overloads return `AsyncMerge2Sequence` or `AsyncMerge3Sequence`, respectively. The task-group example creates its own `AsyncStream` and owns its buffering, cancellation, and termination.
 
 #### Example: Multi-Room Chat
 
@@ -522,7 +522,7 @@ for await (previous, current) in valuesStream.adjacentPairs() {
 
 AsyncSequence with backpressure. **Stable operator ✅**
 
-Use for producer-consumer patterns with flow control. `send(_:)` suspends until a consumer takes the value. Each value goes to exactly one awaiting consumer; the channel does not broadcast.
+Use for producer-consumer patterns with flow control. Each delivered value goes to one awaiting consumer; the channel does not broadcast. `send(_:)` resumes when an iterator takes the value, without waiting for downstream processing to finish. Finishing the channel or cancelling the sending task can also resume a pending send without delivering the value. A returned `send(_:)` is not a delivery or processing acknowledgement; use an explicit acknowledgement when the producer needs one.
 
 #### Example: Message Queue
 
