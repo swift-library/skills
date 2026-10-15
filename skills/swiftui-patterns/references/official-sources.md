@@ -14,3 +14,8 @@ validation; keep those results with the calling project.
 
 Source bodies and declarations reviewed on 2026-09-12 against Swift 6.4 / SDK 27.0.
 Recheck when a source or the toolchain changes.
+
+For source refresh, record the source revision or content hash, reviewed skill
+revision, toolchain/SDK, and separate compilation and runtime results in local
+maintenance records with the calling project. Recheck overlapping capabilities
+when a shared source changes while preserving each skill's ownership boundary.
