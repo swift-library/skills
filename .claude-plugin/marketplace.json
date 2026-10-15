@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Claude and Codex skills for Swift packages, Apple frameworks, SwiftUI and UIKit, developer tooling, documentation, and release engineering",
-    "version": "0.1.1"
+    "version": "0.1.2"
   },
   "plugins": [
     {
@@ -42,6 +42,11 @@
       "name": "swiftpm-distiller",
       "description": "Distill SwiftPM package or Swift library source into agent-ready skill material and usage guidance",
       "source": "./skills/swiftpm-distiller"
+    },
+    {
+      "name": "swift-interface-distiller-patterns",
+      "description": "Collect, read, query, slice and compare public API evidence with explicit configuration, completeness and context budgets",
+      "source": "./skills/swift-interface-distiller-patterns"
     },
     {
       "name": "swift-design-tokens-patterns",

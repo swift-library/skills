@@ -84,6 +84,10 @@ Read `README.md` first for the collection shape and authority model.
   package or Swift library source tree into agent-operational skill material,
   such as trigger contracts, supported tasks, API usage workflows, validation
   commands, examples, or skill skeleton/update material.
+- Enter `skills/swift-interface-distiller-patterns/` to read a package or
+  dependency's public API, prepare budgeted interface context, or compare API
+  observations with swift-interface-distiller. Keep source navigation, runtime
+  behavior and SemVer decisions outside that evidence workflow.
 - Route DTCG token compiler packages, `SwiftDesignTokens`, `TokenTool`,
   `TokensPlugin`, token config, alias/mode resolution, Apple asset generation,
   Swift token constants, and resolved-token exports to

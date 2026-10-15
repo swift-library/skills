@@ -13,6 +13,7 @@ Choose a skill by the task it supports.
 | [`swiftpm-architecture`](../skills/swiftpm-architecture/SKILL.md) | Design and review Swift package architecture. |
 | [`swiftpm-index`](../skills/swiftpm-index/SKILL.md) | Check SwiftPM infrastructure and package collection catalogs. |
 | [`swiftpm-distiller`](../skills/swiftpm-distiller/SKILL.md) | Distill Swift packages into agent-ready skills. |
+| [`swift-interface-distiller-patterns`](../skills/swift-interface-distiller-patterns/SKILL.md) | Read public API, prepare budgeted interface context, and compare observations. |
 | [`swiftpm-plugin-patterns`](../skills/swiftpm-plugin-patterns/SKILL.md) | Design and debug SwiftPM plugin tools. |
 | [`swift-scripts-patterns`](../skills/swift-scripts-patterns/SKILL.md) | Write Swift scripts with swift-sh safely and portably. |
 | [`swift-python-patterns`](../skills/swift-python-patterns/SKILL.md) | Operate Swift PythonKit-style bridge packages. |
