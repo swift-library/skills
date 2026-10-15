@@ -2,10 +2,12 @@
 
 Use this index only when `SKILL.md` routing is not enough.
 
-- `language-updates.md`: Swift 6.3/6.4 syntax, warning control, and
-  compiler-versus-runtime availability checks.
+- `language-updates.md`: Swift 6.3/6.4 syntax, warning control, single-owner
+  storage, temporary/raw-byte APIs and compiler-versus-runtime availability.
 - `official-sources.md`: primary sources and verification methods for Swift
   language and SDK facts.
+- `eval-fixtures.md`: ownership, temporary-buffer lifetime and byte-contract
+  behavior checks.
 - `format-style.md`: `FormatStyle` and `.formatted()` replacements for legacy
   formatters and SwiftUI text formatting.
 - `api-design-guidelines.md`: Swift API Design Guidelines for names, argument
