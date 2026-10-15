@@ -1,0 +1,4 @@
+interface:
+  display_name: "Interface Distiller Patterns"
+  short_description: "Read and compare public API within context budgets"
+  default_prompt: "Use $swift-interface-distiller-patterns to inspect the public API of this package, select compact interface context, and report configuration, completeness and budget limits."
