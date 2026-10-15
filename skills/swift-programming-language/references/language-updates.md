@@ -57,3 +57,85 @@ be found in the selected standard library.
 Use `official-sources.md` for source verification. Record compiler and runtime
 results in the calling repository's evidence, not as a universal readiness
 claim in this reference.
+
+## Uniquely owned storage
+
+Swift 6.4 adds `UniqueBox` (SE-0517) for one heap-owned value and
+`UniqueArray` (SE-0527) for a growing buffer, including `~Copyable` values.
+Choose them when the API needs one owner or noncopyable elements. Keep ordinary
+`Array` for copyable values when its value semantics fit; removing copy-on-write
+does not eliminate buffer growth or prove a performance improvement.
+
+Both containers are noncopyable. Assignment transfers ownership; a later use
+of the consumed container is invalid. `UniqueBox.value` supports borrowed reads
+and in-place mutation; `consume()` transfers the value out and releases the
+box allocation. `clone()` explicitly allocates a new container and requires
+copyable contents.
+
+```swift
+struct Item: ~Copyable {
+  var identifier: Int
+}
+
+@available(anyAppleOS 27.0, *)
+func inspectItems() {
+  var box = UniqueBox(Item(identifier: 1))
+  box.value.identifier = 2
+  let item = box.consume()
+
+  var items = UniqueArray<Item>()
+  items.append(item)
+  for element in items {
+    print(element.identifier)
+  }
+}
+```
+
+The loop borrows the noncopyable elements through `Iterable` (SE-0516);
+iteration leaves the container usable. Inspect iterator lifetime and throwing
+requirements before generalizing an algorithm from `Sequence`.
+
+Check compiler support and the selected standard library's availability. The
+Apple SDK marks these containers `@available(anyAppleOS 27.0, *)`; place code
+that uses them behind the project's appropriate availability boundary. Retain
+existing storage paths for older compilers and deployment targets. Ownership
+does not imply thread safety; concurrency still depends on the element and
+isolation contracts.
+
+## Temporary storage and raw bytes
+
+Swift 6.4 adds `withTemporaryAllocation` (SE-0524). Its typed overload passes
+an `inout OutputSpan<T>`; the raw-byte overload passes an `inout OutputRawSpan`.
+Capacity reserves uninitialized storage: initialize elements with `append`
+before reading them. The typed overload destroys initialized elements on both
+normal and throwing exits, and both overloads release the temporary storage.
+Keep borrowed views within the closure; do not return a span into that storage.
+Stack allocation is an optimization, not a guarantee.
+
+SE-0525 adds bounds-checked, unaligned `RawSpan` and `MutableRawSpan` loads for
+`ConvertibleFromBytes` types. Safe byte stores and appends additionally require
+`ConvertibleToBytes`; `BitwiseCopyable` alone does not establish either
+conversion contract. For example, arbitrary bytes cannot be loaded as `Bool`.
+Validate input length before a load because an out-of-bounds access traps.
+These operations do not validate a binary format or provide atomic access.
+
+```swift
+@available(anyAppleOS 27.0, *)
+func readHeader() -> UInt32 {
+  withTemporaryAllocation(byteCount: 4, alignment: 4) { output in
+    output.append(UInt32(0x01020304), as: UInt32.self, .bigEndian)
+    return output.bytes.load(fromByteOffset: 0, as: UInt32.self, .bigEndian)
+  }
+}
+```
+
+Use explicit byte order for a format that defines it. Reading native memory
+does not make a type's layout a stable wire or file format. The Swift 6.4 Apple
+SDK gives the basic span and temporary-allocation APIs back-deployed
+availability, while `ByteOrder` and the byte-order overloads require OS 27.
+Check each declaration instead of applying one OS requirement to the whole
+family. Preserve the established initialization and cleanup path for older
+compilers, and test older supported systems separately.
+
+Exercise the storage and byte-contract cases in `eval-fixtures.md` when changing
+this guidance or its examples.

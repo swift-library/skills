@@ -91,8 +91,9 @@ Apple or Swift code are out of scope.
 
 ## Read Next
 
-- Read `references/language-updates.md` for Swift 6.3/6.4 language syntax and
-  compiler-versus-runtime availability checks; use `references/official-sources.md`
+- Read `references/language-updates.md` for Swift 6.3/6.4 language syntax,
+  single-owner storage, temporary byte buffers and compiler-versus-runtime
+  availability checks; use `references/official-sources.md`
   when refreshing those facts.
 - Read `rules/baseline.md` when applying or reviewing baseline rules.
 - Read `references/format-style.md` when replacing legacy `Formatter`,
