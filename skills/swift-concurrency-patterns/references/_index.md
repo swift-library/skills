@@ -39,6 +39,7 @@ Quick navigation for the Swift Concurrency Patterns skill.
 | `migration.md` | rollout order, build settings, migration guardrails |
 | `linting.md` | concurrency-focused lint rules |
 | `official-sources.md` | primary sources and SDK/compiler checks for version-sensitive claims |
+| `eval-fixtures.md` | language-mode and manifest-setting behavior checks |
 | `glossary.md` | quick definitions |
 
 ## Problem Router
