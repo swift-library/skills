@@ -72,9 +72,8 @@ called from JavaScript.
 3. Choose the interop layer:
    - Use raw JavaScriptKit for direct `JSObject`/`JSValue` access, small DOM
      calls, dynamic APIs, or simple host integration.
-   - Use BridgeJS typed bindings, which are out of scope here, when the
-     boundary should be typed, generated, or shared with TypeScript
-     declaration files.
+   - Continue with `bridge-js-patterns` when the boundary should be typed,
+     generated, or shared with TypeScript declaration files.
 4. Keep UI and host integration explicit. For complex web UI, prefer a clear
    split where JavaScript owns UI state and Swift owns portable core logic, or
    document why Swift DOM manipulation is the chosen path.
@@ -114,7 +113,7 @@ npm test
 
 For browser work, run the local host page or bundler smoke test that loads the
 generated Wasm and exercises the JavaScript boundary. BridgeJS-generated
-bindings need their own BridgeJS validation.
+bindings continue with `bridge-js-patterns` validation.
 
 ## Output
 

@@ -113,8 +113,9 @@ swift run --swift-sdk <wasm-sdk-id>
 ```
 
 For editor setup, inspect `.sourcekit-lsp/config.json` for the selected
-`swiftPM.swiftSDK`. JavaScript/browser packaging validation belongs to the
-JavaScriptKit or BridgeJS workflow the project uses.
+`swiftPM.swiftSDK`. For JavaScript/browser packaging, continue with
+`javascriptkit-patterns` or `bridge-js-patterns` validation, matching the
+project's interop layer.
 
 This skill includes `scripts/wasm-doctor.py` for a read-only local environment
 check. Use `--strict` only when the workflow should fail on missing toolchain,

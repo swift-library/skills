@@ -159,9 +159,9 @@ Use these only as light reminders during ordinary SwiftUI implementation:
 - Prefer `Button` over `onTapGesture` for ordinary tappable controls.
 - Prefer native SwiftUI navigation, presentation, layout, and accessibility
   APIs before bridging.
-- If the main question is which visible control primitive fits the UI, that
-  visual-design choice is out of scope; after the primitive is chosen,
-  implement or refactor it here.
+- If the main question is which visible control primitive fits the UI, pair
+  with `swiftui-design`; after the primitive is chosen, implement or refactor
+  it here.
 - Gate version-specific APIs with `#available` and provide sensible fallbacks.
 - Adopt Liquid Glass only when explicitly requested or already used by the
   project.

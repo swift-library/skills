@@ -98,8 +98,8 @@ control primitive choice, and editor surfaces.
 - Use system components and control semantics before manually composing common
   controls.
 - Choose the native SwiftUI visual/control primitive before custom rows or
-  custom drawing. Leave non-visual implementation details to general SwiftUI
-  implementation guidance when code needs to change.
+  custom drawing. Use `swiftui-patterns` for implementation details when code
+  needs to change.
 - Keep grouped content native: simple backgrounds, modest corner radii, system
   dividers, and clear internal padding.
 - Avoid `minimumScaleFactor` as a layout bandage; fix the container, wrapping,
