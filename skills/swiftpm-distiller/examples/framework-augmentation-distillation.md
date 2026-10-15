@@ -33,13 +33,15 @@ Evidence inspected:
 | Docs | README, DocC quick starts | host workflow and intended usage | SwiftData query-editing examples |
 | Source | macro declarations, runtime projection types | public capability claims | `@Writable` and projection API |
 | Tests | macro/runtime/usage tests | supported operations and diagnostics | append/delete/save/reorder cases |
-| Interface output | `Docs/Generated/SwiftDataWritable.md` | public declaration check | pre-existing generated artifact |
+| Interface snapshot/view | `.build/interface-distiller/api.json`, `.build/interface-distiller/interface/part-000001.md` | public declaration check | pre-existing collected evidence |
 
 Generated interface evidence:
 - Availability: available.
-- Artifact source: `Docs/Generated/SwiftDataWritable.md`
+- Artifact source: `.build/interface-distiller/api.json` and its rendered
+  `.build/interface-distiller/interface/part-000001.md`.
 - Command provenance: not produced during this session.
-- Notes: use static source/tests if the generated artifact appears stale.
+- Notes: verify the snapshot's revision, configuration, scope and gaps before
+  reuse. Use swift-interface-distiller-patterns to recollect stale evidence.
 
 Commands:
 

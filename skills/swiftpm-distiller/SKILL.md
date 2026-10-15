@@ -75,7 +75,8 @@ and open questions should be handed to the skill creator.
   checkouts, or Xcode `DerivedData/SourcePackages/checkouts` only when the
   package has to be resolved from an import/module name first.
 - Compiler-derived interface evidence when available, such as
-  `swift-interface-distiller` output or equivalent Swift symbol graph output.
+  swift-interface-distiller snapshots and rendered views, or equivalent Swift
+  symbol graph output.
 - Public API source under `Sources/`, especially public types, protocols,
   initializers, result builders, property wrappers, macros, commands, and
   composition helpers.
@@ -96,10 +97,14 @@ and open questions should be handed to the skill creator.
 3. Inspect `Package.swift` first to identify products, modules, tools,
    platforms, plugins, macros, and test targets.
 4. When available and cheap, generate or consult compiler-derived interface
-   evidence before treating source text as the public API shape:
-   `swift-interface-distiller generate --output-dir <scratch-dir>` or an
-   equivalent symbol graph flow. Record the command, working directory, exit
-   code/status, output path, and notable missing targets or failures.
+   evidence before treating source text as the public API shape. Use
+   `interface-distiller collect package` to collect a snapshot, `render` to
+   read its interface, and `query` to select declarations. Route installation,
+   configuration, scope, budgets and completeness interpretation to
+   [swift-interface-distiller-patterns](https://github.com/swift-library/skills/tree/master/skills/swift-interface-distiller-patterns).
+   This skill consumes that evidence for a skill-creation handoff. Record the
+   actual commands, working directory, exit codes, snapshot/view paths and
+   collection gaps; keep outputs in the target's ignored producer directory.
 5. Read public API and high-signal docs before implementation details.
 6. Prefer examples, tests, DocC tutorials, and README quick starts as usage
    evidence; use source internals only to clarify missing behavior.
@@ -160,8 +165,9 @@ materials after the interface evidence is collected.
 - Record what was inspected, including `Package.swift`, `Package.resolved`,
   source tree layout, tests, docs, examples, existing generated artifacts, and
   generated interface output when available.
-- Use generated interface evidence when available, including output from
-  `swift-interface-distiller generate`.
+- Use canonical snapshots and rendered views when available. Keep the
+  snapshot's configuration, scope and collection gaps with any selected view;
+  a successful command alone does not establish complete public API coverage.
 - If generated interface evidence is produced during the session, record the
   exact command, working directory, exit code/status, relevant output path, and
   notable failures or missing targets.
@@ -181,7 +187,8 @@ module in a host app:
    `DerivedData/SourcePackages/checkouts`. If using DerivedData, verify the host
    project has been built at least once before treating a missing checkout as a
    real absence.
-3. Generate compiler-derived interface evidence into scratch or runtime storage.
+3. Collect compiler-derived interface evidence into the target's ignored
+   output directory through the interface usage workflow above.
    If caching is used, record package identity, version or revision, and the
    fact that generated interface evidence is staleable.
 4. If a tool emits generated interface Markdown and README content in one
@@ -383,3 +390,8 @@ notes for the skill creator instead of authoring final files:
   that it is outside distillation scope instead of forcing a distillation.
 - If the request is generic skill creation without SwiftPM source evidence, use
   the separate skill creator / authoring workflow instead of this skill.
+
+When changing this workflow or its examples, exercise
+[the evidence handoff fixture](references/eval-fixtures.md) with the matching
+CLI. Verify command spelling, output paths and the distinction between
+collected declarations and package tool/plugin behavior.

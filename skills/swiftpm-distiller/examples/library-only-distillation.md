@@ -30,12 +30,14 @@ Evidence inspected:
 | Source layout | `Sources/SwiftValidation` | public capabilities | validators and result types |
 | Tests | `Tests/SwiftValidationTests` | usage and edge cases | invalid input cases |
 | Resolved deps | `Package.resolved` | dependency pins | file not present; no external pins found |
-| Interface output | `swift-interface-distiller` | public API shape | not generated in this sample |
+| Interface evidence | no snapshot available | public API shape | not collected in this sample |
 
 Generated interface evidence:
 - Availability: unavailable.
 - Reason: not generated for this lightweight sample; static source/docs/tests
   evidence is enough for this candidate handoff.
+- Follow-up: use swift-interface-distiller-patterns if compiler-derived
+  declarations become necessary.
 
 Commands:
 
