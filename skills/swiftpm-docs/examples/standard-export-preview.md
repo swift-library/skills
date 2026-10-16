@@ -3,7 +3,8 @@
 ## Profile
 
 This preview shows the expected target-repository outcome for the `standard`
-profile.
+profile when the GitHub settings owner has selected local community files.
+Inherited community-health files are omitted from the export.
 
 ## Source Templates Used
 
@@ -35,8 +36,8 @@ profile.
   `.github/ISSUE_TEMPLATE/bug.md`
 - `templates/.github.ISSUE_TEMPLATE.feature.md.tpl` ->
   `.github/ISSUE_TEMPLATE/feature.md`
-- `templates/.github.ISSUE_TEMPLATE._config.yml.tpl` ->
-  `.github/ISSUE_TEMPLATE/_config.yml`
+- `templates/.github.ISSUE_TEMPLATE.config.yml.tpl` ->
+  `.github/ISSUE_TEMPLATE/config.yml`
 - `templates/.github.pull_request_template.md.tpl` ->
   `.github/pull_request_template.md`
 
@@ -72,7 +73,7 @@ profile.
     ISSUE_TEMPLATE/
       bug.md
       feature.md
-      _config.yml
+      config.yml
     pull_request_template.md
 ```
 

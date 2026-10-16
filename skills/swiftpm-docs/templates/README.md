@@ -33,7 +33,7 @@ Current template sources:
   for larger normalize, migration, or export work
 - `.github.ISSUE_TEMPLATE.bug.md.tpl`: bug-report issue template
 - `.github.ISSUE_TEMPLATE.feature.md.tpl`: feature-request issue template
-- `.github.ISSUE_TEMPLATE._config.yml.tpl`: issue-template config
+- `.github.ISSUE_TEMPLATE.config.yml.tpl`: issue-template config
 - `.github.pull_request_template.md.tpl`: pull-request template
 
 Special-case template sources:
@@ -50,6 +50,9 @@ Do not use it for:
 - speculative future template inventories
 - workflow systems outside this skill's scope
 
-These templates are the sources for scaffold and export work.
+These templates own community-file text as well as the documentation
+scaffolds. Emit local community-health files only when the repository does not
+inherit them, using the repository's GitHub settings owner's decision. That
+owner verifies the effective GitHub behavior.
 
 Profile composition guidance lives in `../profiles/`.

@@ -31,6 +31,20 @@ What happened instead?
 
 List the smallest steps needed to reproduce the problem.
 
+## Evidence
+
+Include relevant commands and their output, package and toolchain versions,
+and links to affected code, documentation, or related issues.
+
+## Decision Needed
+
+What decision is needed to resolve this issue?
+
+## Completion Check
+
+How will completion be verified? Name the tests, commands, or observable
+acceptance criteria.
+
 ## Notes
 
 Add any context that may help reviewers understand the issue faster.

@@ -12,6 +12,25 @@ Use this rule when deciding between `.github/`, root governance files, and
 - If the file explains repository-native documentation architecture, it belongs
   in `Documentation/`.
 
+## Community File Ownership
+
+This skill owns community-file text and templates. The repository's GitHub
+settings owner decides which files are local and which inherit shared defaults,
+and verifies that the chosen files take effect on GitHub. Use that decision
+before scaffold or export; emit a local community-health file only when it is
+not inherited. An absent local file alone does not establish that it is needed.
+
+Inheritance is file-specific; issue templates and their `config.yml` are
+selected together because a local `ISSUE_TEMPLATE` directory overrides the
+shared set. See GitHub's
+[default community-health file rules](https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file).
+Repository-specific files such as `LICENSE`, `GOVERNANCE.md`, and `CODEOWNERS`
+remain separate from inherited community-health defaults.
+
+A filed issue states current behavior or state, the expected outcome, evidence
+(commands, versions, and links), the decision needed, and how completion will
+be checked. Documents link to that issue when referring to open work.
+
 ## `.github/`
 
 Belongs:

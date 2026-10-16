@@ -8,11 +8,16 @@ public-repo GitHub/community-health surface.
 
 ## Output Map
 
+`when not inherited` rows are emitted only when the repository's GitHub
+settings owner has selected local files instead of shared defaults. That owner
+verifies their effect on GitHub; this profile owns the template composition.
+See `../rules/governance-vs-documentation-placement.md` for inheritance rules.
+
 | Target path | Source template | Required |
 | --- | --- | --- |
 | `AGENTS.md` | `../templates/AGENTS.md.tpl` | yes |
 | `README.md` | `../templates/README.md.tpl` | yes |
-| `CONTRIBUTING.md` | `../templates/CONTRIBUTING.md.tpl` | yes |
+| `CONTRIBUTING.md` | `../templates/CONTRIBUTING.md.tpl` | when not inherited |
 | `Documentation/README.md` | `../templates/Documentation.README.md.tpl` | yes |
 | `Documentation/Architecture/README.md` | `../templates/Documentation.Architecture.README.md.tpl` | yes |
 | `Documentation/Architecture/VersioningAndRelease.md` | `../templates/Documentation.Architecture.VersioningAndRelease.md.tpl` | yes |
@@ -32,7 +37,7 @@ public-repo GitHub/community-health surface.
 - `.github/CODEOWNERS`
 - `.github/ISSUE_TEMPLATE/bug.md`
 - `.github/ISSUE_TEMPLATE/feature.md`
-- `.github/ISSUE_TEMPLATE/_config.yml`
+- `.github/ISSUE_TEMPLATE/config.yml`
 - `.github/pull_request_template.md`
 
 ## README Placement

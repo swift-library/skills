@@ -1,7 +1,8 @@
 # Standard Target Tree
 
 This example shows a more standard normalized end-state for a Swift package
-repository.
+repository whose GitHub settings owner has selected local community files.
+Omit community-health files inherited from shared defaults.
 
 ## Role Map
 
@@ -10,6 +11,7 @@ repository.
 - Proposal: `Documentation/Proposals/*`
 - Truth: `Documentation/Architecture/*`
 - History: `Documentation/Decisions/*`, `Documentation/Migrations/*`, `Documentation/Archive/*`
+- Open Work: the repository's GitHub issues, linked from documents
 - Governance: `.github/*`
 - Reference: `Documentation/Reference/*`
 
@@ -48,7 +50,7 @@ repository.
     ISSUE_TEMPLATE/
       bug.md
       feature.md
-      _config.yml
+      config.yml
     pull_request_template.md
     workflows/
       ci.yml

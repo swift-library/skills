@@ -11,11 +11,14 @@ SKILL_ROOT = Path(__file__).resolve().parents[1]
 TEMPLATES_ROOT = SKILL_ROOT / "templates"
 PROFILE_NAMES = ("minimal", "standard")
 OUTPUT_ROW = re.compile(
-    r"^\|\s*`(?P<target>[^`]+)`\s*\|\s*`(?P<source>[^`]+)`\s*\|\s*yes\s*\|$"
+    r"^\|\s*`(?P<target>[^`]+)`\s*\|\s*`(?P<source>[^`]+)`\s*\|"
+    r"\s*(?P<required>yes|when not inherited)\s*\|$"
 )
 
 
-def output_map(profile_path: Path) -> list[tuple[Path, Path]]:
+def output_map(
+    profile_path: Path, *, inherited_paths: set[Path]
+) -> list[tuple[Path, Path]]:
     rows: list[tuple[Path, Path]] = []
     for line in profile_path.read_text(encoding="utf-8").splitlines():
         match = OUTPUT_ROW.match(line)
@@ -31,6 +34,8 @@ def output_map(profile_path: Path) -> list[tuple[Path, Path]]:
             raise ValueError(f"{profile_path}: template escapes templates/: {source}") from error
         if not source.is_file():
             raise FileNotFoundError(f"{profile_path}: missing template {source}")
+        if match.group("required") == "when not inherited" and target in inherited_paths:
+            continue
         rows.append((target, source))
     if not rows:
         raise ValueError(f"{profile_path}: no required output map rows")
@@ -134,22 +139,28 @@ def validate_release_policy(root: Path, profile_name: str) -> None:
             raise ValueError(f"{profile_name}: {path.name} does not route to {route}")
 
 
+def export_profile(
+    profile_path: Path, profile_root: Path, *, inherited_paths: set[Path]
+) -> None:
+    for target, source in output_map(profile_path, inherited_paths=inherited_paths):
+        destination = profile_root / target
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(source.read_bytes())
+    profile_name = profile_path.stem
+    agent_guide = profile_root / "AGENTS.md"
+    if not agent_guide.is_file():
+        raise FileNotFoundError(f"{profile_name}: AGENTS.md was not exported")
+    validate_agent_guide(agent_guide.read_text(encoding="utf-8"), profile_name)
+    validate_review_rules(agent_guide.read_text(encoding="utf-8"), profile_name)
+    validate_release_policy(profile_root, profile_name)
+
+
 def main() -> None:
     with tempfile.TemporaryDirectory(prefix="docs-template-export-") as temporary:
         export_root = Path(temporary)
         for profile_name in PROFILE_NAMES:
             profile_path = SKILL_ROOT / "profiles" / f"{profile_name}.md"
-            profile_root = export_root / profile_name
-            for target, source in output_map(profile_path):
-                destination = profile_root / target
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                destination.write_bytes(source.read_bytes())
-            agent_guide = profile_root / "AGENTS.md"
-            if not agent_guide.is_file():
-                raise FileNotFoundError(f"{profile_name}: AGENTS.md was not exported")
-            validate_agent_guide(agent_guide.read_text(encoding="utf-8"), profile_name)
-            validate_review_rules(agent_guide.read_text(encoding="utf-8"), profile_name)
-            validate_release_policy(profile_root, profile_name)
+            export_profile(profile_path, export_root / profile_name, inherited_paths=set())
             print(f"{profile_name}: template export passed")
 
 
