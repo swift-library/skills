@@ -243,6 +243,8 @@ Anthropic's [Claude Code memory](https://code.claude.com/docs/en/memory) and
   community-health files only when the repository does not inherit them. The
   repository's GitHub settings owner decides local files versus shared defaults
   and verifies that they take effect; use that decision as an export input.
+  If the decision is absent, emit no community-health files and report that
+  the inheritance decision is needed.
 - Keep GitHub-facing policy and templates in `.github/*`.
 - Keep CODEOWNERS at `.github/CODEOWNERS` in generated defaults.
 - Keep reference material in `Documentation/Reference/*`.

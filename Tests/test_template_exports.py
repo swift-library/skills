@@ -37,6 +37,14 @@ class TemplateExportTests(unittest.TestCase):
                 for path in root.rglob("*") if path.is_file()
             }
 
+    def test_absent_inheritance_decision_emits_no_community_files(self):
+        for profile in ("minimal", "standard"):
+            with self.subTest(profile=profile), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                with self.assertRaisesRegex(TypeError, "required.*inherited_paths"):
+                    exports.export_profile(SKILL / "profiles" / f"{profile}.md", root)
+                self.assertFalse(any((root / path).exists() for path in COMMUNITY_FILES))
+
     def test_local_community_files_and_issue_chooser_are_exported(self):
         minimal = self.exported_files("minimal", set())
         self.assertEqual(set(minimal) & COMMUNITY_FILES, {Path("CONTRIBUTING.md")})

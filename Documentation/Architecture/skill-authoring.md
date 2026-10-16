@@ -192,6 +192,14 @@ Do not create a separate skill when:
 When two skills could trigger, route to the more specific one first. Keep
 baseline skills shallow and make them hand off to domain skills for deep work.
 
+Keep skill references one-directional: a skill names or relies on only the
+skills it invokes or derives from, never its callers, so the reference graph
+has no cycles. Treat caller decisions as inputs; when a decision is absent,
+produce no output that depends on it and report that the decision is needed.
+An orchestrator invoked by a higher-level orchestrator describes that owner
+by responsibility or by the artifact it reads, such as a shared standard,
+rather than by skill name.
+
 ## Naming Rules
 
 Use lowercase kebab-case for skill names and directories.
