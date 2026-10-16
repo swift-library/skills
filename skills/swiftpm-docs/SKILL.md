@@ -104,6 +104,8 @@ package repository:
 - Truth: `Documentation/Architecture/*`
 - History: `Documentation/Decisions/*`, `Documentation/Migrations/*`,
   `Documentation/Archive/*`
+- Open Work: the repository's GitHub issues; documents link to them instead of
+  listing work
 - Governance: `.github/*`
 - Reference: `Documentation/Reference/*`
 - DocC Source: `Sources/<Target>/<Target>.docc/*`
@@ -237,6 +239,10 @@ Anthropic's [Claude Code memory](https://code.claude.com/docs/en/memory) and
 - Keep historical context in `Documentation/Decisions/*`,
   `Documentation/Migrations/*`, and `Documentation/Archive/*`, not in current
   architecture files or proposal drafts.
+- Own the text of community files and their templates. Emit local
+  community-health files only when the repository does not inherit them. The
+  repository's GitHub settings owner decides local files versus shared defaults
+  and verifies that they take effect; use that decision as an export input.
 - Keep GitHub-facing policy and templates in `.github/*`.
 - Keep CODEOWNERS at `.github/CODEOWNERS` in generated defaults.
 - Keep reference material in `Documentation/Reference/*`.
@@ -273,7 +279,8 @@ Anthropic's [Claude Code memory](https://code.claude.com/docs/en/memory) and
 
 ## Validation Rules
 
-- The selected profile matches the emitted or changed file set.
+- The selected profile and the GitHub settings owner's inheritance decision
+  match the emitted or changed file set.
 - Agent guides do not become indexes, and README-class files do not
   become routing contracts.
 - Root `README.md` stays outward-facing, keeps public manual essentials for the

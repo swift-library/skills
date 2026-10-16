@@ -6,3 +6,7 @@
 | `validate_canonical_target.py REPOSITORY` | Checks an edited target repository's `AGENTS.md` and documentation surface against the canonical-artifact rules before handoff, including the Code Review Rules section and the 32 KiB agent guide budget. |
 
 Both use only the Python standard library and exit non-zero on findings.
+
+The export smoke test materializes local community files. Collection checks also
+exercise inherited and mixed community-file selections through `export_profile`,
+whose `inherited_paths` input comes from the repository's GitHub settings owner.

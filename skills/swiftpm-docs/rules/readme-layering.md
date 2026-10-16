@@ -55,6 +55,7 @@ should not acquire the agent's task workflow or stop conditions.
 | Agent edit route, required checks by change type, edit escalation | AGENTS.md |
 | Future design options | Existing proposal owner |
 | Accepted decisions, migrations, source attribution, release facts | Relevant durable history/provenance owner |
+| Defects, requested changes and decisions not yet done | The owning repository's issue tracker; documents link to the issue instead of listing the work |
 | Local plans, raw run evidence and authoring iterations | Declared task-state owner |
 
 Keep a common-case summary and a link in README when extracting detailed

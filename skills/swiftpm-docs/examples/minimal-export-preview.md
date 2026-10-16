@@ -3,7 +3,8 @@
 ## Profile
 
 This preview shows the expected target-repository outcome for the `minimal`
-profile.
+profile when the GitHub settings owner has selected local community files.
+Inherited community-health files are omitted from the export.
 
 ## Source Templates Used
 
