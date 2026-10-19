@@ -10,7 +10,7 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parent.parent
-SCRIPTS = ROOT / "skills/swiftpm-readme-design/scripts"
+SCRIPTS = ROOT / "skills/swiftpm-readme/scripts"
 sys.path.insert(0, str(SCRIPTS))
 spec = importlib.util.spec_from_file_location("check_readme", SCRIPTS / "check_readme.py")
 check_readme = importlib.util.module_from_spec(spec)

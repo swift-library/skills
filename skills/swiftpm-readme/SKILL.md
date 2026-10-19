@@ -1,9 +1,9 @@
 ---
-name: swiftpm-readme-design
+name: swiftpm-readme
 description: Derive and verify the Swift-specific facts and content of a Swift package repository's README and GitHub metadata. Use for badge values from Package.swift, tags, license, and CI; Install snippets with the SwiftPM dependency, product lines, and build-from-source commands; Quick start code that must resolve and compile against the published tag; Products, Usage, and Requirements sections checked against public source; and Swift ecosystem topics or About claims checked against the package. Produces README section content, badge and install values, verification results, and topic proposals. Do not use for README header or first-screen layout, badge selection, order, or styling, social preview cards, terminal demos, logos or banners, organization profiles, Homebrew or release-download install lines, CLI command references, MCP client configuration, applying GitHub settings, documentation tree placement, package API design, or release tagging.
 ---
 
-# SwiftPM README Design
+# SwiftPM README
 
 ## Purpose
 
