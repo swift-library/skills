@@ -25,7 +25,7 @@ Choose a skill by the task it supports.
 | Skill | What it covers |
 | --- | --- |
 | [`swiftpm-docs`](../skills/swiftpm-docs/SKILL.md) | Scaffold and audit Swift package documentation structure. |
-| [`swiftpm-readme-design`](../skills/swiftpm-readme-design/SKILL.md) | Design and verify Swift package READMEs and repository pages. |
+| [`swiftpm-readme`](../skills/swiftpm-readme/SKILL.md) | Derive and verify Swift package README facts, snippets, and topics. |
 | [`swiftpm-github-release`](../skills/swiftpm-github-release/SKILL.md) | Dry-run SwiftPM GitHub release readiness. |
 | [`apple-platform-release`](../skills/apple-platform-release/SKILL.md) | Prepare Apple-platform signing, Xcode export, notarization, and release artifacts. |
 | [`swiftpm-macos-app-packaging`](../skills/swiftpm-macos-app-packaging/SKILL.md) | Package SwiftPM macOS executables into signed, notarized .app bundles. |

@@ -62,7 +62,7 @@ description. Name the skill to select it explicitly:
 
 - "Audit this repository's documentation with swiftpm-docs."
 - "Use swift-concurrency-patterns to fix these Sendable diagnostics."
-- "Check this package's README and Quick start with swiftpm-readme-design."
+- "Check this package's README and Quick start with swiftpm-readme."
 - "Run the swiftpm-github-release checks before I make this repository public."
 
 When two skills could apply, the more specific one should win: a SwiftUI
