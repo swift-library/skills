@@ -11,7 +11,8 @@ skeleton contains.
 A reader should be able to install the package, build the smallest example,
 and find each product's main entry points from these sections:
 
-- Install: the SwiftPM dependency and the products a target needs.
+- Install: the SwiftPM dependency and the products a target needs, and for
+  an executable, building from source.
 - Quick start, or the skeleton's equivalent such as Quick look, when it holds
   Swift code: the smallest complete example that builds as written. A recorded
   terminal session in that section belongs to the presentation owner.
@@ -51,8 +52,11 @@ accepted those trademarks' terms for this use.
 - With no released tag, depend on the default branch and say so next to the
   snippet or in the skeleton's status note. Never invent a version.
 - For a 0.x tag, use `.upToNextMinor(from:)`; from 1.0, use `from:`.
-- Tools add their install commands (Homebrew, Mint, release download) only
-  when those channels exist.
+- An executable adds its build-from-source commands (`swift build`,
+  `swift run`), and a `mint install` line when the package supports Mint,
+  which builds it from source with SwiftPM. Homebrew, release-download, and
+  other install channels outside SwiftPM and Mint come from their
+  distribution owners.
 
 ## Quick Start
 
@@ -69,9 +73,9 @@ accepted those trademarks' terms for this use.
   `swift` snippet that uses public API.
 - Requirements: the Swift version and platforms, equal to the badge values.
 
-Omit a section the skeleton does not contain or that would be empty. A Swift
-surface the package actually has, such as command-line usage or
-configuration, gets a section only when the skeleton names one.
+Omit a section the skeleton does not contain or that would be empty. Usage
+covers the package's Swift API and plugins; an executable's command reference
+and MCP client configuration come from their owners.
 
 ## Facts
 
