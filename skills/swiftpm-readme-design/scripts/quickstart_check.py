@@ -2,11 +2,11 @@
 """Build a README Quick start the way a new user would.
 
 Usage:
-  quickstart_check.py REPO [--product NAME ...] [--section TITLE] [--local]
-                      [--run] [--destination DEST] [--work DIR] [--keep]
+  quickstart_check.py REPO [--readme PATH] [--product NAME ...] [--section TITLE]
+                      [--local] [--run] [--destination DEST] [--work DIR] [--keep]
 
 Reads the README's .package(url:) line for this repository and the first
-```swift block under the Quick start section, writes a scratch consumer
+```swift block under the Quick start section (or --section), writes a scratch consumer
 package that depends on the published URL with the same requirement, and
 builds it. --local depends on the working tree instead, for checks before
 publishing. --destination builds with xcodebuild for that destination, for
@@ -105,6 +105,8 @@ def run(command, cwd):
 def main(argv):
     parser = argparse.ArgumentParser(description="Build a README Quick start in a scratch consumer.")
     parser.add_argument("repo", type=pathlib.Path)
+    parser.add_argument("--readme", type=pathlib.Path, default=pathlib.Path("README.md"),
+                        help="README to read, relative to REPO (default README.md)")
     parser.add_argument("--product", action="append", default=[], help="product to depend on (repeatable)")
     parser.add_argument("--section", default="Quick start", help="README section holding the snippet")
     parser.add_argument("--local", action="store_true", help="depend on the working tree, not the URL")
@@ -115,9 +117,9 @@ def main(argv):
     args = parser.parse_args(argv)
 
     root = args.repo.resolve()
-    readme_path = root / "README.md"
+    readme_path = root / args.readme
     if not readme_path.exists() or not (root / "Package.swift").exists():
-        fail("REPO needs README.md and Package.swift")
+        fail(f"REPO needs {args.readme} and Package.swift")
     readme = readme_path.read_text()
     facts = collect(root)
     if not facts["name"]:

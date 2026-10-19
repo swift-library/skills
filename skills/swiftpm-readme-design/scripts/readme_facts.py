@@ -2,8 +2,7 @@
 """Derive README facts from a Swift package repository.
 
 Usage:
-  readme_facts.py REPO                 print facts as JSON
-  readme_facts.py REPO --badges        print the centered badge block
+  readme_facts.py REPO                 print facts and badge values as JSON
   readme_facts.py REPO --install       print the SwiftPM dependency line
   readme_facts.py REPO --workflow FILE use FILE as the CI workflow
   readme_facts.py REPO --linux yes|no  override Linux detection
@@ -20,7 +19,6 @@ import pathlib
 import re
 import subprocess
 import sys
-import urllib.parse
 
 PLATFORM_NAMES = {
     "iOS": "iOS", "macOS": "macOS", "tvOS": "tvOS", "watchOS": "watchOS",
@@ -126,19 +124,13 @@ def requirement(tag):
     return f'from: "{version}"'
 
 
-def shield(label, message, color):
-    def quote(s):
-        return urllib.parse.quote(s.replace("-", "--").replace("_", "__"), safe="")
-    return f"https://img.shields.io/badge/{quote(label)}-{quote(message)}-{color}"
-
-
 def collect(root, override=None, linux="auto"):
     owner, name = remote_slug(root)
     tools, package_name, platforms = manifest(root)
     workflow = ci_workflow(root, override)
     linux = builds_on_linux(root, workflow) if linux == "auto" else linux == "yes"
     tag = latest_tag(root)
-    return {
+    facts = {
         "owner": owner,
         "name": name,
         "package_name": package_name,
@@ -151,26 +143,22 @@ def collect(root, override=None, linux="auto"):
         "license_file": license_file(root).name if license_file(root) else None,
         "ci_workflow": workflow,
     }
+    facts["badges"] = badge_values(facts)
+    return facts
 
 
-def badges(facts):
-    base = f"https://github.com/{facts['owner']}/{facts['name']}"
-    lines = []
-    workflow = facts["ci_workflow"]
-    if workflow:
-        lines.append(f'  <a href="{base}/actions/workflows/{workflow}"><img src="{base}/actions/workflows/'
-                     f'{workflow}/badge.svg?branch={facts["default_branch"]}" alt="CI"></a>')
+def badge_values(facts):
+    """Badge values keyed by kind; a kind appears only when a repository fact backs it."""
+    values = {}
+    if facts["ci_workflow"]:
+        values["ci"] = facts["ci_workflow"]
     if facts["swift_tools"]:
-        version = facts["swift_tools"]
-        lines.append(f'  <img src="{shield("Swift", version + "+", "F05138")}" alt="Swift {version}+">')
+        values["swift"] = facts["swift_tools"] + "+"
     if facts["platforms"]:
-        text = " | ".join(facts["platforms"])
-        lines.append(f'  <img src="{shield("platforms", text, "lightgrey")}" alt="Platforms: {text}">')
+        values["platforms"] = facts["platforms"]
     if facts["license"]:
-        short = facts["license"].split(" WITH ")[0]
-        lines.append(f'  <a href="{facts["license_file"]}"><img src="{shield("license", short, "blue")}" '
-                     f'alt="License: {facts["license"]}"></a>')
-    return '<p align="center">\n' + "\n".join(lines) + "\n</p>"
+        values["license"] = facts["license"]
+    return values
 
 
 def install(facts):
@@ -183,20 +171,16 @@ def install(facts):
 def main(argv):
     parser = argparse.ArgumentParser(description="Derive README facts from a Swift package repository.")
     parser.add_argument("repo", type=pathlib.Path)
-    mode = parser.add_mutually_exclusive_group()
-    mode.add_argument("--badges", action="store_true", help="print the badge block")
-    mode.add_argument("--install", action="store_true", help="print the SwiftPM dependency line")
+    parser.add_argument("--install", action="store_true", help="print the SwiftPM dependency line")
     parser.add_argument("--workflow", help="CI workflow file name under .github/workflows")
     parser.add_argument("--linux", choices=("auto", "yes", "no"), default="auto",
                         help="list Linux among platforms (auto: the CI workflow or .github/*.json names a Linux runner)")
     args = parser.parse_args(argv)
     root = args.repo.resolve()
     facts = collect(root, args.workflow, args.linux)
-    if (args.badges or args.install) and not (facts["owner"] and facts["name"]):
+    if args.install and not (facts["owner"] and facts["name"]):
         sys.exit("error: origin is not a GitHub remote; cannot build URLs")
-    if args.badges:
-        print(badges(facts))
-    elif args.install:
+    if args.install:
         print(install(facts))
     else:
         print(json.dumps(facts, indent=2))

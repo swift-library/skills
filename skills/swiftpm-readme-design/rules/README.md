@@ -2,6 +2,5 @@
 
 | File | Read when |
 | --- | --- |
-| `readme-standard.md` | Writing, restructuring, or reviewing a root README. |
-| `repository-surface.md` | Setting About, topics, homepage, or social preview, or writing an organization profile or banner. |
-| `visual-assets.md` | Placing a logo or adding, generating, or reviewing any image. |
+| `readme-sections.md` | Writing, revising, or checking a README's Install, Quick start, Products, Usage, or Requirements sections, or its badge values. |
+| `topics-and-about.md` | Proposing topics or a homepage, or checking an About sentence against the package. |

@@ -68,12 +68,15 @@ Read `README.md` first for the collection shape and authority model.
   capability or skill configuration and not durable repository documentation.
   It stays out of Git through the target repository's local
   `.git/info/exclude`.
-- Enter `skills/swiftpm-readme-design/` when the task is the GitHub-facing
-  presentation of a Swift package repository: README header, badges, Install
-  and Quick start verified against published tags, About and topics, social
-  preview, organization profile, or terminal demos. Keep the decision about
-  which content belongs in the README versus the documentation tree in
-  `swiftpm-docs`.
+- Enter `skills/swiftpm-readme-design/` when the task is the Swift-specific
+  facts and content of a Swift package repository's README: badge values,
+  Install and Quick start verified against published tags, Products, Usage,
+  and Requirements sections, or topic proposals. README first-screen layout,
+  badge styling, social cards, terminal demos, and organization profiles
+  belong to the GitHub presentation owners outside this collection
+  (`github-repo-steward` and `github-org-steward` when installed). Keep the
+  decision about which content belongs in the README versus the documentation
+  tree in `swiftpm-docs`.
 - Enter `skills/swiftpm-index/` when the task is source-backed SwiftPM
   dependency or candidate evaluation for custom reusable infrastructure that may
   overlap with official Apple / swiftlang libraries.

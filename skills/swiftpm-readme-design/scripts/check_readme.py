@@ -3,16 +3,17 @@
 
 Usage: check_readme.py REPO [--readme PATH] [--workflow FILE] [--linux auto|yes|no]
 
+PATH is relative to REPO (default README.md).
+
 Categories:
-  shadowed   .github/README.md hides the root README on the home page
+  shadowed   .github/README.md hides the checked root README on the home page
   link       a relative link or image target does not exist
   anchor     an in-page #anchor matches no heading
   alt        an image has no alt attribute, or a Markdown image has empty alt
-  emoji      emoji outside code blocks
   install    a .package(url:) for this repository names another owner, a
              version with no matching tag, or a branch that does not exist
-  badge      a Swift, platforms, or license badge differs from repository facts,
-             or the CI workflow exists without a CI badge (or the reverse)
+  badge      a Swift, platforms, or license badge value differs from repository
+             facts or has no backing fact, or a CI badge names a missing workflow
   local-path an absolute home-directory path
 
 Prints "category<TAB>line<TAB>detail" per finding and exits 1 when any exist.
@@ -27,7 +28,7 @@ import sys
 import urllib.parse
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from readme_facts import badges, collect, git  # noqa: E402
+from readme_facts import collect, git  # noqa: E402
 
 FENCE = re.compile(r"^\s*(```|~~~)")
 MD_LINK = re.compile(r"(!?)\[([^\]]*)\]\(\s*<?([^)\s>]+)>?(?:\s+\"[^\"]*\")?\s*\)")
@@ -41,8 +42,9 @@ PACKAGE = re.compile(
     r"|\"([^\"]+)\"\s*\.\.[.<]|branch:\s*\"([^\"]+)\"|revision:\s*\"[^\"]+\")",
     re.S,
 )
-SHIELD = re.compile(r"https://img\.shields\.io/badge/([^\"\s)]+)")
-EMOJI = re.compile("[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F]")
+SHIELD = re.compile(r"https://img\.shields\.io/badge/([^\"\s)?]+)")
+SHIELD_SEPARATOR = re.compile(r"(?<!-)-(?!-)")
+LIST_SEPARATOR = re.compile(r"\s*[|,\u00b7]\s*")
 HOME_PATH = re.compile(r"(?:/Users/|/home/|[A-Za-z]:\\Users\\)([A-Za-z0-9._-]+)")
 PLACEHOLDER_USERS = {"you", "your-name", "username", "user", "me", "name", "runner", "shared"}
 
@@ -84,9 +86,39 @@ def line_of(text, offset):
     return text.count("\n", 0, offset) + 1
 
 
+def shield_fields(path):
+    """Label and message of a shields.io static badge path, or None without a label."""
+    parts = SHIELD_SEPARATOR.split(path)
+    if len(parts) != 3:
+        return None
+
+    def decode(part):
+        part = part.replace("--", "-").replace("__", "\0").replace("_", " ").replace("\0", "_")
+        return urllib.parse.unquote(part).strip()
+
+    return decode(parts[0]), decode(parts[1])
+
+
+def badge_mismatch(kind, message, values):
+    """Why a badge message disagrees with the repository's badge values, or None."""
+    if kind not in values:
+        return f"{kind} badge has no backing fact"
+    expected = values[kind]
+    if kind == "swift":
+        if message != expected:
+            return f"swift badge says {message}, facts say {expected}"
+    elif kind == "platforms":
+        if set(LIST_SEPARATOR.split(message)) != set(expected):
+            return f"platforms badge says {message}, facts say {' | '.join(expected)}"
+    elif kind == "license":
+        if message not in {expected, expected.split(" WITH ")[0]}:
+            return f"license badge says {message}, facts say {expected}"
+    return None
+
+
 def check(root, readme, workflow, linux):
     findings = []
-    if (root / ".github" / "README.md").exists() and (root / "README.md").exists() and root.name != ".github":
+    if readme == root / "README.md" and (root / ".github" / "README.md").exists() and root.name != ".github":
         findings.append(("shadowed", 0, ".github/README.md is shown instead of README.md"))
 
     text = readme.read_text()
@@ -114,8 +146,6 @@ def check(root, readme, workflow, linux):
         for tag in IMG_TAG.findall(line):
             if not re.search(r"\balt=", tag, re.I):
                 findings.append(("alt", number, "img without alt attribute"))
-        for match in EMOJI.finditer(line):
-            findings.append(("emoji", number, f"U+{ord(match.group()):04X}"))
 
     for match in HOME_PATH.finditer(text):
         if match.group(1).lower() not in PLACEHOLDER_USERS:
@@ -139,30 +169,30 @@ def check(root, readme, workflow, linux):
                                or git(root, "rev-parse", "--verify", "--quiet", f"refs/heads/{branch}")):
                 findings.append(("install", number, f"branch {branch} does not exist"))
 
-        expected_shields = set(SHIELD.findall(badges(facts)))
-        for match in SHIELD.finditer(text):
-            label = urllib.parse.unquote(match.group(1).split("-")[0]).lower()
-            if label in {"swift", "platforms", "license"} and match.group(1) not in expected_shields:
-                findings.append(("badge", line_of(text, match.start()), f"{label} badge differs from facts"))
-        if facts["ci_workflow"]:
-            if f"actions/workflows/{facts['ci_workflow']}/badge.svg" not in text:
-                findings.append(("badge", 0, f"missing CI badge for {facts['ci_workflow']}"))
-        for match in re.finditer(r"actions/workflows/([^/\"]+)/badge\.svg", text):
-            if not (root / ".github" / "workflows" / match.group(1)).exists():
-                findings.append(("badge", line_of(text, match.start()), f"workflow {match.group(1)} not found"))
+    for match in SHIELD.finditer(text):
+        fields = shield_fields(match.group(1))
+        kind = fields[0].lower() if fields else None
+        if kind in {"swift", "platforms", "license"}:
+            problem = badge_mismatch(kind, fields[1], facts["badges"])
+            if problem:
+                findings.append(("badge", line_of(text, match.start()), problem))
+    for match in re.finditer(r"actions/workflows/([^/\"]+)/badge\.svg", text):
+        if not (root / ".github" / "workflows" / match.group(1)).exists():
+            findings.append(("badge", line_of(text, match.start()), f"workflow {match.group(1)} not found"))
     return findings
 
 
 def main(argv):
     parser = argparse.ArgumentParser(description="Check a README against repository facts.")
     parser.add_argument("repo", type=pathlib.Path)
-    parser.add_argument("--readme", type=pathlib.Path, help="README to check (default REPO/README.md)")
+    parser.add_argument("--readme", type=pathlib.Path, default=pathlib.Path("README.md"),
+                        help="README to check, relative to REPO (default README.md)")
     parser.add_argument("--workflow", help="CI workflow file name under .github/workflows")
     parser.add_argument("--linux", choices=("auto", "yes", "no"), default="auto",
                         help="Linux detection passed to readme_facts.py")
     args = parser.parse_args(argv)
     root = args.repo.resolve()
-    readme = (args.readme or root / "README.md").resolve()
+    readme = (root / args.readme).resolve()
     if not readme.exists():
         sys.exit(f"error: {readme} not found")
     findings = check(root, readme, args.workflow, args.linux)

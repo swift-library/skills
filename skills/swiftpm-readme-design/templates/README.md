@@ -2,7 +2,6 @@
 
 | File | Output | Notes |
 | --- | --- | --- |
-| `README.md.tpl` | Root `README.md` of a package repository | Fill `{{badges}}` and `{{install_dependency}}` from `scripts/readme_facts.py`. Remove sections that would be empty and add `## Products` when there is more than one product. Drop the logo paragraph when the repository has no logo. |
-| `profile.README.md.tpl` | `profile/README.md` in an organization's `.github` repository | Repeat the table row per repository and the group section per group. Use each repository's About sentence verbatim. |
+| `sections.md.tpl` | The Swift sections of a package repository's root `README.md` | Use the section names and order of the README's skeleton, including `{{snippet_section}}` (for example Quick look or Quick start), and drop sections the skeleton does not contain. Fill `{{install_dependency}}` from `scripts/readme_facts.py --install` and `{{swift_tools}}` and `{{platforms}}` from its facts. Keep `## Products` only when there is more than one product. |
 
 Placeholders use `{{name}}` syntax. A finished file contains none.
