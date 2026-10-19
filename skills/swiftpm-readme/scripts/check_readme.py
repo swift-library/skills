@@ -45,7 +45,7 @@ PACKAGE = re.compile(
 SHIELD = re.compile(r"https://img\.shields\.io/badge/([^\"\s)?]+)")
 SHIELD_SEPARATOR = re.compile(r"(?<!-)-(?!-)")
 LIST_SEPARATOR = re.compile(r"\s*[|,\u00b7]\s*")
-HOME_PATH = re.compile(r"(?:/Users/|/home/|[A-Za-z]:\\Users\\)([A-Za-z0-9._-]+)")
+HOME_PATH = re.compile(r"(?:/(?:Users|home)/|[A-Za-z]:\\Users\\)([A-Za-z0-9._-]+)")
 PLACEHOLDER_USERS = {"you", "your-name", "username", "user", "me", "name", "runner", "shared"}
 
 
