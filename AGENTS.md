@@ -72,9 +72,9 @@ Read `README.md` first for the collection shape and authority model.
   facts and content of a Swift package repository's README: badge values,
   Install and Quick start verified against published tags, Products, Usage,
   and Requirements sections, or topic proposals. README first-screen layout,
-  badge styling, social cards, terminal demos, and organization profiles
-  belong to the GitHub presentation owners outside this collection
-  (`github-repo-steward` and `github-org-steward` when installed). Keep the
+  badge styling, social cards, terminal demos, and organization profile layout
+  belong to the GitHub presentation owner outside this collection
+  (`github-readme-design` when installed). Keep the
   decision about which content belongs in the README versus the documentation
   tree in `swiftpm-docs`.
 - Enter `skills/swiftpm-index/` when the task is source-backed SwiftPM
