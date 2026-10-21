@@ -62,11 +62,12 @@ do not restate them. When the project has no VERSIONING, route its creation to
 that skill and supply its version source, mirrors and release owner, which is
 this release reference.
 
-For an existing repository, find the document already owning these rules first.
-Complete that document and adjust the profile target, indexes and AGENTS route
-to that single entry. Do not generate a competing policy. Distinguish implemented
-automation from manual procedures and missing release capability. Unknown
-commands remain explicitly unestablished; the scaffold does not create them.
+For an existing repository, find the document already owning these release
+facts first. Complete that document and adjust the profile target, indexes and
+AGENTS route to that single entry. Do not generate a competing release
+reference; VERSIONING stays separate. Distinguish implemented automation from
+manual procedures and missing release capability. Unknown commands remain
+explicitly unestablished; the scaffold does not create them.
 This is documentation work; changes to release implementation belong to the
 project's release owner.
 An architecture versioning document from an earlier profile is migration

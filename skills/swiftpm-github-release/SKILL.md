@@ -123,7 +123,7 @@ collector/configuration values into a package checklist.
 Use the repository's existing read-only version and release checks before
 adding generic commands. Updates belong to an explicit generation/update
 operation; readiness checks must fail on drift rather than silently repair it.
-Documentation, CI and cleanup alone do not force a product release. A changed
+Whether a change needs a release follows VERSIONING's release timing. A changed
 upstream only requires downstream changes or revalidation where it has impact.
 
 Identify the candidate commit and the exact artifacts covered by acceptance.
@@ -136,16 +136,14 @@ preserve the original failure and use bounded retries.
 For repositories that distribute built artifacts, check that the candidate is
 accepted before formal publication and that publication promotes those same
 bytes. A rebuild or re-sign changes artifact identity and requires affected
-acceptance again. A failed candidate revises candidate/build identity under
-the project policy; it does not by itself consume a formal patch version.
-Published tags and artifacts remain immutable. Report absent automation
-accurately; this readiness skill does not implement a release scheduler.
+acceptance again. A failed candidate revises candidate or build identity;
+version numbers, tags and their recovery follow VERSIONING. Published artifacts
+remain immutable. Report absent automation accurately; this readiness skill does
+not implement a release scheduler.
 
-For a tagged mistake in swift-library, follow
-[Immutable tags](https://github.com/swift-library/.github/blob/master/VERSIONING.md#immutable-tags):
-prepare a new patch release and record the superseded version and correction
-in `CHANGELOG.md`. A failure before tagging and an interrupted publication have
-different recovery rules there; inspect tag and publication state first.
+For a tagged mistake or an interrupted publication in swift-library, inspect tag
+and publication state first, then follow
+[Immutable tags](https://github.com/swift-library/.github/blob/master/VERSIONING.md#immutable-tags).
 
 Compare interface evidence only when both snapshots use the same collector
 version and compatible configuration and scope. Follow the shared

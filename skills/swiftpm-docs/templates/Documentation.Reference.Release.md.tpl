@@ -12,10 +12,10 @@ route readers to it instead of maintaining two copies.>
 
 ## Components and Version Sources
 
-Inspect actual SwiftPM library, CLI, App and plugin components. A library may use
+<Inspect actual SwiftPM library, CLI, App and plugin components. A library may use
 its release tag as authority; an App may declare a product version and build
 number; a plugin may own its version in a manifest. Record only the components
-this project ships, and preserve each existing source of truth.
+this project ships, and preserve each existing source of truth.>
 
 | Shipped component | Version meaning | Version source | Mirrors and derived fields | Update and read-only check |
 | --- | --- | --- | --- | --- |

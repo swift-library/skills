@@ -69,7 +69,8 @@ class PluginTests(unittest.TestCase):
             plugins.validate(self.root)
 
     def test_versions_stay_in_sync(self):
-        for path in (".codex-plugin/plugin.json", ".claude-plugin/marketplace.json"):
+        for path in (".claude-plugin/plugin.json", ".codex-plugin/plugin.json",
+                     ".claude-plugin/marketplace.json"):
             with self.subTest(path=path):
                 target = self.root / path
                 original = target.read_text()
@@ -77,6 +78,16 @@ class PluginTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "version"):
                     plugins.validate(self.root)
                 target.write_text(original)
+
+    def test_version_file_is_the_source(self):
+        (self.root / "VERSION").write_text("99.0.0\n")
+        with self.assertRaisesRegex(ValueError, "version"):
+            plugins.validate(self.root)
+
+    def test_version_file_must_be_valid(self):
+        (self.root / "VERSION").write_text("1.0\n")
+        with self.assertRaisesRegex(ValueError, "Invalid plugin version"):
+            plugins.validate(self.root)
 
     def test_license_keeps_swift_exception(self):
         self.change(".claude-plugin/plugin.json", lambda m: m.update(license="Apache-2.0"))
