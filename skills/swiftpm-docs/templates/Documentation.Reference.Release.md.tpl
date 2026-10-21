@@ -17,6 +17,9 @@ its release tag as authority; an App may declare a product version and build
 number; a plugin may own its version in a manifest. Record only the components
 this project ships, and preserve each existing source of truth.>
 
+<When VERSIONING names this repository's version source and mirrors, link it
+in the table instead of listing them; otherwise record them here.>
+
 | Shipped component | Version meaning | Version source | Mirrors and derived fields | Update and read-only check |
 | --- | --- | --- | --- | --- |
 | <actual component> | <version format, such as a product version with a build number> | <existing file, backend or tag> | <actual metadata/runtime fields> | <existing entry points, manual step, or not established> |
