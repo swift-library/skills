@@ -117,26 +117,32 @@ def validate_agent_guide(text: str, profile_name: str) -> None:
         )
 
 
-def validate_release_policy(root: Path, profile_name: str) -> None:
-    policy = root / "Documentation/Architecture/VersioningAndRelease.md"
-    if not policy.is_file():
-        raise FileNotFoundError(f"{profile_name}: version/release policy was not exported")
-    text = policy.read_text(encoding="utf-8")
+def validate_release_reference(root: Path, profile_name: str) -> None:
+    reference = root / "Documentation/Reference/Release.md"
+    if not reference.is_file():
+        raise FileNotFoundError(f"{profile_name}: release reference was not exported")
+    text = reference.read_text(encoding="utf-8")
     for heading in (
-        "Components and Version Authority", "Dependencies and Verified Combinations",
-        "Derived Metadata and Drift Checks", "Candidate, Acceptance and Publication",
-        "Evidence Reuse and Invalidation", "Entry Points and Artifact Retention",
+        "Components and Version Sources", "Compatibility Surface",
+        "Dependencies and Verified Combinations", "Derived Metadata and Drift Checks",
+        "Candidate, Acceptance and Publication", "Evidence Reuse and Invalidation",
+        "Entry Points and Artifact Retention",
     ):
         if f"## {heading}" not in text:
-            raise ValueError(f"{profile_name}: missing policy section {heading}")
+            raise ValueError(f"{profile_name}: missing release section {heading}")
     routes = {
-        root / "AGENTS.md": "Documentation/Architecture/VersioningAndRelease.md",
-        root / "Documentation/README.md": "Architecture/VersioningAndRelease.md",
-        root / "Documentation/Architecture/README.md": "VersioningAndRelease.md",
+        root / "AGENTS.md": ("Documentation/Reference/Release.md", "VERSIONING"),
+        root / "Documentation/README.md": ("Reference/Release.md",),
     }
-    for path, route in routes.items():
-        if route not in path.read_text(encoding="utf-8"):
-            raise ValueError(f"{profile_name}: {path.name} does not route to {route}")
+    reference_index = root / "Documentation/Reference/README.md"
+    if reference_index.is_file():
+        routes[reference_index] = ("Release.md",)
+    for path, required_routes in routes.items():
+        for route in required_routes:
+            if route not in path.read_text(encoding="utf-8"):
+                raise ValueError(f"{profile_name}: {path.name} does not route to {route}")
+    if (root / "Documentation/Architecture/VersioningAndRelease.md").exists():
+        raise ValueError(f"{profile_name}: architecture versioning document was exported")
 
 
 def export_profile(
@@ -152,7 +158,7 @@ def export_profile(
         raise FileNotFoundError(f"{profile_name}: AGENTS.md was not exported")
     validate_agent_guide(agent_guide.read_text(encoding="utf-8"), profile_name)
     validate_review_rules(agent_guide.read_text(encoding="utf-8"), profile_name)
-    validate_release_policy(profile_root, profile_name)
+    validate_release_reference(profile_root, profile_name)
 
 
 def main() -> None:

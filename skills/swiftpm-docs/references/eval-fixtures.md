@@ -116,9 +116,9 @@ agent guide for this package."
 Context and files:
 
 - `AGENTS.md` has the canonical contract but no `## Code Review Rules`.
-- `Documentation/Architecture/VersioningAndRelease.md` defines the version
-  bump and the change record; DocC catalogs live under
-  `Sources/<Target>/<Target>.docc/`.
+- `VERSIONING.md` defines the version bump and the change record;
+  `Documentation/Reference/Release.md` records the compatibility surface;
+  DocC catalogs live under `Sources/<Target>/<Target>.docc/`.
 - `Scripts/check` already runs formatting and a forbidden-path scan.
 
 Expected output:
@@ -126,8 +126,7 @@ Expected output:
 - `AGENTS.md` gains `## Code Review Rules` with `###` groups for compatibility
   and versioning, claims, public documentation, and tests, each naming the
   behavior, the reason, and the safe path.
-- The versioning rule routes to `VersioningAndRelease.md` instead of copying
-  its bump rules.
+- The versioning rule routes to VERSIONING and the release reference instead of copying its bump rules.
 - Formatting and forbidden paths are left to `Scripts/check`.
 - No `CLAUDE.md` or `REVIEW.md` is created.
 
@@ -159,7 +158,7 @@ release automation.
 | --- | --- |
 | SwiftPM library released only by tags | Preserve the actual single version authority; do not add an App build number or another declaration. |
 | CLI with a plugin manifest and derived runtime constant | Identify CLI and plugin authorities separately; route generation and checks to existing tools. |
-| Existing release policy at another repository path | Complete it, adjust the profile target and all routes, and retain one normative entry. |
+| Existing release facts and mechanics reference at another repository path | Complete it, adjust the profile target and all routes, keep one release reference and leave VERSIONING separate. |
 | New project with no release scripts | Explicitly state that automation is not established; no invented commands or claims of candidate validation. |
 | New toolchain or changed check definitions | Previous evidence is invalid for the affected stage and its dependents; retain failure records. |
 | Unchanged source and exact accepted package | Reuse only trusted matching evidence; preserve the accepted bytes during publication. |

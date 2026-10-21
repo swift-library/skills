@@ -1,31 +1,37 @@
-# Versioning and Release
+# Release
 
 Release status: <implemented, partly manual, or not established; cite evidence>.
 
-This document owns the current version and release rules for <repo-name>.
-Operational command details belong in <existing release reference, or not
-established>. If an existing document already owns these rules, complete that
-document and route readers to it instead of maintaining two normative copies.
-<If the owning organization publishes a versioning standard, link it here and
-record only how this project applies it.>
+Version rules for <repo-name>, covering tags, release timing, choosing the
+next version and the changelog, are in <[VERSIONING](../../VERSIONING.md), or
+the organization VERSIONING the project adopts>. This document records the
+repository's release facts and mechanics and does not restate those rules.
 
-## Components and Version Authority
+<If an existing document already owns these facts, complete that document and
+route readers to it instead of maintaining two copies.>
 
-Inspect actual SwiftPM library, CLI, App and plugin components. A library may use
+## Components and Version Sources
+
+<Inspect actual SwiftPM library, CLI, App and plugin components. A library may use
 its release tag as authority; an App may declare a product version and build
 number; a plugin may own its version in a manifest. Record only the components
-this project ships, and preserve each existing source of truth.
+this project ships, and preserve each existing source of truth.>
 
-| Shipped component | Version meaning | Authoritative source | Derived fields | Update and read-only check |
+<When VERSIONING names this repository's version source and mirrors, link it
+in the table instead of listing them; otherwise record them here.>
+
+| Shipped component | Version meaning | Version source | Mirrors and derived fields | Update and read-only check |
 | --- | --- | --- | --- | --- |
-| <actual component> | <accepted scheme; build/candidate meaning if used> | <existing file, backend or tag> | <actual metadata/runtime fields> | <existing entry points, manual step, or not established> |
+| <actual component> | <version format, such as a product version with a build number> | <existing file, backend or tag> | <actual metadata/runtime fields> | <existing entry points, manual step, or not established> |
 
-<Specify accepted compatible-fix, compatible-feature and incompatible-change
-rules, including 0.x behavior when applicable. Compatibility is established by
-review and tests, not inferred from comparing version numbers. Record the
-component, change type and rationale when advancing its version. Documentation,
-CI or cleanup alone do not require a product release unless shipped behavior
-changes.>
+## Compatibility Surface
+
+<List what consumers depend on: public API, products and traits, CLI commands,
+options, output and exit codes, file formats and locations, serialized values,
+and deployment-target, `swift-tools-version` and toolchain floors. VERSIONING
+decides how a change to this surface affects the next version. Compatibility
+is established by review and tests, not inferred from comparing version
+numbers.>
 
 ## Dependencies and Verified Combinations
 
@@ -48,14 +54,13 @@ commands or implemented automation.>
 
 ## Candidate, Acceptance and Publication
 
-<Describe the actual candidate and release sequence, source trust boundary,
-signing/publishing permissions and the exact artifact accepted. State which
-rules are adopted and which automation is implemented. Where candidates exist,
-failed candidates revise candidate/build identity rather than consuming a new
-formal patch version. Published tags and artifact bytes remain immutable.
-Promote the same accepted artifact; rebuilding changes its identity and requires
-the affected acceptance again. Publish changed components in dependency order
-after their candidate combination has passed.>
+<Describe the actual candidate and release sequence that carries out
+VERSIONING's release procedure: source trust boundary, signing/publishing
+permissions and the exact artifact accepted. State which automation is
+implemented. Published artifact bytes remain immutable. Promote the same
+accepted artifact; rebuilding changes its identity and requires the affected
+acceptance again. Publish changed components in dependency order after their
+candidate combination has passed.>
 
 ## Evidence Reuse and Invalidation
 

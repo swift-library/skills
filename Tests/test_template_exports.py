@@ -66,7 +66,8 @@ class TemplateExportTests(unittest.TestCase):
                 self.assertFalse(set(files) & COMMUNITY_FILES)
                 self.assertIn(Path("AGENTS.md"), files)
                 self.assertIn(Path("README.md"), files)
-                self.assertIn(Path("Documentation/Architecture/VersioningAndRelease.md"), files)
+                self.assertIn(Path("Documentation/Reference/Release.md"), files)
+                self.assertNotIn(Path("Documentation/Architecture/VersioningAndRelease.md"), files)
                 if profile == "standard":
                     for name in ("LICENSE", "GOVERNANCE.md", ".github/CODEOWNERS"):
                         self.assertIn(Path(name), files)

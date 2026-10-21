@@ -32,7 +32,6 @@ Omit community-health files inherited from shared defaults.
     README.md
     Architecture/
       README.md
-      VersioningAndRelease.md
       Package.md
       Modules.md
     Proposals/
@@ -45,6 +44,7 @@ Omit community-health files inherited from shared defaults.
       README.md
     Reference/
       README.md
+      Release.md
   .github/
     CODEOWNERS
     ISSUE_TEMPLATE/

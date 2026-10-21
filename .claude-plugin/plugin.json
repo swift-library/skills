@@ -1,6 +1,6 @@
 {
   "name": "swift-skills",
-  "version": "0.3.0",
+  "version": "0.1.0",
   "description": "Build and maintain Swift packages and Apple apps with agent skills in a single plugin.",
   "author": {
     "name": "swift-library"
