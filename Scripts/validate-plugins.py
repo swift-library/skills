@@ -25,7 +25,7 @@ def validate(root):
     marketplace = read(".claude-plugin/marketplace.json")
     codex = read(".codex-plugin/plugin.json")
     agents = read(".agents/plugins/marketplace.json")
-    version = claude["version"]
+    version = (root / "VERSION").read_text().strip()
     require(re.fullmatch(r"\d+\.\d+\.\d+", version), "Invalid plugin version")
     description = claude["description"]
     require(bool(description), "Missing plugin description")

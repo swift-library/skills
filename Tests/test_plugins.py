@@ -19,7 +19,7 @@ class PluginTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
-        for path in (".claude-plugin/plugin.json", ".claude-plugin/marketplace.json",
+        for path in ("VERSION", ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json",
                      ".codex-plugin/plugin.json", ".agents/plugins/marketplace.json"):
             target = self.root / path
             target.parent.mkdir(parents=True, exist_ok=True)

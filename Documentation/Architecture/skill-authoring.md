@@ -592,10 +592,9 @@ Claude Code and Codex install this repository as the `swift-skills` plugin.
 Claude discovers the default `skills/` directory from the repository root;
 Codex exposes the same directory through `skills: "./skills/"`.
 
-`.claude-plugin/plugin.json` owns the installation version. Its version,
-Claude marketplace `metadata.version`, and the Codex plugin version stay equal.
-Choose the next version under the organization's
-[versioning standard](https://github.com/swift-library/.github/blob/master/VERSIONING.md#choosing-the-next-version).
+The version source and its mirrors follow the organization's
+[versioning standard](https://github.com/swift-library/.github/blob/master/VERSIONING.md#one-version-source);
+[Release](../Reference/Release.md) lists them for this repository.
 
 Run `Scripts/check` for manifest and regression validation. For host checks,
 use isolated homes under the ignored `.build/` directory and confirm the real
