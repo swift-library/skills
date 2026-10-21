@@ -75,8 +75,8 @@ authority. Do not select values from an installed app or an unrelated archive,
 and do not add a second declaration when project tooling already generates
 these settings.
 
-Record the component, change type and upgrade rationale. A failed candidate
-does not alone justify a new formal patch version. Reuse the same artifact and
+Record the component, change type and upgrade rationale; version numbers and
+their corrections follow VERSIONING. Reuse the same artifact and
 submission when retrying a transport or status check; if source, dependencies,
 toolchain, target configuration, packaging, signature or entitlements change,
 create a new candidate/build identity where required and repeat the affected
@@ -91,11 +91,11 @@ points. This skill retains ownership of engineering artifacts and does not
 become a general release orchestrator.
 
 Separate artifact identity from checker identity. A check-only correction does
-not itself require rebuilding, re-signing or a new product version; validate
-the correction and rerun affected checks against the same identified artifact.
-Source, dependency, build, packaging or signing changes may affect that artifact.
-Follow project policy and investigate uncertain inputs; do not exempt files
-merely because they are scripts.
+not itself require rebuilding or re-signing, and version decisions follow
+VERSIONING; validate the correction and rerun affected checks against the same
+identified artifact. Source, dependency, build, packaging or signing changes may
+affect that artifact. Follow project policy and investigate uncertain inputs; do
+not exempt files merely because they are scripts.
 
 ## Reference Files To Consult
 
