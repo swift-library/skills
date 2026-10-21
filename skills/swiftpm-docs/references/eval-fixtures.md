@@ -116,9 +116,9 @@ agent guide for this package."
 Context and files:
 
 - `AGENTS.md` has the canonical contract but no `## Code Review Rules`.
-- `Documentation/Architecture/VersioningAndRelease.md` defines the version
-  bump and the change record; DocC catalogs live under
-  `Sources/<Target>/<Target>.docc/`.
+- `VERSIONING.md` defines the version bump and the change record;
+  `Documentation/Reference/Release.md` records the compatibility surface;
+  DocC catalogs live under `Sources/<Target>/<Target>.docc/`.
 - `Scripts/check` already runs formatting and a forbidden-path scan.
 
 Expected output:
@@ -126,8 +126,7 @@ Expected output:
 - `AGENTS.md` gains `## Code Review Rules` with `###` groups for compatibility
   and versioning, claims, public documentation, and tests, each naming the
   behavior, the reason, and the safe path.
-- The versioning rule routes to `VersioningAndRelease.md` instead of copying
-  its bump rules.
+- The versioning rule routes to VERSIONING and the release reference instead of copying its bump rules.
 - Formatting and forbidden paths are left to `Scripts/check`.
 - No `CLAUDE.md` or `REVIEW.md` is created.
 

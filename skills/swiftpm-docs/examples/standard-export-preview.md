@@ -8,8 +8,8 @@ Inherited community-health files are omitted from the export.
 
 ## Source Templates Used
 
-- `templates/Documentation.Architecture.VersioningAndRelease.md.tpl` ->
-  `Documentation/Architecture/VersioningAndRelease.md`
+- `templates/Documentation.Reference.Release.md.tpl` ->
+  `Documentation/Reference/Release.md`
 - `templates/AGENTS.md.tpl` -> `AGENTS.md`
 - `templates/README.md.tpl` -> `README.md`
 - `templates/CONTRIBUTING.md.tpl` -> `CONTRIBUTING.md`
@@ -57,7 +57,6 @@ Inherited community-health files are omitted from the export.
     README.md
     Architecture/
       README.md
-      VersioningAndRelease.md
     Proposals/
       README.md
     Decisions/
@@ -68,6 +67,7 @@ Inherited community-health files are omitted from the export.
       README.md
     Reference/
       README.md
+      Release.md
   .github/
     CODEOWNERS
     ISSUE_TEMPLATE/

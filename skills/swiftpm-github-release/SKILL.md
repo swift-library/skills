@@ -45,8 +45,10 @@ distribution operations by default.
 - `Package.swift`, `Package.resolved`, and package products/targets.
 - README, license, security/contact files, contribution/governance files, and
   GitHub workflow files.
-- Project version/release policy and each component's authoritative version
-  source. Distinguish generated runtime constants and CLI output from the
+- VERSIONING, the repository's or the organization's it adopts, for version
+  rules, and the release reference `Documentation/Reference/Release.md` for
+  each component's version source, compatibility surface, checks and entry
+  points. Distinguish generated runtime constants and CLI output from the
   declaration or tag that owns their value.
 - Git status, branch, remotes, tags, and the intended release version.
 - CI output or local validation command output, if the user provides it.
@@ -58,9 +60,9 @@ For swift-library repositories, use the organization's
 [VERSIONING](https://github.com/swift-library/.github/blob/master/VERSIONING.md),
 [MAINTENANCE](https://github.com/swift-library/.github/blob/master/MAINTENANCE.md),
 and [Workflow Integration](https://github.com/swift-library/.github/blob/master/Documentation/Reference/WorkflowIntegration.md)
-as the shared authorities. Repository-local declarations supply package facts;
-do not copy shared policy or a workflow run's collector/configuration values
-into a package checklist.
+as the shared authorities. The package's release reference and declarations
+supply package facts; do not copy shared policy or a workflow run's
+collector/configuration values into a package checklist.
 
 ## Workflow
 

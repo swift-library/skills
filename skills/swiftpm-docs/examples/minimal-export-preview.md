@@ -8,8 +8,8 @@ Inherited community-health files are omitted from the export.
 
 ## Source Templates Used
 
-- `templates/Documentation.Architecture.VersioningAndRelease.md.tpl` ->
-  `Documentation/Architecture/VersioningAndRelease.md`
+- `templates/Documentation.Reference.Release.md.tpl` ->
+  `Documentation/Reference/Release.md`
 - `templates/AGENTS.md.tpl` -> `AGENTS.md`
 - `templates/README.md.tpl` -> `README.md`
 - `templates/CONTRIBUTING.md.tpl` -> `CONTRIBUTING.md`
@@ -28,14 +28,16 @@ Inherited community-health files are omitted from the export.
     README.md
     Architecture/
       README.md
-      VersioningAndRelease.md
+    Reference/
+      Release.md
 ```
 
 ## Intentional Omissions
 
 This profile does not require `Documentation/Proposals/`,
-`Documentation/Decisions/`, `Documentation/Migrations/`,
-`Documentation/Archive/`, or `Documentation/Reference/`.
+`Documentation/Decisions/`, `Documentation/Migrations/` or
+`Documentation/Archive/`. From `Documentation/Reference/` it requires only
+`Release.md`.
 
 It also does not emit `.github/README.md`; normal repositories default to the
 root `README.md` for GitHub's surfaced repository landing page.

@@ -1,5 +1,7 @@
 # Reference
 
+- [Release](Release.md): components and version sources, compatibility surface, release checks and entry points.
+
 This directory indexes supporting reference material for `<repo-name>`.
 
 ## Belongs Here

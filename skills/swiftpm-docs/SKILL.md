@@ -50,12 +50,17 @@ repo-native, and easy to maintain.
 
 ## Workflow
 
-Both existing profiles include one compact version and release policy scaffold:
-`Documentation/Architecture/VersioningAndRelease.md`, from
-`templates/Documentation.Architecture.VersioningAndRelease.md.tpl`. Populate it from actual project declarations,
-build configuration, scripts and accepted rules. Include component version
-authority, derived fields, dependency compatibility, candidate acceptance,
-evidence reuse/invalidation, real entry points and artifact retention.
+Both existing profiles include one release reference scaffold:
+`Documentation/Reference/Release.md`, from `templates/Documentation.Reference.Release.md.tpl`. Populate it from actual project
+declarations, build configuration, scripts and accepted rules: components and
+version sources, the compatibility surface, dependency compatibility, derived
+fields, candidate acceptance, evidence reuse/invalidation, real entry points
+and artifact retention. Version rules (tags, release timing, choosing the next
+version, changelog) live only in the root `VERSIONING.md` or the organization
+VERSIONING the project adopts, owned by `github-repo-steward`; link them and
+do not restate them. When the project has no VERSIONING, route its creation to
+that skill and supply its version source, mirrors and release owner, which is
+this release reference.
 
 For an existing repository, find the document already owning these rules first.
 Complete that document and adjust the profile target, indexes and AGENTS route
@@ -64,6 +69,9 @@ automation from manual procedures and missing release capability. Unknown
 commands remain explicitly unestablished; the scaffold does not create them.
 This is documentation work; changes to release implementation belong to the
 project's release owner.
+An architecture versioning document from an earlier profile is migration
+input: move its facts into the release reference, leave its rules to
+VERSIONING and update every inbound link.
 
 1. Start with an audit when a target repo already exists.
 2. Classify files by role before editing content.

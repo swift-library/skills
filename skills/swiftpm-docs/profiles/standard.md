@@ -26,7 +26,7 @@ See `../rules/governance-vs-documentation-placement.md` for inheritance rules.
 | `.github/CODEOWNERS` | `../templates/CODEOWNERS.tpl` | yes |
 | `Documentation/README.md` | `../templates/Documentation.README.md.tpl` | yes |
 | `Documentation/Architecture/README.md` | `../templates/Documentation.Architecture.README.md.tpl` | yes |
-| `Documentation/Architecture/VersioningAndRelease.md` | `../templates/Documentation.Architecture.VersioningAndRelease.md.tpl` | yes |
+| `Documentation/Reference/Release.md` | `../templates/Documentation.Reference.Release.md.tpl` | yes |
 | `Documentation/Proposals/README.md` | `../templates/Documentation.Proposals.README.md.tpl` | yes |
 | `Documentation/Decisions/README.md` | `../templates/Documentation.Decisions.README.md.tpl` | yes |
 | `Documentation/Migrations/README.md` | `../templates/Documentation.Migrations.README.md.tpl` | yes |

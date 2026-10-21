@@ -69,7 +69,9 @@ Use this check:
 ## Task Route
 
 - Before changing versions, dependencies, packaging or release workflows, read
-  `Documentation/Architecture/VersioningAndRelease.md` and use its existing project check entry points.
+  `VERSIONING.md`, or the organization VERSIONING the project adopts, for
+  version rules and `Documentation/Reference/Release.md` for this repository's release facts and check
+  entry points.
 
 - For repository-native documentation placement, read `Documentation/README.md`
   before editing.
@@ -144,10 +146,11 @@ source of truth instead of a literal value.
 
 ### Compatibility and versioning
 
-- Flag a change to public API or observable behavior, including a raised
-  minimum platform or Swift version, without the change record and version
-  bump `Documentation/Architecture/VersioningAndRelease.md` requires. Safe
-  path: record the change under the next version with that bump.
+- Flag a change to the compatibility surface recorded in
+  `Documentation/Reference/Release.md`, such as public API, observable
+  behavior or a raised minimum platform or Swift version, without the
+  changelog entry and version bump VERSIONING requires. Safe path: record the
+  change under the next version with that bump.
 
 ### Claims
 
