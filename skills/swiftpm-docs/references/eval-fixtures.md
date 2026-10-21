@@ -158,7 +158,7 @@ release automation.
 | --- | --- |
 | SwiftPM library released only by tags | Preserve the actual single version authority; do not add an App build number or another declaration. |
 | CLI with a plugin manifest and derived runtime constant | Identify CLI and plugin authorities separately; route generation and checks to existing tools. |
-| Existing release policy at another repository path | Complete it, adjust the profile target and all routes, and retain one normative entry. |
+| Existing release facts and mechanics reference at another repository path | Complete it, adjust the profile target and all routes, keep one release reference and leave VERSIONING separate. |
 | New project with no release scripts | Explicitly state that automation is not established; no invented commands or claims of candidate validation. |
 | New toolchain or changed check definitions | Previous evidence is invalid for the affected stage and its dependents; retain failure records. |
 | Unchanged source and exact accepted package | Reuse only trusted matching evidence; preserve the accepted bytes during publication. |

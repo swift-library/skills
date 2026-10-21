@@ -155,11 +155,11 @@ it does not prove compatibility. Report collector identities and whether the
 baseline was reused or recollected, separately from the candidate result.
 
 Separate artifact identity from checker identity. A check-only correction does
-not itself require rebuilding, re-signing or a new product version; validate
-the correction and rerun affected checks against the same identified artifact.
-Source, dependency, build, packaging or signing changes may affect that artifact.
-Follow project policy and investigate uncertain inputs; do not exempt files
-merely because they are scripts.
+not itself require rebuilding or re-signing, and version decisions follow
+VERSIONING; validate the correction and rerun affected checks against the same
+identified artifact. Source, dependency, build, packaging or signing changes may
+affect that artifact. Follow project policy and investigate uncertain inputs; do
+not exempt files merely because they are scripts.
 
 ## Local Release Closure
 
