@@ -463,7 +463,8 @@ Read `README.md` first for the collection shape and authority model.
 - `skills/*/templates/` holds skill-local template source material, report
   shapes, and scaffold fragments.
 - `skills/*/examples/` holds small reference examples.
-- `.claude-plugin/` and `.codex-plugin/` own the root plugin manifests.
+- `.claude-plugin/plugin.json` and the root `plugin.json` own the plugin
+  manifests for Claude Code and Codex.
   `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`
   publish the collection for their hosts.
 

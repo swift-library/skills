@@ -33,8 +33,8 @@ references, templates, or scripts needed for the current task.
   one.
 - `skills/*/agents/` is optional interface metadata for agent hosts. It is not
   the authoritative trigger or workflow source.
-- `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` define the
-  root `swift-skills` plugin for their hosts.
+- `.claude-plugin/plugin.json` defines the root `swift-skills` plugin for
+  Claude Code, and the root `plugin.json` defines it for Codex.
 - `.claude-plugin/marketplace.json` and `.agents/plugins/marketplace.json`
   publish the whole collection as `swift-skills`.
 
@@ -589,8 +589,10 @@ Before publishing or materially changing a skill, check:
 ## Plugin Distribution
 
 Claude Code and Codex install this repository as the `swift-skills` plugin.
-Claude discovers the default `skills/` directory from the repository root;
-Codex exposes the same directory through `skills: "./skills/"`.
+Claude reads `.claude-plugin/plugin.json`; Codex reads the root `plugin.json`,
+a portable Agent Plugins manifest with the same identity fields and its Codex
+interface under `extensions.com.openai`. Both hosts discover the `skills/`
+directory at the repository root.
 
 The version source and its mirrors follow the organization's
 [versioning standard](https://github.com/swift-library/.github/blob/master/VERSIONING.md#one-version-source);
@@ -616,8 +618,7 @@ CODEX_HOME="$codex_test_home" codex plugin list --available --json
 ```
 
 The Codex marketplace uses the published repository's Git root as its plugin
-source. Codex CLI 0.139.0 local sources require a normal nonempty subdirectory
-inside the marketplace. To test working-tree content, commit the candidate,
+source. To test working-tree content, commit the candidate,
 export it with `git archive HEAD` into `.build/plugin-check/marketplace/release/`,
 and create a local marketplace in `.build/plugin-check/marketplace/` with the
 same name and policy, replacing the source with
