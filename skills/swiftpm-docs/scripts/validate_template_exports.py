@@ -3,45 +3,10 @@
 
 from __future__ import annotations
 
-import re
 import tempfile
 from pathlib import Path
 
-SKILL_ROOT = Path(__file__).resolve().parents[1]
-TEMPLATES_ROOT = SKILL_ROOT / "templates"
-PROFILE_NAMES = ("minimal", "standard")
-OUTPUT_ROW = re.compile(
-    r"^\|\s*`(?P<target>[^`]+)`\s*\|\s*`(?P<source>[^`]+)`\s*\|"
-    r"\s*(?P<required>yes|when not inherited)\s*\|$"
-)
-
-
-def output_map(
-    profile_path: Path, *, inherited_paths: set[Path]
-) -> list[tuple[Path, Path]]:
-    rows: list[tuple[Path, Path]] = []
-    for line in profile_path.read_text(encoding="utf-8").splitlines():
-        match = OUTPUT_ROW.match(line)
-        if match is None:
-            continue
-        target = Path(match.group("target"))
-        source = (profile_path.parent / match.group("source")).resolve()
-        if target.is_absolute() or ".." in target.parts:
-            raise ValueError(f"{profile_path}: unsafe target path {target}")
-        try:
-            source.relative_to(TEMPLATES_ROOT)
-        except ValueError as error:
-            raise ValueError(f"{profile_path}: template escapes templates/: {source}") from error
-        if not source.is_file():
-            raise FileNotFoundError(f"{profile_path}: missing template {source}")
-        if match.group("required") == "when not inherited" and target in inherited_paths:
-            continue
-        rows.append((target, source))
-    if not rows:
-        raise ValueError(f"{profile_path}: no required output map rows")
-    if len({target for target, _ in rows}) != len(rows):
-        raise ValueError(f"{profile_path}: duplicate target path")
-    return rows
+from profile_export import PROFILE_NAMES, SKILL_ROOT, export_files, output_map
 
 
 def review_rule_groups(text: str) -> int | None:
@@ -148,10 +113,7 @@ def validate_release_reference(root: Path, profile_name: str) -> None:
 def export_profile(
     profile_path: Path, profile_root: Path, *, inherited_paths: set[Path]
 ) -> None:
-    for target, source in output_map(profile_path, inherited_paths=inherited_paths):
-        destination = profile_root / target
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_bytes(source.read_bytes())
+    export_files(output_map(profile_path, inherited_paths=inherited_paths), profile_root)
     profile_name = profile_path.stem
     agent_guide = profile_root / "AGENTS.md"
     if not agent_guide.is_file():

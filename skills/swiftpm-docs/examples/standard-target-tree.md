@@ -11,7 +11,7 @@ Omit community-health files inherited from shared defaults.
 - Proposal: `Documentation/Proposals/*`
 - Truth: `Documentation/Architecture/*`
 - History: `Documentation/Decisions/*`, `Documentation/Migrations/*`, `Documentation/Archive/*`
-- Open Work: the repository's GitHub issues, linked from documents
+- Open Work: task plans; GitHub issues for handed-off work, linked from documents
 - Governance: `.github/*`
 - Reference: `Documentation/Reference/*`
 

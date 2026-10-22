@@ -7,7 +7,7 @@ normalization. They are durable behavior inputs, not execution logs.
 
 | Input | Expected output |
 | --- | --- |
-| An architecture document lists defects, requested changes, and pending decisions | Open work belongs in the owning repository's GitHub issues; documents link to the issues while retaining current architecture facts. |
+| An architecture document lists defects, requested changes, and pending decisions | Open work moves out of the document: into the owner's task plan when that owner does it, or into the owning repository's GitHub issues when it is handed off; documents link to issues while retaining current architecture facts. |
 | The GitHub settings owner confirms shared community defaults apply | Omit inherited community-health files from both profiles. Retain repository-specific documentation, license, governance, and ownership files. That owner verifies the defaults take effect. |
 | The settings owner selects local community files | Emit the selected profile's community files, including `.github/ISSUE_TEMPLATE/config.yml` for the standard profile. Both bug and feature templates ask for current behavior or state, expected outcome, evidence with commands, versions and links, the decision needed, and completion checks. |
 | Contributor and security guidance are inherited; issue and pull request templates are local | Omit the inherited files and emit the selected local templates. Inheritance is an input from the settings owner, not a decision inferred from missing local files. |
