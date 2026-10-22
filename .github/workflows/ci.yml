@@ -24,13 +24,29 @@ jobs:
       - name: Validate collection distribution and documentation exports
         run: Scripts/check
 
+  package-template:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: swift-library/swift-package-template
+          path: template
+          persist-credentials: false
+      - name: Check package template documentation
+        run: Scripts/check-package-template template
+
   result:
-    needs: validate
+    needs: [validate, package-template]
     if: always()
     runs-on: ubuntu-24.04
     steps:
       - name: Require successful collection validation
         env:
           VALIDATE: ${{ needs.validate.result }}
+          PACKAGE_TEMPLATE: ${{ needs.package-template.result }}
         run: |
           test "$VALIDATE" = success
+          test "$PACKAGE_TEMPLATE" = success

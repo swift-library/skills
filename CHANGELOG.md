@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- `swiftpm-docs` exports a documentation profile into a package with
+  `scripts/export_profile.py`, filling identity values from arguments and the
+  build command, test command and requirement from the package's own files.
+- `swiftpm-docs` hands VERSIONING to the repository steward only when it is
+  installed.
+- CI checks that `swift-library/swift-package-template` carries the minimal
+  export unchanged.
+- `swiftpm-docs` keeps work its owner does in place in the task plan and sends
+  only handed-off or public work to GitHub issues.
+
 ## 0.1.0
 
 - First release of the `swift-skills` plugin for Claude Code and Codex, with skills for:

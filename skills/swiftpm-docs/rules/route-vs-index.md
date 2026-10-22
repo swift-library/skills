@@ -18,7 +18,7 @@ type and programming language do not change these responsibilities.
 | Current architecture | Accepted structure, detailed contracts, invariants, and design rationale | Named architecture documents |
 | Reference | Exhaustive API/command/schema details, long examples, topic depth | Named reference documents or the project's API documentation |
 | Durable history | Accepted decisions with lasting rationale, migrations, provenance, releases | Existing history or provenance owners |
-| Open work | Defects, requested changes and decisions not yet done | The owning repository's issue tracker; documents link to the issue instead of listing the work |
+| Open work | Defects, requested changes and decisions not yet done | The owner's task plan while that owner does the work; the owning repository's issue tracker when it is handed off or recorded publicly. Documents link to the issue instead of listing the work |
 | Task state | Plans, raw evidence, run logs, intermediate attempts | The declared task-state owner |
 
 Use the target's actual documentation locations and casing. These are roles,
@@ -36,7 +36,8 @@ Ask what the sentence helps its reader do:
 - Understand the product or perform its supported operations: manual.
 - Discover contents, locations, or descriptive ownership: index.
 - Understand detailed current structure or rationale: architecture/reference.
-- Record work that is not done yet: open work; file or link the issue.
+- Record work that is not done yet: open work; keep it in the task plan, or
+  file or link the issue when it is handed off.
 
 Apply the test to clauses when a paragraph combines several roles. Words such
 as "must", "before", "owns", or a directory name are clues, not verdicts.

@@ -3,12 +3,14 @@
 
 import importlib.util
 from pathlib import Path
+import sys
 import tempfile
 import unittest
 
 
 ROOT = Path(__file__).resolve().parent.parent
 SKILL = ROOT / "skills/swiftpm-docs"
+sys.path.insert(0, str(SKILL / "scripts"))
 spec = importlib.util.spec_from_file_location(
     "template_exports", SKILL / "scripts/validate_template_exports.py"
 )

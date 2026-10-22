@@ -57,10 +57,21 @@ version sources, the compatibility surface, dependency compatibility, derived
 fields, candidate acceptance, evidence reuse/invalidation, real entry points
 and artifact retention. Version rules (tags, release timing, choosing the next
 version, changelog) live only in the root `VERSIONING.md` or the organization
-VERSIONING the project adopts, owned by `github-repo-steward`; link them and
-do not restate them. When the project has no VERSIONING, route its creation to
+VERSIONING the project adopts, owned by the repository steward (`github-repo-steward` when installed);
+link them and do not restate them. When the project has no VERSIONING, route its creation to
 that skill and supply its version source, mirrors and release owner, which is
 this release reference.
+
+Export a profile into a package with
+`python3 scripts/export_profile.py --profile <minimal|standard> --output <dir>`.
+Pass the package's identity with `--set repo-name=<repository name>` and
+`--set package-name=<package name>`. Add `--package-root <dir>` to fill the
+build command, test command and requirement from the package's own
+`Package.swift` and `.github/release.json`. Skip community files the
+repository inherits with `--inherited <path>`. Author placeholders and
+bracketed guidance stay for the author. A new repository is created by the
+repository steward, from the template its organization declares when there is
+one; this skill supplies the documentation.
 
 For an existing repository, find the document already owning these release
 facts first. Complete that document and adjust the profile target, indexes and
@@ -113,8 +124,9 @@ package repository:
 - Truth: `Documentation/Architecture/*`
 - History: `Documentation/Decisions/*`, `Documentation/Migrations/*`,
   `Documentation/Archive/*`
-- Open Work: the repository's GitHub issues; documents link to them instead of
-  listing work
+- Open Work: the owner's task plan while in progress; the repository's GitHub
+  issues for work handed off or recorded publicly. Documents link to issues
+  instead of listing work
 - Governance: `.github/*`
 - Reference: `Documentation/Reference/*`
 - DocC Source: `Sources/<Target>/<Target>.docc/*`
