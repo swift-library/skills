@@ -11,6 +11,10 @@
   export unchanged.
 - `swiftpm-docs` keeps work its owner does in place in the task plan and sends
   only handed-off or public work to GitHub issues.
+- The `swift-skills` plugin manifest for Codex is the portable Agent Plugins
+  `plugin.json` at the repository root, with the Codex interface under
+  `extensions.com.openai`; `.codex-plugin/plugin.json` is removed. Codex needs
+  CLI 0.147.0 or later to install the plugin.
 
 ## 0.1.0
 

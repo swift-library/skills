@@ -20,7 +20,7 @@ class PluginTests(unittest.TestCase):
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
         for path in ("VERSION", ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json",
-                     ".codex-plugin/plugin.json", ".agents/plugins/marketplace.json"):
+                     "plugin.json", ".agents/plugins/marketplace.json"):
             target = self.root / path
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes((ROOT / path).read_bytes())
@@ -63,13 +63,23 @@ class PluginTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "repository-root Git plugin"):
             plugins.validate(self.root)
 
-    def test_codex_cannot_expose_a_subset(self):
-        self.change(".codex-plugin/plugin.json", lambda m: m.update(skills="./skills/first/"))
-        with self.assertRaisesRegex(ValueError, "whole skills/"):
+    def test_root_plugin_cannot_select_skills(self):
+        self.change("plugin.json", lambda m: m.update(skills="./skills/first/"))
+        with self.assertRaisesRegex(ValueError, "outside the Agent Plugins schema"):
+            plugins.validate(self.root)
+
+    def test_root_plugin_carries_codex_interface(self):
+        self.change("plugin.json", lambda m: m["extensions"]["com.openai"].pop("interface"))
+        with self.assertRaisesRegex(ValueError, "Codex interface"):
+            plugins.validate(self.root)
+
+    def test_root_plugin_mirrors_claude_identity(self):
+        self.change("plugin.json", lambda m: m.update(author={"name": "other"}))
+        with self.assertRaisesRegex(ValueError, "mirror the root plugin identity"):
             plugins.validate(self.root)
 
     def test_versions_stay_in_sync(self):
-        for path in (".claude-plugin/plugin.json", ".codex-plugin/plugin.json",
+        for path in (".claude-plugin/plugin.json", "plugin.json",
                      ".claude-plugin/marketplace.json"):
             with self.subTest(path=path):
                 target = self.root / path

@@ -17,7 +17,7 @@ the same collection under `skills/`.
 
 | Shipped component | Version meaning | Version source | Mirrors and derived fields | Update and read-only check |
 | --- | --- | --- | --- | --- |
-| `swift-skills` plugin | Release version in `X.Y.Z` form | Root [`VERSION`](../../VERSION) | `version` in [Claude plugin](../../.claude-plugin/plugin.json) and [Codex plugin](../../.codex-plugin/plugin.json); `metadata.version` in [Claude marketplace](../../.claude-plugin/marketplace.json) | Update the source and three mirrors manually; run `python3 -B Scripts/validate-plugins.py` or `Scripts/check` |
+| `swift-skills` plugin | Release version in `X.Y.Z` form | Root [`VERSION`](../../VERSION) | `version` in [Claude plugin](../../.claude-plugin/plugin.json) and [root plugin](../../plugin.json); `metadata.version` in [Claude marketplace](../../.claude-plugin/marketplace.json) | Update the source and three mirrors manually; run `python3 -B Scripts/validate-plugins.py` or `Scripts/check` |
 
 ## Compatibility Surface
 

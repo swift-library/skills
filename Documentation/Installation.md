@@ -21,6 +21,8 @@ claude plugin update swift-skills@swift-skills
 
 ## Codex
 
+The plugin needs Codex CLI 0.147.0 or later.
+
 ```bash
 codex plugin marketplace add swift-library/skills --ref master
 codex plugin add swift-skills@swift-skills

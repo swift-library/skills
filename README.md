@@ -43,7 +43,7 @@ claude plugin install swift-skills@swift-skills
 
 ## Install
 
-The `swift-skills` plugin installs the whole collection in Claude Code or Codex. For Codex:
+The `swift-skills` plugin installs the whole collection in Claude Code or Codex. For Codex CLI 0.147.0 or later:
 
 ```sh
 codex plugin marketplace add swift-library/skills --ref master

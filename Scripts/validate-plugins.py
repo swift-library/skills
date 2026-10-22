@@ -10,6 +10,9 @@ import re
 ROOT = Path(__file__).resolve().parent.parent
 NAME = "swift-skills"
 LICENSE = "Apache-2.0 WITH Swift-exception"
+SCHEMA = "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
+IDENTITY = ("name", "version", "description", "author", "homepage", "repository",
+            "license", "keywords")
 
 
 def require(condition, message):
@@ -23,20 +26,27 @@ def validate(root):
 
     claude = read(".claude-plugin/plugin.json")
     marketplace = read(".claude-plugin/marketplace.json")
-    codex = read(".codex-plugin/plugin.json")
+    plugin = read("plugin.json")
     agents = read(".agents/plugins/marketplace.json")
     version = (root / "VERSION").read_text().strip()
     require(re.fullmatch(r"\d+\.\d+\.\d+", version), "Invalid plugin version")
     description = claude["description"]
     require(bool(description), "Missing plugin description")
-    for manifest in (claude, codex):
+    for manifest in (claude, plugin):
         require(manifest["name"] == NAME, "Unexpected plugin identity")
         require(manifest["version"] == version, "Plugin versions differ")
         require(manifest["description"] == description, "Plugin descriptions differ")
     require(claude["license"] == LICENSE, "Claude plugin license differs from LICENSE.txt")
     # Claude always discovers skills/ relative to the plugin root.
     require("skills" not in claude, "Claude must use default skills/ discovery")
-    require(codex["skills"] == "./skills/", "Codex must expose the whole skills/ directory")
+    require(plugin["$schema"] == SCHEMA, "Root plugin must use the Agent Plugins 1.0.0 schema")
+    require(set(plugin) <= {"$schema", "extensions", *IDENTITY},
+            "Root plugin has fields outside the Agent Plugins schema")
+    require({key: plugin[key] for key in IDENTITY if key in plugin} == claude,
+            "Claude plugin must mirror the root plugin identity")
+    openai = plugin.get("extensions", {}).get("com.openai", {})
+    require(isinstance(openai.get("interface"), dict),
+            "Root plugin must carry the Codex interface in extensions.com.openai")
     require(marketplace["name"] == NAME, "Unexpected Claude marketplace identity")
     require(marketplace["metadata"]["version"] == version, "Marketplace version differs")
     require(marketplace["plugins"] == [{
