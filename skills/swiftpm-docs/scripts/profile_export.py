@@ -15,6 +15,11 @@ OUTPUT_ROW = re.compile(
     r"\s*(?P<required>yes|when not inherited)\s*\|$"
 )
 PLACEHOLDER = re.compile(r"<([a-z0-9-]+)>")
+SWIFT_STRING = re.compile(r'"(?:\\.|[^"\\])*"', re.DOTALL)
+PLATFORM_VERSION = re.compile(
+    r"\.(?P<platform>iOS|macOS|tvOS|watchOS|visionOS)\s*\(\s*"
+    r'(?:\.v(?P<version>\d+(?:_\d+)*)|"(?P<string>[^"\\\r\n]*)")\s*\)'
+)
 
 
 def output_map(
@@ -52,6 +57,63 @@ def read_utf8(path: Path) -> str:
         raise ValueError(f"{path}: {error}") from error
 
 
+def strip_swift_comments(manifest: str) -> str:
+    parts: list[str] = []
+    index = 0
+    while index < len(manifest):
+        if manifest.startswith("//", index):
+            end = manifest.find("\n", index)
+            if end == -1:
+                break
+            parts.append("\n")
+            index = end + 1
+        elif manifest.startswith("/*", index):
+            depth = 1
+            index += 2
+            while depth and index < len(manifest):
+                if manifest.startswith("/*", index):
+                    depth += 1
+                    index += 2
+                elif manifest.startswith("*/", index):
+                    depth -= 1
+                    index += 2
+                else:
+                    index += 1
+            parts.append(" ")
+        elif match := SWIFT_STRING.match(manifest, index):
+            parts.append(match.group())
+            index = match.end()
+        else:
+            parts.append(manifest[index])
+            index += 1
+    return "".join(parts)
+
+
+def platform_expressions(manifest: str, manifest_path: Path) -> list[str]:
+    platforms = re.search(r"\bplatforms\s*:\s*\[", manifest)
+    if platforms is None:
+        return []
+    expressions: list[str] = []
+    start = platforms.end()
+    depth = 0
+    tokens = re.compile(SWIFT_STRING.pattern + r"|[\[\](){},]", re.DOTALL)
+    for token in tokens.finditer(manifest, start):
+        value = token.group()
+        if value == "]" and depth == 0:
+            expression = manifest[start:token.start()].strip()
+            if expression:
+                expressions.append(expression)
+            return expressions
+        if value == "," and depth == 0:
+            expressions.append(manifest[start:token.start()].strip())
+            start = token.end()
+        elif value in ("[", "(", "{"):
+            depth += 1
+        elif value in ("]", ")", "}"):
+            depth -= 1
+    raise ValueError(f"{manifest_path}: unterminated platforms array: {manifest[start:].strip()}")
+
+
 def package_facts(package_root: Path) -> dict[str, str]:
     manifest_path = package_root / "Package.swift"
     manifest = read_utf8(manifest_path)
@@ -62,16 +124,17 @@ def package_facts(package_root: Path) -> dict[str, str]:
     if tools_version is None:
         raise ValueError(f"{manifest_path}: unreadable swift-tools-version")
     requirement = f"Swift {tools_version.group(1)} or later"
-    platforms = re.search(r"\bplatforms\s*:\s*\[(.*?)\]", manifest, re.DOTALL)
-    if platforms is not None:
-        versions = re.findall(
-            r"\.(iOS|macOS|tvOS|watchOS|visionOS)\s*\(\s*\.v(\d+(?:_\d+)*)\s*\)",
-            platforms.group(1),
-        )
-        if versions:
-            requirement += "; " + ", ".join(
-                f"{platform} {version.replace('_', '.')}" for platform, version in versions
-            )
+    versions: list[str] = []
+    for expression in platform_expressions(strip_swift_comments(manifest), manifest_path):
+        match = PLATFORM_VERSION.fullmatch(expression)
+        if match is None:
+            raise ValueError(f"{manifest_path}: unsupported platform expression: {expression}")
+        version = match.group("string")
+        if version is None:
+            version = match.group("version").replace("_", ".")
+        versions.append(f"{match.group('platform')} {version}")
+    if versions:
+        requirement += "; " + ", ".join(versions)
 
     test_command = "swift test"
     release_path = package_root / ".github/release.json"
@@ -96,11 +159,24 @@ def export_files(
     outputs: list[tuple[Path, Path]], output_root: Path, *,
     replacements: dict[str, str] | None = None, force: bool = True,
 ) -> list[Path]:
-    if not force:
-        for target, _ in outputs:
-            destination = output_root / target
-            if destination.exists() or destination.is_symlink():
-                raise FileExistsError(f"{destination}: already exists; use --force to overwrite")
+    try:
+        resolved_root = output_root.resolve()
+    except (OSError, RuntimeError) as error:
+        raise ValueError(f"{output_root}: cannot resolve output directory") from error
+    for target, _ in outputs:
+        destination = output_root / target
+        for relative in (target, *target.parents):
+            path = output_root / relative
+            try:
+                path.resolve().relative_to(resolved_root)
+            except (OSError, RuntimeError, ValueError) as error:
+                raise ValueError(f"{path}: must resolve inside output directory {output_root}") from error
+            if relative != target and path.exists() and not path.is_dir():
+                raise ValueError(f"{path}: destination parent must be a directory")
+        if destination.is_symlink() or (destination.exists() and not destination.is_file()):
+            raise ValueError(f"{destination}: destination must be a regular file, not a symlink")
+        if not force and destination.exists():
+            raise FileExistsError(f"{destination}: already exists; use --force to overwrite")
     written: list[Path] = []
     for target, source in outputs:
         destination = output_root / target

@@ -59,8 +59,8 @@ and artifact retention. Version rules (tags, release timing, choosing the next
 version, changelog) live only in the root `VERSIONING.md` or the organization
 VERSIONING the project adopts, owned by the repository steward (`github-repo-steward` when installed);
 link them and do not restate them. When the project has no VERSIONING, route its creation to
-that skill and supply its version source, mirrors and release owner, which is
-this release reference.
+the repository steward (`github-repo-steward` when installed) and supply its
+version source, mirrors and release owner, which is this release reference.
 
 Export a profile into a package with
 `python3 scripts/export_profile.py --profile <minimal|standard> --output <dir>`.

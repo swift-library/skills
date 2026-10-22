@@ -59,6 +59,62 @@ class ProfileExportTests(unittest.TestCase):
             readme,
         )
 
+    def test_commented_out_platforms_are_ignored(self):
+        (self.package / "Package.swift").write_text(
+            '// swift-tools-version: 6.2\nimport PackageDescription\n'
+            'let package = Package(\n'
+            '    name: "https://example.test/*Example*/",\n'
+            '    // platforms: [.macOS(.v99)],\n'
+            '    /* platforms: [.tvOS(.v99)], /* nested comment */ */\n'
+            '    platforms: [\n'
+            '        // .watchOS(.v99),\n'
+            '        /* .visionOS(.v99), */\n'
+            '        .iOS /* deployment floor */ (.v15),\n'
+            '        .macOS(.v12),\n'
+            '    ],\n'
+            '    products: []\n)\n'
+        )
+        self.export("--package-root", self.package)
+        self.assertIn("- Swift 6.2 or later; iOS 15, macOS 12\n", self.readme())
+        self.assertNotIn("99", self.readme())
+
+    def test_only_commented_platforms_have_no_platform_requirement(self):
+        for comment in ("// platforms: [.iOS(.v99)],", "/* platforms: [.iOS(.v99)], */"):
+            with self.subTest(comment=comment):
+                (self.package / "Package.swift").write_text(
+                    '// swift-tools-version: 6.2\nimport PackageDescription\n'
+                    f'{comment}\nlet package = Package(name: "Example")\n'
+                )
+                self.export("--package-root", self.package, "--force")
+                self.assertIn("- Swift 6.2 or later\n", self.readme())
+
+    def test_string_platform_version_preserves_its_text(self):
+        (self.package / "Package.swift").write_text(
+            '// swift-tools-version: 6.2\nimport PackageDescription\n'
+            'let package = Package(name: "Example", '
+            'platforms: [.iOS("17.0"), .macOS(.v12)])\n'
+        )
+        self.export("--package-root", self.package)
+        self.assertIn("- Swift 6.2 or later; iOS 17.0, macOS 12\n", self.readme())
+
+    def test_unsupported_platform_expression_fails_without_writing(self):
+        manifest = self.package / "Package.swift"
+        for expression in (
+            ".iOS(minimumVersion)", "minimumPlatform",
+            '.custom("Other", versionString: "1.0")',
+            ".iOS(.v15) + extraPlatforms[0]",
+        ):
+            with self.subTest(expression=expression):
+                manifest.write_text(
+                    '// swift-tools-version: 6.2\nimport PackageDescription\n'
+                    'let package = Package(name: "Example", '
+                    f'platforms: [.macOS(.v12), {expression}])\n'
+                )
+                result = self.export("--package-root", self.package, expected=1)
+                self.assertIn(str(manifest), result.stderr)
+                self.assertIn(expression, result.stderr)
+                self.assertFalse(self.output.exists())
+
     def test_set_values_win_over_package_facts(self):
         self.export(
             "--package-root", self.package, "--set", "build-command=Scripts/build",
@@ -111,6 +167,75 @@ class ProfileExportTests(unittest.TestCase):
         self.assertIn(str(existing), result.stderr)
         self.assertEqual(existing.read_bytes(), b"existing documentation\n")
         self.assertFalse((self.output / "AGENTS.md").exists())
+
+    def test_symlinked_file_fails_before_any_writes(self):
+        for location in ("outside", "inside", "missing"):
+            with self.subTest(location=location):
+                output = self.root / location
+                destination = output / "Documentation/Reference/Release.md"
+                destination.parent.mkdir(parents=True)
+                existing = output / "AGENTS.md"
+                existing.write_bytes(b"existing guide\n")
+                referent = output / "Local.md" if location == "inside" else self.root / f"{location}.md"
+                if location != "missing":
+                    referent.write_bytes(b"existing release\n")
+                destination.symlink_to(referent)
+                before = {path.relative_to(output) for path in output.rglob("*")}
+
+                result = self.export("--force", output=output, expected=1)
+
+                self.assertIn(str(destination), result.stderr)
+                self.assertEqual(existing.read_bytes(), b"existing guide\n")
+                self.assertTrue(destination.is_symlink())
+                self.assertEqual({path.relative_to(output) for path in output.rglob("*")}, before)
+                if location == "missing":
+                    self.assertFalse(referent.exists())
+                else:
+                    self.assertEqual(referent.read_bytes(), b"existing release\n")
+
+    def test_symlinked_parent_directory_fails_before_any_writes(self):
+        for exists in (True, False):
+            with self.subTest(parent_exists=exists):
+                output = self.root / f"export-{exists}"
+                output.mkdir()
+                existing = output / "AGENTS.md"
+                existing.write_bytes(b"existing guide\n")
+                outside = self.root / f"outside-{exists}"
+                if exists:
+                    outside.mkdir()
+                    (outside / "README.md").write_bytes(b"existing index\n")
+                parent = output / "Documentation"
+                parent.symlink_to(outside, target_is_directory=True)
+
+                result = self.export("--force", output=output, expected=1)
+
+                self.assertIn(str(parent), result.stderr)
+                self.assertEqual(existing.read_bytes(), b"existing guide\n")
+                self.assertTrue(parent.is_symlink())
+                self.assertEqual(set(output.iterdir()), {existing, parent})
+                if exists:
+                    self.assertEqual(set(outside.iterdir()), {outside / "README.md"})
+                    self.assertEqual((outside / "README.md").read_bytes(), b"existing index\n")
+                else:
+                    self.assertFalse(outside.exists())
+
+    def test_directory_destination_fails_before_any_writes(self):
+        destination = self.output / "Documentation/Reference/Release.md"
+        destination.mkdir(parents=True)
+        result = self.export("--force", expected=1)
+        self.assertIn(str(destination), result.stderr)
+        self.assertTrue(destination.is_dir())
+        self.assertFalse((self.output / "AGENTS.md").exists())
+        self.assertFalse((self.output / "README.md").exists())
+
+    def test_file_parent_fails_before_any_writes(self):
+        parent = self.output / "Documentation"
+        self.output.mkdir()
+        parent.write_bytes(b"existing file\n")
+        result = self.export("--force", expected=1)
+        self.assertIn(str(parent), result.stderr)
+        self.assertEqual(parent.read_bytes(), b"existing file\n")
+        self.assertEqual(set(self.output.iterdir()), {parent})
 
     def test_force_overwrites_exports_and_preserves_other_files(self):
         self.export()
