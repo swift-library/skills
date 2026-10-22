@@ -53,7 +53,7 @@ codex plugin add swift-skills@swift-skills
 Restart your host after installing. The [installation guide](Documentation/Installation.md) covers updates and other hosts.
 
 > [!NOTE]
-> The collection has no tagged release. Installation uses the current `master` branch.
+> Installation uses the current `master` branch, not a tagged release.
 
 ## Usage
 
