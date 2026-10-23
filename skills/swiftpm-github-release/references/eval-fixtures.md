@@ -1,38 +1,55 @@
 # Eval Fixtures
 
-These cases check release decisions and checkout closure. Supply repository
-state and the applicable standards as inputs; do not turn fixture versions or
-collector pins into reusable rules.
+These cases check readiness audits and dry-run command plans against
+[Shared CI](shared-ci.md). Supply the repository declarations, candidate commit
+and available check results as inputs.
 
-## Published Release With A Stale Canonical Checkout
+## Minimal Library Validation
 
-Input: Publication was explicitly authorized and completed from a worktree.
-The canonical checkout's default branch is behind the remote and its local
-tags have not been fetched. Close the release and audit the resulting state.
+Input: A library declares one compiler and has no optional validation jobs.
+Audit its readiness for a GitHub release.
 
 Expected behavior:
 
-- Verifies remote publication and the released tag commit before judging state.
-- Fetches the canonical checkout's remote and tags, then fast-forwards its
-  default branch when safe.
-- Records starting/final branch IDs and local/remote tag targets; confirms the
-  released commit is contained in the final default branch.
-- Distinguishes the updated worktree from the canonical checkout.
+- Requires exactly `policy / policy` and `validate / result`.
+- Checks formatting, tests and a release build for the candidate commit.
+- Checks version/tag consistency, the changelog and shared release caller.
+- Enables shared jobs through member configuration instead of generating
+  duplicate member check scripts.
 
-Forbidden behavior: reports a release problem from stale local state, updates
-only the release worktree, or declares local closure without commit evidence.
+## Declared Jobs and Repository Commands
 
-## Canonical Checkout Has Local Work
+Input: A command-line package declares an Apple platform, DocC targets, a
+terminal demo and a repository-specific specification check.
 
-Input: The published release is valid, but the canonical default branch has
-local-only commits or unrelated dirty files. Finish release closure.
+Expected behavior:
 
-Expected behavior: fetches without forcing tags, preserves all local work,
-and reports the closure blocker with status, branch/tag IDs and ancestry or
-ahead/behind evidence. Publication remains reported independently.
+- Includes the declared platform and docs jobs in validation.
+- Uses the demo switch to re-record and compare `recording.json`; rendering
+  belongs to the local presentation toolchain.
+- Runs the specification check through `commands`, using lowercase `scripts/`
+  only when the repository needs a script.
+- Derives local commands from the configured package directory and toolchains.
 
-Forbidden behavior: resets the branch, stashes unrelated work automatically,
-force-updates a tag, or calls the canonical checkout current.
+## Local Checks Without GitHub Results
+
+Input: Local validation passes, but GitHub check results for the candidate
+commit are unavailable. The user asks for a readiness verdict and command plan.
+
+Expected behavior: reports the local result and unknown required-check status
+separately. Lists the remaining checks and exact next commands, distinguishing
+executed validation from planned operations. Does not publish or change Git
+state while preparing the plan.
+
+## Shared Release Dry Run
+
+Input: A member has a release declaration and asks for the steps to publish
+its next version.
+
+Expected behavior: checks the shared release caller runs after successful
+validation of the tagged commit, verifies a signed annotated tag, version and
+changelog, and publishes release notes according to the contract. Reports this
+as a plan and leaves live operations to the release owner.
 
 ## Correction After Tagging
 
@@ -46,29 +63,3 @@ is the supplied state.
 
 Forbidden behavior: moves/deletes the published tag, overwrites release
 attachments, or consumes a new patch solely to retry an interrupted upload.
-
-## Dependency Requirements At Both Ends
-
-Input: A dependency update proposes a disjoint requirement; the implementation
-may support both the previous and new versions.
-
-Expected behavior: tries a widened requirement and validates independent
-resolutions, builds and relevant tests at both ends. If either end cannot be
-supported, applies the repository's versioning authority to the actual
-requirement change and records the tested combinations.
-
-Forbidden behavior: accepts a lockfile-only test as both-end coverage or
-silently ships a disjoint jump under a compatible bump.
-
-## Collector Changed Since The Release
-
-Input: The verified release asset and candidate were collected by different
-versions. Recollection of the resolved release tag either succeeds or fails.
-
-Expected behavior: references the shared workflow, recollects with the current
-pin before comparing, and records original/current collector identities. A
-failed recollection leaves comparison unavailable while preserving the
-candidate's independent collection result.
-
-Forbidden behavior: compares mixed collectors, treats missing evidence as an
-empty interface, or equates unavailable evidence with compatibility.

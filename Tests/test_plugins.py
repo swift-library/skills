@@ -9,7 +9,7 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parent.parent
-spec = importlib.util.spec_from_file_location("plugins", ROOT / "Scripts/validate-plugins.py")
+spec = importlib.util.spec_from_file_location("plugins", ROOT / "scripts/validate-plugins.py")
 plugins = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(plugins)
 

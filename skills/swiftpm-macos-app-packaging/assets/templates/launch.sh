@@ -12,7 +12,7 @@ sleep 0.5
 
 if [[ ! -d "$APP_PATH" ]]; then
     echo "ERROR: ${APP_NAME}.app not found at $APP_PATH"
-    echo "Run ./Scripts/package_app.sh first to build the app"
+    echo "Run ./scripts/package_app.sh first to build the app"
     exit 1
 fi
 

@@ -160,14 +160,14 @@ sed -i '' 's/MyApp/HelloApp/g' Package.swift version.env
 mv Sources/MyApp Sources/HelloApp
 
 # 2. Copy scripts.
-mkdir -p Scripts
-cp assets/templates/package_app.sh Scripts/
-cp assets/templates/compile_and_run.sh Scripts/
-chmod +x Scripts/*.sh
+mkdir -p scripts
+cp assets/templates/package_app.sh scripts/
+cp assets/templates/compile_and_run.sh scripts/
+chmod +x scripts/*.sh
 
 # 3. Build and launch.
 swift build
-Scripts/compile_and_run.sh
+scripts/compile_and_run.sh
 ```
 
 ## Common Notarization Failures

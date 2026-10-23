@@ -563,7 +563,7 @@ Before publishing or materially changing a skill, check:
   tracked skill directory through `skills/`.
 - Discovery and routing do not point at untracked, missing, or partially
   renamed skill directories.
-- `Scripts/check` passes for collection distribution and template exports.
+- `scripts/check` passes for collection distribution and template exports.
 - Route guidance in `AGENTS.md` stays short and does not duplicate full skill
   workflows.
 - Current-source verification is complete before Apple, Swift, Xcode,
@@ -598,7 +598,7 @@ The version source and its mirrors follow the organization's
 [versioning standard](https://github.com/swift-library/.github/blob/master/VERSIONING.md#one-version-source);
 [Release](../Reference/Release.md) lists them for this repository.
 
-Run `Scripts/check` for manifest and regression validation. For host checks,
+Run `scripts/check` for manifest and regression validation. For host checks,
 use isolated homes under the ignored `.build/` directory and confirm the real
 host configuration is unchanged afterward:
 

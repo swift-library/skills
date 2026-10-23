@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Repository automation uses lowercase `scripts/`, including the macOS app
+  packaging scaffold and templates.
+- `swiftpm-github-release` audits readiness against the shared CI contract:
+  formatting, tests and a release build, plus declared jobs and repository
+  commands, with `policy / policy` and `validate / result` as required checks.
+- Documentation exports derive local `swift build` and `swift test` commands
+  from the package directory declared in `.github/swift-package.json`.
+- Terminal demos use the `github-readme-design` toolchain for local rendering
+  and the validation workflow's demo switch for re-recording.
 - `swiftpm-docs` exports a documentation profile into a package with
   `scripts/export_profile.py`, filling identity values from arguments and the
   build command, test command and requirement from the package's own files.

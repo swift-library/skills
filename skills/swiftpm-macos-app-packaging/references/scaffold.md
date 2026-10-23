@@ -21,7 +21,7 @@ swift package init --type executable
 5. If app resources are needed, add `resources: [.process("Resources")]` and
    create `Sources/MyApp/Resources/`.
 6. Add `version.env` for packaging metadata.
-7. Copy script templates from `assets/templates/` into `Scripts/`.
+7. Copy script templates from `assets/templates/` into `scripts/`.
 
 ## Required Shape
 
@@ -32,8 +32,8 @@ swift package init --type executable
 - Resources live under the executable target when SwiftPM should copy them.
 - The bootstrap uses `Resources/README.txt` as a visible placeholder so SwiftPM
   copies the resources directory without warning on hidden placeholder files.
-- Packaging scripts live outside `Sources/`, usually in `scripts/` or
-  `Scripts/`, based on project convention.
+- Packaging scripts live in the repository's `scripts/` directory
+  (repository-specific automation, created only when needed).
 - Version values should come from a small local file such as `version.env` or
   from the release process.
 

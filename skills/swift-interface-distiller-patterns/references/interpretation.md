@@ -94,6 +94,7 @@ into empty snapshots. A valid baseline cannot be replaced by missing expected
 modules, failed/unsupported collection or conflicts. External references alone
 do not invalidate a scoped baseline.
 
-Shared organization workflows own release comparison targets and baseline
-governance. `equal` describes these observations; it is not a compatibility or
-runtime-behavior guarantee and does not choose a SemVer bump.
+When the user asks for an interface comparison, run swift-interface-distiller
+explicitly with the revisions or snapshots selected for that task. `equal`
+describes these observations; it is not a compatibility or runtime-behavior
+guarantee and does not choose a SemVer bump.

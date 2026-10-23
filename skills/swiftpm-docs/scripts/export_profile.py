@@ -26,7 +26,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--profile", required=True, choices=PROFILE_NAMES)
     parser.add_argument("--output", required=True, type=Path)
-    parser.add_argument("--package-root", type=Path)
+    parser.add_argument(
+        "--package-root", type=Path,
+        help="repository root; reads package_directory from .github/swift-package.json when present",
+    )
     parser.add_argument("--set", action="append", type=assignment, default=[], dest="values")
     parser.add_argument("--inherited", action="append", type=Path, default=[])
     parser.add_argument("--force", action="store_true")

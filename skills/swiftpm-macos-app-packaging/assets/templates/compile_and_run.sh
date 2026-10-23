@@ -44,7 +44,7 @@ if [[ -n "${RELEASE_ARCHES}" ]]; then
 fi
 
 log "==> package app"
-SIGNING_MODE=adhoc ARCHES="${ARCHES_VALUE}" "${ROOT_DIR}/Scripts/package_app.sh" release
+SIGNING_MODE=adhoc ARCHES="${ARCHES_VALUE}" "${ROOT_DIR}/scripts/package_app.sh" release
 
 log "==> launch app"
 if ! open "${APP_BUNDLE}"; then

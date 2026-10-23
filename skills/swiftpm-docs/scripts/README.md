@@ -10,6 +10,11 @@
 The command and validators use only the Python standard library and exit non-zero
 on findings.
 
+`--package-root` names the repository root. The exporter reads `Package.swift`
+at `.github/swift-package.json`'s `package_directory` (default `.`) for
+requirements. Local commands are `swift build` and `swift test`, with
+`--package-path` for a nested package. Explicit `--set` values take precedence.
+
 The export smoke test materializes local community files. Collection checks also
 exercise inherited and mixed community-file selections through `export_profile`,
 whose `inherited_paths` input comes from the repository's GitHub settings owner.

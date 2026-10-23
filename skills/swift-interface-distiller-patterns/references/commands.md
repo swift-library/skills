@@ -153,11 +153,11 @@ out of structured evidence or declarations.
 
 ## Compare And Baseline
 
-Collect both revisions with the same collector and matching configuration and
-scope before comparing. An organization release attachment may wrap the
-snapshot in an envelope; verify its identity and extract its snapshot before
-passing it to this CLI. Follow the shared workflow for baseline acquisition
-and recollection when collector versions differ.
+When the user asks for a comparison, run swift-interface-distiller explicitly.
+Collect the requested revisions with the same collector and matching
+configuration and scope before comparing; recollect both when collector
+versions differ. Use baseline write/check only when the user requests a
+persisted baseline.
 
 ```sh
 interface-distiller compare "$BASELINE_SNAPSHOT" "$CANDIDATE_SNAPSHOT" \

@@ -66,8 +66,10 @@ Export a profile into a package with
 `python3 scripts/export_profile.py --profile <minimal|standard> --output <dir>`.
 Pass the package's identity with `--set repo-name=<repository name>` and
 `--set package-name=<package name>`. Add `--package-root <dir>` to fill the
-build command, test command and requirement from the package's own
-`Package.swift` and `.github/release.json`. Skip community files the
+local commands with `swift build` and `swift test`, and the requirement from
+`Package.swift`. This directory is the repository root;
+`.github/swift-package.json`'s `package_directory` selects a nested package
+and adds `--package-path` to both commands. Skip community files the
 repository inherits with `--inherited <path>`. Author placeholders and
 bracketed guidance stay for the author. A new repository is created by the
 repository steward, from the template its organization declares when there is
@@ -231,7 +233,7 @@ Anthropic's [Claude Code memory](https://code.claude.com/docs/en/memory) and
 - Keep Code Review Rules to judgments a reviewer must make about this
   package, each with its reason and safe path. A deterministic check, such as
   formatting, lint, forbidden paths, or availability, belongs in
-  `Scripts/check` or CI, not in the review rules.
+  the repository's validation CI, not in the review rules.
 - When canonicalizing an existing `AGENTS.md`, replace correction-shaped
   feature guidance with the self-contained canonical-artifact contract carried
   by `templates/AGENTS.md.tpl`; do not treat a feature bullet such as

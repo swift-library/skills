@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import re
+import shlex
 from pathlib import Path
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
@@ -115,7 +116,26 @@ def platform_expressions(manifest: str, manifest_path: Path) -> list[str]:
 
 
 def package_facts(package_root: Path) -> dict[str, str]:
-    manifest_path = package_root / "Package.swift"
+    config_path = package_root / ".github/swift-package.json"
+    directory = "."
+    if config_path.exists():
+        try:
+            config = json.loads(read_utf8(config_path))
+        except json.JSONDecodeError as error:
+            raise ValueError(f"{config_path}: {error}") from error
+        if not isinstance(config, dict):
+            raise ValueError(f"{config_path}: expected an object")
+        directory = config.get("package_directory", ".")
+        if not isinstance(directory, str) or not directory.strip():
+            raise ValueError(f"{config_path}: package_directory must be a non-empty string")
+    relative = Path(directory)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise ValueError(f"{config_path}: package_directory must be inside the repository")
+    try:
+        (package_root / relative).resolve().relative_to(package_root.resolve())
+    except (OSError, RuntimeError, ValueError) as error:
+        raise ValueError(f"{config_path}: package_directory must resolve inside the repository") from error
+    manifest_path = package_root / relative / "Package.swift"
     manifest = read_utf8(manifest_path)
     tools_version = re.search(
         r"^\s*//\s*swift-tools-version:\s*(\d+\.\d+)(?:\.\d+)?\s*$",
@@ -136,21 +156,10 @@ def package_facts(package_root: Path) -> dict[str, str]:
     if versions:
         requirement += "; " + ", ".join(versions)
 
-    test_command = "swift test"
-    release_path = package_root / ".github/release.json"
-    if release_path.exists():
-        try:
-            release = json.loads(read_utf8(release_path))
-        except json.JSONDecodeError as error:
-            raise ValueError(f"{release_path}: {error}") from error
-        if not isinstance(release, dict):
-            raise ValueError(f"{release_path}: expected an object")
-        test_command = release.get("check_command", test_command)
-        if not isinstance(test_command, str):
-            raise ValueError(f"{release_path}: check_command must be a string")
+    package_option = f" --package-path {shlex.quote(directory)}" if relative != Path(".") else ""
     return {
-        "build-command": "swift build",
-        "test-command": test_command,
+        "build-command": f"swift build{package_option}",
+        "test-command": f"swift test{package_option}",
         "requirement": requirement,
     }
 

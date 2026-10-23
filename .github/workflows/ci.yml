@@ -22,7 +22,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Validate collection distribution and documentation exports
-        run: Scripts/check
+        run: scripts/check
 
   package-template:
     runs-on: ubuntu-24.04
@@ -36,7 +36,7 @@ jobs:
           path: template
           persist-credentials: false
       - name: Check package template documentation
-        run: Scripts/check-package-template template
+        run: scripts/check-package-template template
 
   result:
     needs: [validate, package-template]

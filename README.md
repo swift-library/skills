@@ -103,7 +103,7 @@ skill lives in `skills/<skill>/`:
 [Skill authoring](Documentation/Architecture/skill-authoring.md) defines the
 structure, trigger contract, and validation checklist for new or changed
 skills. The Claude and Codex marketplaces each publish the root `swift-skills`
-plugin. Run `Scripts/check` before pushing; it validates both hosts' manifests,
+plugin. Run `scripts/check` before pushing; it validates both hosts' manifests,
 distribution regression tests, and documentation template exports. Use the
 [isolated installation checks](Documentation/Architecture/skill-authoring.md#plugin-distribution)
 when changing plugin distribution.
