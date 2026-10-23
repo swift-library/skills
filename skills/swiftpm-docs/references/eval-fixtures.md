@@ -25,7 +25,8 @@ cross-surface implementation drift.
 
 Input prompt: "A draft Swift package gained JSON and YAML export while we were
 exploring the feature. The YAML export branch was never accepted; the package
-contract is JSON export. The released 0.9 storage migration and the external
+contract is JSON export. Adopt the canonical-artifacts contract in our agent
+guide. The released 0.9 storage migration and the external
 reader ownership record remain valid. Make the repository documentation and
 agent guide current."
 
@@ -84,15 +85,15 @@ Acceptance checks:
 - The unchanged decision and ownership records have no content diff; an agent
   may cite them in the handoff but may not restate them in place.
 - `python3 scripts/validate_template_exports.py` passes for both `minimal` and
-  `standard` profile exports.
+  `standard` profile exports, with and without the canonical-artifacts module.
 
-Baseline expectation:
+Failure signatures:
 
-- The old skill may patch prose incrementally, retain `JSON-only` or removal
+- Incremental prose patches retain `JSON-only` or removal
   narration, miss generated target-guide semantics, or overreach into Swift
   implementation and tests.
 
-Evidence sources:
+Review inputs:
 
 - Final documentation and generated target `AGENTS.md` diff.
 - Cross-surface drift or handoff report.
@@ -140,13 +141,42 @@ Acceptance checks:
 - `scripts/validate_canonical_target.py` passes, including the review-rule
   section and size budget.
 
-Evidence sources:
+Review inputs:
 
 - Target `AGENTS.md` diff and validator output.
 
 Owner notes:
 
 - The review-rule shape comes from the bundled `rules/code-review-rules.md`.
+
+## Optional Canonical Artifacts
+
+| Input | Expected output |
+| --- | --- |
+| Minimal or standard export without a module request | AGENTS.md includes ordinary routes and Code Review Rules; it has no Canonical Artifacts contract or module delimiters. |
+| Target adopts the contract or the user requests it | `--module canonical-artifacts` emits the complete contract; both validators check it. |
+| Normalize documentation after feedback without target adoption | Normalize current documentation; preserve the target's module selection rather than adding a repository-wide contract. |
+| Guide has no module | Target validator reports not applicable; an explicit module requirement fails. |
+| Guide carries an incomplete Canonical Artifacts section | Target validator reports the missing contract clauses. |
+
+Acceptance checks: run `Tests/test_profile_export.py` and
+`Tests/test_template_exports.py` for both export modes and target validation.
+
+## Document Lifecycle
+
+| Input | Expected output |
+| --- | --- |
+| Design alternatives need agreement | Proposed document names the author, affected owners, and governance-designated acceptance authority; Proposals index links it with owner and review status. |
+| Authority accepts a design before implementation | Accepted Decision records choice, rationale, authority, and date. Architecture and Reference keep the implemented model, optionally linking a clearly labelled accepted-but-unimplemented direction and implementation issue. |
+| Implementation merges in stages | Current Architecture/Reference describe each implemented portion; pending notes track the unimplemented remainder and disappear when resolved. |
+| Settled proposal duplicates its Decision and current-model docs | Delete the proposal, remove its active index entry, and repair inbound links. Archive only distinct durable rationale, migration, or audit material as non-current. |
+| Rejected or withdrawn proposal has no durable record value | Delete it and its active index entry; do not create a Decision to preserve the rejection. |
+| Accepted decision replaces another accepted decision | Mark the earlier record Superseded with a Superseded by link, link back from its successor, preserve rationale and intermediate chain links, and update the Decisions index. Keep implemented-model docs accurate until the replacement merges. |
+
+Acceptance checks: review the resulting document roles, status values, links,
+and index entries against `rules/proposal-vs-truth-vs-history.md`,
+`rules/proposal-doc-format.md`, `rules/decision-record-format.md`, and
+`rules/architecture-description-primacy.md`.
 
 ## Package Command Exports
 
@@ -172,5 +202,5 @@ release automation.
 | CLI with a plugin manifest and derived runtime constant | Identify CLI and plugin authorities separately; route generation and checks to existing tools. |
 | Existing release facts and mechanics reference at another repository path | Complete it, adjust the profile target and all routes, keep one release reference and leave VERSIONING separate. |
 | New project with no release scripts | Explicitly state that automation is not established; no invented commands or claims of candidate validation. |
-| New toolchain or changed check definitions | Previous evidence is invalid for the affected stage and its dependents; retain failure records. |
-| Unchanged source and exact accepted package | Reuse only trusted matching evidence; preserve the accepted bytes during publication. |
+| New toolchain or changed check definitions | Check results are invalid for the affected stage and its dependents; retain failure records. |
+| Unchanged source and exact accepted package | Reuse only trusted matching check results; preserve the accepted bytes during publication. |

@@ -3,10 +3,13 @@
 
 from __future__ import annotations
 
+import argparse
 import tempfile
 from pathlib import Path
 
-from profile_export import PROFILE_NAMES, SKILL_ROOT, export_files, output_map
+from profile_export import (
+    MODULE_NAMES, PROFILE_NAMES, SKILL_ROOT, export_files, has_canonical_artifacts, output_map,
+)
 
 
 def review_rule_groups(text: str) -> int | None:
@@ -30,9 +33,16 @@ def validate_review_rules(text: str, profile_name: str) -> None:
         raise ValueError(f"{profile_name} exported AGENTS.md Code Review Rules has no ### group")
 
 
-def validate_agent_guide(text: str, profile_name: str) -> None:
+def validate_agent_guide(
+    text: str, profile_name: str, *, modules: frozenset[str] = frozenset(),
+) -> None:
+    if "canonical-artifacts" not in modules:
+        if has_canonical_artifacts(text):
+            raise ValueError(f"{profile_name} exported AGENTS.md has an unrequested canonical-artifacts module")
+        return
     normalized = " ".join(text.split())
     checks = {
+        "Canonical Artifacts section": has_canonical_artifacts(text),
         "editing input": "editing input" in normalized,
         "path independence": "not on the editing path" in normalized,
         "A+B normalization": "`A + B`" in normalized and "AWithoutB" in normalized,
@@ -111,25 +121,43 @@ def validate_release_reference(root: Path, profile_name: str) -> None:
 
 
 def export_profile(
-    profile_path: Path, profile_root: Path, *, inherited_paths: set[Path]
+    profile_path: Path, profile_root: Path, *, inherited_paths: set[Path],
+    modules: frozenset[str] = frozenset(),
 ) -> None:
-    export_files(output_map(profile_path, inherited_paths=inherited_paths), profile_root)
+    export_files(
+        output_map(profile_path, inherited_paths=inherited_paths), profile_root, modules=modules,
+    )
     profile_name = profile_path.stem
     agent_guide = profile_root / "AGENTS.md"
     if not agent_guide.is_file():
         raise FileNotFoundError(f"{profile_name}: AGENTS.md was not exported")
-    validate_agent_guide(agent_guide.read_text(encoding="utf-8"), profile_name)
+    validate_agent_guide(agent_guide.read_text(encoding="utf-8"), profile_name, modules=modules)
     validate_review_rules(agent_guide.read_text(encoding="utf-8"), profile_name)
     validate_release_reference(profile_root, profile_name)
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--module", action="append", choices=MODULE_NAMES,
+        help="validate selected modules; by default validate with and without canonical-artifacts",
+    )
+    args = parser.parse_args()
+    selections = (
+        [frozenset(args.module)] if args.module is not None
+        else [frozenset(), frozenset(MODULE_NAMES)]
+    )
     with tempfile.TemporaryDirectory(prefix="docs-template-export-") as temporary:
         export_root = Path(temporary)
         for profile_name in PROFILE_NAMES:
             profile_path = SKILL_ROOT / "profiles" / f"{profile_name}.md"
-            export_profile(profile_path, export_root / profile_name, inherited_paths=set())
-            print(f"{profile_name}: template export passed")
+            for modules in selections:
+                variant = ",".join(sorted(modules)) or "default"
+                export_profile(
+                    profile_path, export_root / profile_name / variant,
+                    inherited_paths=set(), modules=modules,
+                )
+                print(f"{profile_name} ({variant}): template export passed")
 
 
 if __name__ == "__main__":

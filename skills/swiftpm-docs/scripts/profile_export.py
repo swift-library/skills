@@ -11,6 +11,11 @@ from pathlib import Path
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 TEMPLATES_ROOT = SKILL_ROOT / "templates"
 PROFILE_NAMES = ("minimal", "standard")
+MODULE_NAMES = ("canonical-artifacts",)
+MODULE_BLOCK = re.compile(
+    r"^<!-- module:([a-z][a-z0-9-]*) -->\n(.*?)^<!-- /module:\1 -->\n",
+    re.MULTILINE | re.DOTALL,
+)
 OUTPUT_ROW = re.compile(
     r"^\|\s*`(?P<target>[^`]+)`\s*\|\s*`(?P<source>[^`]+)`\s*\|"
     r"\s*(?P<required>yes|when not inherited)\s*\|$"
@@ -56,6 +61,20 @@ def read_utf8(path: Path) -> str:
         return path.read_bytes().decode("utf-8")
     except UnicodeError as error:
         raise ValueError(f"{path}: {error}") from error
+
+
+def render_template(source: Path, *, modules: frozenset[str] = frozenset()) -> str:
+    unknown = modules.difference(MODULE_NAMES)
+    if unknown:
+        raise ValueError(f"unknown modules: {', '.join(sorted(unknown))}")
+    return MODULE_BLOCK.sub(
+        lambda match: match.group(2) if match.group(1) in modules else "",
+        read_utf8(source),
+    )
+
+
+def has_canonical_artifacts(text: str) -> bool:
+    return "## Canonical Artifacts" in text.splitlines()
 
 
 def strip_swift_comments(manifest: str) -> str:
@@ -167,7 +186,9 @@ def package_facts(package_root: Path) -> dict[str, str]:
 def export_files(
     outputs: list[tuple[Path, Path]], output_root: Path, *,
     replacements: dict[str, str] | None = None, force: bool = True,
+    modules: frozenset[str] = frozenset(),
 ) -> list[Path]:
+    rendered = [(target, render_template(source, modules=modules)) for target, source in outputs]
     try:
         resolved_root = output_root.resolve()
     except (OSError, RuntimeError) as error:
@@ -187,17 +208,14 @@ def export_files(
         if not force and destination.exists():
             raise FileExistsError(f"{destination}: already exists; use --force to overwrite")
     written: list[Path] = []
-    for target, source in outputs:
+    for target, text in rendered:
         destination = output_root / target
         if replacements:
             text = PLACEHOLDER.sub(
                 lambda match: replacements.get(match.group(1), match.group(0)),
-                read_utf8(source),
+                text,
             )
-            content = text.encode("utf-8")
-        else:
-            content = source.read_bytes()
         destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_bytes(content)
+        destination.write_bytes(text.encode("utf-8"))
         written.append(destination)
     return written

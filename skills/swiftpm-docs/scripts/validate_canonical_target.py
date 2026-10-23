@@ -7,6 +7,8 @@ import argparse
 import re
 from pathlib import Path
 
+from profile_export import MODULE_NAMES, has_canonical_artifacts
+
 AGENT_MARKERS = {
     "editing input": "editing input",
     "path independence": "not on the editing path",
@@ -61,6 +63,10 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("repository", type=Path)
     parser.add_argument(
+        "--module", action="append", choices=MODULE_NAMES, default=[],
+        help="require the selected module; otherwise detect Canonical Artifacts in AGENTS.md",
+    )
+    parser.add_argument(
         "--allow-path",
         action="append",
         default=[],
@@ -91,11 +97,17 @@ def main() -> int:
     if not agent_guide.is_file():
         failures.append("AGENTS.md is missing")
     else:
-        normalized = " ".join(agent_guide.read_text(encoding="utf-8").split())
+        agent_text = agent_guide.read_text(encoding="utf-8")
+        carries_module = has_canonical_artifacts(agent_text)
+        if not carries_module and "canonical-artifacts" not in args.module:
+            print("canonical target validation not applicable: canonical-artifacts is absent")
+            return 0
+        if not carries_module:
+            failures.append("AGENTS.md misses the requested Canonical Artifacts section")
+        normalized = " ".join(agent_text.split())
         for name, marker in AGENT_MARKERS.items():
             if marker not in normalized:
                 failures.append(f"AGENTS.md misses {name}: {marker}")
-        agent_text = agent_guide.read_text(encoding="utf-8")
         groups = review_rule_groups(agent_text)
         if groups is None:
             failures.append("AGENTS.md misses the Code Review Rules section")

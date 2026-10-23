@@ -6,6 +6,12 @@ baseline.
 This profile extends beyond `minimal` with proposal, history, reference, and a
 fuller GitHub/community-health surface. That distinction is intentional.
 
+## Modules
+
+Modules are off by default. Select `--module canonical-artifacts` only when
+the target adopts that contract or the user requests it. It adds the Canonical
+Artifacts section to `AGENTS.md` without changing the output file set.
+
 ## Output Map
 
 `when not inherited` rows are emitted only when the repository's GitHub

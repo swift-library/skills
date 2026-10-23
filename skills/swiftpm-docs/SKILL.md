@@ -52,17 +52,60 @@ repo-native, and easy to maintain.
 
 ## Workflow
 
+1. Start with an audit when a target repo already exists.
+2. Classify files by role before editing content. Apply the document lifecycle
+   in `rules/proposal-vs-truth-vs-history.md` when handling designs, acceptance,
+   implementation merges, or superseded decisions.
+3. Normalize role collisions before exporting template output.
+4. Choose the smallest profile that fits the requested baseline:
+   `minimal` for documentation-first, `standard` for public-repo-complete.
+   Modules are off by default. Enable `canonical-artifacts` only when the
+   target adopts that contract or the user asks for it.
+5. Compose scaffold and export outputs from explicit profile guidance, not
+   ad-hoc file lists. Use the release-reference and export-input guidance below.
+6. For long-running normalize, migration, or export work, create
+   `.agent/PLANS.md` from `templates/.agent.PLANS.md.tpl` and keep it current.
+   Before writing it, run `git check-ignore -q .agent/PLANS.md` in the target
+   repository; when that fails, append `.agent/` to the repository's local
+   `.git/info/exclude`, not to the shared `.gitignore`.
+7. When iterative feedback or a rejected implementation is part of the input,
+   read `rules/canonical-artifacts.md` before editing. When the target adopts
+   the module and `AGENTS.md` is in scope, merge the complete Canonical Artifacts
+   section of `templates/AGENTS.md.tpl` with valid repository routes and run
+   `scripts/validate_canonical_target.py <repository> --module canonical-artifacts`
+   before handoff. Documentation normalization alone does not select the module.
+8. Inventory every conflicting implementation, option, test, fixture,
+   snapshot, configuration, schema, generated source, and example found
+   outside documentation ownership. Report each remaining file or category;
+   do not reduce the handoff to representative examples.
+
+### Release Reference
+
 Both existing profiles include one release reference scaffold:
 `Documentation/Reference/Release.md`, from `templates/Documentation.Reference.Release.md.tpl`. Populate it from actual project
 declarations, build configuration, scripts and accepted rules: components and
 version sources, the compatibility surface, dependency compatibility, derived
-fields, candidate acceptance, evidence reuse/invalidation, real entry points
+fields, candidate acceptance, check-result reuse/invalidation, real entry points
 and artifact retention. Version rules (tags, release timing, choosing the next
 version, changelog) live only in the root `VERSIONING.md` or the organization
 VERSIONING the project adopts, owned by the repository steward (`github-repo-steward` when installed);
 link them and do not restate them. When the project has no VERSIONING, route its creation to
 the repository steward (`github-repo-steward` when installed) and supply its
 version source, mirrors and release owner, which is this release reference.
+
+For an existing repository, find the document already owning these release
+facts first. Complete that document and adjust the profile target, indexes and
+AGENTS route to that single entry. Do not generate a competing release
+reference; VERSIONING stays separate. Distinguish implemented automation from
+manual procedures and missing release capability. Unknown commands remain
+explicitly unestablished; the scaffold does not create them.
+This is documentation work; changes to release implementation belong to the
+project's release owner.
+An architecture versioning document from an earlier profile is migration
+input: move its facts into the release reference, leave its rules to
+VERSIONING and update every inbound link.
+
+### Export Inputs
 
 Export a profile into a package with
 `python3 scripts/export_profile.py --profile <minimal|standard> --output <dir>`.
@@ -77,39 +120,9 @@ bracketed guidance stay for the author. A new repository is created by the
 repository steward, from the template its organization declares when there is
 one; this skill supplies the documentation.
 
-For an existing repository, find the document already owning these release
-facts first. Complete that document and adjust the profile target, indexes and
-AGENTS route to that single entry. Do not generate a competing release
-reference; VERSIONING stays separate. Distinguish implemented automation from
-manual procedures and missing release capability. Unknown commands remain
-explicitly unestablished; the scaffold does not create them.
-This is documentation work; changes to release implementation belong to the
-project's release owner.
-An architecture versioning document from an earlier profile is migration
-input: move its facts into the release reference, leave its rules to
-VERSIONING and update every inbound link.
-
-1. Start with an audit when a target repo already exists.
-2. Classify files by role before editing content.
-3. Normalize role collisions before exporting template output.
-4. Choose the smallest profile that fits the requested baseline:
-   `minimal` for documentation-first, `standard` for public-repo-complete.
-5. Compose scaffold and export outputs from explicit profile guidance, not
-   ad-hoc file lists.
-6. For long-running normalize, migration, or export work, create
-   `.agent/PLANS.md` from `templates/.agent.PLANS.md.tpl` and keep it current.
-   Before writing it, run `git check-ignore -q .agent/PLANS.md` in the target
-   repository; when that fails, append `.agent/` to the repository's local
-   `.git/info/exclude`, not to the shared `.gitignore`.
-7. When iterative feedback or a rejected implementation is part of the input,
-   read `rules/canonical-artifacts.md` before editing. If `AGENTS.md` is in
-   scope, also read `templates/AGENTS.md.tpl`, merge its complete canonical
-   artifact contract with valid repository routes, and run
-   `scripts/validate_canonical_target.py` before handoff.
-8. Inventory every conflicting implementation, option, test, fixture,
-   snapshot, configuration, schema, generated source, and example found
-   outside documentation ownership. Report each remaining file or category;
-   do not reduce the handoff to representative examples.
+Add `--module canonical-artifacts` to include the Canonical Artifacts contract
+in `AGENTS.md`. Omit the flag for the baseline agent guide. For an existing
+target, preserve its adopted module selection when regenerating the guide.
 
 ## Role Model
 
@@ -148,16 +161,16 @@ Read only the files relevant to the selected operation:
 - `rules/code-review-rules.md`: the `## Code Review Rules` section and the
   files that carry it to a specific reviewer.
 - `rules/proposal-vs-truth-vs-history.md`: proposal, truth, and history
-  classification.
+  classification, acceptance, implementation merge, and proposal retirement.
 - `rules/architecture-description-primacy.md`: current architecture
-  description ownership.
+  description ownership and accepted-but-unimplemented changes.
 - `rules/canonical-artifacts.md`: current-artifact normalization after
   iterative feedback or superseded implementation attempts.
 - `rules/architecture-doc-format.md`: lightweight arc42-style architecture
   document shape.
 - `rules/decision-record-format.md`: lightweight ADR/MADR-style decision
-  record shape.
-- `rules/proposal-doc-format.md`: lightweight proposal document shape.
+  record shape, statuses, and supersession chains.
+- `rules/proposal-doc-format.md`: proposal entry, acceptance ownership, and index upkeep.
 - `rules/governance-vs-documentation-placement.md`: GitHub and governance
   placement.
 - `rules/path-casing.md`: canonical documentation path casing for scaffold,
@@ -173,15 +186,12 @@ Read only the files relevant to the selected operation:
 - `references/codex-exec-plans.md`: when deciding whether a task needs a
   session-spanning `.agent/PLANS.md` execution aid.
 - `scripts/validate_template_exports.py`: materialize the `minimal` and
-  `standard` output maps and verify target `AGENTS.md` invariants.
-- `scripts/validate_canonical_target.py`: verify an edited target `AGENTS.md`
-  carries the complete contract and Code Review Rules within the 32 KiB
-  budget, and flag correction-shaped prose in active documentation roles and
-  DocC source.
-
-`route-vs-index.md`, `readme-layering.md`, and `code-review-rules.md` are
-bundled copies derived from the `repository-docs` skill; edit them there and
-re-derive.
+  `standard` output maps with and without `canonical-artifacts`; verify the
+  selected contract and Code Review Rules.
+- `scripts/validate_canonical_target.py`: for targets carrying the module, verify
+  the complete contract and Code Review Rules within the 32 KiB budget, and flag
+  correction-shaped prose in active documentation roles and DocC source.
+  `--module canonical-artifacts` explicitly requires the contract.
 
 External foundations:
 [ISO/IEC/IEEE 42010](https://www.iso-architecture.org/ieee-1471/ads/),
@@ -217,7 +227,7 @@ Anthropic's [Claude Code memory](https://code.claude.com/docs/en/memory) and
   rules to named files under `Documentation/Architecture/`.
 - Keep shipped documentation focused on current product facts, supported
   behavior, and operating guidance. Keep temporary implementation notes,
-  local evidence, local paths, run-specific artifacts, and historical comparison
+  local logs and outputs, local paths, run-specific artifacts, and historical comparison
   notes out of README files, reference docs, API docs, and bundled user-facing
   skills. Promote only accepted decision records into
   `Documentation/Decisions/*` and durable transition or cutover records into
@@ -236,9 +246,9 @@ Anthropic's [Claude Code memory](https://code.claude.com/docs/en/memory) and
   package, each with its reason and safe path. A deterministic check, such as
   formatting, lint, forbidden paths, or availability, belongs in
   the repository's validation CI, not in the review rules.
-- When canonicalizing an existing `AGENTS.md`, replace correction-shaped
+- When the target adopts `canonical-artifacts`, replace correction-shaped
   feature guidance with the self-contained canonical-artifact contract carried
-  by `templates/AGENTS.md.tpl`; do not treat a feature bullet such as
+  by `templates/AGENTS.md.tpl` in its `AGENTS.md`; do not treat a feature bullet such as
   `A without B` as already current.
 - Inspect code, tests, configuration, schemas, generated sources, and examples
   for contract drift that would make normalized documentation false. Report
@@ -343,12 +353,12 @@ Anthropic's [Claude Code memory](https://code.claude.com/docs/en/memory) and
 - Target-facing templates and exported files do not mention `swift-skills`,
   skill-local `rules/`, `examples/`, profile mechanics, or source/export
   internals.
-- `python3 scripts/validate_template_exports.py` materializes both profiles and
-  verifies that each exported `AGENTS.md` carries the complete path-independent
-  canonical-artifact contract and a Code Review Rules section with `###`
-  groups.
-- After canonicalizing an existing repository, run
-  `python3 scripts/validate_canonical_target.py <repository>`. Use
+- `python3 scripts/validate_template_exports.py` materializes both profiles
+  with and without `canonical-artifacts`. Every export has Code Review Rules
+  with `###` groups; only selected-module exports carry the complete
+  path-independent canonical-artifact contract.
+- For a target carrying `canonical-artifacts`, run
+  `python3 scripts/validate_canonical_target.py <repository> --module canonical-artifacts`. Use
   `--allow-path` only for a reviewed active file whose negative wording is
   independently required by a current compatibility, safety, or ownership
   invariant, and state that rationale in the handoff.

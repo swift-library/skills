@@ -18,6 +18,7 @@ def check(template_root: Path, export_root: Path) -> int:
     exported = subprocess.run([
         sys.executable, "-B", str(ROOT / "skills/swiftpm-docs/scripts/export_profile.py"),
         "--profile", "minimal", "--package-root", str(template_root),
+        "--module", "canonical-artifacts",
         "--output", str(export_root), "--set", "repo-name=swift-package-template",
         "--set", "package-name=swift-package-template",
     ])

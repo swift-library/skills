@@ -18,3 +18,7 @@ This directory indexes decision records for `<repo-name>`.
 ## Use
 
 Use this subtree for durable records of what was decided and why.
+Index records with their status: `Accepted` or `Superseded`. Proposed designs
+belong in `../Proposals/`. Each superseded record links to its immediate
+replacement with `Superseded by`; the replacement links back with `Supersedes`.
+Keep the chain intact and preserve each record's rationale.
