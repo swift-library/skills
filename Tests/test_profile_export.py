@@ -4,6 +4,7 @@
 import json
 import os
 from pathlib import Path
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -30,9 +31,9 @@ class ProfileExportTests(unittest.TestCase):
         self.package = self.root / "package"
         self.package.mkdir()
         (self.package / "Package.swift").write_text(MANIFEST)
-        self.release = self.package / ".github/release.json"
-        self.release.parent.mkdir()
-        self.release.write_text(json.dumps({"check_command": "Scripts/check --strict"}))
+        self.config = self.package / ".github/swift-package.json"
+        self.config.parent.mkdir()
+        self.config.write_text("{}\n")
         self.output = self.root / "export"
 
     def tearDown(self):
@@ -53,7 +54,7 @@ class ProfileExportTests(unittest.TestCase):
     def test_package_facts_are_filled_in_declaration_order(self):
         self.export("--package-root", self.package)
         readme = self.readme()
-        self.assertIn("swift build\nScripts/check --strict\n", readme)
+        self.assertIn("swift build\nswift test\n", readme)
         self.assertIn(
             "Swift 6.2 or later; visionOS 26.1, iOS 15, macOS 12, tvOS 16, watchOS 9",
             readme,
@@ -275,15 +276,82 @@ class ProfileExportTests(unittest.TestCase):
             (SKILL / "templates/README.md.tpl").read_bytes(),
         )
 
-    def test_missing_release_file_defaults_to_swift_test(self):
-        self.release.unlink()
+    def test_missing_configuration_uses_root_package(self):
+        self.config.unlink()
         self.export("--package-root", self.package)
         self.assertIn("swift build\nswift test\n", self.readme())
 
-    def test_missing_check_command_defaults_to_swift_test(self):
-        self.release.write_text("{}\n")
+    def test_root_package_directory_preserves_commands(self):
+        self.config.write_text(json.dumps({"package_directory": "."}))
         self.export("--package-root", self.package)
         self.assertIn("swift build\nswift test\n", self.readme())
+
+    def test_nested_package_selects_manifest_and_quotes_commands(self):
+        for directory in ("Packages/Core", "Packages/Client's Core"):
+            with self.subTest(directory=directory):
+                nested = self.package / directory
+                nested.mkdir(parents=True)
+                (nested / "Package.swift").write_text(MANIFEST.replace("6.2", "6.1"))
+                self.config.write_text(json.dumps({"package_directory": directory}))
+                self.export("--package-root", self.package, "--force")
+                self.assertIn("- Swift 6.1 or later;", self.readme())
+                for line in self.readme().splitlines():
+                    if line.startswith(("swift build", "swift test")):
+                        self.assertEqual(shlex.split(line)[2:], ["--package-path", directory])
+                self.assertIn(f"swift build --package-path {shlex.quote(directory)}\n", self.readme())
+                self.assertIn(f"swift test --package-path {shlex.quote(directory)}\n", self.readme())
+
+    def test_nested_package_does_not_require_root_manifest(self):
+        nested = self.package / "Package"
+        nested.mkdir()
+        (self.package / "Package.swift").rename(nested / "Package.swift")
+        self.config.write_text(json.dumps({"package_directory": "Package"}))
+        self.export("--package-root", self.package)
+        self.assertIn("swift test --package-path Package\n", self.readme())
+
+    def test_missing_selected_manifest_fails_before_writing(self):
+        self.config.write_text(json.dumps({"package_directory": "Missing"}))
+        result = self.export("--package-root", self.package, expected=1)
+        self.assertIn(str(self.package / "Missing/Package.swift"), result.stderr)
+        self.assertFalse(self.output.exists())
+
+    def test_invalid_configuration_fails_before_writing(self):
+        for config in ([], None, {"package_directory": []}, {"package_directory": ""},
+                       {"package_directory": "../outside"}, {"package_directory": str(self.root)}):
+            with self.subTest(config=config):
+                self.config.write_text(json.dumps(config))
+                result = self.export("--package-root", self.package, expected=1)
+                self.assertIn(str(self.config), result.stderr)
+                self.assertFalse(self.output.exists())
+
+    def test_package_directory_cannot_resolve_outside_repository(self):
+        outside = self.root / "outside"
+        outside.mkdir()
+        (outside / "Package.swift").write_text(MANIFEST)
+        (self.package / "Linked").symlink_to(outside, target_is_directory=True)
+        self.config.write_text(json.dumps({"package_directory": "Linked"}))
+        result = self.export("--package-root", self.package, expected=1)
+        self.assertIn(str(self.config), result.stderr)
+        self.assertFalse(self.output.exists())
+
+    def test_package_exports_only_replace_fact_placeholders(self):
+        replacements = {
+            "<build-command>": "swift build",
+            "<test-command>": "swift test",
+            "<requirement>": "Swift 6.2 or later; visionOS 26.1, iOS 15, macOS 12, tvOS 16, watchOS 9",
+        }
+        for profile in ("minimal", "standard"):
+            with self.subTest(profile=profile):
+                output = self.root / profile
+                self.export("--package-root", self.package, profile=profile, output=output)
+                for line in (SKILL / "profiles" / f"{profile}.md").read_text().splitlines():
+                    if not line.startswith("| `"):
+                        continue
+                    target, source = line.split("`")[1:4:2]
+                    expected = (SKILL / "profiles" / source).read_bytes()
+                    for placeholder, value in replacements.items():
+                        expected = expected.replace(placeholder.encode(), value.encode())
+                    self.assertEqual((output / target).read_bytes(), expected, target)
 
     def test_manifest_without_platforms_has_only_swift_requirement(self):
         (self.package / "Package.swift").write_text(
@@ -300,10 +368,11 @@ class ProfileExportTests(unittest.TestCase):
         self.assertIn(str(manifest), result.stderr)
         self.assertIn("swift-tools-version", result.stderr)
 
-    def test_invalid_release_json_names_file(self):
-        self.release.write_text("{\n")
+    def test_invalid_configuration_json_names_file(self):
+        self.config.write_text("{\n")
         result = self.export("--package-root", self.package, expected=1)
-        self.assertIn(str(self.release), result.stderr)
+        self.assertIn(str(self.config), result.stderr)
+        self.assertFalse(self.output.exists())
 
     def template_check(self, expected):
         result = subprocess.run(

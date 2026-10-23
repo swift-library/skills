@@ -76,8 +76,11 @@ Products, Usage, and Requirements sections that name only what exists.
    - when the snippet section holds Swift code,
      `scripts/quickstart_check.py REPO --section TITLE` to resolve the Install
      requirement from the published URL and build that code in a scratch
-     consumer. A recorded terminal session is the presentation owner's
-     demonstration and is not built here.
+     consumer;
+   - for a terminal demo, use the `github-readme-design` toolchain's
+     `script.yml` and `recording.json`, rendered locally by the presentation
+     owner. The validation workflow's `demo` switch re-records the demo and
+     compares `recording.json`.
 
    When the documentation owner surfaces `.github/README.md`, pass
    `--readme .github/README.md` to both checkers; the path is relative to

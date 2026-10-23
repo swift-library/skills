@@ -56,3 +56,9 @@ inherit them, using the repository's GitHub settings owner's decision. That
 owner verifies the effective GitHub behavior.
 
 Profile composition guidance lives in `../profiles/`.
+
+The README's `<build-command>` and `<test-command>` placeholders receive
+`swift build` and `swift test` when exporting with `--package-root`.
+`.github/swift-package.json`'s `package_directory` selects the manifest and
+adds `--package-path` for a nested package. These documentation templates
+carry no repository scripts.

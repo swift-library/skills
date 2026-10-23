@@ -107,13 +107,8 @@ using another version.
   generate public declarations. Use actual measurements; no compression ratio
   is promised by the tool.
 - Source navigation, runtime semantics and version policy remain outside this
-  evidence workflow. For swift-library releases, follow
-  [VERSIONING](https://github.com/swift-library/.github/blob/master/VERSIONING.md#public-interface-evidence),
-  [MAINTENANCE](https://github.com/swift-library/.github/blob/master/MAINTENANCE.md)
-  and the shared
-  [comparison workflow](https://github.com/swift-library/.github/blob/master/Documentation/Reference/WorkflowIntegration.md#api-evidence-and-comparison).
-  These own release baseline selection and policy; do not copy their current
-  collector pin or runner configuration into this skill.
+  evidence workflow. Release decisions follow the repository's VERSIONING
+  authority.
 
 ## Validation Rules
 

@@ -119,7 +119,7 @@ Context and files:
 - `VERSIONING.md` defines the version bump and the change record;
   `Documentation/Reference/Release.md` records the compatibility surface;
   DocC catalogs live under `Sources/<Target>/<Target>.docc/`.
-- `Scripts/check` already runs formatting and a forbidden-path scan.
+- The repository's validation CI already runs formatting and a forbidden-path scan.
 
 Expected output:
 
@@ -127,12 +127,12 @@ Expected output:
   and versioning, claims, public documentation, and tests, each naming the
   behavior, the reason, and the safe path.
 - The versioning rule routes to VERSIONING and the release reference instead of copying its bump rules.
-- Formatting and forbidden paths are left to `Scripts/check`.
+- Formatting and forbidden paths are left to the repository's validation CI.
 - No `CLAUDE.md` or `REVIEW.md` is created.
 
 Forbidden behavior:
 
-- Review rules that restate `Scripts/check`, copy the versioning policy, or
+- Review rules that restate validation CI, copy the versioning policy, or
   name functions likely to move.
 
 Acceptance checks:
@@ -147,6 +147,18 @@ Evidence sources:
 Owner notes:
 
 - The review-rule shape comes from the bundled `rules/code-review-rules.md`.
+
+## Package Command Exports
+
+| Input | Expected output |
+| --- | --- |
+| Package at the repository root | Local commands are `swift build` and `swift test`; requirements come from its manifest. |
+| `.github/swift-package.json` declares a nested `package_directory` | Read that directory's manifest and add a shell-quoted `--package-path` argument to both local commands. |
+| Explicit command or requirement overrides | `--set` values take precedence over package facts. |
+| Invalid configuration or missing selected manifest | Report the input path and fail before writing any export. |
+
+Acceptance checks: run `Tests/test_profile_export.py` and verify both profiles
+retain their template bytes apart from the selected placeholder values.
 
 ## Version and Release Scaffold Cases
 
