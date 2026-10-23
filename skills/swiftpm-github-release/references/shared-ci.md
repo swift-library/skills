@@ -46,11 +46,11 @@ Schema validates it, and an invalid or unknown key fails the configuration job.
 | `test_configurations` | no | Build configurations for `swift test`; default `["debug"]`. |
 | `build_system` | no | SwiftPM `--build-system` value for every SwiftPM command. |
 | `traits` | no | List of trait sets; each set is tested and built once, e.g. `[["default"], ["Experimental", "default"]]`. |
-| `environment` | no | String map exported to every validation command. |
+| `environment` | no | String map exported to every validation command. The demo recording takes its environment only from the script's `env`, so the recording stays reproducible from the script. |
 | `platforms.linux` | no | List of `{name, image}`; `image` is a digest-pinned Swift Docker image. Runs `swift test` in the container. |
 | `platforms.apple` | no | List of `{name, platform, scheme, test?, runner?, xcode?}` for iOS, tvOS, watchOS or visionOS. Builds for the generic destination; with `test: true`, prepares a matching simulator runtime and runs the scheme's tests. Defaults to the last compiler entry's runner and Xcode. |
-| `docs` | no | `{targets}`: DocC build of each target with warnings as errors. Declare it only when the package ships DocC documentation. |
-| `demo` | no | `{product, script?}`: builds the release executable `product` and re-records the terminal demo (default script `.github/assets/terminal/script.yml`), comparing only `recording.json` through the `github-readme-design` action's recording-only mode. Declare it only for a command-line tool with a README demo. |
+| `docs` | no | `{targets, traits?}`: one public symbol-graph dump with extension blocks, then a DocC conversion of each target's catalog with warnings as errors. `traits` is one trait set for the dump, for documented trait-gated API. Declare it only when the package ships DocC documentation. |
+| `demo` | no | `{product, script?}`: builds the release executable `product` and re-records the terminal demo (default script `.github/assets/terminal/script.yml`), comparing only `recording.json` through the `github-readme-design` action's recording-only mode. On drift the job uploads the regenerated `recording.json` as an artifact for the maintainer to commit. Declare it only for a command-line tool with a README demo. |
 | `commands` | no | List of `{name, run, runner?, xcode?}` for repository-specific checks, such as `scripts/check-spec`. Each runs in the member checkout. |
 | `timeout_minutes` | no | Per-job limit from 1 to 360; default 45. |
 
@@ -86,7 +86,10 @@ instead of copying the script. A template carries no scripts.
   `job.workflow_sha`; they embed no script source and need no generators.
 - Each job requests only the permissions it uses. Release workflows restore
   and save no caches and never cancel running or queued releases.
-- The repository validates itself: its CI calls every workflow with fixture
-  packages, including one failing fixture per job that must fail.
+- The repository validates itself: its CI calls the validation and policy
+  workflows with passing fixture packages and runs each job's rejection path
+  against a failing fixture through its scripts. Release and organization
+  workflows are covered by workflow linting and unit tests and exercised by
+  their consumers.
 - The README documents the job catalog, the configuration reference, caller
   examples and pinning.
