@@ -25,8 +25,8 @@ Apple or Swift code are out of scope.
 
 - Checking API naming, argument labels, documentation comments, old
   Foundation formatting, Observation, SwiftUI baseline, baseline localization
-  API usage, SwiftData CloudKit, testing, obvious secret-storage mistakes, or
-  Xcode MCP patterns.
+  API usage, baseline SwiftData model constraints for CloudKit-backed stores,
+  testing, obvious secret-storage mistakes, or Xcode MCP patterns.
 - Replacing obvious old API usage with compatible modern APIs.
 - Reviewing or writing user-visible formatting with `FormatStyle`,
   `.formatted()`, or SwiftUI `Text(_:format:)`.
@@ -35,7 +35,7 @@ Apple or Swift code are out of scope.
 - Checking Google Swift style only when the repository or user explicitly
   requests that style.
 - Applying lightweight Swift coding checks to a SwiftUI app project.
-- Checking baseline SwiftData CloudKit constraints.
+- Checking baseline SwiftData model constraints for CloudKit-backed stores.
 - Checking baseline localization API usage, formatting, project-structure,
   testing, obvious secret-storage mistakes, and Xcode MCP guidance.
 
@@ -48,7 +48,9 @@ Apple or Swift code are out of scope.
   concurrency migration, actor-isolation design, data-race work, or `Sendable`
   fixes.
 - The task requires SwiftData implementation, schema design, custom DataStore,
-  query, migration, CloudKit sync, or troubleshooting work.
+  query, migration, or troubleshooting work, including CloudKit sync
+  implementation and troubleshooting. This skill checks only baseline
+  SwiftData model constraints for CloudKit-backed stores.
 - The task requires CoreData migration or persistent store design.
 - The task requires nontrivial Keychain Services implementation, access
   control, keychain sharing, biometric-protected secrets, credential migration,

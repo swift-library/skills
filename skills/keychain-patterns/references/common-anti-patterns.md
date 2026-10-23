@@ -1,8 +1,8 @@
 # Common Anti-Patterns
 
-> **Scope:** The 10 most dangerous security anti-patterns that AI coding assistants generate for iOS apps. Each entry includes the vulnerability explanation, realistic ❌ insecure code, ✅ correct replacement, detection heuristic, and OWASP risk mapping. This is the skill's backbone — the single most important file for correcting AI-generated security code.
+> **Scope:** Keychain storage, access-control, credential, and logging anti-patterns in iOS apps. Each entry includes the vulnerability explanation, realistic ❌ insecure code, ✅ correct replacement, detection heuristic, and OWASP risk mapping. This is the skill's backbone — the single most important file for correcting AI-generated security code.
 >
-> **Cross-references:** `biometric-authentication.md` (anti-pattern #3 deep dive), `keychain-fundamentals.md` (anti-pattern #4 CRUD patterns), `keychain-access-control.md` (anti-pattern #5 protection classes), `credential-storage-patterns.md` (anti-patterns #1–2 token lifecycle), `migration-legacy-stores.md` (anti-pattern #9 first-launch cleanup), `compliance-owasp-mapping.md` (full OWASP/MASVS mapping).
+> **Cross-references:** `biometric-authentication.md` (anti-pattern #3 deep dive), `keychain-fundamentals.md` (anti-pattern #4 CRUD patterns), `keychain-access-control.md` (anti-pattern #5 protection classes), `credential-storage-patterns.md` (anti-patterns #1–2 token lifecycle), `migration-legacy-stores.md` (anti-pattern #7 first-launch cleanup), `compliance-owasp-mapping.md` (full OWASP/MASVS mapping).
 
 ---
 
@@ -352,115 +352,7 @@ grep -rn "kSecAttrAccessibleWhenUnlocked\b" --include="*.swift" | \
 
 ---
 
-## Anti-Pattern #6 — Nonce Reuse in AES-GCM
-
-**Severity:** CRITICAL | **OWASP:** M10 (Insufficient Cryptography) | **Fix effort:** Medium
-
-Reusing a nonce with the same key in AES-GCM is a complete cryptographic break. Identical nonces produce identical keystreams, enabling plaintext recovery via `C1 ⊕ C2 = P1 ⊕ P2` and authentication key recovery via polynomial factorization ("forbidden attack," Joux 2006). CryptoKit's `AES.GCM.seal` has a safe default: omitting the `nonce` parameter auto-generates a random 12-byte nonce. Danger occurs when AI explicitly constructs nonces.
-
-**❌ Insecure — AI-generated patterns:**
-
-```swift
-import CryptoKit
-
-// Hardcoded nonce — identical keystream every encryption
-let fixedNonce = try! AES.GCM.Nonce(data: Data(repeating: 0x00, count: 12))
-
-func encrypt(_ plaintext: Data, using key: SymmetricKey) throws -> Data {
-    let sealedBox = try AES.GCM.seal(
-        plaintext, using: key, nonce: fixedNonce)  // CATASTROPHIC
-    return sealedBox.combined!
-}
-// Also dangerous: counter-based nonce that resets on app restart → collision
-```
-
-**✅ Secure — let CryptoKit handle nonces:**
-
-```swift
-import CryptoKit
-
-func encrypt(_ plaintext: Data, using key: SymmetricKey) throws -> Data {
-    // Nonce omitted → CryptoKit generates random 12-byte nonce
-    let sealedBox = try AES.GCM.seal(plaintext, using: key)
-    return sealedBox.combined!  // Contains: nonce ‖ ciphertext ‖ tag
-}
-
-func decrypt(_ combined: Data, using key: SymmetricKey) throws -> Data {
-    let sealedBox = try AES.GCM.SealedBox(combined: combined)
-    return try AES.GCM.open(sealedBox, using: key)
-}
-
-let key = SymmetricKey(size: .bits256)  // AES-256 per WWDC 2025 guidance
-```
-
-WWDC 2019-709 introduced CryptoKit with the design philosophy: "easy to use, hard to misuse."
-
-**MASTG test:** MASTG-TEST-0317. **MASWE:** MASWE-0022. **Legacy:** MASTG-CRYPTO-4.
-
-**Detection heuristic:**
-
-```bash
-grep -rn "AES\.GCM\.Nonce(data:" --include="*.swift"
-grep -rn "let.*nonce.*=.*AES\.GCM\.Nonce" --include="*.swift"
-grep -rn "Data(repeating:.*count:\s*12)" --include="*.swift"
-grep -rn "\.seal(.*nonce:" --include="*.swift"
-```
-
----
-
-## Anti-Pattern #7 — MD5/SHA-1 for Security Purposes
-
-**Severity:** HIGH | **OWASP:** M10 (Insufficient Cryptography) | **Fix effort:** Low
-
-MD5 broken since Wang & Yu (2005); SHA-1 broken by SHAttered (2017). CISA January 2025 lists both as insecure. Apple signals this via CryptoKit's `Insecure.MD5` and `Insecure.SHA1` namespacing.
-
-**❌ Insecure — AI-generated pattern:**
-
-```swift
-import CryptoKit
-func hashPassword(_ password: String) -> String {
-    let hash = Insecure.MD5.hash(data: password.data(using: .utf8)!)
-    return hash.map { String(format: "%02x", $0) }.joined()
-}
-// Also: CC_MD5, CC_SHA1 from CommonCrypto
-```
-
-**✅ Secure — SHA-256 minimum, KDF for passwords:**
-
-```swift
-import CryptoKit
-
-// Integrity verification
-func hashData(_ data: Data) -> String {
-    let hash = SHA256.hash(data: data)
-    return hash.map { String(format: "%02x", $0) }.joined()
-}
-
-// HMAC for message authentication
-func authenticate(_ data: Data, key: SymmetricKey) -> Data {
-    Data(HMAC<SHA256>.authenticationCode(for: data, using: key))
-}
-
-// Password storage — NEVER raw hashes. Use a KDF:
-// Server-side: Argon2id, bcrypt, or scrypt
-// On-device: PBKDF2 with ≥600,000 iterations (OWASP 2023 minimum for HMAC-SHA256)
-```
-
-iOS 26 adds SHA-3 family (`SHA3_256`, `SHA3_384`, `SHA3_512`) in CryptoKit. WWDC 2025-314 covers post-quantum additions (ML-KEM, ML-DSA), not SHA-3.
-
-**MASTG test:** MASTG-TEST-0211. **MASTG demos:** MASTG-DEMO-0015, MASTG-DEMO-0016. **Legacy:** MSTG-CRYPTO-1.
-
-**Detection heuristic:**
-
-```bash
-grep -rn "Insecure\.\(MD5\|SHA1\)" --include="*.swift"
-grep -rn "CC_MD5\|CC_SHA1\|CC_MD5_DIGEST_LENGTH\|CC_SHA1_DIGEST_LENGTH" \
-  --include="*.swift" --include="*.m"
-```
-
----
-
-## Anti-Pattern #8 — Logging Sensitive Data
+## Anti-Pattern #6 — Logging Sensitive Data
 
 **Severity:** HIGH | **OWASP:** M9 (Insecure Data Storage) | **Fix effort:** Low
 
@@ -515,7 +407,7 @@ grep -rn 'os_log.*%{public}' --include="*.swift" | \
 
 ---
 
-## Anti-Pattern #9 — Not Clearing Keychain on First Launch
+## Anti-Pattern #7 — Not Clearing Keychain on First Launch
 
 **Severity:** MEDIUM | **OWASP:** M9 (Insecure Data Storage) | **Fix effort:** Low
 
@@ -576,61 +468,6 @@ grep -rn "SecItemDelete" --include="*.swift" -l | \
 
 ---
 
-## Anti-Pattern #10 — Non-Cryptographic RNG for Security Operations
-
-**Severity:** HIGH | **OWASP:** M10 (Insufficient Cryptography) | **Fix effort:** Low
-
-`arc4random()` returns only 32-bit `UInt32` — insufficient for cryptographic purposes requiring 128–256 bits. Character-by-character token construction introduces bias. Truly non-cryptographic alternatives (`rand()`, `drand48()`, GameplayKit RNG) must never be used for security operations.
-
-**❌ Insecure — AI-generated patterns:**
-
-```swift
-func generateToken() -> String {
-    return String(arc4random_uniform(999_999))  // ~20 bits of entropy
-}
-
-func generateSessionId(length: Int = 16) -> String {
-    let chars = "abcdefghijklmnopqrstuvwxyz0123456789"
-    return String((0..<length).map { _ in chars.randomElement()! })  // Bias
-}
-// Also dangerous: srand48/drand48, rand(), GameplayKit RNG
-```
-
-**✅ Secure — SecRandomCopyBytes / CryptoKit:**
-
-```swift
-import Security
-import CryptoKit
-
-// SecRandomCopyBytes — canonical iOS crypto RNG
-func generateSecureToken(byteCount: Int = 32) throws -> String {
-    var bytes = [UInt8](repeating: 0, count: byteCount)
-    let status = SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes)
-    guard status == errSecSuccess else {
-        throw CryptoError.randomGenerationFailed(status)
-    }
-    return bytes.map { String(format: "%02x", $0) }.joined()
-}
-
-// CryptoKit key generation (secure RNG internally)
-let encryptionKey = SymmetricKey(size: .bits256)
-```
-
-`SecRandomCopyBytes` sources entropy from the Secure Enclave's hardware TRNG via corecrypto's `ccrng_generate`. It reports errors via return status — unlike `arc4random`, which silently cannot fail.
-
-**MASTG test:** MASTG-TEST-0311. **MASTG demos:** MASTG-DEMO-0073, MASTG-DEMO-0074. **Legacy:** MSTG-CRYPTO-6.
-
-**Detection heuristic:**
-
-```bash
-grep -rn "arc4random\|arc4random_uniform\|arc4random_buf" --include="*.swift" | \
-  grep -iE "token|nonce|salt|key|secret|session|iv"
-grep -rn "\bsrand\b\|\brand()\|\brandom()\|\bdrand48\b" --include="*.swift"
-grep -rn "GKARC4RandomSource\|GKMersenneTwisterRandomSource" --include="*.swift"
-```
-
----
-
 ## Quick Reference Matrix
 
 | #   | Anti-Pattern             | OWASP 2024 | MASTG Test      | Dangerous API              | Secure API                          | Fix Effort |
@@ -640,11 +477,8 @@ grep -rn "GKARC4RandomSource\|GKMersenneTwisterRandomSource" --include="*.swift"
 | 3   | LAContext-only biometric | M3         | MASTG-TEST-0266 | `evaluatePolicy`           | `SecAccessControlCreateWithFlags`   | Medium     |
 | 4   | Ignored SecItem errors   | M8         | MASTG-TEST-0300 | Unchecked `SecItemAdd`     | OSStatus switch + `SecItemUpdate`   | Low        |
 | 5   | Wrong data protection    | M9         | MASTG-TEST-0299 | `kSecAttrAccessibleAlways` | `WhenUnlockedThisDeviceOnly`        | Low        |
-| 6   | Nonce reuse AES-GCM      | M10        | MASTG-TEST-0317 | `AES.GCM.Nonce(data:)`     | Omit nonce (auto-random)            | Medium     |
-| 7   | MD5/SHA-1 for security   | M10        | MASTG-TEST-0211 | `Insecure.MD5/.SHA1`       | `SHA256`+ / KDF for passwords       | Low        |
-| 8   | Logging sensitive data   | M9         | MASTG-TEST-0297 | `print(token)`             | `Logger` + `.private`               | Low        |
-| 9   | No keychain cleanup      | M9         | MASTG-TEST-0300 | Missing cleanup            | UserDefaults flag + `SecItemDelete` | Low        |
-| 10  | Non-crypto RNG           | M10        | MASTG-TEST-0311 | `arc4random()`             | `SecRandomCopyBytes`                | Low        |
+| 6   | Logging sensitive data   | M9         | MASTG-TEST-0297 | `print(token)`             | `Logger` + `.private`               | Low        |
+| 7   | No keychain cleanup      | M9         | MASTG-TEST-0300 | Missing cleanup            | UserDefaults flag + `SecItemDelete` | Low        |
 
 ---
 
@@ -660,18 +494,6 @@ Recommended: Semgrep on every PR + post-build binary scanning. CodeQL nightly fo
 
 ---
 
-## iOS 26 / WWDC 2025 Implications
-
-WWDC 2025-314 introduced the most significant CryptoKit expansion since 2019:
-
-- **Symmetric keys:** `.bits256` recommended over `.bits128` for quantum resistance (anti-patterns #6, #10)
-- **Hashing:** SHA-3 family (`SHA3_256/384/512`) in CryptoKit on iOS 26+ (anti-pattern #7)
-- **Post-quantum:** ML-KEM 768/1024, ML-DSA 65/87, X-Wing — all with Secure Enclave support
-- **TLS:** `X25519MLKEM768` enabled by default for `URLSession` in iOS 26
-- **Secure Enclave:** Hardware post-quantum key creation strengthens anti-patterns #3 and #5 fixes
-
----
-
 ## Summary Checklist
 
 When reviewing iOS code for security anti-patterns, verify each item:
@@ -681,9 +503,5 @@ When reviewing iOS code for security anti-patterns, verify each item:
 1. **Biometrics bound to Keychain** — `evaluatePolicy` is never used alone to gate sensitive actions; `SecAccessControlCreateWithFlags` with `.biometryCurrentSet` protects keychain items
 1. **All SecItem calls checked** — `SecItemAdd` handles `errSecDuplicateItem` with `SecItemUpdate` fallback; `SecItemCopyMatching` handles `errSecItemNotFound`; no discarded `OSStatus` return values
 1. **Explicit data protection class** — every `SecItemAdd` includes `kSecAttrAccessible` or `kSecAttrAccessControl`; no `kSecAttrAccessibleAlways`; `ThisDeviceOnly` variants used for non-syncing items
-1. **No nonce reuse** — `AES.GCM.seal` called without explicit `nonce:` parameter (auto-random); no stored/global/counter-based nonce variables
-1. **No broken hashes** — no `Insecure.MD5`, `Insecure.SHA1`, `CC_MD5`, `CC_SHA1` for security purposes; passwords use KDF (Argon2id, bcrypt, PBKDF2-HMAC-SHA256 with ≥600,000 iterations)
 1. **No sensitive data in logs** — `print()` and `NSLog()` never contain tokens, keys, or credentials; `os_log` uses `%{private}@`; `Logger` uses `.private` or `.private(mask: .hash)`
 1. **First-launch keychain cleanup** — `UserDefaults` flag + `SecItemDelete` for all classes runs before SDK initialization at app startup
-1. **Cryptographic RNG only** — `SecRandomCopyBytes` or CryptoKit APIs for tokens, nonces, salts, keys; no `arc4random` / `rand()` / `drand48()` / GameplayKit RNG in security contexts
-1. **iOS 26 readiness** — symmetric keys use `.bits256`; no deprecated algorithms; aware of post-quantum CryptoKit APIs for forward-looking implementations

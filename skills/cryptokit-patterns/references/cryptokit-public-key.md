@@ -361,6 +361,8 @@ NIST curve keys (P-256/P-384/P-521) can be stored as `kSecClassKey` items in the
 The Secure Enclave generates, stores, and operates on private keys entirely within its hardware boundary — raw key material never enters application memory.
 
 ```swift
+// Simulator builds use a software key or a mock provider instead (see secure-enclave.md).
+#if !targetEnvironment(simulator)
 guard SecureEnclave.isAvailable else { return }
 
 let accessControl = SecAccessControlCreateWithFlags(
@@ -378,6 +380,7 @@ let signature = try seKey.signature(for: data)
 
 // The public key is a standard P256.Signing.PublicKey — exports normally
 let publicPEM = seKey.publicKey.pemRepresentation
+#endif
 ```
 
 For classical curves, only P256 works with the Secure Enclave. On iOS 26, the Secure Enclave gains support for `SecureEnclave.MLKEM768`, `SecureEnclave.MLKEM1024`, `SecureEnclave.MLDSA65`, and `SecureEnclave.MLDSA87`.

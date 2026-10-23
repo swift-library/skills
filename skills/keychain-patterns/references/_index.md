@@ -13,7 +13,7 @@ the task requires tests.
 | `credential-storage-patterns.md` | OAuth tokens, API keys, password lifecycle, logout cleanup, key rotation |
 | `migration-legacy-stores.md` | Moving secrets out of UserDefaults, @AppStorage, plists, NSCoding, and stale installs |
 | `biometric-authentication.md` | Keychain-bound Face ID / Touch ID, LAContext pitfalls, enrollment changes |
-| `common-anti-patterns.md` | Review backbone for insecure storage, ignored errors, biometric bypasses, weak crypto, and logging |
+| `common-anti-patterns.md` | Review backbone for insecure storage, ignored errors, biometric bypasses, and logging |
 | `testing-security-code.md` | Protocol-based keychain tests, simulator/device split, CI handling |
 | `compliance-owasp-mapping.md` | OWASP Mobile Top 10, MASVS, and MASTG audit mapping |
 

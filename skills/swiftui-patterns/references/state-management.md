@@ -340,7 +340,7 @@ struct ThemedView: View {
 }
 ```
 
-The `@Entry` macro replaces the manual `EnvironmentKey` conformance pattern. It also works with `TransactionValues`, `ContainerValues`, and `FocusedValues`.
+The `@Entry` macro replaces the manual `EnvironmentKey` conformance pattern. It also works with `Transaction`, `ContainerValues`, and `FocusedValues`.
 
 ### @Environment with @Observable (iOS 17+ - Preferred)
 

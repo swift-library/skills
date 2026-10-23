@@ -1,10 +1,10 @@
-# Testing Keychain, CryptoKit, and Biometric Code
+# Testing Keychain and Biometric Code
 
-> Scope: Unit, integration, and CI patterns for validating keychain, CryptoKit, and biometric security code across simulator, CI runners, and physical devices.
+> Scope: Unit, integration, and CI patterns for validating Keychain Services and keychain-bound biometric code across simulator, CI runners, and physical devices.
 
 **Protocol-based abstraction is the single most important pattern for testable security code.** Wrapping Security framework calls behind a Swift protocol lets you inject an in-memory mock for unit tests while reserving real keychain integration tests for physical devices. The core challenge is that keychain behavior differs dramatically across three environments — Xcode simulator, CI runner, and physical device — and tests that ignore these differences produce flaky failures, crashes, or false confidence.
 
-This reference covers mock design, CryptoKit round-trip tests, Secure Enclave guards, biometric mocking, CI/CD keychain creation, simulator limitations, Swift Testing framework patterns, mutation testing, and OWASP MASTG validation. All code targets Swift 5.9+/6.0, iOS 17–18+, with iOS 26 post-quantum notes where applicable.
+This reference covers keychain test doubles, injected errors, biometric mocking, CI keychain setup, simulator limitations, Swift Testing, migration tests, mutation testing, and OWASP MASTG validation. When storing CryptoKit key material or opaque Secure Enclave key representations, test persistence through the same keychain abstraction; inject key providers for unit tests. Hardware-backed key integration tests must exclude Simulator with `#if targetEnvironment(simulator)` and check `SecureEnclave.isAvailable` on device. Its Simulator value is not a guarantee that key operations work.
 
 Key sources: Apple TN3137 "On Mac keychain APIs and implementations," WWDC19-413 "Testing in Xcode," WWDC24-10179/10195 "Meet/Go further with Swift Testing," Apple Platform Security Guide, OWASP MASTG.
 
@@ -117,21 +117,19 @@ final class AuthenticationManager {
 
 ---
 
-## Seven Mistakes AI Generators Make in Keychain Tests
+## Six Mistakes AI Generators Make in Keychain Tests
 
 **1. Tests that use the real keychain without cleanup.** Tests calling `SecItemAdd` directly leave state across runs. Second run fails with `errSecDuplicateItem` (-25299). AI generators rarely include `setUp`/`tearDown` cleanup.
 
-**2. Assuming Secure Enclave exists on simulator.** `SecureEnclave.isAvailable` returns `false` on every simulator. Tests calling `SecureEnclave.P256.Signing.PrivateKey()` directly throw `CryptoKitError` on simulator and crash CI.
+**2. Not testing error paths.** Real keychain code must handle `errSecDuplicateItem` (-25299), `errSecItemNotFound` (-25300), `errSecAuthFailed` (-25293), and `errSecInteractionNotAllowed` (-25308). AI generators almost never test these failure modes.
 
-**3. Not testing error paths.** Real keychain code must handle `errSecDuplicateItem` (-25299), `errSecItemNotFound` (-25300), `errSecAuthFailed` (-25293), and `errSecInteractionNotAllowed` (-25308). AI generators almost never test these failure modes.
+**3. Assuming biometric hardware.** Tests instantiating a real `LAContext` and asserting `canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics)` returns `true` fail on simulator where no biometric hardware exists.
 
-**4. Assuming biometric hardware.** Tests instantiating a real `LAContext` and asserting `canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics)` returns `true` fail on simulator where no biometric hardware exists.
+**4. Missing test host app.** Since Xcode 9, test bundles on iOS simulator require a host app to access the keychain. Without one, `SecItemAdd` returns `-25300` or `-34018`. AI generators never mention this requirement.
 
-**5. Missing test host app.** Since Xcode 9, test bundles on iOS simulator require a host app to access the keychain. Without one, `SecItemAdd` returns `-25300` or `-34018`. AI generators never mention this requirement.
+**5. No service/account scoping.** Tests omitting `kSecAttrService` match items from other tests or even other apps. Every keychain operation in tests must use a unique, test-specific service identifier.
 
-**6. No service/account scoping.** Tests omitting `kSecAttrService` match items from other tests or even other apps. Every keychain operation in tests must use a unique, test-specific service identifier.
-
-**7. Confusing data protection keychain with file-based keychain.** Per Apple TN3137, macOS has two keychain implementations. The `security` CLI works with the file-based keychain; iOS apps use the data protection keychain. CI scripts using `security create-keychain` create the wrong type for `SecItemAdd` targets.
+**6. Confusing data protection keychain with file-based keychain.** Per Apple TN3137, macOS has two keychain implementations. The `security` CLI works with the file-based keychain; iOS apps use the data protection keychain. CI scripts using `security create-keychain` create the wrong type for `SecItemAdd` targets.
 
 ---
 
@@ -142,29 +140,16 @@ Understanding exactly what works where prevents entire categories of test failur
 | Feature                                                       | Simulator                             | Physical Device              |
 | ------------------------------------------------------------- | ------------------------------------- | ---------------------------- |
 | Keychain CRUD (`SecItemAdd`, etc.)                            | ✅ Works                              | ✅ Works                     |
-| CryptoKit software crypto (AES-GCM, ChaChaPoly, P256, SHA256) | ✅ Software                           | ✅ Hardware-accelerated      |
 | `kSecAttrAccessible` values                                   | ✅ Accepted but not hardware-enforced | ✅ Hardware-enforced         |
-| `SecureEnclave.isAvailable`                                   | Returns **false**                     | Returns **true** (A7+)       |
-| `SecureEnclave.P256.Signing.PrivateKey()`                     | ❌ Throws                             | ✅ Works                     |
 | Biometric prompt on protected items                           | ❌ Skipped — value returned silently  | ✅ Shows prompt              |
 | `LAContext.canEvaluatePolicy(.biometrics)`                    | Returns **false**                     | Returns **true** if enrolled |
 | Face ID simulation via Xcode menu                             | ✅ Manual only                        | N/A (real hardware)          |
-| Post-quantum (ML-KEM, ML-DSA) iOS 26+                         | ✅ Software (iOS 26 runtime)          | ✅ Works                     |
 
 **Critical subtlety:** On simulator, keychain items protected with `kSecAttrAccessControl` and biometric flags return their value without showing a biometric prompt. Simulator tests that store biometric-protected items and read them succeed silently, giving false confidence the biometric gate works.
 
 ### Conditional Compilation and Runtime Guards
 
 ```swift
-// Compile-time: exclude SE code on simulator
-#if targetEnvironment(simulator)
-    let signingKey = SoftwareSigningKey()
-#else
-    let signingKey = SecureEnclave.isAvailable
-        ? try SecureEnclaveSigningKey()
-        : SoftwareSigningKey()
-#endif
-
 // Runtime skip in XCTest
 func testDeviceOnlyFeature() throws {
     #if targetEnvironment(simulator)
@@ -269,154 +254,6 @@ final class KeychainErrorPathTests: XCTestCase {
     }
 }
 ```
-
-### CryptoKit Round-Trip Tests (Simulator-Safe)
-
-All CryptoKit software operations work on simulator. These tests run everywhere:
-
-```swift
-import XCTest
-import CryptoKit
-
-final class CryptoKitTests: XCTestCase {
-
-    func testAESGCMRoundTrip() throws {
-        let key = SymmetricKey(size: .bits256)
-        let plaintext = "Sensitive credentials".data(using: .utf8)!
-        let sealedBox = try AES.GCM.seal(plaintext, using: key)
-        let ciphertext = sealedBox.combined!
-        XCTAssertNotEqual(ciphertext, plaintext)
-
-        let reopened = try AES.GCM.SealedBox(combined: ciphertext)
-        let decrypted = try AES.GCM.open(reopened, using: key)
-        XCTAssertEqual(decrypted, plaintext)
-    }
-
-    func testAESGCMWrongKeyFails() throws {
-        let correctKey = SymmetricKey(size: .bits256)
-        let wrongKey = SymmetricKey(size: .bits256)
-        let sealed = try AES.GCM.seal("secret".data(using: .utf8)!, using: correctKey)
-        XCTAssertThrowsError(try AES.GCM.open(sealed, using: wrongKey))
-    }
-
-    func testP256SignVerify() throws {
-        let privateKey = P256.Signing.PrivateKey()
-        let data = "Message to authenticate".data(using: .utf8)!
-        let signature = try privateKey.signature(for: data)
-        XCTAssertTrue(privateKey.publicKey.isValidSignature(signature, for: data))
-
-        let tampered = "Tampered message".data(using: .utf8)!
-        XCTAssertFalse(privateKey.publicKey.isValidSignature(signature, for: tampered))
-    }
-
-    func testCurve25519KeyAgreement() throws {
-        let alice = Curve25519.KeyAgreement.PrivateKey()
-        let bob = Curve25519.KeyAgreement.PrivateKey()
-        let aliceShared = try alice.sharedSecretFromKeyAgreement(with: bob.publicKey)
-        let bobShared = try bob.sharedSecretFromKeyAgreement(with: alice.publicKey)
-
-        let aliceKey = aliceShared.hkdfDerivedSymmetricKey(
-            using: SHA256.self, salt: Data(), sharedInfo: Data(), outputByteCount: 32)
-        let bobKey = bobShared.hkdfDerivedSymmetricKey(
-            using: SHA256.self, salt: Data(), sharedInfo: Data(), outputByteCount: 32)
-
-        // Both parties can decrypt each other's messages
-        let sealed = try AES.GCM.seal("test".data(using: .utf8)!, using: aliceKey)
-        XCTAssertEqual(try AES.GCM.open(sealed, using: bobKey), "test".data(using: .utf8)!)
-    }
-}
-```
-
-**iOS 26 note:** Post-quantum cryptography (ML-KEM, ML-DSA) is available via CryptoKit starting iOS 26. Gate these tests with `@available(iOS 26, *)` and use the same round-trip pattern. Software-based PQC works on simulator.
-
----
-
-## Secure Enclave Test Strategy — Protocol Fallback
-
-> **Distinct key types:** A function returning `P256.Signing.PrivateKey` for both SE and software paths is a type error — `SecureEnclave.P256.Signing.PrivateKey` and `P256.Signing.PrivateKey` are distinct types. The correct approach is a protocol-based abstraction:
-
-### SigningKeyProvider Protocol with SE/Software Implementations
-
-```swift
-import CryptoKit
-
-protocol SigningKeyProvider {
-    func sign(_ data: Data) throws -> Data
-    func publicKeyData() -> Data
-}
-
-final class SecureEnclaveSigningKey: SigningKeyProvider {
-    private let key: SecureEnclave.P256.Signing.PrivateKey
-
-    init() throws {
-        guard SecureEnclave.isAvailable else {
-            throw KeychainError.unhandledError(status: errSecUnimplemented)
-        }
-        self.key = try SecureEnclave.P256.Signing.PrivateKey()
-    }
-
-    func sign(_ data: Data) throws -> Data {
-        try key.signature(for: data).derRepresentation
-    }
-
-    func publicKeyData() -> Data { key.publicKey.derRepresentation }
-}
-
-final class SoftwareSigningKey: SigningKeyProvider {
-    private let key = P256.Signing.PrivateKey()
-
-    func sign(_ data: Data) throws -> Data {
-        try key.signature(for: data).derRepresentation
-    }
-
-    func publicKeyData() -> Data { key.publicKey.derRepresentation }
-}
-
-struct SigningKeyFactory {
-    static func make() -> SigningKeyProvider {
-        if SecureEnclave.isAvailable,
-           let seKey = try? SecureEnclaveSigningKey() {
-            return seKey
-        }
-        return SoftwareSigningKey()
-    }
-}
-```
-
-### Testing Secure Enclave Code
-
-```swift
-// ❌ INCORRECT: Crashes on simulator and CI
-func testSecureEnclaveSigning_BROKEN() throws {
-    let key = try SecureEnclave.P256.Signing.PrivateKey() // throws on simulator
-    let sig = try key.signature(for: "data".data(using: .utf8)!)
-    XCTAssertTrue(key.publicKey.isValidSignature(sig, for: "data".data(using: .utf8)!))
-}
-
-// ✅ CORRECT: Skip gracefully when SE unavailable
-func testSecureEnclaveSigning_withGuard() throws {
-    try XCTSkipUnless(SecureEnclave.isAvailable,
-                      "Secure Enclave not available — skipping on simulator")
-    let key = try SecureEnclave.P256.Signing.PrivateKey()
-    let data = "authenticated payload".data(using: .utf8)!
-    let sig = try key.signature(for: data)
-    XCTAssertTrue(key.publicKey.isValidSignature(sig, for: data))
-}
-
-// ✅ CORRECT: Protocol-based test runs everywhere
-func testSigningWithFallback() throws {
-    let signer = SigningKeyFactory.make()
-    let data = "payload".data(using: .utf8)!
-    let sigBytes = try signer.sign(data)
-    XCTAssertFalse(sigBytes.isEmpty)
-
-    let publicKey = try P256.Signing.PublicKey(derRepresentation: signer.publicKeyData())
-    let signature = try P256.Signing.ECDSASignature(derRepresentation: sigBytes)
-    XCTAssertTrue(publicKey.isValidSignature(signature, for: data))
-}
-```
-
----
 
 ## Biometric Flow Testing — LAContext Mocking
 
@@ -592,8 +429,8 @@ Since Xcode 9, test bundles on iOS simulator require a host app to access the ke
 
 Create two test plans for CI/device split:
 
-- **CITests.xctestplan**: Only tests using `MockKeychainService` and simulator-safe CryptoKit. Skips integration, biometric, and SE tests.
-- **DeviceTests.xctestplan**: Real keychain integration, Secure Enclave, and biometric hardware tests. Requires physical device.
+- **CITests.xctestplan**: Tests using `MockKeychainService` and biometric test doubles. Excludes hardware integration tests.
+- **DeviceTests.xctestplan**: Real keychain integration and biometric hardware tests. Requires physical device.
 
 ```bash
 # CI: simulator-safe tests on every push
@@ -767,13 +604,11 @@ Three insights most guides miss: (1) the simulator silently returns biometric-pr
 ## Summary Checklist
 
 1. **Protocol abstraction** — All keychain access goes through `KeychainServiceProtocol`; no direct `SecItem*` calls in business logic
-2. **Mock with injectable errors** — `MockKeychainService` supports `errorToThrow` for testing `errSecDuplicateItem`, `errSecAuthFailed`, `errSecInteractionNotAllowed`, and `errSecItemNotFound` paths
-3. **setUp/tearDown cleanup** — Every integration test using real keychain has both pre-test and post-test cleanup with a test-specific `kSecAttrService`
-4. **Secure Enclave guard** — All SE tests use `try XCTSkipUnless(SecureEnclave.isAvailable, ...)` or protocol-based fallback; never call `SecureEnclave.P256.*` unconditionally
-5. **Biometric mock** — `LAContext` wrapped behind protocol or subclass mock; tests cover success, user cancel, lockout, and not-enrolled scenarios
-6. **Simulator/device split** — Two Xcode test plans: `CITests` (mock-based, simulator-safe) and `DeviceTests` (real keychain, SE, biometrics on physical device)
-7. **CI keychain setup** — GitHub Actions calls `security set-key-partition-list` after cert import; test target has host app with Keychain Sharing capability enabled
-8. **CryptoKit round-trips** — Encrypt→decrypt and sign→verify tests for AES-GCM, ChaChaPoly, P256, Curve25519; wrong-key failure tests included
-9. **Error path coverage** — Every `OSStatus` code the app can encounter has a corresponding test with injected mock failure
-10. **Migration testing** — UserDefaults→Keychain migration tested with isolated `UserDefaults(suiteName:)` and mock keychain; verifies source cleared after migration
-11. **Mutation testing baseline** — Muter mutation score tracked against an agreed threshold for security-critical code paths; `RelationalOperatorReplacement` and `RemoveSideEffects` operators enabled
+1. **Mock with injectable errors** — `MockKeychainService` supports `errorToThrow` for testing `errSecDuplicateItem`, `errSecAuthFailed`, `errSecInteractionNotAllowed`, and `errSecItemNotFound` paths
+1. **setUp/tearDown cleanup** — Every integration test using real keychain has both pre-test and post-test cleanup with a test-specific `kSecAttrService`
+1. **Biometric mock** — `LAContext` wrapped behind protocol or subclass mock; tests cover success, user cancel, lockout, and not-enrolled scenarios
+1. **Simulator/device split** — Two Xcode test plans: `CITests` (mock-based, simulator-safe) and `DeviceTests` (real keychain and biometrics on physical device)
+1. **CI keychain setup** — GitHub Actions calls `security set-key-partition-list` after cert import; test target has host app with Keychain Sharing capability enabled
+1. **Error path coverage** — Every `OSStatus` code the app can encounter has a corresponding test with injected mock failure
+1. **Migration testing** — UserDefaults→Keychain migration tested with isolated `UserDefaults(suiteName:)` and mock keychain; verifies source cleared after migration
+1. **Mutation testing baseline** — Muter mutation score tracked against an agreed threshold for security-critical code paths; `RelationalOperatorReplacement` and `RemoveSideEffects` operators enabled

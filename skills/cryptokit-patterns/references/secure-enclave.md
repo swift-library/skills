@@ -63,7 +63,7 @@ enum SecureEnclaveError: Error {
 }
 ```
 
-The `#if targetEnvironment(simulator)` compile-time guard is essential. **`SecureEnclave.isAvailable` can return `true` on the Simulator** when the host Mac has SE hardware (T2/M-series), but actual key generation fails at runtime. This behavior varies across Xcode versions — some return `false` consistently, others reflect the host's hardware. The compile-time check eliminates the ambiguity entirely.
+Exclude Simulator with `#if targetEnvironment(simulator)` or inject a software/mock provider, then check `SecureEnclave.isAvailable` at runtime on physical hardware. The availability value on Simulator can vary with the host and Xcode version, including returning `true` on a Mac with Secure Enclave hardware while key generation fails. Handle key-operation errors even after the availability check succeeds. The operation snippets below assume this guard has passed.
 
 ```swift
 // ❌ INCORRECT: No availability check — crashes on simulator and old devices
@@ -192,6 +192,9 @@ import LocalAuthentication
 import Security
 
 func createBiometricKey() throws -> SecureEnclave.P256.Signing.PrivateKey {
+    #if targetEnvironment(simulator)
+    throw SecureEnclaveError.notAvailable
+    #else
     guard SecureEnclave.isAvailable else {
         throw SecureEnclaveError.notAvailable
     }
@@ -215,6 +218,7 @@ func createBiometricKey() throws -> SecureEnclave.P256.Signing.PrivateKey {
         accessControl: accessControl,
         authenticationContext: context
     )
+    #endif
 }
 
 // Later: reconstruct and use (biometric prompt appears)
@@ -337,7 +341,7 @@ These patterns appear routinely in LLM-generated code. Each reflects a misunders
 
 ### 1. Not checking isAvailable (and the simulator double-trap)
 
-The minimal check is `SecureEnclave.isAvailable`, but this alone is insufficient on the simulator. The robust pattern combines compile-time and runtime checks:
+Combine compile-time Simulator exclusion with the runtime hardware availability check:
 
 ```swift
 // ✅ Robust availability check — safe everywhere
