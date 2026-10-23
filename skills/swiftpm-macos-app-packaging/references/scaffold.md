@@ -34,8 +34,9 @@ swift package init --type executable
   copies the resources directory without warning on hidden placeholder files.
 - Packaging scripts live in the repository's `scripts/` directory
   (repository-specific automation, created only when needed).
-- Version values should come from a small local file such as `version.env` or
-  from the release process.
+- Both packaging and notarization templates require `MARKETING_VERSION` and
+  `BUILD_NUMBER` in `version.env`, ignoring inherited values. Adapt that input
+  consistently to the project's authoritative version source when needed.
 
 ## Bootstrap Template
 

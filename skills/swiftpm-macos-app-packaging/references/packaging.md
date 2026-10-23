@@ -61,6 +61,11 @@ plutil -lint MyApp.app/Contents/Info.plist
 - Copy SwiftPM-emitted `*.bundle` resource bundles from the selected build
   output directory into `Contents/Resources`.
 - Copy built `*.framework` outputs into `Contents/Frameworks` when present.
+  For multiple architectures, take the requested slice from each architecture's
+  build, extracting it from universal framework binaries in a private temporary
+  directory that is removed on exit. Merge the thin inputs with `lipo` and verify
+  the final architecture set. A missing framework binary or requested slice
+  fails packaging.
 - Add `@executable_path/../Frameworks` as an rpath when frameworks are embedded.
 - Strip extended attributes with `xattr -cr` and remove `._*` AppleDouble files
   before signing.
@@ -71,8 +76,6 @@ The bundled scripts read common environment variables:
 
 - `APP_NAME`
 - `BUNDLE_ID`
-- `MARKETING_VERSION`
-- `BUILD_NUMBER`
 - `ARCHES`
 - `SIGNING_MODE`
 - `APP_IDENTITY`
@@ -80,7 +83,12 @@ The bundled scripts read common environment variables:
 - `MENU_BAR_APP`
 - `APP_ENTITLEMENTS`
 
-Set them in the shell, `version.env`, or a project-local wrapper script.
+Set these environment variables in the shell or a project-local wrapper.
+`MARKETING_VERSION` and `BUILD_NUMBER` must both be declared in `version.env`;
+the packaging and notarization templates clear inherited values before reading
+it. Adapt that input to the project's authoritative version source when it
+uses another declaration, keeping both scripts on the same source. Do not
+supply version values through shell overrides or duplicate declarations.
 
 ## Entitlements Input
 

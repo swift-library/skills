@@ -1,8 +1,8 @@
 # Compliance & OWASP Mapping Reference
 
-> Scope: Maps Apple-platform client security patterns to OWASP Mobile Top 10 (2024), MASVS, and MASTG controls for audit and remediation workflows.
+> Scope: Maps Keychain storage and access-control patterns to OWASP Mobile Top 10 (2024), MASVS, and MASTG controls for audit and remediation workflows.
 
-**Older guidance still uses the 2016 OWASP Mobile Top 10 numbering — "M2: Insecure Data Storage," "M5: Insufficient Cryptography" — which the 2024 list replaced.** This reference maps current iOS security practices to the OWASP Mobile Top 10 (2024), MASVS v2.1.0, and MASTG test cases for the 2024–2026 compliance window. It covers the four categories most relevant to Keychain & Security work: M1 (Improper Credential Usage), M3 (Insecure Authentication/Authorization), M9 (Insecure Data Storage), and M10 (Insufficient Cryptography). Hardcoded credentials (CWE-798) are listed as a dangerous practice in CISA and FBI's Product Security Bad Practices guidance.
+**Older guidance still uses the 2016 OWASP Mobile Top 10 numbering — "M2: Insecure Data Storage," "M5: Insufficient Cryptography" — which the 2024 list replaced.** This reference maps current iOS security practices to the OWASP Mobile Top 10 (2024), MASVS v2.1.0, and MASTG test cases for the 2024–2026 compliance window. It covers M1 (Improper Credential Usage), M3 (Insecure Authentication/Authorization), and M9 (Insecure Data Storage), plus key-storage obligations under MASVS-CRYPTO-2. Hardcoded credentials (CWE-798) are listed as a dangerous practice in CISA and FBI's Product Security Bad Practices guidance.
 
 ---
 
@@ -36,7 +36,6 @@ This matrix links each OWASP 2024 category to its MASVS controls, MASTG test cas
 | **M1** Improper Credential Usage  | MASVS-STORAGE-1, MASVS-AUTH-1, MASVS-CRYPTO-2 | 0213, 0214, 0299, 0300, 0302                                     | Keychain + `SecAccessControl`; App Attest                                               | Static scan (no literals); keychain dump with ACL; attestation logs |
 | **M3** Insecure Auth/AuthZ        | MASVS-AUTH-1, MASVS-AUTH-2, MASVS-AUTH-3      | 0266, 0267, 0268, 0269, 0270, 0271                               | `SecAccessControlCreateWithFlags` + `.biometryCurrentSet`; `ASWebAuthenticationSession` | Auth flow diagrams; biometric bypass test results; token TTL policy |
 | **M9** Insecure Data Storage      | MASVS-STORAGE-1, MASVS-STORAGE-2              | 0296, 0297, 0299, 0300, 0301, 0302, 0303, 0215, 0298, 0313, 0314 | Keychain accessibility flags; `NSFileProtectionComplete`; `isExcludedFromBackup`        | `xattr` listings; backup extraction; keychain dump                  |
-| **M10** Insufficient Cryptography | MASVS-CRYPTO-1, MASVS-CRYPTO-2                | 0209, 0210, 0211, 0213, 0214, 0311, 0317                         | CryptoKit `AES.GCM`/`ChaChaPoly`; `SecRandomCopyBytes`; Secure Enclave keys             | Crypto inventory; algorithm audit; unit tests                       |
 
 > **Cross-reference note:** MASVS-STORAGE-1 and MASTG-TEST-0299/0302 appear under both M1 and M9. This is intentional — keychain configuration simultaneously addresses credential storage and data-at-rest protection. See `keychain-access-control.md` for detailed accessibility flag guidance.
 
@@ -342,84 +341,6 @@ print("Password entered: \(password)")
 
 ---
 
-## M10 — Insufficient Cryptography
-
-**Scope:** Weak algorithms, insufficient key lengths, poor key management, insecure RNG, deprecated hashes. Attack vectors: AVERAGE. Impact: SEVERE. Was M5 in 2016.
-
-### Deprecated vs. Approved Algorithms
-
-| Category       | ❌ Deprecated/Broken              | ✅ Approved (CryptoKit, iOS 13+)                               |
-| -------------- | --------------------------------- | -------------------------------------------------------------- |
-| Hashing        | MD5, SHA-1 (for security)         | SHA256, SHA384, SHA512; SHA3 (iOS 26+)                         |
-| Symmetric      | DES, 3DES, RC4, Blowfish, AES-ECB | AES.GCM (AES-256-GCM), ChaChaPoly                              |
-| Asymmetric     | RSA < 2048 bits                   | P256, P384, P521, Curve25519, Ed25519                          |
-| Key derivation | Simple SHA hash of password       | HKDF; Argon2/bcrypt/scrypt server-side                         |
-| RNG            | `rand()`, `random()`, `srand()`   | `SecRandomCopyBytes` (iOS 2+), CryptoKit auto-nonces (iOS 13+) |
-| Post-quantum   | All classical PKC (by 2030)       | ML-KEM, ML-DSA, X-Wing (iOS 26+)                               |
-
-**`arc4random()` nuance:** On modern Apple platforms, `arc4random()` uses a CSPRNG internally (not broken RC4). It is technically secure on iOS. However, `SecRandomCopyBytes` remains recommended for explicit cryptographic use — its security guarantees are documented and cross-platform portable.
-
-**AES-GCM nonce reuse is catastrophic:** A single reuse with the same key destroys both confidentiality (XOR of ciphertexts reveals XOR of plaintexts) and authentication (leaks GHASH key `H`, enabling arbitrary forgery). CryptoKit mitigates this by auto-generating random nonces when `AES.GCM.seal()` is called without an explicit nonce.
-
-### MASTG Test Cases
-
-| Test ID         | Legacy ID     | Verifies                                        | Profile |
-| --------------- | ------------- | ----------------------------------------------- | ------- |
-| MASTG-TEST-0209 | MSTG-CRYPTO-2 | Key size meets minimum requirements             | L1, L2  |
-| MASTG-TEST-0210 | MSTG-CRYPTO-2 | No broken symmetric algorithms (DES, 3DES, RC4) | L1, L2  |
-| MASTG-TEST-0211 | MSTG-CRYPTO-3 | No broken hashes (MD5, SHA-1 for security)      | L1, L2  |
-| MASTG-TEST-0317 | MSTG-CRYPTO-3 | No broken encryption modes (ECB)                | L1, L2  |
-| MASTG-TEST-0311 | MSTG-CRYPTO-6 | CSPRNG used (not `rand`/`random`)               | L1, L2  |
-| MASTG-TEST-0213 | MSTG-CRYPTO-1 | No hardcoded cryptographic keys in code         | L1, L2  |
-| MASTG-TEST-0214 | MSTG-CRYPTO-5 | No hardcoded cryptographic keys in files        | L1, L2  |
-
-**iOS-specific testing:** Use radare2 to find references to `kCCAlgorithmDES`, `kCCAlgorithm3DES`, `kCCAlgorithmRC4`, `kCCOptionECBMode` in CommonCrypto calls. Search for `CC_MD5`, `CC_SHA1` or CryptoKit `Insecure.MD5`/`Insecure.SHA1`. MASTG demos: MASTG-DEMO-0015 (CommonCrypto broken hash), MASTG-DEMO-0016 (CryptoKit broken hash), MASTG-DEMO-0018 (broken encryption).
-
-### Compliant: CryptoKit encryption
-
-The canonical full round-trip pattern is anti-pattern #6 in `common-anti-patterns.md`. This compliance snippet stays minimal to avoid duplicating canonical crypto guidance.
-
-```swift
-import CryptoKit
-
-enum CryptoError: Error { case invalidCiphertext }
-
-/// Compliance: OWASP M10 (Insufficient Cryptography), MASVS-CRYPTO-1.
-/// Test cases: MASTG-TEST-0210, MASTG-TEST-0317. iOS 13.0+.
-func sealForStorage(_ plaintext: Data, using key: SymmetricKey) throws -> Data {
-    let sealedBox = try AES.GCM.seal(plaintext, using: key)
-    guard let combined = sealedBox.combined else { throw CryptoError.invalidCiphertext }
-    return combined
-}
-
-// Compliance: MASVS-CRYPTO-2, MASTG-TEST-0213
-let encryptionKey = SymmetricKey(size: .bits256) // 256-bit from CSPRNG
-```
-
-### Anti-pattern: insecure cryptography
-
-```swift
-// ❌ WRONG — MD5 (collisions trivially constructable) — fails MASTG-TEST-0211
-var digest = [UInt8](repeating: 0, count: Int(CC_MD5_DIGEST_LENGTH))
-CC_MD5(data.bytes, CC_LONG(data.count), &digest)
-
-// ❌ WRONG — ECB mode — fails MASTG-TEST-0317
-CCCrypt(CCOperation(kCCEncrypt), CCAlgorithm(kCCAlgorithmAES),
-        CCOptions(kCCOptionECBMode), key, keyLength, nil, plaintext, ...)
-
-// ❌ WRONG — Insecure RNG — fails MASTG-TEST-0311
-let seed = srand(UInt32(time(nil)))  // Predictable seed
-
-// ❌ WRONG — Hardcoded key — fails MASTG-TEST-0213
-let key = SymmetricKey(data: "my-secret-key-1234567890123456".data(using: .utf8)!)
-
-// ❌ WRONG — Static nonce (catastrophic if reused)
-let nonce = try AES.GCM.Nonce(data: Data(repeating: 0, count: 12))
-let sealed = try AES.GCM.seal(data, using: key, nonce: nonce)
-```
-
----
-
 ## kSecAttrAccessible Selection Guide
 
 > Complete selection criteria and data protection tier mapping: `keychain-access-control.md` § The "When" Layer: Seven Accessibility Constants. The guidance below is a compliance-focused quick-reference for audit contexts.
@@ -435,7 +356,7 @@ Keychain accessibility is the single most important iOS security decision — it
 | `kSecAttrAccessibleAfterFirstUnlock`               | ✅     | ✅     | ❌                      | Background tasks (e.g., push notification keys)       |
 | `kSecAttrAccessibleAlways`                         | ✅     | ✅     | ❌                      | **❌ DEPRECATED (iOS 12) — never use**                |
 
-**Critical:** `kSecAttrAccessible` and `kSecAttrAccessControl` are mutually exclusive. When using `SecAccessControlCreateWithFlags`, the accessibility level is the function's first parameter — do not also set `kSecAttrAccessible` in the query dictionary, or you get `errSecParam (-50)`. See `keychain-access-control.md`.
+**Critical:** `kSecAttrAccessible` and `kSecAttrAccessControl` are mutually exclusive. When using `SecAccessControlCreateWithFlags`, pass the accessibility level as its `protection` argument — do not also set `kSecAttrAccessible` in the query dictionary, or you get `errSecParam (-50)`. See `keychain-access-control.md`.
 
 > **Choosing a device-only default:** `kSecAttrAccessibleWhenUnlockedThisDeviceOnly` and `kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly` are both valid. The `WhenPasscodeSet` variant is strictly more secure (items are deleted if passcode is removed) but may surprise users. Choose based on threat model: `WhenPasscodeSet` for high-security credentials, `WhenUnlocked` for general sensitive data.
 
@@ -451,26 +372,26 @@ Auditors evaluate against MAS Testing Profiles: **L1 (standard)** for low-risk a
 
 **Key filesystem paths auditors target:** `<Sandbox>/Library/Preferences/<BundleID>.plist` (UserDefaults), `<Sandbox>/Documents/` (databases), `<Sandbox>/Library/Caches/` (web cache), `<Sandbox>/Library/SplashBoard/Snapshots/` (screenshot cache), `<Sandbox>/tmp/` (temporary files with uncleared data).
 
-### Top 10 Audit Findings
+### Audit Findings
 
-| Rank | Finding                         | OWASP  | MASVS        | MASTG Tests | Severity |
-| ---- | ------------------------------- | ------ | ------------ | ----------- | -------- |
-| 1    | Secrets in UserDefaults/plists  | M1, M9 | STORAGE-1    | 0299, 0302  | Critical |
-| 2    | LAContext-only biometric auth   | M3     | AUTH-2       | 0266, 0267  | High     |
-| 3    | Missing certificate pinning     | M5     | NETWORK-2    | 0244        | High     |
-| 4    | Hardcoded API keys in binary    | M1     | CRYPTO-2     | 0213, 0214  | Critical |
-| 5    | Deprecated crypto (MD5, DES)    | M10    | CRYPTO-1     | 0210, 0211  | High     |
-| 6    | Insecure keychain accessibility | M9     | STORAGE-1    | 0299        | Medium   |
-| 7    | Sensitive data in logs          | M9     | STORAGE-2    | 0296, 0297  | Medium   |
-| 8    | Missing jailbreak detection     | M7     | RESILIENCE-1 | —           | Low      |
-| 9    | Unencrypted SQLite/Realm        | M9     | STORAGE-1    | 0302        | High     |
-| 10   | ATS exceptions allowing HTTP    | M5     | NETWORK-1    | —           | Medium   |
+| Finding                         | OWASP  | MASVS        | MASTG Tests | Severity |
+| ------------------------------- | ------ | ------------ | ----------- | -------- |
+| Secrets in UserDefaults/plists  | M1, M9 | STORAGE-1    | 0299, 0302  | Critical |
+| LAContext-only biometric auth   | M3     | AUTH-2       | 0266, 0267  | High     |
+| Missing certificate pinning     | M5     | NETWORK-2    | 0244        | High     |
+| Hardcoded API keys in binary    | M1     | CRYPTO-2     | 0213, 0214  | Critical |
+| Insecure keychain accessibility | M9     | STORAGE-1    | 0299        | Medium   |
+| Sensitive data in logs          | M9     | STORAGE-2    | 0296, 0297  | Medium   |
+| Missing jailbreak detection     | M7     | RESILIENCE-1 | —           | Low      |
+| Unencrypted SQLite/Realm        | M9     | STORAGE-1    | 0302        | High     |
+| ATS exceptions allowing HTTP    | M5     | NETWORK-1    | —           | Medium   |
+
 
 ### Evidence Kit (5 Artifacts)
 
 | Artifact               | Proves                                        | OWASP/MASVS |
 | ---------------------- | --------------------------------------------- | ----------- |
-| Static analysis report | No hardcoded secrets or weak crypto           | M1, M10     |
+| Static analysis report | No hardcoded secrets                          | M1          |
 | Filesystem/xattr log   | `NSFileProtectionComplete` applied            | M9          |
 | Keychain dump          | `ThisDeviceOnly` + `SecAccessControl` present | M1, M9      |
 | Backup extraction      | No sensitive data migrated                    | M9          |
@@ -482,35 +403,14 @@ Public jailbreaks usually lag the current iOS release, so a jailbroken test devi
 
 ---
 
-## Post-Quantum Cryptography Roadmap
-
-Apple announced PQC support at WWDC 2025 (Session 314: "Get ahead with quantum-secure cryptography"). The threat model: "harvest now, decrypt later" — adversaries collecting encrypted traffic today for future quantum decryption.
-
-| Date                     | Milestone                                                                             |
-| ------------------------ | ------------------------------------------------------------------------------------- |
-| February 2024 (iOS 17.4) | iMessage PQ3 — first quantum-secure messaging at scale                                |
-| August 2024              | NIST finalizes FIPS 203/204/205                                                       |
-| January 2025             | CISA adds insecure crypto algorithms to bad practices list                            |
-| June 2025 (WWDC)         | CryptoKit PQC APIs announced for iOS 26                                               |
-| September 2025 (iOS 26)  | ML-KEM-768/1024, ML-DSA-65/87, X-Wing KEM in CryptoKit; quantum-secure TLS by default |
-| 2030 (NIST target)       | Classical public-key crypto deprecated                                                |
-| 2035 (CNSA 2.0)          | Classical algorithms disallowed for National Security Systems                         |
-
-Apple uses hybrid cryptography — combining post-quantum and classical algorithms so updates never reduce security below the classical baseline. Build crypto agility now: abstract cryptographic interfaces behind protocols to allow configuration-level switches when PQC adoption becomes mandatory.
-
----
-
 ## Cross-Reference Index
 
 | iOS Practice                                              | M1  | M3  | M9  | M10              | Primary Reference                |
 | --------------------------------------------------------- | --- | --- | --- | ---------------- | -------------------------------- |
 | Keychain + `WhenPasscodeSetThisDeviceOnly`                | ✅  | —   | ✅  | ✅ (key storage) | `keychain-access-control.md`     |
 | `SecAccessControlCreateWithFlags` + `.biometryCurrentSet` | ✅  | ✅  | ✅  | —                | `biometric-authentication.md`    |
-| CryptoKit AES.GCM with auto-nonce                         | —   | —   | ✅  | ✅               | `common-anti-patterns.md`        |
 | `NSFileProtectionComplete`                                | —   | —   | ✅  | —                | `keychain-access-control.md`     |
-| `SecRandomCopyBytes` for key/token generation             | ✅  | ✅  | —   | ✅               | `common-anti-patterns.md`        |
 | App Attest for credential provisioning                    | ✅  | ✅  | —   | —                | `credential-storage-patterns.md` |
-| ML-KEM/ML-DSA (iOS 26+)                                   | —   | —   | —   | ✅               | `common-anti-patterns.md`        |
 
 ---
 
@@ -518,20 +418,15 @@ Apple uses hybrid cryptography — combining post-quantum and classical algorith
 
 Three patterns emerge from this mapping. First, the Keychain is the universal compliance mechanism on iOS — a single correctly configured `SecItemAdd` with `kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly` and `.biometryCurrentSet` simultaneously satisfies M1, M3, and M9. Second, any reference to "M2: Insecure Data Storage" or "M5: Insufficient Cryptography" flags outdated 2016 guidance. Third, the MASTG transition to new test IDs (MASTG-TEST-02xx/03xx) means legacy MSTG-\* references in code comments should be updated.
 
-For 2025–2026, the most consequential change is post-quantum cryptography reaching production iOS. With NIST targeting 2030 for classical PKC deprecation and Apple shipping ML-KEM/ML-DSA in iOS 26 with quantum-secure TLS enabled by default, compliance programs should evaluate hybrid cryptographic strategies now.
-
 ---
 
 ## Summary Checklist
 
 1. **OWASP 2024 numbering** — All references use 2024 numbering (M1/M3/M9/M10), not 2016 (M2/M5/M4+M6)
-2. **MASTG test IDs** — References use new MASTG-TEST-02xx/03xx IDs (not legacy MSTG-\* only)
-3. **Keychain-only credential storage** — Credentials stored in Keychain with `ThisDeviceOnly` accessibility, never in UserDefaults/plists/files
-4. **Keychain-bound biometrics** — Authentication uses `SecAccessControlCreateWithFlags` + `.biometryCurrentSet`, not LAContext-only
-5. **No dual access control** — `kSecAttrAccessible` and `kSecAttrAccessControl` are never set simultaneously in the same query
-6. **CryptoKit algorithms** — All cryptographic operations use CryptoKit (iOS 13+) or SecKey — no CommonCrypto deprecated algorithms (MD5, DES, 3DES, RC4, ECB)
-7. **Automatic nonces** — AES-GCM encryption relies on CryptoKit auto-nonces; no manual nonce construction without a documented rotation strategy
-8. **File protection** — Sensitive files use `NSFileProtectionComplete` and are excluded from backup via `isExcludedFromBackup`
-9. **No sensitive logging** — No sensitive data appears in `NSLog`/`print` statements or keyboard caches (`.autocorrectionType = .no`, `.isSecureTextEntry = true`)
-10. **Compliance annotations** — Code comments include OWASP category, MASVS control, and MASTG test case IDs
-11. **Post-quantum readiness** — Cryptographic interfaces are abstracted behind protocols enabling future ML-KEM/ML-DSA adoption
+1. **MASTG test IDs** — References use new MASTG-TEST-02xx/03xx IDs (not legacy MSTG-\* only)
+1. **Keychain-only credential storage** — Credentials stored in Keychain with `ThisDeviceOnly` accessibility, never in UserDefaults/plists/files
+1. **Keychain-bound biometrics** — Authentication uses `SecAccessControlCreateWithFlags` + `.biometryCurrentSet`, not LAContext-only
+1. **No dual access control** — `kSecAttrAccessible` and `kSecAttrAccessControl` are never set simultaneously in the same query
+1. **File protection** — Sensitive files use `NSFileProtectionComplete` and are excluded from backup via `isExcludedFromBackup`
+1. **No sensitive logging** — No sensitive data appears in `NSLog`/`print` statements or keyboard caches (`.autocorrectionType = .no`, `.isSecureTextEntry = true`)
+1. **Compliance annotations** — Code comments include OWASP category, MASVS control, and MASTG test case IDs

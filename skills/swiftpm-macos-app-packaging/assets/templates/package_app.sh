@@ -28,7 +28,7 @@ if [[ ! "$MARKETING_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] ||
   exit 1
 fi
 
-ARCH_LIST=( ${ARCHES:-} )
+read -r -a ARCH_LIST <<< "${ARCHES:-}"
 if [[ ${#ARCH_LIST[@]} -eq 0 ]]; then
   HOST_ARCH=$(uname -m)
   ARCH_LIST=("$HOST_ARCH")
@@ -151,16 +151,87 @@ if [[ ${#SWIFTPM_BUNDLES[@]} -gt 0 ]]; then
   done
 fi
 
-# Embed frameworks if any exist in the build folder.
-FRAMEWORK_DIRS=(".build/$CONF" ".build/${ARCH_LIST[0]}-apple-macosx/$CONF")
-for dir in "${FRAMEWORK_DIRS[@]}"; do
-  if compgen -G "${dir}/*.framework" >/dev/null; then
-    cp -R "${dir}/"*.framework "$APP/Contents/Frameworks/"
+# Universal frameworks must carry a binary from every requested build.
+if [[ ${#ARCH_LIST[@]} -gt 1 ]]; then
+  FRAMEWORK_SLICE_DIR=$(mktemp -d "${TMPDIR:-/tmp}/framework-slices.XXXXXX")
+  trap 'rm -rf "$FRAMEWORK_SLICE_DIR"' EXIT
+  trap 'exit 129' HUP
+  trap 'exit 130' INT
+  trap 'exit 143' TERM
+  FRAMEWORK_DIRS=()
+  for ARCH in "${ARCH_LIST[@]}"; do
+    FRAMEWORK_DIRS+=("$(dirname "$(build_product_path "$APP_NAME" "$ARCH")")")
+  done
+  FRAMEWORK_DIRS+=(".build/$CONF")
+  shopt -s nullglob
+  for BUILD_DIR in "${FRAMEWORK_DIRS[@]}"; do
+    for FRAMEWORK in "$BUILD_DIR/"*.framework; do
+      FRAMEWORK_NAME=$(basename "$FRAMEWORK")
+      DEST_FRAMEWORK="$APP/Contents/Frameworks/$FRAMEWORK_NAME"
+      [[ -d "$DEST_FRAMEWORK" ]] && continue
+      FRAMEWORK_EXECUTABLE=${FRAMEWORK_NAME%.framework}
+      for INFO in "$FRAMEWORK/Resources/Info.plist" "$FRAMEWORK/Info.plist"; do
+        if [[ -f "$INFO" ]]; then
+          FRAMEWORK_EXECUTABLE=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$INFO")
+          break
+        fi
+      done
+      FRAMEWORK_BINARIES=()
+      for FRAMEWORK_ARCH in "${ARCH_LIST[@]}"; do
+        SRC=$(build_product_path "$FRAMEWORK_NAME/$FRAMEWORK_EXECUTABLE" "$FRAMEWORK_ARCH")
+        if [[ ! -f "$SRC" ]]; then
+          echo "ERROR: Missing $FRAMEWORK_NAME binary for $FRAMEWORK_ARCH at $SRC" >&2
+          exit 1
+        fi
+        SRC_ARCHES=$(lipo -archs "$SRC")
+        read -r -a SRC_ARCH_LIST <<< "$SRC_ARCHES"
+        if [[ " ${SRC_ARCH_LIST[*]} " != *" $FRAMEWORK_ARCH "* ]]; then
+          echo "ERROR: $FRAMEWORK_NAME missing arch $FRAMEWORK_ARCH at $SRC (have: $SRC_ARCHES)" >&2
+          exit 1
+        fi
+        if [[ ${#SRC_ARCH_LIST[@]} -gt 1 ]]; then
+          SLICE="$FRAMEWORK_SLICE_DIR/$FRAMEWORK_ARCH"
+          lipo "$SRC" -thin "$FRAMEWORK_ARCH" -output "$SLICE"
+          FRAMEWORK_BINARIES+=("$SLICE")
+        else
+          FRAMEWORK_BINARIES+=("$SRC")
+        fi
+      done
+      cp -R "$FRAMEWORK" "$DEST_FRAMEWORK"
+      chmod -R u+w "$DEST_FRAMEWORK"
+      DEST_BINARY="$DEST_FRAMEWORK/$FRAMEWORK_EXECUTABLE"
+      # Preserve versioned framework symlinks when replacing their target binary.
+      while [[ -L "$DEST_BINARY" ]]; do
+        LINK=$(readlink "$DEST_BINARY")
+        if [[ "$LINK" == /* ]]; then
+          echo "ERROR: Absolute framework binary symlink: $DEST_BINARY" >&2
+          exit 1
+        fi
+        DEST_BINARY="$(dirname "$DEST_BINARY")/$LINK"
+      done
+      lipo -create "${FRAMEWORK_BINARIES[@]}" -output "$DEST_BINARY"
+      chmod +x "$DEST_BINARY"
+      verify_binary_arches "$DEST_BINARY" "${ARCH_LIST[@]}"
+    done
+  done
+  FRAMEWORKS=("$APP/Contents/Frameworks/"*.framework)
+  shopt -u nullglob
+  if [[ ${#FRAMEWORKS[@]} -gt 0 ]]; then
     chmod -R a+rX "$APP/Contents/Frameworks"
     install_name_tool -add_rpath "@executable_path/../Frameworks" "$APP/Contents/MacOS/$APP_NAME"
-    break
   fi
-done
+else
+  # Embed frameworks if any exist in the build folder.
+  FRAMEWORK_DIRS=(".build/$CONF" ".build/${ARCH_LIST[0]}-apple-macosx/$CONF")
+  for dir in "${FRAMEWORK_DIRS[@]}"; do
+    if compgen -G "${dir}/*.framework" >/dev/null; then
+      cp -R "${dir}/"*.framework "$APP/Contents/Frameworks/"
+      chmod -R a+rX "$APP/Contents/Frameworks"
+      install_name_tool -add_rpath "@executable_path/../Frameworks" "$APP/Contents/MacOS/$APP_NAME"
+      break
+    fi
+  done
+fi
 
 if [[ -f "$ICON_TARGET" ]]; then
   cp "$ICON_TARGET" "$APP/Contents/Resources/Icon.icns"

@@ -11,7 +11,8 @@ Categories:
   anchor     an in-page #anchor matches no heading
   alt        an image has no alt attribute, or a Markdown image has empty alt
   install    a .package(url:) for this repository names another owner, a
-             version with no matching tag, or a branch that does not exist
+             version with no published tag, a branch not published on origin,
+             or unknown publication facts when origin cannot be read
   badge      a Swift, platforms, or license badge value differs from repository
              facts or has no backing fact, or a CI badge names a missing workflow
   local-path an absolute home-directory path
@@ -28,7 +29,7 @@ import sys
 import urllib.parse
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from readme_facts import collect, git  # noqa: E402
+from readme_facts import collect, published_refs  # noqa: E402
 
 FENCE = re.compile(r"^\s*(```|~~~)")
 MD_LINK = re.compile(r"(!?)\[([^\]]*)\]\(\s*<?([^)\s>]+)>?(?:\s+\"[^\"]*\")?\s*\)")
@@ -153,7 +154,8 @@ def check(root, readme, workflow, linux):
 
     facts = collect(root, workflow, linux)
     if facts["owner"] and facts["name"]:
-        tags = {t.lstrip("v") for t in git(root, "tag", "--list").splitlines()}
+        tags = {t.lstrip("v") for t in facts["published_tags"] or []}
+        branches = published_refs(root, "heads") if any(m.group(6) for m in PACKAGE.finditer(text)) else None
         for match in PACKAGE.finditer(text):
             owner, name = match.group(1), match.group(2)
             if name.lower() != facts["name"].lower():
@@ -163,11 +165,16 @@ def check(root, readme, workflow, linux):
                 findings.append(("install", number, f"owner {owner}, origin is {facts['owner']}"))
             version = match.group(3) or match.group(4) or match.group(5)
             branch = match.group(6)
-            if version and version.lstrip("v") not in tags:
-                findings.append(("install", number, f"version {version} has no tag"))
-            if branch and not (git(root, "rev-parse", "--verify", "--quiet", f"refs/remotes/origin/{branch}")
-                               or git(root, "rev-parse", "--verify", "--quiet", f"refs/heads/{branch}")):
-                findings.append(("install", number, f"branch {branch} does not exist"))
+            if version:
+                if facts["published_tags"] is None:
+                    findings.append(("install", number, "published tags unknown: cannot read origin"))
+                elif version.lstrip("v") not in tags:
+                    findings.append(("install", number, f"version {version} has no published tag"))
+            if branch:
+                if branches is None:
+                    findings.append(("install", number, "published branches unknown: cannot read origin"))
+                elif branch not in branches:
+                    findings.append(("install", number, f"branch {branch} is not published on origin"))
 
     for match in SHIELD.finditer(text):
         fields = shield_fields(match.group(1))

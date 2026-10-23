@@ -3,6 +3,7 @@
 
 Usage: check_repo_facts.py REPO [--range REV_RANGE] [--allow-identity EMAIL ...]
                            [--next-version X.Y.Z] [--live]
+                           [--forbid-ai-trailers] [--breaking-floor-raise]
 
 Checks:
   install-owner     README GitHub URLs for this repository use the origin owner
@@ -10,16 +11,19 @@ Checks:
   surfaced-readme   no .github/README.md hides the root README (except a .github repository)
   workflow-branch   push-triggered workflows that filter branches include the default branch
   spi-targets       .spi.yml documentation targets exist in Package.swift
-  version-bump      raising a deployment target or swift-tools-version is a breaking bump:
+  floor-raise       non-failing note for deployment-target or swift-tools-version raises;
+                    apply the repository's VERSIONING to choose the bump
+  version-bump      (--breaking-floor-raise) requires a breaking bump for those raises:
                     MINOR during 0.x, MAJOR from 1.0. Checks the pending version (from
                     --next-version, .github/release.json or VERSION) against the latest
                     tag, or the latest tag against the one before it
   identity          commit authors and committers in --range are allowed identities
-  ai-trailer        commit messages in --range carry no AI attribution trailers
+  ai-trailer        (--forbid-ai-trailers) commit messages in --range carry no AI
+                    attribution trailers
   rendered-readme   (--live) GitHub renders the root README.md
   about             (--live) the repository has an About description
 
-Prints one finding per line and exits 1 when anything is found.
+Prints findings and notes separately; exits 1 only when findings exist.
 """
 import argparse
 import json
@@ -114,10 +118,15 @@ def main():
     parser.add_argument("--range", help="commits to check for identity and trailers, e.g. origin/main..HEAD")
     parser.add_argument("--allow-identity", action="append", default=[], help="allowed author/committer email")
     parser.add_argument("--next-version", help="version about to be released, when not readable from the repository")
+    parser.add_argument("--forbid-ai-trailers", action="store_true",
+                        help="enforce an adopted policy forbidding AI attribution trailers in --range")
+    parser.add_argument("--breaking-floor-raise", action="store_true",
+                        help="require a MINOR bump in 0.x or MAJOR bump from 1.0 for raised platform/tools floors")
     parser.add_argument("--live", action="store_true", help="also query GitHub with gh")
     args = parser.parse_args()
     repo = pathlib.Path(args.repo)
     findings = []
+    notes = []
     owner, name = origin_slug(repo)
     tags = set(git(repo, "tag", "--list", check=False).split())
     versions = {SEMVER.match(t).group(0).lstrip("v") for t in tags if SEMVER.match(t)}
@@ -161,7 +170,9 @@ def main():
         old_text = git(repo, "show", f"{tag_for[base]}:Package.swift", check=False)
         new_text = git(repo, "show", f"{tag_for[head]}:Package.swift", check=False) if head else manifest_text
         raised = raised_floor(manifest_floor(old_text), manifest_floor(new_text)) if old_text and new_text else []
-        if raised and not breaking:
+        if raised and not args.breaking_floor_raise:
+            notes.append(("floor-raise", f"{base} -> {new} raises {', '.join(raised)}; apply the repository's VERSIONING"))
+        elif raised and not breaking:
             level = "MINOR" if old_v[0] == 0 else "MAJOR"
             findings.append(("version-bump", f"{base} -> {new} raises {', '.join(raised)}; that needs a {level} bump"))
 
@@ -194,10 +205,11 @@ def main():
                     findings.append(("identity", f"{short} {role} {person} <{email}>"))
                 elif re.search(AI_TOOLS, f"{person} {email}", re.I):
                     findings.append(("identity", f"{short} {role} {person} <{email}>"))
-            for m in TRAILER.finditer(body):
-                findings.append(("ai-trailer", f"{short} {m.group(0).strip()}"))
-            if GENERATED.search(body):
-                findings.append(("ai-trailer", f"{short} {GENERATED.search(body).group(0)}"))
+            if args.forbid_ai_trailers:
+                for m in TRAILER.finditer(body):
+                    findings.append(("ai-trailer", f"{short} {m.group(0).strip()}"))
+                if GENERATED.search(body):
+                    findings.append(("ai-trailer", f"{short} {GENERATED.search(body).group(0)}"))
 
     if args.live and owner:
         def gh(path, jq):
@@ -212,7 +224,9 @@ def main():
 
     for category, detail in findings:
         print(f"{category}\t{detail}")
-    print(f"summary: {len(findings)} finding(s) for {owner}/{name}", file=sys.stderr)
+    for category, detail in notes:
+        print(f"note:{category}\t{detail}")
+    print(f"summary: {len(findings)} finding(s), {len(notes)} note(s) for {owner}/{name}", file=sys.stderr)
     sys.exit(1 if findings else 0)
 
 

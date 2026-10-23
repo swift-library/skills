@@ -4,7 +4,10 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import os
+import sys
 import time
 from pathlib import Path
 from typing import Any
@@ -12,9 +15,21 @@ from typing import Any
 from tool_common import ensure_parent, fail, print_result, require_tool, run_command
 
 
-STATE_DIR = Path(".codex/ios-simulator")
-RESULT_DIR = STATE_DIR / "xcresults"
-INDEX_PATH = STATE_DIR / "xcresults-index.json"
+def state_dir(args: argparse.Namespace) -> Path:
+    override = getattr(args, "state_dir", None) or os.environ.get("IOS_SIMULATOR_STATE_DIR")
+    if override:
+        return Path(override).expanduser().resolve()
+    workspace = getattr(args, "workspace", None)
+    project = getattr(args, "project", None)
+    if not workspace and not project:
+        workspace, project = find_project_root(Path.cwd())
+    root = Path(workspace or project).resolve().parent if workspace or project else Path.cwd().resolve()
+    key = hashlib.sha256(os.fsencode(root)).hexdigest()[:16]
+    cache = os.environ.get("XDG_CACHE_HOME")
+    base = Path(cache).expanduser() if cache else Path.home() / (
+        "Library/Caches" if sys.platform == "darwin" else ".cache"
+    )
+    return (base / "ios-simulator" / key).resolve()
 
 
 def find_project_root(start: Path) -> tuple[str | None, str | None]:
@@ -93,18 +108,19 @@ def result_id(action: str) -> str:
     return f"xcresult-{time.strftime('%Y%m%d-%H%M%S')}-{action}"
 
 
-def load_index() -> dict[str, Any]:
-    if INDEX_PATH.exists():
+def load_index(directory: Path) -> dict[str, Any]:
+    index_path = directory / "xcresults-index.json"
+    if index_path.exists():
         try:
-            return json.loads(INDEX_PATH.read_text(encoding="utf-8"))
+            return json.loads(index_path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             return {}
     return {}
 
 
-def save_index(index: dict[str, Any]) -> None:
-    INDEX_PATH.parent.mkdir(parents=True, exist_ok=True)
-    INDEX_PATH.write_text(json.dumps(index, indent=2, sort_keys=True), encoding="utf-8")
+def save_index(directory: Path, index: dict[str, Any]) -> None:
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "xcresults-index.json").write_text(json.dumps(index, indent=2, sort_keys=True), encoding="utf-8")
 
 
 def diagnostic_lines(text: str, kind: str, limit: int) -> list[str]:
@@ -119,14 +135,14 @@ def diagnostic_lines(text: str, kind: str, limit: int) -> list[str]:
     return deduped[:limit]
 
 
-def register_result(result_id_value: str, payload: dict[str, Any]) -> None:
-    index = load_index()
+def register_result(directory: Path, result_id_value: str, payload: dict[str, Any]) -> None:
+    index = load_index(directory)
     index[result_id_value] = payload
-    save_index(index)
+    save_index(directory, index)
 
 
-def result_entry(identifier: str, *, json_output: bool = False) -> dict[str, Any]:
-    index = load_index()
+def result_entry(directory: Path, identifier: str, *, json_output: bool = False) -> dict[str, Any]:
+    index = load_index(directory)
     entry = index.get(identifier)
     if not entry:
         fail(f"Unknown xcresult id: {identifier}. Use list-results.", json_output=json_output)
@@ -139,8 +155,9 @@ def cmd_build_or_test(args: argparse.Namespace) -> None:
     target = destination(args, action)
     scheme = resolve_scheme(args)
     rid = result_id(action)
-    result_path = ensure_parent(args.result_bundle or RESULT_DIR / f"{rid}.xcresult")
-    log_path = ensure_parent(args.log or STATE_DIR / f"{rid}.log")
+    directory = state_dir(args)
+    result_path = ensure_parent(Path(args.result_bundle).expanduser().resolve() if args.result_bundle else directory / "xcresults" / f"{rid}.xcresult")
+    log_path = ensure_parent(Path(args.log).expanduser().resolve() if args.log else directory / f"{rid}.log")
 
     cmd = ["xcodebuild", "-quiet"]
     if args.clean:
@@ -174,7 +191,7 @@ def cmd_build_or_test(args: argparse.Namespace) -> None:
         "result_bundle": str(result_path),
         "created_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
     }
-    register_result(rid, payload)
+    register_result(directory, rid, payload)
     status = "SUCCESS" if ok else "FAILED"
     payload["message"] = f"{action}: {status} ({len(errors)} errors, {len(warnings)} warnings) [{rid}]"
     print_result(payload if args.verbose or args.json else {**payload, "errors": errors[:3], "warnings": warnings[:3]}, json_output=args.json)
@@ -194,7 +211,7 @@ def cmd_list_schemes(args: argparse.Namespace) -> None:
 
 
 def cmd_list_results(args: argparse.Namespace) -> None:
-    index = load_index()
+    index = load_index(state_dir(args))
     items = list(index.items())[-args.limit :]
     if args.json:
         print_result({"ok": True, "results": dict(items)}, json_output=True)
@@ -211,7 +228,7 @@ def xcresulttool(path: str, args: list[str], *, json_output: bool = False) -> st
 
 
 def cmd_show_result(args: argparse.Namespace) -> None:
-    entry = result_entry(args.id, json_output=args.json)
+    entry = result_entry(state_dir(args), args.id, json_output=args.json)
     log_path = Path(entry["log"])
     text = log_path.read_text(encoding="utf-8", errors="replace") if log_path.exists() else ""
     output: dict[str, Any] = {"ok": True, "id": args.id, "entry": entry}
@@ -274,6 +291,7 @@ def add_project_args(parser: argparse.ArgumentParser) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Concise xcodebuild wrapper for iOS Simulator")
+    parser.add_argument("--state-dir", help="state directory (overrides IOS_SIMULATOR_STATE_DIR and the per-project user cache)")
     sub = parser.add_subparsers(dest="command", required=True)
 
     for name in ("build", "test"):
@@ -321,6 +339,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--json", action="store_true")
     p.set_defaults(func=cmd_show_log)
 
+    for command, command_parser in sub.choices.items():
+        command_parser.add_argument("--state-dir", default=argparse.SUPPRESS,
+                                    help="state directory (overrides IOS_SIMULATOR_STATE_DIR)")
+        if command in {"list-results", "show-result"}:
+            command_parser.add_argument("--workspace", help="workspace used to select the project cache")
+            command_parser.add_argument("--project", help="project used to select the project cache")
     return parser
 
 

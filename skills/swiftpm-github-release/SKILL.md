@@ -1,6 +1,6 @@
 ---
 name: swiftpm-github-release
-description: Audit and dry-run GitHub release readiness for SwiftPM packages and Swift command-line tools. Use for pre-tag gates, version/tag consistency, shared CI readiness, repository validation commands, and publish-boundary checks. Produce readiness findings and exact next commands from the package declarations and shared CI contract. Do not use for live tag pushes, GitHub release creation, external package-manager publishing, notarization/signing, App Store releases, or broad code fixes.
+description: Audit and dry-run GitHub release readiness for SwiftPM packages and Swift command-line tools. Use for pre-tag gates, version/tag consistency, adopted CI readiness, repository validation commands, and publish-boundary checks. Produce readiness findings and exact next commands from the package declarations and adopted CI contract. Do not use for live tag pushes, GitHub release creation, external package-manager publishing, notarization/signing, App Store releases, or broad code fixes.
 ---
 
 # SwiftPM GitHub Release
@@ -55,13 +55,19 @@ distribution operations.
 - CI output or local validation command output, if the user provides it.
 - Release attachments planned for upload.
 
-Read [Shared CI](references/shared-ci.md) for the validation and release
-contract. Members enable its shared jobs through their declarations. For
-swift-library repositories, also use the organization's
-[VERSIONING](https://github.com/swift-library/.github/blob/master/VERSIONING.md),
-and [MAINTENANCE](https://github.com/swift-library/.github/blob/master/MAINTENANCE.md).
-The package's release reference and declarations supply package facts; link
-shared policy instead of copying it into a package checklist.
+Derive CI expectations from the repository's workflows and configured branch
+protection or rulesets. Apply [Shared CI](references/shared-ci.md) only when a
+caller uses a reusable workflow implementing that specification, for example
+`<org>/github-workflows/.github/workflows/swift-package.yml@<sha>` with
+`.github/swift-package.json`. Inspect the referenced workflow or its declared
+contract to establish adoption; organization membership or a configuration
+filename alone does not establish it. Other CI designs follow their own
+workflow declarations and configured required checks.
+
+Use the repository's VERSIONING, or the organization VERSIONING adopted through
+its own documentation and links. The package's release reference and
+declarations supply package facts; link adopted policy instead of copying it
+into a package checklist.
 
 ## Workflow
 
@@ -78,7 +84,9 @@ shared policy instead of copying it into a package checklist.
    - no accidental machine-local paths, credentials, generated user state, or
      ignored build output in release-facing files;
    - working tree state is understood;
-   - README, license, security, and CI files match the public scope.
+   - README, license, security, and CI files match the public scope;
+   - README install requirements match origin's published tags and branches;
+     local refs alone do not establish publication.
 4. Check SwiftPM readiness:
    - `Package.swift` parses;
    - package identity and product names are intentional;
@@ -91,19 +99,19 @@ shared policy instead of copying it into a package checklist.
      including explicit 0.x semantics. Number comparison alone does not prove
      compatibility;
 5. Run or plan validation commands:
-   - check the member's caller and configuration against
-     [Shared CI](references/shared-ci.md); the required checks are exactly
-     `policy / policy` and `validate / result`;
-   - formatting, tests and a release build always run; platforms, docs and
-     the terminal demo run only when declared;
-   - derive local commands from the repository's configuration and existing
-     entry points, including its package directory and toolchains;
-   - enable shared jobs instead of writing member check scripts. Additional
-     repository-specific checks use `commands`; create lowercase `scripts/`
-     only when such automation is needed.
+   - derive build, test and other checks from the repository's workflows,
+     configuration and existing entry points, including its package directory
+     and toolchains;
+   - inspect branch protection or rulesets for required checks as configured.
+     Report unavailable configuration as unknown, not as none configured;
+   - for a caller implementing [Shared CI](references/shared-ci.md), check its
+     caller, configuration, jobs and required checks against that
+     specification;
+   - for other repositories, validate their declared commands and required
+     checks without imposing shared job names, configuration or script layout.
 6. Check GitHub release readiness:
    - required checks pass for the candidate commit, or their status is unknown;
-   - release declarations and the shared release caller follow the contract;
+   - release declarations and callers follow the repository's adopted contract;
    - tag naming is documented or obvious;
    - release notes/changelog source is identified;
    - security reporting path is present.
@@ -121,9 +129,10 @@ Bind check results to the candidate commit and the repository's declared
 validation. Report failed or unavailable checks explicitly; a local pass does
 not establish the required GitHub check status.
 
-For a tagged mistake or an interrupted publication in swift-library, inspect tag
-and publication state first, then follow
-[Immutable tags](https://github.com/swift-library/.github/blob/master/VERSIONING.md#immutable-tags).
+For a tagged mistake or interrupted publication, inspect tag and publication
+state first. Follow the adopted release policy and the Safety Rules: preserve
+published tags and correct released source through a new version. Distinguish
+a source correction from retrying an interrupted publication.
 
 ## Publish Boundary Gate
 
@@ -137,16 +146,21 @@ attachments. The scripts live in this skill's `scripts/` directory:
   tree and any separately planned attachments before upload, including nested
   archives.
 - `check_repo_facts.py <repo> --range <published>..HEAD --allow-identity
-  <maintainer email> --live` checks commit identities, AI attribution
-  trailers, install URLs and versions, workflow branches, `.spi.yml`
-  documentation targets, deployment-target or tools-version raises hidden in a
-  non-breaking bump, and the README that GitHub renders. Pass `--next-version`
+  <maintainer email> --live` checks commit identities, install URLs and versions,
+  workflow branches, `.spi.yml` documentation targets, and the README that
+  GitHub renders. It reports deployment-target or tools-version raises as
+  non-failing notes for applying the adopted VERSIONING. Pass `--next-version`
   when the pending version is not in `.github/release.json` or `VERSION`.
+  Add `--forbid-ai-trailers` only when the repository's or adopted organization's
+  policy forbids AI attribution trailers. Add `--breaking-floor-raise` only
+  when that policy requires a MINOR bump during 0.x or MAJOR bump from 1.0 for
+  deployment-target or tools-version raises.
 
 Pass `--local-name` for other machine or account names and `--deny-file` for
 internal names the maintainer lists. Then read shipped docs against the
 project's rule for public content: current product facts, without run notes or
-comparisons against other projects. Findings are blockers. For content that is
+comparisons against other projects. Findings are blockers; non-failing notes
+require interpretation under the adopted version policy. For content that is
 already public, use `references/cleanup-decisions.md`: rotate any exposed
 credential and prepare a forward fix. Published history and version tags remain
 immutable; removing visible content does not revoke a leaked credential.
@@ -180,7 +194,7 @@ Package: <Package.swift name>
 Products: <products>
 Version/tag: <version or unknown>
 Evidence level: local validation / CI output / dry-run only
-Required checks: policy / policy <status>; validate / result <status>
+Required checks: <repository-configured checks and statuses / none configured / unknown>
 Publish surface: clean / <n> findings in history, tree, assets or facts
 
 Blocking issues:
@@ -196,6 +210,11 @@ Next safe commands:
 - ...
 ```
 
+For a repository adopting the shared specification, list the required checks it
+names with their statuses and report any configuration mismatch. Otherwise list
+the repository's own required checks, or `none configured` when verified; use
+`unknown` when unavailable.
+
 For command-plan-only requests, separate local validation commands from live
 commands and label live commands as requiring confirmation.
 
@@ -204,8 +223,9 @@ commands and label live commands as requiring confirmation.
 Exercise the applicable cases in
 [eval fixtures](references/eval-fixtures.md) when changing release behavior.
 Use actual Git state and check output as evidence; distinguish a command plan
-from an executed check. Read [Shared CI](references/shared-ci.md) for validation
-and release requirements and the [reference index](references/_index.md) for
+from an executed check. Apply [Shared CI](references/shared-ci.md) validation
+and release requirements only to repositories adopting an implementation of
+that specification. Use the [reference index](references/_index.md) for
 publish-cleanup guidance.
 
 ## Decision Rules

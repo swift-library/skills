@@ -77,10 +77,11 @@ Products, Usage, and Requirements sections that name only what exists.
      `scripts/quickstart_check.py REPO --section TITLE` to resolve the Install
      requirement from the published URL and build that code in a scratch
      consumer;
-   - for a terminal demo, use the `github-readme-design` toolchain's
-     `script.yml` and `recording.json`, rendered locally by the presentation
-     owner. The validation workflow's `demo` switch re-records the demo and
-     compares `recording.json`.
+   - for a terminal demo, check it against the recording source and validation
+     the repository declares, and leave rendering to the presentation owner
+     (`github-readme-design` when installed). A repository whose CI implements
+     a demo re-recording check, such as a shared workflow's `demo` option,
+     re-records with that check.
 
    When the documentation owner surfaces `.github/README.md`, pass
    `--readme .github/README.md` to both checkers; the path is relative to

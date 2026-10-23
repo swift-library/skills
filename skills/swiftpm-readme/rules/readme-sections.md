@@ -15,10 +15,9 @@ and find each product's main entry points from these sections:
   an executable, building from source.
 - Quick start, or the skeleton's equivalent such as Quick look, when it holds
   Swift code: the smallest complete example that builds as written. A recorded
-  terminal session in that section uses the presentation owner's
-  `github-readme-design` toolchain: `script.yml` and `recording.json` are
-  rendered locally, and the validation workflow's `demo` switch re-records
-  the demo to compare `recording.json`.
+  terminal session in that section comes from the recording source the
+  repository declares, rendered by the presentation owner; when the
+  repository's CI re-records the demo, that check keeps the recording current.
 - Products: each product and its purpose, when there is more than one.
 - Usage: task-oriented subsections covering every product's main entry
   points.
