@@ -71,8 +71,8 @@ Use these as compact judgment examples, not as mandatory output.
 
 - Smell: a weak patch lands because the visible behavior delta is hard to
   explain.
-- Better shape: return to evidence, isolate the failure mode, then choose a
-  clearer change or roll the weak patch back.
+- Better shape: collect diagnostic observations, isolate the failure mode,
+  then choose a clearer change or roll the weak patch back.
 - Why: low-confidence fixes create stale code paths and hide the real boundary.
 
 ## Respect Authored API Philosophy

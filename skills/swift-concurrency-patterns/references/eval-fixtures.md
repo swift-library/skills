@@ -15,7 +15,7 @@ Expected behavior:
   and the upcoming-feature setting with Swift 6.0+ tools.
 - Keeps complete checking unconditional for the Swift 6 target and does not
   add a redundant feature setting there.
-- Treats warnings from the earlier mode as migration evidence, without
+- Treats warnings from the earlier mode as migration diagnostics, without
   claiming that a newer compiler tests an older compiler's runtime support.
 
 Acceptance checks: compile a nonisolated shared-mutable-state probe under the

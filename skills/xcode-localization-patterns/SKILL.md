@@ -72,7 +72,7 @@ resource access, runtime string APIs, SwiftUI presentation, and validation.
    truncation, ordering, and concatenated `Text` anti-patterns.
 8. Use XLIFF or xcloc export/import workflows for translator handoff when the
    task involves external translation.
-9. Validate with the smallest meaningful evidence: targeted build, locale run,
+9. Validate with the smallest meaningful check: targeted build, locale run,
    pseudolocalized UI pass, UI test, snapshot, or string-resource inspection.
 
 ## Review Rules

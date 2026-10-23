@@ -73,7 +73,7 @@ When changing conversions:
 2. Preserve Swift error reflection for throwing Python calls.
 3. Keep dictionary initialization order and duplicate-key behavior aligned with
    tests.
-4. Treat numpy as optional runtime evidence. Tests should skip numpy-specific
+4. Treat numpy as optional runtime test coverage. Tests should skip numpy-specific
    assertions when `Python.attemptImport("numpy")` fails.
 
 When adding consumers:

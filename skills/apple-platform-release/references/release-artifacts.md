@@ -8,8 +8,8 @@ Use this file for cross-cutting release artifact readiness and handoff checks.
   for macOS App Store when exported that way.
 - Developer ID distribution: signed `.app`, notarization `.zip`, `.dmg`, or
   signed `.pkg`.
-- Supporting evidence: archive path, export log, ExportOptions plist, signing
-  identity, team ID, bundle ID, profile, notarization submission ID, notary log,
+- Supporting files and check results: archive path, export log, ExportOptions
+  plist, signing identity, team ID, bundle ID, profile, notarization submission ID, notary log,
   staple validation, and Gatekeeper assessment.
 
 ## Release Engineering Checklist

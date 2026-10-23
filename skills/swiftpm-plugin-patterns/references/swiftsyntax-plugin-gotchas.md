@@ -90,7 +90,7 @@ default `swift package <verb>` path passes without requiring special flags.
   avoids the mixed SwiftSyntax host graph. Validate it; do not assume the split
   fixes the issue.
 - Record the failure in an ADR with the exact SwiftPM revision, Swift toolchain,
-  SwiftSyntax version, command, and `debug.yaml` evidence.
+  SwiftSyntax version, command, and `debug.yaml` excerpts.
 - Revisit when SwiftPM or SwiftSyntax changes; do not require users to change
   package topology or pass special build flags as the normal workflow.
 

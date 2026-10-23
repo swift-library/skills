@@ -29,9 +29,9 @@ The 2024 edition is a complete overhaul. Four categories are entirely new, two p
 
 ## Master Traceability Matrix
 
-This matrix links each OWASP 2024 category to its MASVS controls, MASTG test cases, iOS APIs, and required audit evidence.
+This matrix links each OWASP 2024 category to its MASVS controls, MASTG test cases, iOS APIs, and required audit reports, logs, and outputs.
 
-| OWASP 2024                        | MASVS v2 Controls                             | Key MASTG Tests (New IDs)                                        | iOS APIs / Flags                                                                        | Required Evidence                                                   |
+| OWASP 2024                        | MASVS v2 Controls                             | Key MASTG Tests (New IDs)                                        | iOS APIs / Flags                                                                        | Required Reports, Logs, And Outputs                                                   |
 | --------------------------------- | --------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | **M1** Improper Credential Usage  | MASVS-STORAGE-1, MASVS-AUTH-1, MASVS-CRYPTO-2 | 0213, 0214, 0299, 0300, 0302                                     | Keychain + `SecAccessControl`; App Attest                                               | Static scan (no literals); keychain dump with ACL; attestation logs |
 | **M3** Insecure Auth/AuthZ        | MASVS-AUTH-1, MASVS-AUTH-2, MASVS-AUTH-3      | 0266, 0267, 0268, 0269, 0270, 0271                               | `SecAccessControlCreateWithFlags` + `.biometryCurrentSet`; `ASWebAuthenticationSession` | Auth flow diagrams; biometric bypass test results; token TTL policy |
@@ -387,7 +387,7 @@ Auditors evaluate against MAS Testing Profiles: **L1 (standard)** for low-risk a
 | ATS exceptions allowing HTTP    | M5     | NETWORK-1    | —           | Medium   |
 
 
-### Evidence Kit (5 Artifacts)
+### Audit Report Bundle (5 Artifacts)
 
 | Artifact               | Proves                                        | OWASP/MASVS |
 | ---------------------- | --------------------------------------------- | ----------- |

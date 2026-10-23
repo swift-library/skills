@@ -44,7 +44,7 @@ Record the important `debug.yaml` or verbose-log facts:
 - Whether the missing module is a direct import without a direct dependency:
 - Relevant `*-tool.build` directories:
 
-## Upstream Evidence
+## Upstream References And Reproduction Results
 
 - SwiftPM / SwiftSyntax / forum links:
 - Whether upstream has fixed, partially fixed, or documented workarounds:

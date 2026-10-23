@@ -12,15 +12,15 @@ Use this rule when mapping target package code patterns to library candidates.
 
 ## Inputs
 
-- Target evidence from P0 source: imports, files, symbols, tests, docs,
-  scripts, plugins, and dependency usage.
+- Target code and project files from P0 sources: imports, files, symbols, tests,
+  docs, scripts, plugins, and dependency usage.
 - Candidate discovery fields from the generated index: fetched `summary`,
   `description`, `source_categories`, `entry_kind`, `package_manifest_status`,
   `primary_language`, `language_filter_status`, `swift_package_candidate`,
   `candidate_confidence`, `adoptability_basis`, and `status_notes`.
-- Candidate evidence from P1/P2 sources: README/docs/Package.swift, products,
-  modules, supported platforms, release state, license, maintenance, and status
-  notes.
+- Candidate code, documentation, and metadata from P1/P2 sources:
+  README/docs/Package.swift, products, modules, supported platforms, release
+  state, license, maintenance, and status notes.
 - Curated hints from `knowledge/replacement-patterns.md`,
   `knowledge/apple-package-hints.md`, and `knowledge/swiftlang-package-hints.md`.
 
@@ -29,8 +29,8 @@ Use this rule when mapping target package code patterns to library candidates.
 - For automatic coding-time checks, start from `knowledge/replacement-patterns.md`
   and the official hint files. Emit a short library check note, then continue
   implementation or review.
-- Default automatic checks to Evaluate unless verified P1 source evidence is
-  already available in the current context.
+- Default automatic checks to Evaluate unless verified P1 source code and
+  documentation are already available in the current context.
 - Use fetched `summary` and `description` fields to infer candidate capability
   for manual discovery only.
 - Treat generated GitHub repository entries as official candidates, not as
@@ -47,11 +47,11 @@ Use this rule when mapping target package code patterns to library candidates.
   alone.
 - Verify any plausible match against candidate package source or documentation
   before recommending Adopt or Wrap.
-- Final recommendations require target code evidence, candidate source
-  evidence, API fit, platform/toolchain fit, dependency cost, license,
+- Final recommendations require target code, candidate source code or
+  documentation, API fit, platform/toolchain fit, dependency cost, license,
   maintenance, and public-boundary impact.
 - Treat weak or unverified matches as Reference or Keep custom until source
-  evidence improves.
+  code or documentation verifies the fit.
 
 ## Fit Levels
 
@@ -67,6 +67,7 @@ Use this rule when mapping target package code patterns to library candidates.
 
 Every candidate should include:
 
-- target evidence: where the current wheel appears in the target package
-- source evidence: which candidate source describes the candidate capability
+- target code: where the current wheel appears in the target package
+- candidate source code or documentation: which candidate source describes the
+  candidate capability
 - matching reason: why the candidate does or does not fit

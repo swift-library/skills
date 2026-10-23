@@ -48,7 +48,7 @@ Spotlight, widgets, controls, Focus, and Live Activities.
 - Navigation, authentication, deep-link, and app-launch code reached from an
   intent.
 - Tests, sample shortcuts, simulator/device runs, and Shortcuts or Spotlight
-  validation evidence.
+  check results.
 
 ## Workflow
 

@@ -11,7 +11,7 @@ optional IDB. Run each script with `--help` for the current command surface.
   gestures, and lightweight accessibility-tree audit.
 - `state_capture.py`: screenshot, logs, device state, optional hierarchy, and
   Markdown bug-report summary.
-- `test_recorder.py`: current-screen screenshot/tree evidence and Markdown
+- `test_recorder.py`: current-screen screenshot/tree capture and Markdown
   test report.
 - `visual_diff.py`: screenshot comparison and optional diff image.
 - `model_inspector.py`: Core Data and SwiftData model inspection.
@@ -37,3 +37,8 @@ To clean up, remove that project's cache directory (or the explicit state
 directory) after builds and inspection finish. This deletes its logs, bundles
 and result-ID index; separately remove outputs placed elsewhere by `--log`
 or `--result-bundle` when they are no longer needed.
+
+## Maintainer Validation
+
+- Run `python3 <script> --help` after editing bundled scripts.
+- Compile edited Python scripts with `python3 -m py_compile`.

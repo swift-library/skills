@@ -55,7 +55,7 @@ promote a `mapKeyedValues` spelling solely from a session mention when it cannot
 be found in the selected standard library.
 
 Use `official-sources.md` for source verification. Record compiler and runtime
-results in the calling repository's evidence, not as a universal readiness
+results in the calling repository's validation logs, not as a universal readiness
 claim in this reference.
 
 ## Uniquely owned storage

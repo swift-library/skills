@@ -1,7 +1,9 @@
 # Eval Fixtures
 
-Use the matching released executable and real output for command checks. These
-cases define behavior expectations, not recorded performance or trigger scores.
+When changing this skill, exercise the applicable cases with the matching
+released CLI and run the collection's declared checks. Use real output for
+command checks. These cases define behavior expectations, not recorded
+performance or trigger scores.
 Fixture modules, symbols, paths, configurations and budgets are supplied inputs.
 
 ## Understand An Unfamiliar Dependency
@@ -69,7 +71,7 @@ producer inputs; absent configuration or a failed import is reported explicitly.
 ## Review Two Releases
 
 Input prompt: "Review public API changes between these releases. The attached
-evidence was made by different collector versions."
+snapshots were made by different collector versions."
 
 Expected behavior: verifies release/snapshot identities, recollects both
 revisions with one collector and compatible configuration/scope before
@@ -78,10 +80,10 @@ or reports why comparison is unavailable. Separates interface,
 documentation, availability and provenance changes.
 
 Forbidden behavior: compares mixed collectors or chooses a SemVer bump from
-the diff. Never treats missing baseline evidence as an empty API.
+the diff. Never treats missing baseline snapshots as an empty API.
 
 Acceptance checks: the comparison uses matching identities; nonzero difference
-status preserves the report; unavailable evidence remains an explicit result.
+status preserves the report; unavailable snapshots remain an explicit result.
 
 ## Baseline Protection
 
@@ -96,7 +98,7 @@ Forbidden behavior: overwrites the baseline, filters away a gap to pass, or
 confuses external references alone with incomplete collection.
 
 Acceptance checks: baseline digest is unchanged after rejected write and check;
-stderr/exit evidence identifies the failure.
+stderr and exit status identify the failure.
 
 ## Large Interface View
 
@@ -119,7 +121,7 @@ indivisible block produces an explicit actionable size error.
 Input prompts: "Which source files call this method?" / "Why does this function
 deadlock at runtime?" / "Should this API change be a major release?"
 
-Expected behavior: identifies the question as outside public-interface evidence
+Expected behavior: identifies the question as outside public-interface inspection
 ownership. May retain relevant declarations as supporting context, but does
 not claim to answer source indexing, runtime semantics or version policy.
 

@@ -9,16 +9,16 @@ Input assumption: local filesystem path to a Swift Package repository.
 
 ## Positioning
 
-This skill guides Swift Package architecture work and produces evidence-oriented
-review artifacts when requested.
+This skill guides Swift Package architecture work and produces review
+artifacts with cited sources when requested.
 
 - Primary job: guide target graphs, module boundaries, product layout,
   dependency direction, composition roots, public API surfaces, test placement,
   and package-structure refactors.
 - Review-mode job: review a local Swift Package architecture with progressive
   disclosure, choosing direct in-place review or brief output from the request.
-- Manual brief job: turn a local Swift Package into a compact,
-  evidence-oriented Markdown brief on explicit skill invocation or when the
+- Manual brief job: turn a local Swift Package into a compact
+  Markdown brief with cited sources on explicit skill invocation or when the
   user asks for active, proactive, brief, bundle, context package, or reviewer
   handoff behavior.
 - Not its job: produce a final architecture verdict, generate a full migration
@@ -38,7 +38,7 @@ review artifacts when requested.
   architecture, inspect the repository directly and answer with prioritized
   findings, evidence, and residual risks. Do not create a Markdown file unless
   requested.
-- Explicit skill invocation: Produce the compact Markdown evidence brief.
+- Explicit skill invocation: Produce the compact Markdown architecture brief.
 - Active review: If the user explicitly asks for active or proactive review
   behavior, emit the fixed Markdown brief described under Output Contract. This
   is the active mode default.
@@ -48,7 +48,7 @@ review artifacts when requested.
 - Ambiguous mentions: If the request only names architecture or package shape
   without a concrete change or review ask, gather only enough context to clarify
   intent or provide a lightweight orientation.
-- Selecting package source evidence for an architecture review or reviewer handoff.
+- Selecting package source code for an architecture review or reviewer handoff.
 
 ## Progressive Disclosure
 
@@ -59,7 +59,7 @@ review artifacts when requested.
   test contracts.
 - Run the helper script for active review and brief output, or when it materially
   speeds up file ranking. For direct in-place reviews, use the script output as
-  internal evidence and keep the user-facing answer concise.
+  internal review context and keep the user-facing answer concise.
 - Load `references/example-output.md` only when markdown brief shape is unclear
   or formatting needs calibration.
 

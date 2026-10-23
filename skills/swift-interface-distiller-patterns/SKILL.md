@@ -9,7 +9,7 @@ description: swift-interface-distiller public API inspection and revision compar
 
 Use swift-interface-distiller to turn compiler observations into public API
 context an agent can read, query and compare. Own the collection choices,
-interface selection and interpretation of evidence. Preserve configuration,
+interface selection and snapshot interpretation. Preserve configuration,
 scope, provenance and gaps alongside the selected declarations.
 
 The command examples follow the v0.3.1 CLI contract. Confirm the executable's
@@ -70,7 +70,7 @@ using another version.
    a repository's display name. Exclusion globs win over inclusion.
 5. Read the snapshot header and gaps before the declarations. Render the
    default interface with summary docs, then use `--docs full`, `--docs none`,
-   `--show-implied` or `--view evidence` according to the question. The evidence
+   `--show-implied` or `--view evidence` according to the question. The detailed
    view and canonical JSON retain details collapsed in the readable view.
 6. Query a type or symbol, then slice only the needed reference closure. Choose
    JSON, Swift or Markdown before setting the budget. Read
@@ -93,7 +93,7 @@ using another version.
   size accounting and failure handling.
 - [Eval fixtures](references/eval-fixtures.md): realistic tasks and acceptance
   checks for the skill's boundaries.
-- [Reference index](references/_index.md): upstream command and evidence
+- [Reference index](references/_index.md): upstream command and snapshot
   authorities.
 
 ## Decision Rules
@@ -108,8 +108,8 @@ using another version.
   generate public declarations. Use actual measurements; no compression ratio
   is promised by the tool.
 - Source navigation, runtime semantics and version policy remain outside this
-  evidence workflow. Release decisions follow the repository's VERSIONING
-  authority.
+  public-interface workflow. Release decisions follow the repository's
+  VERSIONING authority.
 
 ## Validation Rules
 
@@ -119,8 +119,6 @@ using another version.
   from query/slice state and omissions.
 - Verify every command against the installed CLI. Check real output and exit
   codes; a help listing alone does not demonstrate a successful collection.
-- When changing this skill, exercise the applicable eval fixtures with the
-  matching released CLI and run the collection's declared checks.
 
 ## Output Format
 
@@ -131,11 +129,12 @@ Return only the context needed for the question, with:
 - payload and total bytes when budgeted, selection state, omissions and
   external references;
 - expected/collected modules, collection gaps and unresolved questions;
-- comparison categories or command failure evidence when applicable.
+- comparison categories or command failure diagnostics when applicable.
 
 ## Failure / Uncertainty Handling
 
-Report an unavailable compiler, producer configuration or module as missing
-evidence. An import or process failure is not an empty successful interface.
+Report an unavailable compiler, producer configuration or module as a missing
+collection prerequisite. An import or process failure is not an empty
+successful interface.
 Never replace a valid baseline with incomplete collection. Preserve diagnostics
 separately from contract data and keep run reports with execution paths local.

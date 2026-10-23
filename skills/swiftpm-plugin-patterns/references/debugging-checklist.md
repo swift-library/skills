@@ -58,7 +58,7 @@ find .build -path "*-tool.build" -type d -print
 - SwiftSyntax reports platform floor errors: raise the package platform to the
   dependency floor, such as macOS 10.15+ for SwiftSyntax 602.0.0.
 
-## Evidence To Keep
+## Versions, Commands, And Outputs To Keep
 
 - Swift version: `swift --version`.
 - SwiftPM source revision or Xcode version.

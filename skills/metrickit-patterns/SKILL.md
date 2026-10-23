@@ -29,7 +29,7 @@ of scope.
 
 - Do not use for recording or parsing Instruments `.trace` bundles.
 - Do not use for source-only SwiftUI or general performance refactors without
-  MetricKit payload evidence.
+  MetricKit payloads.
 - Do not use for generic analytics event taxonomy unless MetricKit payloads are
   part of the event pipeline.
 - Do not use for crash-reporting SDK setup unless MetricKit diagnostics are in
@@ -73,8 +73,8 @@ of scope.
 
 ## Review Rules
 
-- Do not claim real performance evidence unless a MetricKit payload, Organizer
-  report, or local device run supports it.
+- Do not claim real performance results unless a MetricKit payload, Organizer
+  report, or local device run supports them.
 - Do not block app launch or foreground responsiveness while processing
   payloads.
 - Do not upload raw stack traces, paths, identifiers, or user-correlatable data
@@ -91,7 +91,7 @@ of scope.
   captured reports when available.
 - Verify redaction, retry, and retention behavior.
 - Cross-check any actionable performance conclusion with Xcode Organizer,
-  Instruments, logs, or source evidence when the payload alone is insufficient.
+  Instruments, logs, or source code when the payload alone is insufficient.
 
 ## Output
 

@@ -1,4 +1,4 @@
-# Interpreting Interface Evidence
+# Interpreting API Snapshots
 
 ## Completeness Has Two Layers
 
@@ -10,7 +10,7 @@ while the underlying collection is incomplete.
 | --- | --- | --- |
 | `present` / observed declaration | Producer supplied the field or declaration | Report it with its provenance and configuration. |
 | `absent` | An observation establishes absence | Use only the stated observation's scope. |
-| `notCollected`, `unsupported`, `failed`, `filtered`, `unresolved` | Different reasons evidence is unavailable or excluded | Preserve the reason; none is a negative fact. |
+| `notCollected`, `unsupported`, `failed`, `filtered`, `unresolved` | Different reasons observations are unavailable or excluded | Preserve the reason; none is a negative fact. |
 | `externalReferences` | Compiler IDs outside the collected scope | External observation, not a budget omission or collection gap. |
 | `omittedReferences` with `truncated` | Budget omitted in-snapshot symbols | Narrow roots, change format or raise the budget. |
 | `complete` slice | All in-snapshot references in the closure were selected | Check collection gaps independently. |
@@ -38,13 +38,14 @@ is a recorded scope policy; it is not missing collection. Protocol extension
 declarations and conformances remain in scope.
 
 Interface anchors identify top-level blocks, including standalone external
-extensions; members link to their containing block. Evidence views use
-per-symbol anchors. Use canonical IDs when a stable symbol identity is needed.
+extensions; members link to their containing block. Views rendered with
+`--view evidence` use per-symbol anchors. Use canonical IDs when a stable symbol
+identity is needed.
 
-Distinguish compiler-reported, parsed, derived and policy fields. Evidence
+Distinguish compiler-reported, parsed, derived and policy fields. Snapshot
 normalization determinism applies to identical observations, not arbitrary
 compiler builds or undeclared external inputs. Run reports hold timing, cache
-state and execution paths separately from portable canonical evidence.
+state and execution paths separately from portable canonical snapshots.
 
 ## Budgets And Measurements
 

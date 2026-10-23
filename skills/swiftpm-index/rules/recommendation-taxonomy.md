@@ -28,8 +28,8 @@ than the dependency.
 
 The taxonomy answers one question: should the target package use a candidate
 library instead of maintaining its own implementation? Do not assign Adopt or
-Wrap from index presence alone; require target code evidence and verified
-candidate source evidence.
+Wrap from index presence alone; require target code and verified
+candidate source code or documentation.
 
 ## Dependency-Cost Checks
 

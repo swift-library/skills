@@ -3,7 +3,7 @@
 Use these references when justifying plugin architecture or debugging host-tool
 build behavior.
 
-## Versioned Evidence
+## Source And Toolchain Versions
 
 - SwiftPM source inspected: `swiftlang/swift-package-manager`
   revision `e5ac741fed39ebd16df924d3dbfa904a1c332079`.

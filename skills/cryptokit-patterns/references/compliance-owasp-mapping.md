@@ -6,13 +6,13 @@ Use OWASP Mobile Top 10 (2024) numbering: M10 covers insufficient cryptography; 
 
 ## Master Traceability Matrix
 
-| OWASP 2024 | MASVS controls | MASTG tests | CryptoKit/API concern | Required evidence |
+| OWASP 2024 | MASVS controls | MASTG tests | CryptoKit/API concern | Required reports and check results |
 | --- | --- | --- | --- | --- |
 | M10 — Insufficient Cryptography | MASVS-CRYPTO-1, MASVS-CRYPTO-2 | 0209, 0210, 0211, 0213, 0214, 0311, 0317 | AES-GCM, ChaChaPoly, secure randomness, key sizes, Secure Enclave keys | Crypto inventory, algorithm audit, unit tests |
 | M1 — Improper Credential Usage | MASVS-CRYPTO-2 | 0213, 0214 | Hardcoded cryptographic keys in source or bundled files | Static source and binary scans |
-| M9 — Insecure Data Storage | MASVS-STORAGE-1, MASVS-CRYPTO-2 | 0302 | Authenticated encryption and separate protection of its key | Encryption round trips and key-persistence evidence |
+| M9 — Insecure Data Storage | MASVS-STORAGE-1, MASVS-CRYPTO-2 | 0302 | Authenticated encryption and separate protection of its key | Encryption round trips and key-persistence check results |
 
-Persist private and symmetric key material in the Keychain with an explicit access policy. Secure Enclave keys remain device-bound; protect their opaque persisted representations. Key storage and access-control integration need separate evidence from cryptographic correctness tests.
+Persist private and symmetric key material in the Keychain with an explicit access policy. Secure Enclave keys remain device-bound; protect their opaque persisted representations. Key storage and access-control integration need separate check results from cryptographic correctness tests.
 
 ---
 
@@ -103,7 +103,7 @@ Use MobSF for static scanning and radare2 for targeted API analysis. Inspect `Se
 | Hardcoded cryptographic keys | M1, M10 | CRYPTO-2 | 0213, 0214 | Critical |
 | Deprecated crypto (MD5, DES) | M10 | CRYPTO-1 | 0210, 0211 | High |
 
-Collect a static analysis report, a cryptographic inventory with algorithms and key sizes, relevant code snippets, and positive and negative operation tests. Record the key-persistence and hardware-test evidence separately. Use the supported assessment environment; static and binary analysis remain available when a jailbroken device is unavailable.
+Collect a static analysis report, a cryptographic inventory with algorithms and key sizes, relevant code snippets, and positive and negative operation tests. Record the key-persistence and hardware-test results separately. Use the supported assessment environment; static and binary analysis remain available when a jailbroken device is unavailable.
 
 ---
 
@@ -141,5 +141,5 @@ Apple uses hybrid cryptography — combining post-quantum and classical algorith
 2. **Algorithms** — Use appropriate CryptoKit or SecKey primitives; reject MD5, DES, 3DES, RC4, and ECB for security work.
 3. **Nonces** — Prefer AES-GCM automatic nonces; require a documented uniqueness strategy when a protocol supplies them.
 4. **Key lifecycle** — Generate keys securely, reject embedded private or symmetric keys, and protect persisted key material separately from ciphertext.
-5. **Evidence** — Include algorithm inventory, source/binary findings, correct API usage, and positive and negative crypto tests.
+5. **Reports and check results** — Include algorithm inventory, source/binary findings, correct API usage, and positive and negative crypto tests.
 6. **Post-quantum readiness** — Evaluate hybrid cryptographic strategies and keep interfaces adaptable to ML-KEM/ML-DSA adoption.

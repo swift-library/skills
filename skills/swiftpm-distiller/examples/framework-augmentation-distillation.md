@@ -5,7 +5,7 @@
 Distill `/path/to/swift-data-writable` into a Swift collection skill-creation
 handoff.
 
-## Evidence To Prefer
+## Materials To Prefer
 
 - README and DocC quick starts: the host framework workflow being improved.
 - Public macro/property-wrapper declarations: the package mechanism and
@@ -25,23 +25,23 @@ Package identity:
 - Package mechanism: SwiftDataWritable's `@Writable` macro generates a
   `$property` projection backed by `ModelContext`.
 
-Evidence inspected:
+Inspected materials:
 
-| Evidence | Source/path | Used for | Notes |
+| Material | Source/path | Used for | Notes |
 |---|---|---|---|
 | Manifest | `Package.swift` | macro/runtime targets and platforms | confirms SwiftPM shape |
 | Docs | README, DocC quick starts | host workflow and intended usage | SwiftData query-editing examples |
 | Source | macro declarations, runtime projection types | public capability claims | `@Writable` and projection API |
 | Tests | macro/runtime/usage tests | supported operations and diagnostics | append/delete/save/reorder cases |
-| Interface snapshot/view | `.build/interface-distiller/api.json`, `.build/interface-distiller/interface/part-000001.md` | public declaration check | pre-existing collected evidence |
+| Interface snapshot/view | `.build/interface-distiller/api.json`, `.build/interface-distiller/interface/part-000001.md` | public declaration check | existing collected declarations |
 
-Generated interface evidence:
+API snapshot:
 - Availability: available.
 - Artifact source: `.build/interface-distiller/api.json` and its rendered
   `.build/interface-distiller/interface/part-000001.md`.
 - Command provenance: not produced during this session.
 - Notes: verify the snapshot's revision, configuration, scope and gaps before
-  reuse. Use swift-interface-distiller-patterns to recollect stale evidence.
+  reuse. Use swift-interface-distiller-patterns to recollect stale snapshots.
 
 Commands:
 
@@ -70,9 +70,9 @@ Candidate skill boundary:
   `WritableCollection`, `MutableWritableCollection`, or generated `$items`
   projections.
 - Suggested non-goal: generic SwiftData schema/container/query work without
-  `@Writable` or SwiftDataWritable evidence.
-- Suggested non-goal: generic SwiftUI `List` editing after the writable query
-  projection is no longer the issue.
+  `@Writable` or SwiftDataWritable usage.
+- Suggested non-goal: generic SwiftUI `List` editing outside writable query
+  projection usage.
 
 Suggested supported tasks:
 - Add `@Writable` to explicit SwiftData `@Query` array properties.

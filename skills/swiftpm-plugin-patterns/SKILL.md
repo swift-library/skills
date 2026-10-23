@@ -67,8 +67,8 @@ discovery, and business logic.
 - Do not claim plugin support from `swift build --product Tool` alone; always
   run the SwiftPM plugin command.
 - If a SwiftSyntax host-tool hard gate fails, keep a production fallback and
-  record an ADR with reproduction commands, upstream evidence, workaround
-  status, and build graph evidence.
+  record an ADR with reproduction commands, upstream references, workaround
+  status, and build graph excerpts.
 
 ## Reference Files
 
@@ -99,6 +99,6 @@ For debugging work, return:
 1. Failing command.
 2. Direct tool build result.
 3. Real plugin path result.
-4. `debug.yaml` / `Modules-tool` evidence.
+4. `debug.yaml` excerpts / `Modules-tool` outputs.
 5. Root cause class.
 6. Minimal fix or fallback.

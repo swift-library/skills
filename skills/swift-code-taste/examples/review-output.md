@@ -58,7 +58,7 @@ Why this is a smell:
 
 Expected shape:
 
-- Start with evidence and root-cause ranking.
+- Start with diagnostic observations and root-cause ranking.
 - Keep the patch only when it produces a clear behavioral improvement or
   isolates the failure mode.
 
@@ -147,8 +147,8 @@ Minimal fix:
 Merge after cleanup.
 
 Block the ownership move and remove out-of-scope edits. If the behavior problem
-still matters, do a diagnosis-first follow-up with evidence before landing a
-replacement patch.
+still matters, establish the diagnosis with concrete observations before landing
+a replacement patch.
 
 ## 7. Code Diff (Key Hunks)
 

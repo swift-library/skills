@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create a compact test evidence bundle from the current simulator screen."""
+"""Create a compact test report bundle from the current simulator screen."""
 
 from __future__ import annotations
 

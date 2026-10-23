@@ -16,8 +16,8 @@ Adopt / Wrap / Reference / Keep custom
 
 - Source category:
 - Authority:
-- Target evidence:
-- Source evidence:
+- Target code:
+- Candidate source code or documentation:
 - Source-needed notes:
 
 ## Dependency-Cost Checks

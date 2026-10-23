@@ -4,7 +4,7 @@
 
 Distill `/path/to/swift-validation` into a skill-creation handoff.
 
-## Evidence To Prefer
+## Materials To Prefer
 
 - `Package.swift`: products, target names, platforms, test targets.
 - `README.md` and DocC quick starts: intended imports and common flows.
@@ -21,21 +21,21 @@ Package identity:
 - Products and targets: `SwiftValidation` library product, `SwiftValidation`
   target, `SwiftValidationTests` test target.
 
-Evidence inspected:
+Inspected materials:
 
-| Evidence | Source/path | Used for | Notes |
+| Material | Source/path | Used for | Notes |
 |---|---|---|---|
 | Manifest | `Package.swift` | products, targets, platforms | tools version and target list |
 | Docs | `README.md` | intended workflows | quick-start API sequence |
 | Source layout | `Sources/SwiftValidation` | public capabilities | validators and result types |
 | Tests | `Tests/SwiftValidationTests` | usage and edge cases | invalid input cases |
 | Resolved deps | `Package.resolved` | dependency pins | file not present; no external pins found |
-| Interface evidence | no snapshot available | public API shape | not collected in this sample |
+| API snapshot | no snapshot available | public API shape | not collected in this sample |
 
-Generated interface evidence:
+API snapshot:
 - Availability: unavailable.
-- Reason: not generated for this lightweight sample; static source/docs/tests
-  evidence is enough for this candidate handoff.
+- Reason: not generated for this lightweight sample; static source, docs and tests
+  suffice for this candidate handoff.
 - Follow-up: use swift-interface-distiller-patterns if compiler-derived
   declarations become necessary.
 
@@ -87,11 +87,11 @@ Handoff notes for skill creator:
 
 Authoring handoff:
 - Keep generic skill anatomy in the authoring workflow; this distillation
-  contributes only package-specific evidence and workflows.
+  contributes only package-specific sources and workflows.
 ```
 
 ## Robustness Checks
 
 - Does every workflow cite package evidence instead of inferred API behavior?
 - Are generic skill-writing rules kept out of the handoff?
-- Are unsupported package surfaces listed as evidence gaps instead of invented?
+- Are unsupported package surfaces listed as coverage gaps instead of invented?

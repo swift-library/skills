@@ -35,5 +35,6 @@ Use this rule when auditing a target Swift package.
 ## Report Rule
 
 Every candidate recommendation must include the current wheel, candidate
-library, source category, authority, target evidence, source evidence, fit,
-recommendation, reason, migration seam, risks, and suggested next step.
+library, source category, authority, target code, candidate source code or
+documentation, fit, recommendation, reason, migration seam, risks, and suggested
+next step.

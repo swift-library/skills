@@ -70,7 +70,7 @@ SwiftLint behavior, not when the task is only general Swift style judgment.
    disk edits from autocorrection as code changes that still need normal review.
 8. For custom rules, choose regex rules only when syntax kinds and false
    positives are acceptable. Treat Swift custom rules as a heavier project
-   investment that needs current build and distribution evidence.
+   investment that needs current build and distribution check results.
 9. Propose the smallest enforcement change that improves signal without
    flooding the repository with noisy churn.
 

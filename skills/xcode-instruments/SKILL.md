@@ -7,9 +7,9 @@ description: Xcode Instruments trace recording and analysis with xctrace, .trace
 
 ## Purpose
 
-Guide Xcode Instruments and `xctrace` recording, analysis, and evidence-based
-performance review. Use the bundled scripts for repeatable trace analysis and
-recording when local Xcode tools are available.
+Guide Xcode Instruments and `xctrace` recording, analysis, and performance
+review with cited measurements. Use the bundled scripts for repeatable trace
+analysis and recording when local Xcode tools are available.
 
 ## When To Use
 
@@ -19,7 +19,7 @@ recording when local Xcode tools are available.
   timestamps.
 - Recording a trace by attaching to an app, launching an app, selecting a
   device, selecting an Instruments template, or time-boxing a profiling run.
-- Correlating trace evidence with source-level performance findings.
+- Correlating trace findings with source-level performance findings.
 - Focusing analysis on a time window, log message, signpost interval, hang, or
   hitch.
 - Using `analyze_trace.py` or `record_trace.py` for connected-device or simulator profiling, including SwiftUI update lanes.
@@ -27,9 +27,9 @@ recording when local Xcode tools are available.
 ## When Not To Use
 
 - Do not use for source-only SwiftUI performance review without trace or
-  profiling evidence.
+  profiling measurements.
 - Do not use for source-only SwiftUI state, layout, navigation, accessibility,
-  animation, or image refactoring without trace or profiling evidence.
+  animation, or image refactoring without trace or profiling measurements.
 - Do not use for Swift Charts.
 - Do not use for Core Data or SwiftData persistence design.
 - Do not use for broad Swift Concurrency migration, actor-isolation design,
@@ -82,11 +82,11 @@ Use `references/_index.md` only when the needed reference is unclear.
 ## Decision Rules
 
 - Repository-local truth wins over this skill.
-- Do not claim Instruments or `xctrace` evidence unless a trace or local tool
+- Do not claim Instruments or `xctrace` findings unless a trace or local tool
   output supports it.
 - Prefer structured script output for analysis, then summarize the result for
   the user.
-- Separate measured trace evidence from hypotheses.
+- Separate trace measurements from hypotheses.
 - Use physical iOS/iPadOS devices or host Mac for the SwiftUI template lane;
   prefer Time Profiler for simulator recordings when the SwiftUI lane is not
   available.
@@ -103,7 +103,10 @@ Use `references/_index.md` only when the needed reference is unclear.
 
 ## Output Format
 
-For reviews or profiling recommendations, return:
+For questions, give a direct answer. For small edits or single operations,
+summarize what changed or ran, validation, and open risks.
+
+For audits, reviews, investigations, and other substantial tasks, return:
 
 1. Phase / stage judgment
 2. Trace or recording surface inspected

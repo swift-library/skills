@@ -90,5 +90,5 @@ and MCP client configuration come from their owners.
 ## Public Content
 
 The README is public. Keep out absolute local paths, usernames, and machine
-names; agent state, workspace notes, task logs, and local evidence; and
+names; agent state, workspace notes, task logs, and local check outputs; and
 internal tool, team, or process names.
