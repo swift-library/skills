@@ -381,25 +381,27 @@ def cmd_push(args: argparse.Namespace) -> None:
     device = resolve_device(device_arg(args), json_output=args.json)
     payload_path: Path | None = Path(args.payload).expanduser() if args.payload else None
     temp_name: str | None = None
-    if payload_path is None:
-        payload = {
-            "Simulator Target Bundle": args.bundle_id,
-            "aps": {"alert": {"title": args.title or "", "body": args.body or ""}},
-        }
-        if args.badge is not None:
-            payload["aps"]["badge"] = args.badge
-        if not args.no_sound:
-            payload["aps"]["sound"] = args.sound or "default"
-        tmp = tempfile.NamedTemporaryFile("w", suffix=".apns", delete=False)
-        json.dump(payload, tmp)
-        tmp.close()
-        temp_name = tmp.name
-        payload_path = Path(temp_name)
-    if not payload_path.exists():
-        fail(f"Payload not found: {payload_path}", json_output=args.json)
-    run_command(["xcrun", "simctl", "push", device, args.bundle_id, str(payload_path)], timeout=args.timeout, json_output=args.json)
-    if temp_name:
-        Path(temp_name).unlink(missing_ok=True)
+    try:
+        if payload_path is None:
+            payload = {
+                "Simulator Target Bundle": args.bundle_id,
+                "aps": {"alert": {"title": args.title or "", "body": args.body or ""}},
+            }
+            if args.badge is not None:
+                payload["aps"]["badge"] = args.badge
+            if not args.no_sound:
+                payload["aps"]["sound"] = args.sound or "default"
+            tmp = tempfile.NamedTemporaryFile("w", suffix=".apns", delete=False)
+            temp_name = tmp.name
+            with tmp:
+                json.dump(payload, tmp)
+            payload_path = Path(temp_name)
+        if not payload_path.exists():
+            fail(f"Payload not found: {payload_path}", json_output=args.json)
+        run_command(["xcrun", "simctl", "push", device, args.bundle_id, str(payload_path)], timeout=args.timeout, json_output=args.json)
+    finally:
+        if temp_name:
+            Path(temp_name).unlink(missing_ok=True)
     print_result({"ok": True, "device": device, "bundle_id": args.bundle_id, "message": f"Sent push to {args.bundle_id} on {device}"}, json_output=args.json)
 
 

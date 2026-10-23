@@ -101,7 +101,9 @@ Use `references/_index.md` only when the needed reference is unclear.
 - `scripts/sim.py`: `xcrun simctl` device lifecycle, app lifecycle, screenshot,
   logs/streaming, privacy, clipboard, push, status bar, and health operations.
 - `scripts/xcode_build.py`: concise `xcodebuild` build/test wrapper, cached
-  result IDs, log drill-down, and `xcresulttool` summary hooks.
+  result IDs, log drill-down, and `xcresulttool` summary hooks. Override its
+  per-project user cache with `--state-dir` or `IOS_SIMULATOR_STATE_DIR`; see
+  `scripts/README.md` for storage and cleanup.
 - `scripts/idb_ui.py`: optional IDB screen map, semantic find/tap/type,
   keyboard, hardware buttons, gestures, and lightweight audit.
 - `scripts/state_capture.py`: screenshot, logs, device state, optional IDB

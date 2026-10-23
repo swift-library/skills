@@ -74,7 +74,10 @@ An installed app, stale build directory or template default is not the version
 source for a distribution build. Missing or conflicting values must fail.
 
 The bootstrap template supplies an explicit `version.env` for a new project.
-When adapting the packaging script to a project with another authority, replace
+Both packaging and notarization templates require it to declare
+`MARKETING_VERSION` and `BUILD_NUMBER`, clearing inherited values before reading
+it.
+When adapting the packaging and notarization scripts to another authority, replace
 that input with the real source rather than adding a second declaration. The
 packaging template requires its source file and does not guess version values.
 

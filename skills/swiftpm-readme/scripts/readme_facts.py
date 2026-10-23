@@ -7,14 +7,17 @@ Usage:
   readme_facts.py REPO --workflow FILE use FILE as the CI workflow
   readme_facts.py REPO --linux yes|no  override Linux detection
 
-Facts come from the origin remote, git tags, Package.swift, LICENSE, and
-.github/workflows; nothing is typed by hand.
+Facts come from the origin's published refs, Package.swift, LICENSE, and
+.github/workflows. Unknown remote facts are JSON null; an empty published_tags
+list means the remote was read and has no tags. --install fails when publication
+facts are unknown. Local branches and tags are not publication evidence.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import pathlib
 import re
 import subprocess
@@ -41,15 +44,41 @@ def remote_slug(root):
     return (match.group(1), match.group(2)) if match else (None, None)
 
 
+def remote_output(root, *args):
+    """Read published refs without prompting; None means the remote is unknown."""
+    try:
+        return subprocess.check_output(
+            ["git", "-C", str(root), "ls-remote", *args, "origin", *(["HEAD"] if "--symref" in args else [])],
+            text=True, stderr=subprocess.DEVNULL, timeout=30,
+            env={**os.environ, "GIT_TERMINAL_PROMPT": "0"},
+        ).strip()
+    except (subprocess.CalledProcessError, FileNotFoundError, subprocess.TimeoutExpired):
+        return None
+
+
 def default_branch(root):
-    ref = git(root, "symbolic-ref", "--short", "refs/remotes/origin/HEAD")
-    return ref.split("/", 1)[1] if ref else git(root, "branch", "--show-current") or None
+    output = remote_output(root, "--symref")
+    match = re.search(r"^ref: refs/heads/(.+)\tHEAD$", output or "", re.M)
+    return match.group(1) if match else None
+
+
+def published_refs(root, kind):
+    output = remote_output(root, "--" + kind)
+    if output is None:
+        return None
+    prefix = "refs/" + kind + "/"
+    return sorted({ref[len(prefix):].removesuffix("^{}")
+                   for line in output.splitlines()
+                   for _, ref in [line.split("\t", 1)] if ref.startswith(prefix)})
+
+
+def newest_version(tags):
+    versions = [t for t in tags or [] if re.fullmatch(r"v?\d+\.\d+\.\d+", t)]
+    return max(versions, key=lambda t: (tuple(map(int, t.lstrip("v").split("."))), t)) if versions else None
 
 
 def latest_tag(root):
-    tags = git(root, "tag", "--list", "--sort=-v:refname").splitlines()
-    tags = [t for t in tags if re.fullmatch(r"v?\d+\.\d+\.\d+", t)]
-    return tags[0] if tags else None
+    return newest_version(published_refs(root, "tags"))
 
 
 def manifest(root):
@@ -129,13 +158,15 @@ def collect(root, override=None, linux="auto"):
     tools, package_name, platforms = manifest(root)
     workflow = ci_workflow(root, override)
     linux = builds_on_linux(root, workflow) if linux == "auto" else linux == "yes"
-    tag = latest_tag(root)
+    tags = published_refs(root, "tags")
+    tag = newest_version(tags)
     facts = {
         "owner": owner,
         "name": name,
         "package_name": package_name,
         "default_branch": default_branch(root),
         "latest_tag": tag,
+        "published_tags": tags,
         "requirement": requirement(tag),
         "swift_tools": tools,
         "platforms": platforms + (["Linux"] if linux else []),
@@ -162,6 +193,10 @@ def badge_values(facts):
 
 
 def install(facts):
+    if facts["published_tags"] is None:
+        raise ValueError("published tags are unknown; cannot derive an install requirement")
+    if not facts["requirement"] and not facts["default_branch"]:
+        raise ValueError("published default branch is unknown; cannot derive an install requirement")
     url = f"https://github.com/{facts['owner']}/{facts['name']}.git"
     if facts["requirement"]:
         return f'.package(url: "{url}", {facts["requirement"]}),'
@@ -181,7 +216,10 @@ def main(argv):
     if args.install and not (facts["owner"] and facts["name"]):
         sys.exit("error: origin is not a GitHub remote; cannot build URLs")
     if args.install:
-        print(install(facts))
+        try:
+            print(install(facts))
+        except ValueError as error:
+            sys.exit(f"error: {error}")
     else:
         print(json.dumps(facts, indent=2))
 

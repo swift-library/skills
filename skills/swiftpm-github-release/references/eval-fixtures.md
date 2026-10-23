@@ -1,13 +1,14 @@
 # Eval Fixtures
 
-These cases check readiness audits and dry-run command plans against
-[Shared CI](shared-ci.md). Supply the repository declarations, candidate commit
-and available check results as inputs.
+These cases check readiness audits and dry-run command plans against the
+repository's adopted policy and CI design. Apply [Shared CI](shared-ci.md) only
+to callers implementing that specification. Supply repository declarations,
+candidate commit, required-check configuration and available results as inputs.
 
 ## Minimal Library Validation
 
-Input: A library declares one compiler and has no optional validation jobs.
-Audit its readiness for a GitHub release.
+Input: A library adopting Shared CI declares one compiler and has no optional
+validation jobs. Audit its readiness for a GitHub release.
 
 Expected behavior:
 
@@ -19,8 +20,8 @@ Expected behavior:
 
 ## Declared Jobs and Repository Commands
 
-Input: A command-line package declares an Apple platform, DocC targets, a
-terminal demo and a repository-specific specification check.
+Input: A command-line package adopting Shared CI declares an Apple platform,
+DocC targets, a terminal demo and a repository-specific specification check.
 
 Expected behavior:
 
@@ -43,8 +44,8 @@ state while preparing the plan.
 
 ## Shared Release Dry Run
 
-Input: A member has a release declaration and asks for the steps to publish
-its next version.
+Input: A member adopting Shared CI has a release declaration and asks for the
+steps to publish its next version.
 
 Expected behavior: checks the shared release caller runs after successful
 validation of the tagged commit, verifies a signed annotated tag, version and
@@ -54,7 +55,7 @@ as a plan and leaves live operations to the release owner.
 ## Correction After Tagging
 
 Input: A published tag contains a mistake. The owner asks how to correct it;
-the project follows swift-library VERSIONING.
+the project follows the VERSIONING policy it adopts from its organization.
 
 Expected behavior: references the immutable-tag policy, prepares a new patch
 version and a changelog entry identifying the superseded version and fix.
@@ -63,3 +64,53 @@ is the supplied state.
 
 Forbidden behavior: moves/deletes the published tag, overwrites release
 attachments, or consumes a new patch solely to retry an interrupted upload.
+
+## Standalone Repository
+
+Input: A standalone SwiftPM repository uses its own GitHub Actions workflows,
+with `build-and-test` required by branch protection and no shared workflow.
+
+Expected behavior:
+
+- Checks version/tag consistency, release-facing files, README facts and the
+  publish boundary, and runs or plans the repository's declared commands.
+- Reports `build-and-test` and its candidate-commit status.
+- Produces no Shared CI configuration, caller or fixed-check-name findings.
+
+Acceptance checks: passing declared validation and required checks can yield
+Ready. Missing `policy / policy`, `validate / result` or
+`.github/swift-package.json` does not change that verdict.
+
+## Organization Adopting the Shared Specification
+
+Input: An organization's member calls
+`<org>/github-workflows/.github/workflows/swift-package.yml@<sha>` with
+`.github/swift-package.json`; the referenced workflow implements Shared CI.
+
+Expected behavior:
+
+- Checks the caller, pin, configuration and declared jobs against Shared CI.
+- Requires `policy / policy` and `validate / result` as specified, and checks
+  their statuses for the candidate commit.
+- Applies the repository's adopted VERSIONING and enables policy flags only
+  when that policy requires them.
+
+Acceptance checks: an invalid configuration or required-check mismatch is a
+finding; a conforming caller with passing checks satisfies the CI gate.
+Changing the organization name does not change the applicable specification.
+
+## Organization With a Different CI Design
+
+Input: An organization member uses another reusable workflow with its own
+configuration and requires `verify / tests`; it does not adopt Shared CI.
+
+Expected behavior:
+
+- Follows that organization's adopted declarations and configured checks.
+- Reports `verify / tests` and its candidate-commit status.
+- Does not apply Shared CI based on organization membership or file names.
+
+Acceptance checks: absence of Shared CI job names or configuration is not a
+finding. A failing declared required check blocks readiness. Verified absence
+of required checks is reported as `none configured`; inaccessible branch
+protection or rulesets are reported as `unknown`.
