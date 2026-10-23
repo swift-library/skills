@@ -12,7 +12,7 @@ context an agent can read, query and compare. Own the collection choices,
 interface selection and snapshot interpretation. Preserve configuration,
 scope, provenance and gaps alongside the selected declarations.
 
-The command examples follow the v0.3.1 CLI contract. Confirm the executable's
+The command examples follow the v0.4.0 CLI contract. Confirm the executable's
 version and help before use; read the matching upstream documentation when
 using another version.
 
@@ -70,7 +70,7 @@ using another version.
    a repository's display name. Exclusion globs win over inclusion.
 5. Read the snapshot header and gaps before the declarations. Render the
    default interface with summary docs, then use `--docs full`, `--docs none`,
-   `--show-implied` or `--view evidence` according to the question. The detailed
+   `--show-implied` or `--view symbols` according to the question. The symbols
    view and canonical JSON retain details collapsed in the readable view.
 6. Query a type or symbol, then slice only the needed reference closure. Choose
    JSON, Swift or Markdown before setting the budget. Read

@@ -50,6 +50,12 @@
   statuses and supersession. VERSIONING goes to the repository steward when it
   is installed; work its owner does stays in the task plan, and only handed-off
   or public work goes to GitHub issues.
+- `swiftpm-docs` templates trace changes to the request, a cited source or the
+  owning invariant, keep check logs out of shipped documentation, and title the
+  release reference section "Result Reuse and Invalidation". Re-export a package
+  profile to adopt the wording.
+- `swift-interface-distiller-patterns` follows the swift-interface-distiller 0.4.0
+  CLI: `render --view symbols` replaces `--view evidence`.
 - `swiftpm-macos-app-packaging` writes the notarization key and archive into a
   private temporary directory, merges every architecture of embedded frameworks
   in universal builds, and reads versions from `version.env` in both packaging
