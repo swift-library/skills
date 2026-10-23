@@ -44,9 +44,8 @@ state-trigger feedback unless that UI action starts a Core Haptics pattern.
 1. Classify the job: custom engine lifecycle, programmatic pattern, AHAP
    resource, advanced player, dynamic update, design review, or validation.
 2. Apply the simple-before-custom gate. If declarative SwiftUI feedback or a
-   basic feedback generator carries the interaction, use `swiftui-patterns`
-   for the SwiftUI implementation or a basic feedback generator instead of
-   adding Core Haptics engine code.
+   basic feedback generator carries the interaction, use that declarative
+   feedback or generator API; custom engine lifecycle is unnecessary.
 3. Load only the matching reference:
    - `references/engine-lifecycle.md` for `CHHapticEngine`, capability checks,
      start/stop, stopped/reset handlers, shutdown, fallback, and thread safety.

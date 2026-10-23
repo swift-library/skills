@@ -31,6 +31,7 @@ Crown focus, and visionOS hover/focus coordination.
 
 ## When Not To Use
 
+- Assistive-technology focus semantics belong to accessibility work.
 - Do not use for visual polish, spacing, typography, color, or native UI
   design; visual design is out of scope.
 - Do not use for general SwiftUI state, layout, navigation, performance, or

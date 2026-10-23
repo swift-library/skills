@@ -27,6 +27,7 @@ Architecture adapters, and reactive presentation pipelines.
 
 ## When Not To Use
 
+- Do not use for ordinary UIKit feedback-generator work without an architecture change.
 - Do not use for SwiftUI-only app or feature architecture.
 - Do not use for SwiftUI view layout, state wrapper usage, animation, or
   navigation modifier behavior.

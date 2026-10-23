@@ -18,8 +18,9 @@ review artifacts when requested.
 - Review-mode job: review a local Swift Package architecture with progressive
   disclosure, choosing direct in-place review or brief output from the request.
 - Manual brief job: turn a local Swift Package into a compact,
-  evidence-oriented Markdown brief when the user explicitly asks for active,
-  proactive, brief, bundle, context package, or reviewer handoff behavior.
+  evidence-oriented Markdown brief on explicit skill invocation or when the
+  user asks for active, proactive, brief, bundle, context package, or reviewer
+  handoff behavior.
 - Not its job: produce a final architecture verdict, generate a full migration
   plan, rewrite code, rank community dependencies, run strict Swift code-shape
   taste review, or concatenate the whole repository.
@@ -37,6 +38,7 @@ review artifacts when requested.
   architecture, inspect the repository directly and answer with prioritized
   findings, evidence, and residual risks. Do not create a Markdown file unless
   requested.
+- Explicit skill invocation: Produce the compact Markdown evidence brief.
 - Active review: If the user explicitly asks for active or proactive review
   behavior, emit the fixed Markdown brief described under Output Contract. This
   is the active mode default.
@@ -90,7 +92,8 @@ python3 scripts/build_swift_package_bundle.py /path/to/repo --output /tmp/archit
 - Use in-place review for clear ordinary package architecture review requests.
 - Use active review when explicitly asked for proactive review; active review
   produces a brief.
-- Use brief/bundle mode only when the user asks for an artifact or handoff.
+- Use brief/bundle mode for explicit skill invocation or a requested artifact
+  or handoff.
 
 2. Inspect structure.
 - Read `Package.swift` first.
@@ -197,8 +200,9 @@ Model responsibilities:
 
 ## Output Contract
 
-This contract applies only to active review and brief/bundle mode. Emit exactly
-one markdown file. Use these headings exactly and in this order:
+This contract applies to explicit skill invocation, active review, and
+brief/bundle mode. Emit exactly one markdown file. Use these headings exactly
+and in this order:
 - `# Repository Overview`
 - `# Directory Tree`
 - `# Module Summary`

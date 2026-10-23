@@ -30,7 +30,7 @@
 
 ## Overview
 
-The collection covers package architecture, Apple frameworks, interface design, developer tools, documentation, and release engineering. Each skill carries a focused trigger and supporting guidance; your agent selects it when a task matches, and the [catalog](Documentation/Catalog.md) helps you find the right workflow.
+The collection covers package architecture, Apple frameworks, interface design, developer tools, documentation, and release engineering. Each skill carries a focused trigger and supporting guidance; your agent selects it when a task matches, and the [catalog](docs/catalog.md) helps you find the right workflow.
 
 ## Quick look
 
@@ -50,7 +50,7 @@ codex plugin marketplace add swift-library/skills --ref master
 codex plugin add swift-skills@swift-skills
 ```
 
-Restart your host after installing. The [installation guide](Documentation/Installation.md) covers updates and other hosts.
+Restart your host after installing. The [installation guide](docs/installation.md) covers updates and other hosts.
 
 > [!NOTE]
 > Installation uses the current `master` branch, not a tagged release.
@@ -68,8 +68,8 @@ description. Name the skill to select it explicitly:
 When two skills could apply, the more specific one should win: a SwiftUI
 rendering question belongs to `swiftui-performance` rather than
 `swiftui-patterns`, and a framework review belongs to that framework's skill
-rather than `swift-programming-language`. [AGENTS.md](AGENTS.md) records the
-routing for pairs that overlap.
+rather than `swift-programming-language`. Each skill's description and
+`SKILL.md` state its boundary.
 
 Skills with scripts need the tools those scripts call, such as `git`, `swift`,
 `xcodebuild`, or Python 3. The skill's `SKILL.md` or `scripts/README.md` names
@@ -77,15 +77,15 @@ them.
 
 ## Requirements
 
-- An agent host that can load `SKILL.md` instructions, such as the hosts in the [installation guide](Documentation/Installation.md)
+- An agent host that can load `SKILL.md` instructions, such as the hosts in the [installation guide](docs/installation.md)
 - The SDKs and tools named by the individual skill for its task; the collection itself declares no Swift compiler floor
 
 ## Documentation
 
-- [Skill catalog](Documentation/Catalog.md)
-- [Installation guide](Documentation/Installation.md)
-- [Documentation index](Documentation/README.md)
-- [Skill authoring architecture](Documentation/Architecture/skill-authoring.md)
+- [Skill catalog](docs/catalog.md)
+- [Installation guide](docs/installation.md)
+- [Documentation index](docs/README.md)
+- [Skill authoring architecture](docs/architecture/skill-authoring.md)
 
 ## Contributing
 
@@ -100,12 +100,14 @@ skill lives in `skills/<skill>/`:
   `examples/`, `scripts/`, `cli/`, and `assets/`, each with an index when it
   holds more than one file
 
-[Skill authoring](Documentation/Architecture/skill-authoring.md) defines the
+[Skill authoring](docs/architecture/skill-authoring.md) defines the
 structure, trigger contract, and validation checklist for new or changed
 skills. The Claude and Codex marketplaces each publish the root `swift-skills`
 plugin. Run `scripts/check` before pushing; it validates both hosts' manifests,
-distribution regression tests, and documentation template exports. Use the
-[isolated installation checks](Documentation/Architecture/skill-authoring.md#plugin-distribution)
+skill contracts, links, reference cycles, organization-neutral content,
+distribution regression tests, and documentation template exports, and reports
+host listing sizes. Use the
+[isolated installation checks](docs/architecture/skill-authoring.md#plugin-distribution)
 when changing plugin distribution.
 
 Commit subjects and pull request titles follow Conventional Commits. The shared

@@ -101,7 +101,7 @@ and open questions should be handed to the skill creator.
    `interface-distiller collect package` to collect a snapshot, `render` to
    read its interface, and `query` to select declarations. Route installation,
    configuration, scope, budgets and completeness interpretation to
-   [swift-interface-distiller-patterns](https://github.com/swift-library/skills/tree/master/skills/swift-interface-distiller-patterns).
+   `swift-interface-distiller-patterns`.
    This skill consumes that evidence for a skill-creation handoff. Record the
    actual commands, working directory, exit codes, snapshot/view paths and
    collection gaps; keep outputs in the target's ignored producer directory.

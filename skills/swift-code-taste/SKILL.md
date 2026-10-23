@@ -110,7 +110,9 @@ approach is absent.
 ## When Not To Use
 
 - SwiftPM target graphs, product layout, module dependency direction, package
-  structure, or architecture briefs by themselves.
+  structure, or architecture briefs by themselves. Include package architecture
+  review when code-shape work also changes target graphs, products, or module
+  dependencies.
 - SwiftUI or UIKit architecture pattern selection by itself.
 - Framework/API correctness inside a focused Apple or Swift package domain.
 - SwiftLint setup, rule governance, analyzer runs, or enforcement wiring.
