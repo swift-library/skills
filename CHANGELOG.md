@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Repository automation uses lowercase `scripts/`, including the macOS app
+  packaging scaffold and templates.
 - `swiftpm-docs` exports a documentation profile into a package with
   `scripts/export_profile.py`, filling identity values from arguments and the
   build command, test command and requirement from the package's own files.

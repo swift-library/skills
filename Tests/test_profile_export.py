@@ -117,11 +117,11 @@ class ProfileExportTests(unittest.TestCase):
 
     def test_set_values_win_over_package_facts(self):
         self.export(
-            "--package-root", self.package, "--set", "build-command=Scripts/build",
-            "--set", "test-command=Scripts/test", "--set", "requirement=Custom requirement",
+            "--package-root", self.package, "--set", "build-command=scripts/build",
+            "--set", "test-command=scripts/test", "--set", "requirement=Custom requirement",
         )
         readme = self.readme()
-        self.assertIn("Scripts/build\nScripts/test\n", readme)
+        self.assertIn("scripts/build\nscripts/test\n", readme)
         self.assertIn("- Custom requirement\n", readme)
         self.assertNotIn("Swift 6.2 or later", readme)
 
@@ -307,7 +307,7 @@ class ProfileExportTests(unittest.TestCase):
 
     def template_check(self, expected):
         result = subprocess.run(
-            [str(ROOT / "Scripts/check-package-template"), str(self.package)],
+            [str(ROOT / "scripts/check-package-template"), str(self.package)],
             env={**os.environ, "RUNNER_TEMP": str(self.root / "runner")},
             capture_output=True, text=True,
         )

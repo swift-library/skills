@@ -14,7 +14,7 @@ ARCH_LIST=( ${ARCHES_VALUE} )
 for ARCH in "${ARCH_LIST[@]}"; do
   swift build -c release --arch "$ARCH"
 done
-ARCHES="${ARCHES_VALUE}" "$ROOT/Scripts/package_app.sh" release
+ARCHES="${ARCHES_VALUE}" "$ROOT/scripts/package_app.sh" release
 
 ENTITLEMENTS_DIR="$ROOT/.build/entitlements"
 APP_ENTITLEMENTS="${APP_ENTITLEMENTS:-${ENTITLEMENTS_DIR}/${APP_NAME}.entitlements}"

@@ -30,8 +30,8 @@ fi
 
 NOTES_HTML="${ZIP_DIR}/${ZIP_BASE}.html"
 KEEP_NOTES=${KEEP_SPARKLE_NOTES:-0}
-if [[ -x "$ROOT/Scripts/changelog-to-html.sh" ]]; then
-  "$ROOT/Scripts/changelog-to-html.sh" "$VERSION" >"$NOTES_HTML"
+if [[ -x "$ROOT/scripts/changelog-to-html.sh" ]]; then
+  "$ROOT/scripts/changelog-to-html.sh" "$VERSION" >"$NOTES_HTML"
 else
   cat >"$NOTES_HTML" <<HTML
 <!doctype html>

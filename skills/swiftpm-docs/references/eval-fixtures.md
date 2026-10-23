@@ -12,7 +12,7 @@ normalization. They are durable behavior inputs, not execution logs.
 | The settings owner selects local community files | Emit the selected profile's community files, including `.github/ISSUE_TEMPLATE/config.yml` for the standard profile. Both bug and feature templates ask for current behavior or state, expected outcome, evidence with commands, versions and links, the decision needed, and completion checks. |
 | Contributor and security guidance are inherited; issue and pull request templates are local | Omit the inherited files and emit the selected local templates. Inheritance is an input from the settings owner, not a decision inferred from missing local files. |
 
-Acceptance checks: run `Scripts/check` from the collection root for local,
+Acceptance checks: run `scripts/check` from the collection root for local,
 inherited, and mixed profile exports; inspect the issue prompts and documentation
 diff against these cases. This skill owns community-file text and templates;
 the GitHub settings owner owns selection and effective-behavior verification.
