@@ -1,6 +1,6 @@
 ---
 name: audioaccessorykit-patterns
-description: Use this skill for AudioAccessoryKit implementation and review across AccessoryControlDevice, accessory capabilities, AccessoryControlDevice.Configuration, Placement, automatic audio switching, third-party audio accessory companion apps, AccessorySetupKit pairing handoff, connected audio sources, placement state updates, EU availability constraints, development/ad hoc distribution limits, and physical accessory validation. Do not use for AVKit playback, Core Bluetooth setup, AccessorySetupKit picker flows, generic audio sessions, or market eligibility claims.
+description: AudioAccessoryKit companion-app implementation for AccessoryControlDevice, placement, connected sources, and automatic audio switching after pairing; review region and distribution limits. Not for AccessorySetupKit pickers or AVKit playback.
 ---
 
 # AudioAccessoryKit Patterns
@@ -20,6 +20,7 @@ for automatic audio switching.
   switching.
 - Reviewing development/ad hoc distribution limits, EU availability
   constraints, physical accessory validation, and graceful unavailable states.
+- Reviewing `AccessoryControlDevice.Configuration` and `Placement` updates.
 
 ## When Not To Use
 

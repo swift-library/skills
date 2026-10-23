@@ -1,6 +1,6 @@
 ---
 name: swift-programming-language
-description: "Use this skill for broad Swift or Apple-platform language and API baseline work when no deeper domain skill fits: obvious modernization, Swift API Design Guidelines, naming and argument labels, documentation comments, FormatStyle and .formatted() usage, Date.now, count(where:), modern Foundation APIs, lightweight Observation or SwiftUI baseline checks, accessible image buttons, force unwrap and force try caution, user-visible error handling, baseline localization API checks, project structure, tests, secrets, obvious secret-storage mistakes, SwiftLint, Google Swift style reference checks, or Xcode MCP usage. Do not use it for deep Swift Concurrency diagnostics or migration, deep SwiftUI, SwiftData implementation/schema/query/migration/sync work, CoreData, Keychain Services implementation, CryptoKit, certificate trust, networking, package architecture, dependency replacement, strict code-shape taste review, or repository documentation work."
+description: Swift language modernization and API baseline review, including naming, argument labels, documentation comments and FormatStyle. Apply lightweight checks when no deeper domain fits. Not for strict code-shape review or framework-specific implementation.
 ---
 
 # The Swift Programming Language
@@ -38,6 +38,7 @@ Apple or Swift code are out of scope.
 - Checking baseline SwiftData model constraints for CloudKit-backed stores.
 - Checking baseline localization API usage, formatting, project-structure,
   testing, obvious secret-storage mistakes, and Xcode MCP guidance.
+- Checking `Date.now`, `count(where:)`, accessible image buttons, force unwraps, force try, user-visible error handling, or baseline SwiftLint findings.
 
 ## Do Not Use When
 

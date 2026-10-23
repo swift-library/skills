@@ -1,6 +1,6 @@
 ---
 name: javascriptkit-patterns
-description: Use this skill for JavaScriptKit Swift package implementation and review in Swift-on-Wasm projects, including `import JavaScriptKit`, `JSObject`, `JSValue`, `JSClosure`, `JSOneshotClosure`, `JSException`, `JSObject.global`, DOM and browser API calls, Swift-JavaScript value conversion, JavaScript promises with Swift async/await, `JavaScriptEventLoop`, `JavaScriptBigIntSupport`, `JavaScriptFoundationCompat`, and PackageToJS packaging. Do not use for BridgeJS typed code generation/macros, generic Swift Wasm porting, WebKit/Safari extension JavaScript, or native Apple JavaScript bridges.
+description: JavaScriptKit dynamic Swift/Wasm interop with JSObject, JSValue, JSClosure, DOM calls, value conversion and async promises. Review callback lifetimes, exceptions and PackageToJS packaging. Not for BridgeJS typed codegen or general Wasm porting.
 ---
 
 # JavaScriptKit Patterns

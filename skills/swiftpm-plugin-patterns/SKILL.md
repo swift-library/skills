@@ -1,6 +1,6 @@
 ---
 name: swiftpm-plugin-patterns
-description: Use this skill for designing, implementing, reviewing, or debugging Swift Package Manager command plugins, build tool plugins, executable tool targets, plugin tool/core target topology, Package.swift plugin dependencies, context.tool(named:) workflows, generated source or generated host flows, SwiftSyntax parser tools inside plugins, macro-target interactions, host-tool build graph diagnostics, and plugin fixture validation. Do not use for general SwiftPM dependency management, app release packaging, macro expansion authoring unrelated to plugins, or non-plugin Swift package architecture.
+description: SwiftPM command/build tool plugin design and debugging, including executable tool/core targets, context.tool(named:), generated sources, SwiftSyntax and host-tool build failures. Not for ordinary package graphs or standalone macro implementation.
 ---
 
 # SwiftPM Plugin Patterns
@@ -28,6 +28,7 @@ discovery, and business logic.
 - Debugging `context.tool(named:)`, host-tool builds, `Modules-tool`,
   `*-tool.build`, or `no such module` failures.
 - Reviewing `Package.swift` plugin dependencies and plugin/tool boundaries.
+- Reviewing macro-target interactions in a plugin/tool build graph or validating plugin fixtures.
 
 ## When Not To Use
 

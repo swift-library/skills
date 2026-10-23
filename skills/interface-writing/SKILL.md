@@ -1,6 +1,6 @@
 ---
 name: interface-writing
-description: Use this skill to write, rewrite, review, improve, or harden text shown inside product interfaces, including UX writing, UI copy, interface text, microcopy, button labels, alerts, error messages, empty states, onboarding, settings text, tooltips, notifications, CLI output, accessibility labels, source strings, localization-risk notes, and terminology consistency. Trigger for design copy or implementation-side copy when wording may affect the experience, code strings, accessibility labels, or localization handoff. Do not use for marketing copy, blog posts, App Store listings, API docs, brand guides, resumes, or interview writing.
+description: Product interface writing and review for UI copy, microcopy, errors, empty states, onboarding, CLI output, accessibility labels, source strings, localization handoff, and terminology consistency. Not for marketing copy or API documentation.
 ---
 
 # Interface Writing

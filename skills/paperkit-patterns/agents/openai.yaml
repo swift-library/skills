@@ -2,4 +2,4 @@ interface:
   display_name: "PaperKit Patterns"
   short_description: "Implement and review PaperKit structured markup workflows"
   brand_color: "#8E8E93"
-  default_prompt: "Use $paperkit-patterns for PaperMarkupViewController, PaperMarkup, structured markup, PencilKit coexistence, persistence, rendering, and PaperKit SDK-gated behavior."
+  default_prompt: "Use $paperkit-patterns to review structured markup, insertion UI, feature compatibility, PencilKit integration, persistence, rendering, and undo."

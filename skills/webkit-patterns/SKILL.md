@@ -1,6 +1,6 @@
 ---
 name: webkit-patterns
-description: Use this skill for WebKit implementation and review across SwiftUI WebView/WebPage, WKWebView fallback, page state, navigation policy, external links, JavaScript evaluation, local HTML/data loading, custom URL schemes, ephemeral pages, custom user agents, web export, and embedded-web security boundaries. Do not use for OAuth/browser authentication flows, ordinary networking/cache work, broad SwiftUI layout, or web app frontend implementation.
+description: WebKit implementation and review for SwiftUI WebView/WebPage, WKWebView fallback, navigation policy, JavaScript, local HTML, custom URL schemes, and embedded-web security. Not for OAuth/browser authentication or web frontend implementation.
 ---
 
 # WebKit Patterns

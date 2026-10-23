@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $swiftpm-index to check SwiftPM custom reusable infrastructure against official Apple/swiftlang package hints, or to run manual full-index, Swift Package Collection tooling, SPI, local-candidate, and source-refresh workflows."
+  default_prompt: "Use $swiftpm-index to audit reusable SwiftPM infrastructure, discover package candidates, or validate, diff, generate and sign Package Collections; report Adopt/Wrap/Reference/Keep decisions with evidence."

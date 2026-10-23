@@ -1,6 +1,6 @@
 ---
 name: passkit-patterns
-description: Use this skill for PassKit, Apple Pay, and Wallet implementation and review across PKPaymentRequest, PKPaymentAuthorizationController, Apple Pay buttons, merchant IDs, payment capabilities, shipping/contact updates, payment token handoff, recurring/deferred/multimerchant payments, Wallet pass access, PKAddPassesViewController, PKPassLibrary, pass entitlements, pass update services, and simulator/device payment constraints. Do not use for StoreKit digital goods, pricing strategy, market commerce planning, or generic payment-provider SDK work with no PassKit behavior.
+description: PassKit implementation and review for Apple Pay checkout, PKPaymentRequest, payment authorization/token handoff, merchant IDs, and Wallet passes with PKPassLibrary. Not for StoreKit digital goods or payment-provider work without PassKit.
 ---
 
 # PassKit Patterns
@@ -24,6 +24,7 @@ handoff, Wallet passes, and pass-library access.
   `PKAddPassesViewController`.
 - Debugging Wallet entitlements, pass type IDs, payment-sheet updates, device
   constraints, or simulator limitations.
+- Reviewing Wallet pass update services and pass entitlements.
 
 ## When Not To Use
 

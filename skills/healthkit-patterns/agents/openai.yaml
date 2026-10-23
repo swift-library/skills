@@ -2,4 +2,4 @@ interface:
   display_name: "HealthKit Patterns"
   short_description: "Implement and review HealthKit data and workout flows"
   brand_color: "#FF2D55"
-  default_prompt: "Use $healthkit-patterns for HealthKit authorization, queries, background delivery, samples, units, workouts, HKWorkoutSession, and health-data privacy."
+  default_prompt: "Use $healthkit-patterns to review read/share authorization, queries, units, background delivery, workout sessions, mirroring, and health-data privacy."

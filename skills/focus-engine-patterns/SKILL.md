@@ -1,6 +1,6 @@
 ---
 name: focus-engine-patterns
-description: Use this skill for Apple platform focus management and focus movement patterns across SwiftUI, UIKit, AppKit, RealityKit, tvOS, iOS/iPadOS, watchOS, visionOS, and macOS, including Focus Engine APIs, @FocusState, focusable views, focus sections, focus guides, key view loops, Digital Crown focus, hover/focus coordination, focus restoration, styling, async focus updates, focus accessibility integration, and focus debugging. Do not use for visual design polish, general SwiftUI state/layout work, dedicated accessibility audits unrelated to UI focus, persistence, networking, package architecture, or repository documentation.
+description: Apple-platform focus implementation and debugging for @FocusState, tvOS remote navigation, focus guides, macOS key view loops, Digital Crown, hover coordination, restoration, and async updates. Not for accessibility audits unrelated to focus.
 ---
 
 # Focus Engine Patterns

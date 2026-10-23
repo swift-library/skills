@@ -1,6 +1,6 @@
 ---
 name: macos-tcc-permissions-patterns
-description: Use this skill for macOS TCC privacy permission implementation and review involving Screen Recording, Accessibility, Input Monitoring, Full Disk Access, Automation, System Settings privacy deep links, drag-to-authorize app bundles, helper app permission identity, prompt-state pitfalls, and onboarding fallback behavior. Do not use for PermissionKit child communication permissions, general SwiftUI layout, app packaging/signing, ordinary sandbox entitlements, or accessibility audits unless they are part of a macOS TCC permission flow.
+description: macOS TCC permission implementation and diagnosis for Screen Recording, Accessibility, Input Monitoring, Full Disk Access and Automation. Review System Settings links, helper identity and onboarding fallbacks. Not for accessibility audits or ordinary signing.
 ---
 
 # macOS TCC Permissions Patterns
@@ -24,6 +24,7 @@ risks for macOS apps and helpers.
   tool appears in privacy settings.
 - Positioning a permission guide near System Settings, including brittle window
   lookup or Accessibility API strategies.
+- Diagnosing prompt-state pitfalls and onboarding fallbacks in macOS TCC permission flows.
 
 ## When Not To Use
 

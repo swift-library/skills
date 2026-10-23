@@ -1,6 +1,6 @@
 ---
 name: ios-simulator
-description: Use for iOS Simulator automation and diagnostics involving xcrun simctl, device list/suggest/create/boot/shutdown/erase/delete, simulator health checks, installing or launching .app bundles, app state, deep links, screenshots, status bar overrides, clipboard setup, permissions, simulated push notifications, logs, xcodebuild simulator build/test runs, xcresult summaries, visual screenshot diffs, test evidence, project-file Core Data or SwiftData model inspection, or optional IDB accessibility-tree inspection and semantic UI actions. Do not use for Instruments .trace analysis, source-only SwiftUI/UIKit review, dedicated accessibility audits, Core Data or SwiftData schema design, networking, package architecture, or repository documentation.
+description: iOS Simulator automation with simctl, device lifecycle, app launch/deep links, screenshots, logs, permissions, push simulation and xcodebuild/xcresult diagnostics. Includes screenshot diffs and optional IDB UI actions. Not for Instruments trace analysis.
 ---
 
 # iOS Simulator

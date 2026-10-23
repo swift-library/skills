@@ -1,6 +1,6 @@
 ---
 name: pdfkit-patterns
-description: Use this skill for PDFKit implementation and review across PDFView, PDFDocument, PDFPage, PDFSelection, PDFAnnotation, navigation, search, thumbnails, forms, links, outlines, page manipulation, rendering, printing, password-protected documents, access permissions, annotation persistence, and SwiftUI wrappers. Do not use for PaperKit structured markup, PencilKit freeform drawing, generic document storage, or PDF generation unrelated to PDFKit behavior.
+description: PDFKit implementation and review for PDFView, PDFDocument, search, annotations, forms, page manipulation, rendering, printing, and password-protected PDFs. Not for PaperKit structured markup or PencilKit drawing.
 ---
 
 # PDFKit Patterns
@@ -21,6 +21,7 @@ using PDFKit.
   exporting PDF content with PDFKit.
 - Wrapping PDFKit in SwiftUI and debugging coordinator, annotation hit testing,
   page state, or persistence behavior.
+- Reviewing `PDFSelection` and `PDFAnnotation` behavior.
 
 ## When Not To Use
 

@@ -1,6 +1,6 @@
 ---
 name: foundation-urlsession-patterns
-description: Use this skill for Foundation URL Loading System and URLSession implementation and review across URLSessionConfiguration, URLRequest, HTTPURLResponse validation, async data/download/upload tasks, byte streams, background URLSession transfers, delegates, authentication challenges, cookies, caches, redirects, retries, pagination, SSE, WebSocket tasks, URLProtocol mocks, ATS, and API client shape. Do not use for Network.framework sockets/listeners/path monitoring, BackgroundTasks scheduling except background transfer handoff, certificate trust internals, or generic package architecture.
+description: Foundation URLSession implementation and review for HTTP clients, async transfers, background sessions, streaming/SSE, WebSockets, authentication, caches, URLProtocol mocks, and ATS. Not for Network.framework transports, OS task scheduling, or certificate trust internals.
 ---
 
 # Foundation URLSession Patterns
@@ -24,6 +24,7 @@ background transfer handoff.
   response validation.
 - Reviewing trust challenge handoff where `URLSession` integration is the
   issue.
+- Reviewing `URLSessionConfiguration` and authentication-challenge delegates.
 
 ## When Not To Use
 

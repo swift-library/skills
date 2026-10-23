@@ -1,6 +1,6 @@
 ---
 name: background-tasks-patterns
-description: Use this skill for BackgroundTasks implementation and review across BGTaskScheduler, BGTaskRequest, BGAppRefreshTask, BGProcessingTask, BGContinuedProcessingTask, permitted identifiers, Info.plist setup, SwiftUI backgroundTask registration, UIKit registration, scheduling heuristics, expiration handlers, setTaskCompleted, checkpointing, background URLSession handoff, background push coordination, debug launch, and OS lifecycle failures. Do not use for ordinary Swift Concurrency, URLSession-only transfer code, push payload design, or app architecture without OS background execution.
+description: BackgroundTasks implementation and debugging for BGTaskScheduler, BGAppRefreshTask, BGProcessingTask, BGContinuedProcessingTask, Info.plist registration, expiration, and completion. Not for ordinary async/await, URLSession-only transfers, or push payload design.
 ---
 
 # Background Tasks Patterns
@@ -22,6 +22,7 @@ lifecycle correctness.
   checkpointing, or foreground work that can continue briefly in the
   background.
 - Reviewing user expectations around OS scheduling and graceful stale data.
+- Reviewing UIKit registration and `setTaskCompleted` lifecycle handling.
 
 ## When Not To Use
 
@@ -37,6 +38,8 @@ lifecycle correctness.
 
 ## Inputs To Inspect
 
+- Check `BGTaskSchedulerPermittedIdentifiers` and `UIBackgroundModes`:
+  app refresh requires `fetch`; processing requires `processing`.
 - Info.plist permitted identifiers, background modes, capabilities, and target
   deployment settings.
 - Task registration, scheduling, launch handler, expiration handler,
@@ -64,6 +67,16 @@ lifecycle correctness.
 
 ## Review Rules
 
+- Register each identifier once; duplicate registration kills the app. Finish
+  registration before app launch ends, except for continued-processing tasks.
+- Pending requests are limited to one refresh and ten processing tasks;
+  submitting a request for an already queued task replaces that request.
+- On iOS/tvOS 27+, use `try await submitTaskRequest(_:)` or its completion form;
+  the older synchronous submission API is deprecated because it misses errors.
+- `BGContinuedProcessingTask` is available on iOS 26+ and must report progress
+  through `NSProgressReporting`; apparently stalled work may be expired.
+- Background GPU requests require checking `BGTaskScheduler.supportedResources`
+  and the `com.apple.developer.background-tasks.continued-processing.gpu` entitlement.
 - Do not schedule identifiers that are missing from permitted identifiers.
 - Do not register tasks too late in app lifecycle.
 - Do not assume a task runs at a requested time or runs at all.

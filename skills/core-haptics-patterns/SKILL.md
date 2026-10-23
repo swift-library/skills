@@ -1,6 +1,6 @@
 ---
 name: core-haptics-patterns
-description: 'Use this skill for Core Haptics implementation, review, debugging, and validation in Swift or Apple-platform code: CHHapticEngine, CHHapticPattern, CHHapticEvent, CHHapticPatternPlayer, CHHapticAdvancedPatternPlayer, AHAP files, haptic/audio patterns, dynamic parameters, capability checks, engine start/stop lifecycle, stoppedHandler, resetHandler, interruption recovery, real-device validation, and haptic failure diagnosis. Do not use for simple SwiftUI sensoryFeedback, ordinary UIFeedbackGenerator feedback, or accessibility-only haptic audits.'
+description: Core Haptics implementation and debugging for CHHapticEngine, AHAP files, custom audio-haptic patterns, dynamic parameters, and stop/reset recovery. Not for SwiftUI sensoryFeedback or ordinary UIFeedbackGenerator feedback.
 ---
 
 # Core Haptics Patterns
@@ -25,6 +25,8 @@ state-trigger feedback unless that UI action starts a Core Haptics pattern.
   hardware, muted playback, idle shutdown, or physical-device behavior.
 - Reviewing whether a custom haptic pattern is warranted instead of simple
   SwiftUI or UIKit feedback.
+- Reviewing `CHHapticPatternPlayer`, `CHHapticAdvancedPatternPlayer`,
+  `stoppedHandler`, and `resetHandler` recovery paths.
 
 ## When Not To Use
 

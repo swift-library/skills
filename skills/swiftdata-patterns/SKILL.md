@@ -1,6 +1,6 @@
 ---
 name: swiftdata-patterns
-description: 'Use this skill for any implementation, review, debugging, migration, or modernization change that touches SwiftData surfaces, including @Model, @Relationship, relationship append, inverse relationships, graph-root insertion, @Attribute, @Transient, #Predicate, @Query, FetchDescriptor, ModelContainer, ModelContext, context.insert, save/autosave, ModelConfiguration, ModelActor, SchemaMigrationPlan, VersionedSchema, persistent history, CloudKit sync, #Index, #Unique, inheritance, or Core Data coexistence. Also use alongside SwiftDataWritable when @Writable relationship chains raise persistence, insert, save, delete, or graph traversal questions. Do not use for Core Data-only stacks, deep SwiftUI UI design, broad Swift Concurrency migration, networking, package architecture, or repository documentation.'
+description: SwiftData implementation, debugging and migration for @Model relationships, graph-root insertion, ModelContext saves, predicates/queries, schema migration and CloudKit sync. Not for Core Data-only stacks.
 ---
 
 # SwiftData Patterns

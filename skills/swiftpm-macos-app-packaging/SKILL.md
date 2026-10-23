@@ -1,6 +1,6 @@
 ---
 name: swiftpm-macos-app-packaging
-description: 'Use this skill for SwiftPM-only macOS app packaging without an Xcode app project: scaffold a minimal app layout, package SwiftPM targets and resources into a custom .app bundle, build universal binaries, copy resource bundles and frameworks, build icons, run or verify a local app, configure menu bar LSUIElement behavior, code sign with explicit entitlements, notarize, staple, zip, or prepare a Sparkle appcast. Do not use for Xcode project packaging, iOS Simulator work, Instruments traces, SwiftUI source design, package architecture review, or repository documentation.'
+description: SwiftPM-only macOS .app scaffolding and packaging with universal binaries, resource bundles, LSUIElement, signing, notarization and Sparkle appcasts. Launch and verify packaged apps. Not for Xcode app-project packaging or SwiftUI source design.
 ---
 
 # macOS SwiftPM App Packaging
@@ -30,6 +30,7 @@ source-level follow-up outside packaging scope.
 - Creating a stable local development signing identity for repeatable
   packaging checks.
 - Preparing optional Sparkle appcast metadata from an already packaged app.
+- Building app icons or checking explicit signing entitlements, stapling, and ZIP output for the packaged app.
 
 ## When Not To Use
 

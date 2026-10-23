@@ -1,6 +1,6 @@
 ---
 name: contacts-patterns
-description: Use this skill for Contacts and ContactsUI implementation and review across CNContactStore authorization, limited contact access, ContactAccessButton, CNContactPickerViewController, contact fetching, key descriptors, CNContact/CNMutableContact, CNSaveRequest, groups, containers, vCard import/export, change history, contact notes entitlement boundaries, and SwiftUI picker wrappers. Do not use for generic address-book data models, interface copy only, account sync backends, or privacy text with no Contacts framework behavior.
+description: Contacts and ContactsUI implementation and review for CNContactStore authorization, limited access, ContactAccessButton, contact pickers, mutations, vCards, and change history. Includes notes entitlement and partial-contact failures.
 ---
 
 # Contacts Patterns
@@ -22,6 +22,8 @@ inside Apple-platform apps.
   contacts.
 - Working with key descriptors, partial-contact failures, vCards, change
   history, notes entitlement boundaries, or contact database change handling.
+- Working with `CNContact`, `CNMutableContact`, `CNSaveRequest`, groups, and
+  containers.
 
 ## When Not To Use
 

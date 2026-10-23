@@ -1,6 +1,6 @@
 ---
 name: pencilkit-patterns
-description: Use this skill for PencilKit implementation and review across PKCanvasView, PKDrawing, PKToolPicker, inking/eraser/lasso tools, custom tool picker items, accessory items, Apple Pencil hover/squeeze/roll interactions, drawing policies, stroke inspection, serialization, image export, thumbnails, undo/redo, SwiftUI wrappers, and device testing. Do not use for PaperKit structured markup, PDFKit document semantics, generic vector drawing, or visual design polish alone.
+description: PencilKit drawing implementation for PKCanvasView, PKDrawing, PKToolPicker, custom tools, Pencil hover/squeeze/roll, serialization, undo/redo, and SwiftUI wrappers. Not for PaperKit structured markup or PDFKit document semantics.
 ---
 
 # PencilKit Patterns

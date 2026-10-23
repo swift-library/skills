@@ -1,6 +1,6 @@
 ---
 name: weatherkit-patterns
-description: Use this skill for WeatherKit implementation and review across WeatherService, current weather, hourly/daily/minute forecasts, weather alerts, historical weather, WeatherAvailability, WeatherAttribution, Apple Weather attribution display, location-backed weather, forecast caching, rate/availability handling, REST versus Swift API boundaries, and weather dashboard validation. Do not use for generic networking, non-WeatherKit providers, Core Location-only behavior, or visual chart styling with no WeatherKit data issue.
+description: WeatherKit implementation and review for WeatherService forecasts, alerts, historical data, WeatherAvailability, attribution, caching, and Swift/REST boundaries. Not for Core Location-only behavior or chart styling without a weather-data issue.
 ---
 
 # WeatherKit Patterns
@@ -21,6 +21,7 @@ fetch, cache, display, attribute, and validate Apple Weather data.
   weather alert detail links.
 - Designing weather-specific caching, request grouping, failure states, or REST
   versus Swift API boundaries.
+- Reviewing rate limits and weather dashboard validation.
 
 ## When Not To Use
 

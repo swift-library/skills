@@ -35,7 +35,7 @@ SCENARIOS = {
     "Claude 200k context": (8_000, "swift-skills:"),
     "Codex max_context_tokens=10000": (40_000, ""),
 }
-ENFORCED_SCENARIOS = frozenset()
+ENFORCED_SCENARIOS = frozenset({"Claude 1M context", "Codex max_context_tokens=10000"})
 
 
 @dataclass(frozen=True)

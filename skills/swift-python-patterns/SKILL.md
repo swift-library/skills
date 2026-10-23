@@ -1,6 +1,6 @@
 ---
 name: swift-python-patterns
-description: Use this skill when changing, reviewing, refactoring, testing, or debugging a Swift PythonKit-style bridge package such as swift-python, the `Python` module/product, `PythonObject`, `PythonConvertible`, `ConvertibleFromPython`, `PythonLibrary`, dynamic Python library loading, `PYTHON_VERSION`, `PYTHON_LIBRARY`, `PYTHON_LOADER_LOGGING`, Swift-callable Python functions/classes, numpy array conversion, or runtime Python bridge failures. Do not use for ordinary Python application code, Python package management, or unrelated app business logic.
+description: swift-python/PythonKit bridge implementation and debugging for PythonObject conversions, Swift-callable Python functions/classes, numpy arrays and PythonLibrary dynamic loading. Diagnose PYTHON_LIBRARY selection failures. Not for ordinary Python apps.
 ---
 
 # Swift Python Patterns
@@ -23,6 +23,7 @@ objects/functions for Swift callers.
 - Reviewing Swift callbacks exposed to Python through `PythonFunction`,
   `PythonInstanceMethod`, or `PythonClass`.
 - Debugging numpy array conversion helpers.
+- Working with the `Python` module/product, `PythonConvertible`, `ConvertibleFromPython`, or runtime selection/diagnostics through `PYTHON_VERSION`, `PYTHON_LIBRARY`, and `PYTHON_LOADER_LOGGING`.
 
 ## When Not To Use
 

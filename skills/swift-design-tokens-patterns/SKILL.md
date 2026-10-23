@@ -1,6 +1,6 @@
 ---
 name: swift-design-tokens-patterns
-description: Use this skill when changing, reviewing, refactoring, testing, or debugging the swift-design-tokens package, `SwiftDesignTokens` library, `TokenTool` executable, `TokensPlugin` command plugin, DTCG-style token JSON parsing, canonical token config handling, alias/mode resolution, Colors.xcassets generation, Swift token constant generation, resolved JSON export, or design-token compiler validation. Do not use for app-specific visual styling, design-system consumption APIs, Figma design review, or generic SwiftPM architecture unless the token compiler/package surface is the concrete issue.
+description: swift-design-tokens compiler implementation and debugging for DTCG token JSON, alias/mode resolution, Colors.xcassets, Swift constants and resolved JSON. Covers SwiftDesignTokens, TokenTool and TokensPlugin. Not for app styling or design-system consumption.
 ---
 
 # Swift Design Tokens Patterns
@@ -23,6 +23,7 @@ JSON.
 - Reviewing CLI or SwiftPM command plugin behavior around `generate-tokens`.
 - Validating compiler behavior for DTCG token types and unsupported-token
   handling.
+- Reviewing canonical token configuration handling and its compiler outputs.
 
 ## When Not To Use
 

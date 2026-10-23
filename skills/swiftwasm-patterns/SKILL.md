@@ -1,6 +1,6 @@
 ---
 name: swiftwasm-patterns
-description: Use this skill for Swift SDKs for WebAssembly, Swift-on-Wasm, WASI build and porting work, `swift sdk install/list`, `swift build --swift-sdk ..._wasm`, `#if os(WASI)`, Wasm compatibility audits, Embedded Swift Wasm builds, WasmKit or other Wasm runtime validation, and SourceKit-LSP Swift SDK configuration. Do not use for ordinary Apple-platform Swift, raw JavaScriptKit `JSObject`/`JSValue` interop, BridgeJS typed Swift-JavaScript code generation, WebKit/Safari extension JavaScript, or community SwiftUI-on-web renderers unless the task is explicitly about their Wasm build boundary.
+description: Swift WebAssembly/WASI builds and porting with Swift SDK installation, swift build --swift-sdk, conditional compilation and compatibility audits. Validate runtimes, Embedded Swift and SourceKit-LSP setup. Not for JavaScriptKit interop or BridgeJS codegen.
 ---
 
 # SwiftWasm Patterns

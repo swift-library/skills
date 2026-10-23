@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $focus-engine-patterns to review Apple platform focus behavior."
+  default_prompt: "Use $focus-engine-patterns to implement or debug Apple-platform focus movement, @FocusState, remote and keyboard navigation, key view loops, Digital Crown, hover, restoration, and async updates."

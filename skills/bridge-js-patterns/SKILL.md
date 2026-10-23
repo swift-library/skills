@@ -1,6 +1,6 @@
 ---
 name: bridge-js-patterns
-description: Use this skill for BridgeJS typed Swift-JavaScript interoperability in JavaScriptKit projects, including `@JS`, `@JSFunction`, `@JSClass`, `@JSGetter`, `@JSSetter`, `JSTypedClosure`, `throws(JSException)`, `bridge-js.d.ts`, `bridge-js.config.json`, generated `BridgeJS.swift`, `BridgeJS.Macros.swift`, `JavaScript/BridgeJS.json`, `bridge-js.js`, `.d.ts` output, PackageToJS integration, and `swift package plugin bridge-js`. Do not use for raw JavaScriptKit `JSObject`/`JSValue` calls, generic Swift Wasm porting, or native WebKit/Safari extension JavaScript.
+description: BridgeJS typed Swift/JavaScript interop and codegen using @JS macros, bridge-js.d.ts, bridge-js.config.json, generated BridgeJS.swift and PackageToJS. Debug type mapping and generated glue. Not for raw JSObject/JSValue calls or generic Wasm porting.
 ---
 
 # BridgeJS Patterns
@@ -24,6 +24,7 @@ Swift-TypeScript boundaries.
   generated files.
 - Debugging BridgeJS type mapping, closure bridging, `throws(JSException)`,
   unsupported declarations, plugin output, or PackageToJS integration.
+- Reviewing `JSTypedClosure` bridging or running `swift package plugin bridge-js`.
 
 ## When Not To Use
 

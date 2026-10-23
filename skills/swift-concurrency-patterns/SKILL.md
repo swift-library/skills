@@ -1,9 +1,15 @@
 ---
 name: swift-concurrency-patterns
-description: Diagnose and review Swift Concurrency problems with project-compatible patterns. Use when work involves Swift Concurrency, async/await, actors, tasks, task groups, AsyncSequence, AsyncStream, AsyncAlgorithms, @MainActor, Sendable, actor isolation, data races, strict concurrency, Swift 6 migration, SwiftUI concurrency diagnostics, Core Data concurrency, async testing, concurrency performance, concurrency bug hunts, or concurrency-related SwiftLint diagnostics such as async_without_await. Do not use for broad SwiftUI, SwiftData schema, Core Data schema, package architecture, dependency replacement, or repository documentation work unless the concrete issue is concurrency-specific.
+description: Swift Concurrency diagnosis, review and Swift 6 migration for async/await, actors, tasks, Sendable, isolation and data races. Covers AsyncSequence and SwiftUI/Core Data concurrency issues. Not for persistence schemas or general UI design.
 ---
 
 # Swift Concurrency Patterns
+
+## When To Use
+
+- Diagnosing async/await, tasks/task groups, `@MainActor`, `Sendable`, actor isolation, data races, or strict concurrency and Swift 6 migration.
+- Reviewing `AsyncSequence`, `AsyncStream`, AsyncAlgorithms, SwiftUI/Core Data concurrency, async testing, performance, or concurrency bug hunts.
+- Investigating concurrency-related SwiftLint diagnostics such as `async_without_await`.
 
 ## Progressive Disclosure
 

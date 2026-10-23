@@ -1,6 +1,6 @@
 ---
 name: core-data-patterns
-description: Use this skill for Core Data implementation, review, debugging, or modernization involving NSPersistentContainer, NSPersistentCloudKitContainer, NSManagedObjectContext, NSManagedObject, NSManagedObjectID, NSFetchRequest, NSFetchedResultsController, merge policies, saves, batch insert/delete/update, persistent history tracking, model constraints, validation, schema migration, CloudKit sync, Core Data performance, in-memory stores, or errors such as NSPersistentStoreIncompatibleVersionHashError, NSMergeConflict, cross-context object access, and failed unique NSEntityDescription matches. Do not use for SwiftData, generic database design, networking, package architecture, repository documentation, or non-Core-Data Swift Concurrency migration.
+description: Core Data implementation and diagnosis for NSPersistentContainer, managed-object contexts, fetches, saves, merge conflicts, batch operations, migrations, persistent history and CloudKit sync. Investigate confinement and store-version errors. Not for SwiftData.
 ---
 
 # Core Data Patterns
@@ -23,6 +23,7 @@ triage, and small implementation recommendations.
 - Investigating Core Data errors such as
   `NSPersistentStoreIncompatibleVersionHashError`, `NSMergeConflict`, failed
   unique `NSEntityDescription` matches, or cross-context object access.
+- Inspecting `NSManagedObjectContext`, `NSManagedObject`, `NSManagedObjectID`, `NSFetchRequest`, `NSFetchedResultsController`, or in-memory test stores.
 
 ## When Not To Use
 

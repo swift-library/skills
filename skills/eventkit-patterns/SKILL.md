@@ -1,6 +1,6 @@
 ---
 name: eventkit-patterns
-description: Use this skill for EventKit and EventKitUI implementation and review across EKEventStore, calendar and reminder authorization, full versus write-only calendar access, usage-description keys, event/reminder CRUD, predicates, recurrence rules, alarms, writable calendar selection, EKEventStoreChanged, EventKitUI editors/viewers, and SwiftUI wrappers. Do not use for generic scheduling models, notification delivery, interface copy only, or calendar server backends with no EventKit behavior.
+description: EventKit and EventKitUI implementation for EKEventStore, full/write-only calendar access, reminder CRUD, recurrence and alarms, writable calendars, and editors. Not for notification delivery or calendar server backends.
 ---
 
 # EventKit Patterns
@@ -20,6 +20,7 @@ features that use EventKit and EventKitUI inside Apple-platform apps.
   writable-calendar filtering, batching, or database-change notifications.
 - Wrapping `EKEventViewController`, `EKEventEditViewController`, or
   `EKCalendarChooser` in SwiftUI.
+- Reviewing usage-description keys, fetch predicates, and `EKEventStoreChanged`.
 
 ## When Not To Use
 

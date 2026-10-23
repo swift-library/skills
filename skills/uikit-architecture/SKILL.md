@@ -1,6 +1,6 @@
 ---
 name: uikit-architecture
-description: Use this skill for UIKit app, feature, or module architecture selection, review, refactoring, or scaffolding involving MVC-to-MVP/MVVM/VIPER migration, Presenter/ViewModel/Interactor boundaries, Coordinator or Router navigation, Clean Architecture adapters, Combine/RxSwift presentation pipelines, UIViewController responsibility cleanup, dependency injection, async cancellation, testability, or UIKit and SwiftUI interop ownership. Do not use for SwiftUI-only architecture, SwiftUI view implementation, visual design, accessibility audits, local Swift Package architecture review, persistence schema work, or deep Swift Concurrency diagnostics.
+description: UIKit feature architecture selection, review, and migration from MVC to MVP, MVVM, or VIPER, with UIViewController cleanup, Coordinators, dependency injection, and SwiftUI interop ownership. Not for SwiftUI-only architecture or visual polish.
 ---
 
 # UIKit Architecture
@@ -24,6 +24,7 @@ Architecture adapters, and reactive presentation pipelines.
   strategy.
 - Deciding ownership in UIKit apps that host SwiftUI screens or migrate feature
   by feature.
+- Scaffolding UIKit modules with Combine/RxSwift presentation pipelines.
 
 ## When Not To Use
 

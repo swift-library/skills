@@ -1,6 +1,6 @@
 ---
 name: app-clips-patterns
-description: Use this skill for App Clips implementation and review across App Clip target setup, invocation URLs, associated domains, app-to-clip code sharing, App Clip experiences, location confirmation, shared data handoff, full-app promotion, local testing, and full-app parity. Do not use for App Store metadata operations alone, release signing alone, general SwiftUI architecture, or ordinary deep-link handling with no App Clip target.
+description: App Clips implementation and review for target setup, invocation URLs, associated domains, shared code/data handoff, location confirmation, full-app promotion, and local testing. Not for ordinary deep links without an App Clip target.
 ---
 
 # App Clips Patterns
@@ -21,6 +21,7 @@ hand off cleanly to the installed app.
 - Implementing location confirmation, full-app promotion, App Clip links, or
   local App Clip testing.
 - Debugging size, capability, invocation, entitlement, or handoff failures.
+- Checking full-app parity for App Clip experiences and handoff behavior.
 
 ## When Not To Use
 

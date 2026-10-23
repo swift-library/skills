@@ -1,6 +1,6 @@
 ---
 name: natural-language-patterns
-description: Use this skill for Natural Language and Translation framework implementation and review across NLTokenizer, NLLanguageRecognizer, NLTagger, NLEmbedding, NLContextualEmbedding, NLModel, gazetteers, language constraints, token options, asset requests, translationPresentation, translationTask, TranslationSession, LanguageAvailability, batch translation, replacement actions, and deterministic text-analysis pipelines. Do not use for Foundation Models generation, Speech transcription, Core ML internals, server translation APIs, or interface copywriting.
+description: Natural Language and Translation implementation for NLTokenizer, NLTagger, language detection, embeddings, TranslationSession, translationTask, and batch translation. Not for Foundation Models generation or Speech transcription.
 ---
 
 # Natural Language Patterns
@@ -22,6 +22,8 @@ metadata, embeddings, custom natural-language models, and in-app translation.
   `TranslationSession`, `translationTask`, or `LanguageAvailability`.
 - Reviewing asset downloads, locale/language availability, deterministic text
   fixtures, threading, and pipeline boundaries.
+- Reviewing token options, asset requests, `translationPresentation`, batch
+  translation, and replacement actions.
 
 ## When Not To Use
 

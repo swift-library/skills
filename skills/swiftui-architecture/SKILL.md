@@ -1,6 +1,6 @@
 ---
 name: swiftui-architecture
-description: Use this skill for SwiftUI app or feature architecture selection, review, refactoring, or scaffolding involving MVVM, MVI, whether to adopt TCA, Clean Architecture presentation layers, SwiftUI Coordinator patterns, NavigationStack flow state, dependency injection, effect boundaries, async cancellation, testable feature boundaries, or migration from ad hoc SwiftUI state to a named architecture. Do not use for detailed Point-Free ComposableArchitecture work after TCA is already used or explicitly accepted, SwiftUI view layout, controls, animation, visual design, accessibility audits, package architecture, UIKit-only module architecture, SwiftData/Core Data persistence, or deep Swift Concurrency diagnostics.
+description: SwiftUI app and feature architecture selection, review, and scaffolding with MVVM, MVI, TCA fit checks, Clean Architecture, Coordinators, and testable effect boundaries. Not for detailed TCA implementation or ordinary view layout.
 ---
 
 # SwiftUI Architecture
@@ -26,6 +26,7 @@ out of scope.
   cancellation, and testing strategy.
 - Migrating a SwiftUI feature incrementally toward an existing local
   architecture.
+- Designing `NavigationStack` flow state and Coordinator ownership.
 
 ## When Not To Use
 

@@ -2,4 +2,4 @@ interface:
   display_name: "WebKit Patterns"
   short_description: "Implement and review embedded WebKit surfaces"
   brand_color: "#007AFF"
-  default_prompt: "Use $webkit-patterns for SwiftUI WebView/WebPage, WKWebView, navigation policy, JavaScript, local content, custom schemes, and embedded-web boundaries."
+  default_prompt: "Use $webkit-patterns to implement or review embedded WebKit content with WebView/WebPage or WKWebView, navigation policy, JavaScript, local content, custom schemes, and security boundaries."

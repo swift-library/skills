@@ -1,6 +1,6 @@
 ---
 name: cryptotokenkit-patterns
-description: Use this skill for CryptoTokenKit implementation and review across TKToken, TKTokenDriver, TKTokenSession, TKTokenWatcher, TKSmartCard, TKSmartCardToken, TKSmartCardTokenDriver, smart card app extensions, token keychain contents, certificate/key exposure, PIN/authentication state, APDU exchange, TLV records, managed smart card authentication, and token errors. Do not use for Keychain storage without hardware tokens, CryptoKit algorithms, certificate trust policy, Passkeys, or generic authentication UI.
+description: CryptoTokenKit hardware-token and smart-card implementation with TKToken, TKTokenSession, TKSmartCard, APDUs, token keychain exposure and PIN state. Debug drivers, extensions and sessions. Not for ordinary Keychain storage, passkeys or certificate trust policy.
 ---
 
 # CryptoTokenKit Patterns
@@ -21,6 +21,7 @@ authentication.
   creation, certificate/key exposure, and managed smart card preferences.
 - Reviewing hardware-token integration boundaries with Keychain and
   certificate trust.
+- Diagnosing token errors and authentication-state failures.
 
 ## When Not To Use
 

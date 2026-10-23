@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $certificate-trust-patterns to review or implement certificate trust, pinning, URLSession trust challenges, client certificates, and mTLS code."
+  default_prompt: "Use $certificate-trust-patterns to implement or review SecTrust evaluation, URLSession challenges, certificate/SPKI pinning, client certificates, mTLS, deprecated-API migration and rotation."

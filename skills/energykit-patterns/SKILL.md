@@ -1,6 +1,6 @@
 ---
 name: energykit-patterns
-description: Use this skill for EnergyKit implementation and review across electricity guidance, cleaner energy periods, utility-rate-aware guidance, venues, EV charger and HVAC load event sessions, suggested actions, guidance tokens, unsupported regions, dashboards, insights, and entitlement-gated residential energy workflows. Do not use for HomeKit accessory control, generic energy marketing claims, or commercial/industrial energy systems.
+description: EnergyKit implementation and review for residential electricity guidance, cleaner-energy and utility-rate context, venues, EV/HVAC load events, guidance tokens, and unsupported regions. Not for HomeKit accessory control or commercial/industrial energy systems.
 ---
 
 # EnergyKit Patterns
@@ -53,6 +53,18 @@ event reporting.
 
 ## Review Rules
 
+- `ElectricityGuidance` is available on iOS/macOS 26+, not watchOS/tvOS/visionOS;
+  `EnergyVenue.venues()` requires iOS/macOS 26.1+.
+- Iterate `ElectricityGuidance.sharedService.guidance(using:at:)` as a throwing
+  async sequence; pass an `ElectricityGuidance.Query` and venue UUID.
+- Query actions are `.shift` or `.reduce`; guidance values pair `DateInterval`
+  with a `Double` rating, and the response carries a UUID `guidanceToken`.
+- Keep `.locationHasRatePlan` and `.guidanceIncorporatesRatePlan` distinct
+  when interpreting the guidance response's `options` set.
+- Submit typed load events with `EnergyVenue.submitEvents(_:)`; EV/HVAC sessions
+  carry `.begin`, `.active`, or `.end` plus `wasFollowingGuidance` and a token.
+- On iOS/macOS 27+, use `init(timestamp:measurement:session:device:)` with
+  `ElectricalLoadDevice`; EV/HVAC `deviceID:` initializers are deprecated there.
 - Do not issue device-control advice from EnergyKit alone.
 - Do not treat guidance as a guarantee of cost, carbon, or grid outcome.
 - Do not assume support outside documented residential EV/HVAC-style use cases.

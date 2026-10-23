@@ -1,6 +1,6 @@
 ---
 name: tipkit-patterns
-description: Use this skill for TipKit implementation and review across Tips.configure, Tip definitions, TipView, popoverTip, TipUIView, TipNSView, TipGroup, Rule, Parameter, Event, display frequency, datastore location, CloudKit tip sync, tip actions, custom TipViewStyle, invalidation, eligibility reset, testing helpers, and onboarding/discovery boundaries. Do not use for generic onboarding copy, marketing prompts, ordinary SwiftUI layout, or interface wording unless TipKit behavior is in scope.
+description: TipKit implementation and review for Tips.configure, TipView/popoverTip, TipGroup, eligibility rules, Parameter/Event, CloudKit tip sync, invalidation, and testing. Not for onboarding copy or interface wording alone.
 ---
 
 # TipKit Patterns

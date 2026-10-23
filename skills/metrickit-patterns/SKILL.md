@@ -1,6 +1,6 @@
 ---
 name: metrickit-patterns
-description: Use this skill for MetricKit implementation and review across MXMetricManager, MXMetricManagerSubscriber, MXMetricPayload, MXDiagnosticPayload, app launch/runtime/CPU/memory/responsiveness/network/cellular/app-exit metrics, crash/hang/CPU/disk diagnostics, MXCallStackTree, custom MXSignpostMetric payloads, JSON export, payload persistence, backend upload, Xcode Organizer correlation, privacy redaction, and delayed telemetry expectations. Do not use for xctrace/Instruments trace recording, source-only performance refactoring, or analytics event design unless MetricKit payload handling is in scope.
+description: MetricKit telemetry implementation and review for MXMetricManager, metric/diagnostic payloads, crash and hang reports, signposts, JSON export, and delayed delivery. Not for Instruments trace recording or source-only performance refactoring.
 ---
 
 # MetricKit Patterns
@@ -22,6 +22,8 @@ of scope.
 - Persisting payloads, exporting JSON, uploading to a backend, or correlating
   with Xcode Organizer.
 - Designing redaction and sampling policies for performance diagnostics.
+- Inspecting `MXMetricManagerSubscriber`, `MXCallStackTree`,
+  `MXSignpostMetric`, and delayed telemetry delivery.
 
 ## When Not To Use
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "SwiftPM GitHub Release"
   short_description: "Dry-run SwiftPM GitHub release readiness"
-  default_prompt: "Use $swiftpm-github-release to audit this SwiftPM repository before a GitHub release and list blockers, warnings, passed checks, and next safe commands."
+  default_prompt: "Use $swiftpm-github-release to audit SwiftPM package or CLI release readiness, verify pre-tag/version/CI checks, and report blockers, passed checks and exact next commands without performing live publication."

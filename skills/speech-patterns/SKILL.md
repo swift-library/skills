@@ -1,6 +1,6 @@
 ---
 name: speech-patterns
-description: Use this skill for Speech framework implementation and review across speech authorization, microphone permission, NSSpeechRecognitionUsageDescription, NSMicrophoneUsageDescription, SpeechAnalyzer, SpeechTranscriber, AssetInventory, AnalyzerInput streams, SFSpeechRecognizer, SFSpeechAudioBufferRecognitionRequest, SFSpeechURLRecognitionRequest, AVAudioEngine taps, live transcription, file transcription, on-device/server recognition decisions, partial/final results, cancellation, and recognition cleanup. Do not use for Natural Language post-processing alone, AVKit playback, server transcription APIs, or generic permission copy.
+description: Speech transcription implementation for SpeechAnalyzer, SpeechTranscriber, AssetInventory, live/file input, and SFSpeechRecognizer maintenance. Includes permissions, partial results, on-device/server choice, and cleanup. Not for Natural Language-only analysis.
 ---
 
 # Speech Patterns
@@ -23,6 +23,8 @@ coordinating microphone/audio pipeline state.
   delegates, and recognition task lifecycle.
 - Debugging `AVAudioEngine` taps, audio session category, on-device versus
   server recognition, cancellation, cleanup, and unavailable locales.
+- Checking `NSSpeechRecognitionUsageDescription`, `NSMicrophoneUsageDescription`,
+  `SFSpeechAudioBufferRecognitionRequest`, and `SFSpeechURLRecognitionRequest`.
 
 ## When Not To Use
 

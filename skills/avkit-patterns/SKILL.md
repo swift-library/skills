@@ -1,6 +1,6 @@
 ---
 name: avkit-patterns
-description: Use this skill for AVKit and AVFoundation playback implementation and review across AVPlayer, AVPlayerViewController, SwiftUI VideoPlayer, Picture in Picture, AirPlay, subtitles, playback controls, player observation, HLS buffering, audio session/background playback, Now Playing, lifecycle cleanup, and playback error handling. Do not use for photo picking/capture, MusicKit catalog playback, generic audio DSP, or visual design polish.
+description: AVKit and AVFoundation playback implementation and debugging with AVPlayer, AVPlayerViewController, VideoPlayer, Picture in Picture, AirPlay, and HLS buffering. Not for MusicKit catalog playback or photo capture.
 ---
 
 # AVKit Patterns

@@ -1,6 +1,6 @@
 ---
 name: network-framework-patterns
-description: Use this skill for Network.framework implementation and review across NWConnection, NWListener, NWBrowser, NWPathMonitor, NWParameters, NWEndpoint, NWProtocolTCP/UDP/TLS/WebSocket/QUIC options, local network privacy, Bonjour browsing, peer-to-peer protocols, connection state machines, backpressure, receive loops, TLS parameters, and path-aware networking. Do not use for ordinary HTTP API clients, URLSession transfers, App Transport Security-only review, or generic package architecture.
+description: Network.framework implementation and debugging for NWConnection, NWListener, NWBrowser, NWPathMonitor, TCP/UDP/TLS/WebSocket/QUIC, Bonjour, local network privacy, and backpressure. Not for HTTP API clients, URLSession transfers, or ATS-only review.
 ---
 
 # Network Framework Patterns

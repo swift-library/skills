@@ -1,6 +1,6 @@
 ---
 name: devicecheck-patterns
-description: Use this skill for DeviceCheck and App Attest implementation and review across DCDevice support checks, device token generation, two server-side bits, DCAppAttestService, App Attest key generation, attestation, assertions, nonce/challenge handling, server verification, environment entitlement, DCError handling, rollout strategy, invalidated keys, retry policy, fraud-risk signals, and graceful unsupported states. Do not use for Keychain storage, CryptoKit primitive selection, certificate trust, authentication UI, or generic security review without DeviceCheck/App Attest.
+description: DeviceCheck and App Attest implementation for DCDevice tokens, two-bit server state, DCAppAttestService attestation/assertions, challenges and server verification. Diagnose DCError, invalidated keys and unsupported devices. Not for login UI or Keychain storage.
 ---
 
 # DeviceCheck Patterns

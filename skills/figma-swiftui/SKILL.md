@@ -1,6 +1,6 @@
 ---
 name: figma-swiftui
-description: Use this skill when converting Figma URLs, nodes, selected Figma desktop nodes, screenshots, source briefs, design tokens, variants, or assets into production SwiftUI for iOS, iPadOS, macOS, watchOS, tvOS, or visionOS using Figma MCP context. Covers Figma-to-SwiftUI visual fidelity, Auto Layout to SwiftUI layout, Asset Catalog export, responsive device frames, component variants, existing-screen adaptation audits, and project-aware native SwiftUI implementation. Do not use for web, React, Tailwind implementation, generic Figma MCP setup alone, UIKit-only implementation, SwiftUI architecture choice, or visual design critique without Figma implementation.
+description: Figma-to-SwiftUI implementation from nodes, screenshots, tokens, variants, and assets using Figma MCP, with Auto Layout translation, Asset Catalog export, and visual fidelity. Not for web or UIKit-only output, MCP setup alone, or design critique alone.
 ---
 
 # Figma SwiftUI
@@ -40,6 +40,8 @@ SwiftUI-specific translation layer.
   and prototype transition intent into native SwiftUI.
 - Combining a source brief/ticket with Figma visuals for implementation scope,
   behavior, states, and actions.
+- Using Figma URLs, selected desktop nodes, screenshots, and MCP context for
+  project-aware iOS, iPadOS, macOS, watchOS, tvOS, or visionOS implementation.
 
 ## Do Not Use When
 

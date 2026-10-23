@@ -1,6 +1,6 @@
 ---
 name: widgetkit-design
-description: Use this skill for WidgetKit widget visual design, native widget layout, lock screen and home screen widget polish, widget family adaptation, Gauge usage, containerBackground, widget typography, semantic colors, internal padding, cross-family hierarchy, dense widget rendering, timeline refresh cadence when it affects visual freshness, or app/widget visual consistency. Do not use for general SwiftUI app design, WidgetKit provider architecture unrelated to design, AppIntent configuration, reload plumbing, persistence, networking, Swift Charts, or package architecture.
+description: WidgetKit visual design and polish for Lock Screen and Home Screen families, Gauge, containerBackground, typography, padding, dense layouts, and cross-family hierarchy. Not for provider architecture, AppIntent configuration, or reload plumbing.
 ---
 
 # WidgetKit Design
@@ -21,6 +21,8 @@ families.
   families, too dense, or visually disconnected from the app.
 - Reviewing timeline refresh cadence when stale data or excessive refreshes
   affect the visible widget experience.
+- Tuning `containerBackground`, typography, semantic colors, internal padding,
+  and cross-family hierarchy for dense widgets and app/widget consistency.
 
 ## When Not To Use
 

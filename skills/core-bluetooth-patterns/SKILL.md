@@ -1,6 +1,6 @@
 ---
 name: core-bluetooth-patterns
-description: Use this skill for Core Bluetooth implementation and review across CBCentralManager, CBPeripheral, CBPeripheralDelegate, CBPeripheralManager, CBMutableService, CBCharacteristic, CBDescriptor, CBUUID, BLE scanning, connection, service/characteristic discovery, read/write/notify flows, GATT modeling, advertising, L2CAP channels, background modes, state restoration, NSBluetoothAlwaysUsageDescription, and Bluetooth Classic support. Do not use for AccessorySetupKit picker setup, AudioAccessoryKit automatic audio switching, Core NFC, or generic networking.
+description: Core Bluetooth implementation and debugging for CBCentralManager, BLE central/peripheral roles, GATT read/write/notify, L2CAP, background modes, and state restoration. Not for AccessorySetupKit pickers or AudioAccessoryKit switching.
 ---
 
 # Core Bluetooth Patterns
@@ -21,6 +21,8 @@ Bluetooth runtime state.
   restoration, background modes, permissions, or platform support.
 - Reviewing Bluetooth Classic usage through Core Bluetooth when that API is in
   scope.
+- Reviewing `CBPeripheralDelegate`, `CBMutableService`, `CBCharacteristic`,
+  `CBDescriptor`, `CBUUID`, and `NSBluetoothAlwaysUsageDescription`.
 
 ## When Not To Use
 

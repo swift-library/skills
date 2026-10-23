@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $swiftpm-macos-app-packaging to scaffold, package, sign, notarize, launch, or verify a SwiftPM-only macOS .app bundle."
+  default_prompt: "Use $swiftpm-macos-app-packaging to scaffold, package, sign, notarize, launch or verify a SwiftPM-only macOS .app, including universal binaries, resources, LSUIElement and optional Sparkle appcasts."

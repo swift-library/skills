@@ -1,6 +1,6 @@
 ---
 name: swiftpm-index
-description: "Audit SwiftPM package code when implementation or review may duplicate official Apple/swiftlang or established package infrastructure: CLI parsing, Package Collections, sequence or async algorithms, process execution, Markdown or Swift source tooling, DocC/testing/system wrappers, logging/metrics/tracing, HTTP, OpenAPI, protobuf, crypto, certificates, or ASN.1. Use for full SwiftPM Index audits, Package Collection validation/diff/generation/signing, SPI discovery, source refresh, and Adopt/Wrap/Reference/Keep decisions. Do not use for ordinary feature work, registry publishing, treating collections as dependency URL aliases, GitHub popularity ranking, Apple SDK catalogs, automatic migrations, code rewrites, or non-Swift package discovery."
+description: SwiftPM infrastructure audits and package discovery for Adopt/Wrap/Reference/Keep decisions. Validate, diff, generate or sign Package Collections; inspect SPI candidates and refresh sources. Not for registry publishing or automatic dependency migration.
 ---
 
 # SwiftPM Index
@@ -75,6 +75,7 @@ Read task-specific rules and CLI docs only as needed.
 - Produce Adopt / Wrap / Reference / Keep custom recommendations.
 - Review or document the source-acquisition CLI contract for official and SPI
   package indexes.
+- Checking reusable CLI parsing, sequence/async algorithms, process execution, Markdown/Swift source tooling, DocC/testing/system wrappers, logging/metrics/tracing, HTTP/OpenAPI/protobuf, or crypto/certificate/ASN.1 infrastructure.
 
 ## When Not To Use
 

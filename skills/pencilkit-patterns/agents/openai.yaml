@@ -2,4 +2,4 @@ interface:
   display_name: "PencilKit Patterns"
   short_description: "Implement and review PencilKit drawing workflows"
   brand_color: "#5E5CE6"
-  default_prompt: "Use $pencilkit-patterns for PKCanvasView, PKDrawing, PKToolPicker, Apple Pencil interactions, drawing persistence, export, and SwiftUI PencilKit wrappers."
+  default_prompt: "Use $pencilkit-patterns to review canvas/tool ownership, Pencil interactions, drawing policies, persistence, export, undo/redo, and device tests."

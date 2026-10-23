@@ -1,6 +1,6 @@
 ---
 name: accessorysetupkit-patterns
-description: Use this skill for AccessorySetupKit implementation and review across ASAccessorySession, ASAccessory, ASDiscoveryDescriptor, ASPickerDisplayItem, ASPickerDisplaySettings, picker discovery, Bluetooth and Wi-Fi accessory setup, NSAccessorySetupKitSupports, event handling, authorization update/finish/fail flows, renaming/removing accessories, Bluetooth HID support options, and bridging to Core Bluetooth or Wi-Fi connection code. Do not use for generic Core Bluetooth scanning, HomeKit/Matter setup, AudioAccessoryKit state after pairing, or broad hardware strategy.
+description: AccessorySetupKit setup and review for ASAccessorySession, picker discovery, Bluetooth/Wi-Fi authorization, and NSAccessorySetupKitSupports. Not for ongoing Core Bluetooth communication, HomeKit/Matter setup, or audio switching.
 ---
 
 # AccessorySetupKit Patterns
@@ -20,6 +20,7 @@ Bluetooth or Wi-Fi connection code.
   authorization finish/fail/update flows.
 - Bridging selected accessories to Core Bluetooth or Wi-Fi connection code.
 - Debugging Bluetooth HID support options or accessory setup availability.
+- Inspecting `ASAccessory` state and `ASPickerDisplaySettings` configuration.
 
 ## When Not To Use
 

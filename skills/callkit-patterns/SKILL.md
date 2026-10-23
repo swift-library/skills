@@ -1,6 +1,6 @@
 ---
 name: callkit-patterns
-description: Use this skill for CallKit and PushKit VoIP implementation and review across CXProviderConfiguration, CXProvider, CXCallController, CXCallUpdate, incoming and outgoing calls, provider delegates, answer/end/mute/hold actions, VoIP push token and push handling, audio-session coordination, and Call Directory extensions. Do not use for generic notifications, AVKit playback, ordinary audio sessions, or app architecture without CallKit lifecycle work.
+description: CallKit and PushKit VoIP implementation and review for CXProvider, CXCallController, incoming/outgoing calls, call actions, VoIP pushes, audio-session coordination, and Call Directory extensions. Not for generic notifications or ordinary audio playback.
 ---
 
 # CallKit Patterns

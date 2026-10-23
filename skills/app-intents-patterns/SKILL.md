@@ -1,6 +1,6 @@
 ---
 name: app-intents-patterns
-description: Use this skill for App Intents implementation and review across AppIntent actions, parameters, AppEntity/AppEnum modeling, entity queries, App Shortcuts, Siri and Shortcuts integration, Spotlight indexing, widgets, controls, Live Activity interactivity, Focus filters, assistant schemas, URL representation, and SiriKit migration. Do not use for visual widget design, broad SwiftUI architecture, App Store metadata, market messaging, or standalone Core Spotlight work with no App Intents surface.
+description: App Intents implementation and review for AppIntent actions, AppEntity queries, AppEnum, App Shortcuts, Siri, Spotlight, widgets, controls, and Live Activity interactivity. Not for visual widget design or standalone Core Spotlight indexing.
 ---
 
 # App Intents Patterns
@@ -24,6 +24,7 @@ Spotlight, widgets, controls, Focus, and Live Activities.
 - Migrating relevant SiriKit custom intent behavior to App Intents.
 - Debugging intent discovery, parameter resolution, app launch/navigation,
   authentication, or missing entity results.
+- Defining URL representation for App Intents and their app-navigation paths.
 
 ## When Not To Use
 
@@ -69,6 +70,16 @@ Spotlight, widgets, controls, Focus, and Live Activities.
 
 ## Review Rules
 
+- `AppIntent.perform()` is `async throws` and returns an `IntentResult`;
+  the protocol also requires a `LocalizedStringResource` title and `init()`.
+- `AppEntity.defaultQuery` must be an `EntityQuery` for that entity type;
+  implement `entities(for:)` to resolve persisted identifiers.
+- `AppShortcutsProvider.appShortcuts` uses `AppShortcutsBuilder`; use
+  `updateAppShortcutParameters()` when refreshing shortcut parameters.
+- On OS 26+, use `supportedModes`; `openAppWhenRun` is deprecated there.
+  Gate this migration for older deployment targets.
+- `WidgetConfigurationIntent` inherits `AppIntent` and supplies its own
+  `perform()` implementation; configuration intents need no custom action body.
 - Keep App Intents code small, deterministic, and independent of view state.
 - Do not expose sensitive data through display representations, dialogs,
   snippets, donated entities, or logs.

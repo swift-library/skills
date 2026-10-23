@@ -1,6 +1,6 @@
 ---
 name: group-activities-patterns
-description: Use this skill for GroupActivities and SharePlay implementation and review across GroupActivity, GroupSession, GroupSessionMessenger, GroupActivitySharingController, synchronized media playback, participant tracking, GroupSessionJournal, nearby participants, FaceTime/iMessage group experiences, entitlement setup, and session lifecycle. Do not use for generic multiplayer networking, CallKit, AVKit-only playback, or ordinary collaboration UI without GroupActivities.
+description: GroupActivities and SharePlay implementation and review for GroupActivity, GroupSession, GroupSessionMessenger, synchronized playback, participant tracking, and session lifecycle. Not for generic multiplayer networking or playback without SharePlay.
 ---
 
 # Group Activities Patterns
@@ -21,6 +21,7 @@ media/collaboration experiences.
 - Presenting `GroupActivitySharingController` or system sharing UI.
 - Using `GroupSessionJournal`, participant tracking, nearby participants, or
   FaceTime/iMessage group-session behavior.
+- Checking GroupActivities entitlement setup for shared experiences.
 
 ## When Not To Use
 

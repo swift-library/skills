@@ -1,6 +1,6 @@
 ---
 name: swiftui-tca-architecture
-description: Use this skill for detailed SwiftUI feature design, implementation, review, refactoring, or testing when Point-Free's The Composable Architecture (TCA) is already used or explicitly accepted. Covers ComposableArchitecture @Reducer, @ObservableState, Store/StoreOf, ViewAction, BindingReducer, Effect, @Dependency, @DependencyClient, dependency clients, @Shared, @SharedReader, @Presents, PresentationAction, StackState, StackAction, IdentifiedActionOf, reducer composition, child features, scoped stores, delegate actions, TCA navigation and presentation, TestStore, TestClock, performance pitfalls, and migration of existing TCA code. Do not use to decide whether a project should adopt TCA instead of MVVM, MVI, Clean Architecture, or a coordinator. Do not use for ordinary SwiftUI layout, visual design, generic Swift Testing syntax, SwiftData/Core Data persistence, Swift package architecture, or broad Swift Concurrency diagnostics.
+description: ComposableArchitecture feature implementation and review when TCA is already accepted, including @Reducer, StoreOf, effects, dependencies, navigation, shared state, and TestStore. Not for TCA adoption decisions or ordinary SwiftUI layout.
 ---
 
 # SwiftUI TCA Architecture
@@ -34,6 +34,11 @@ of scope.
   `TestStore`, `@Dependency`, `@Shared`, TCA navigation, or TCA presentation.
 - A review or refactor is scoped to existing TCA code.
 - The feature architecture owner has selected TCA and handed off detailed work.
+- Working with `@ObservableState`, `Store`, `ViewAction`, `BindingReducer`,
+  `@DependencyClient`, dependency clients, `@SharedReader`, or `TestClock`.
+- Composing reducers and child features with scoped stores, delegate actions,
+  `@Presents`, `PresentationAction`, `StackState`, `StackAction`, or
+  `IdentifiedActionOf`, including performance pitfalls and TCA migrations.
 
 ## When Not To Use
 

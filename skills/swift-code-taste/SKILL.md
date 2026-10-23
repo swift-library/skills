@@ -1,6 +1,6 @@
 ---
 name: swift-code-taste
-description: Use this skill when implementing, editing, refactoring, reviewing, or auditing Swift code where the user cares about Swift code taste, code elegance, code shape cleanliness, semantic naming, comment quality, abstraction quality, ownership boundaries, public API hygiene, semantic duplication, AI-shaped code, and Apple, Swift, and reference-project semantic alignment. Also use for questions like whether an abstraction earns its existence, whether code is too wrapped or only forwards calls, whether public/package-facing extensions pollute Apple/Swift/third-party type namespaces, or Chinese requests about 代码优雅, 抽象是否赚到存在, 不要为了抽象而抽象, 只包一层, or 代码味道. Do not use for SwiftPM target graph, product layout, or dependency direction alone; framework-specific API correctness; SwiftLint configuration; documentation structure; or generic style linting.
+description: Swift code implementation and review for semantic naming, ownership, public API hygiene, unnecessary wrappers, semantic duplication and AI-shaped code. Judge whether abstractions earn their existence. Not for SwiftLint configuration or target-graph design.
 ---
 
 # Swift Code Taste
@@ -106,6 +106,8 @@ approach is absent.
 - Checking whether custom Swift APIs align with Apple, SwiftLang, project-local,
   or adopted reference-project semantics.
 - Reviewing public API surface cleanliness in Swift packages or app modules.
+- Reviewing comment quality, forwarding-only abstractions, or public/package-facing extensions that pollute framework or third-party type namespaces.
+- Requests about 代码优雅, 抽象是否赚到存在, 不要为了抽象而抽象, 只包一层, or 代码味道.
 
 ## When Not To Use
 

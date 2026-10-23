@@ -1,6 +1,6 @@
 ---
 name: xcode-localization-patterns
-description: Use this skill for end-to-end Apple-platform localization implementation and review across Xcode localization settings, String Catalogs, generated symbols, XLIFF or xcloc exchange, pseudolocalization, app/package/framework localized resources, Bundle access, Swift localization APIs, SwiftUI localized text presentation, RTL layout checks, and locale UI tests. Do not use for interface copywriting alone, FormatStyle-only modernization, ordinary SwiftUI text cleanup, or marketing/app-store localization.
+description: Xcode localization implementation and review with String Catalogs, generated symbols, XLIFF/xcloc exchange, localized bundles and SwiftUI text. Validate pseudolocalization, RTL and locale UI tests. Not for copywriting or FormatStyle-only modernization.
 ---
 
 # Xcode Localization Patterns
@@ -25,6 +25,7 @@ resource access, runtime string APIs, SwiftUI presentation, and validation.
   Dynamic Type, or localized snapshot coverage.
 - Debugging missing strings, wrong bundles, stale keys, fixed-format strings,
   concatenation, or locale-dependent test failures.
+- Configuring Xcode localization settings and localized resource bundle access.
 
 ## When Not To Use
 

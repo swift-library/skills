@@ -1,6 +1,6 @@
 ---
 name: carplay-patterns
-description: Use this skill for CarPlay implementation and review across CarPlay entitlements, app category boundaries, CPTemplateApplicationScene, scene delegates, CPInterfaceController, CPListTemplate, CPMapTemplate, CPNowPlayingTemplate, dashboard and instrument-cluster scenes, CarPlay Simulator, template limits, and vehicle display constraints. Do not use for generic SwiftUI/UIKit architecture, ordinary in-app navigation, or Apple-platform release work without CarPlay surfaces.
+description: CarPlay implementation and review for entitlements, CPTemplateApplicationScene, CPInterfaceController, template limits, dashboard/instrument-cluster scenes, and CarPlay Simulator. Not for ordinary in-app navigation or UI architecture.
 ---
 
 # CarPlay Patterns
@@ -22,6 +22,8 @@ display validation.
   simulator/device validation.
 - Diagnosing CarPlay entitlement, scene manifest, route preview, map button, or
   Now Playing behavior.
+- Implementing `CPListTemplate`, `CPMapTemplate`, or `CPNowPlayingTemplate`
+  within vehicle display constraints.
 
 ## When Not To Use
 

@@ -1,6 +1,6 @@
 ---
 name: core-motion-patterns
-description: Use this skill for Core Motion implementation and review across CMMotionManager, CMDeviceMotion, accelerometer, gyroscope, magnetometer, attitude reference frames, CMPedometer, CMMotionActivityManager, CMAltimeter, CMHeadphoneMotionManager, CMWaterSubmersionManager, NSMotionUsageDescription, NSFallDetectionUsageDescription, availability checks, sampling intervals, live updates, historical queries, sensor fusion, and battery/privacy tradeoffs. Do not use for HealthKit samples, SensorKit research data access, Core Location, or generic animation.
+description: Core Motion implementation and debugging for CMMotionManager, accelerometer/gyroscope data, CMPedometer, headphone motion, sampling, and sensor lifecycle. Not for HealthKit samples, SensorKit research access, or Core Location.
 ---
 
 # Core Motion Patterns
@@ -21,6 +21,8 @@ submersion data, and motion-related privacy/performance behavior.
   availability checks, sampling intervals, queues, and battery use.
 - Debugging simulator/device differences, noisy data, coordinate frames,
   smoothing, and lifecycle cleanup.
+- Reviewing motion-data privacy alongside live updates and historical queries.
+- Working with `CMHeadphoneMotionManager` and `CMWaterSubmersionManager`.
 
 ## When Not To Use
 

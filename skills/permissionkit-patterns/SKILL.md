@@ -1,6 +1,6 @@
 ---
 name: permissionkit-patterns
-description: Use this skill for PermissionKit implementation and review across child communication experiences, communication limits, contact handles, AskCenter, PermissionButton, PermissionQuestion, CommunicationTopic, PermissionChoice, PermissionResponse, significant app update topics, response observation, AskError, family/child account behavior, and iMessage-only availability. Do not use for generic app permissions, privacy prompts, parental controls strategy, or contact access without PermissionKit.
+description: PermissionKit child/guardian communication requests with AskCenter, PermissionButton, communication limits and response observation. Review significant app update topics, AskError and iMessage-only availability. Not for generic privacy prompts or contact access.
 ---
 
 # PermissionKit Patterns

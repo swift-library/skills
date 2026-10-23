@@ -2,4 +2,4 @@ interface:
   display_name: "MLX Swift Patterns"
   short_description: "Implement and review MLX Swift package runtime work"
   brand_color: "#5E5CE6"
-  default_prompt: "Use $mlx-swift-patterns for MLX Swift package setup, MLX arrays, MLXNN, MLXOptimizers, MLXRandom, Apple silicon/Metal build constraints, MLX Swift LM/VLM examples, model size selection, memory pressure, and backend-selection decisions."
+  default_prompt: "Use $mlx-swift-patterns to implement or review MLX Swift package setup, arrays, neural-network/optimizer/random APIs, LM/VLM examples, Metal builds, model selection, memory pressure and backend fallback."

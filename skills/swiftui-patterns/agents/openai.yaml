@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $swiftui-patterns to review or improve SwiftUI code for state flow, view structure, navigation, layout, controls/forms, Form/Section/LabeledContent implementation, macOS scenes/MenuBarExtra utilities, or modern API usage."
+  default_prompt: "Use $swiftui-patterns to review or implement SwiftUI state/data flow, layout, navigation, native controls, macOS scenes, MenuBarExtra, and Liquid Glass within the existing architecture."

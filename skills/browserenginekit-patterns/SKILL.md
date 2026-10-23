@@ -1,6 +1,6 @@
 ---
 name: browserenginekit-patterns
-description: Use this skill for BrowserEngineKit implementation and review across alternative browser engine eligibility, host apps, web content extensions, networking extensions, rendering extensions, XPC, sandboxing, JIT, rendering layer hosting, text input, downloads, process lifecycle, and non-WebKit browser-engine boundaries. Do not use for WKWebView/WebKit embedding, ordinary web content, or generic XPC work without BrowserEngineKit extensions.
+description: BrowserEngineKit implementation and review for alternative browser engines, host/content/networking/rendering extensions, XPC, sandboxing, JIT, text input, and process lifecycle. Not for WKWebView embedding or generic XPC without browser extensions.
 ---
 
 # BrowserEngineKit Patterns

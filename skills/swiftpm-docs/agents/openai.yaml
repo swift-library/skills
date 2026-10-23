@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $swiftpm-docs to scaffold, audit, normalize, or export Swift package repository documentation structure while preserving Route / Index separation and target-facing template boundaries."
+  default_prompt: "Use $swiftpm-docs to scaffold, audit, normalize or export Swift package repository documentation, preserving Route/Index separation, document roles and target-facing template boundaries."

@@ -1,6 +1,6 @@
 ---
 name: swiftpm-docs
-description: Scaffold, audit, normalize, and export Swift package repository documentation structure. Use for repository documentation baselines, documentation drift audits, Route/Index separation, AGENTS.md Code Review Rules, Documentation/Architecture current truth, DocC target catalog placement, Documentation/Proposals design-in-progress, Documentation/Decisions/Migrations/Archive history, Documentation/Reference placement, GitHub/community-health documentation, profile-based template output, and .agent/PLANS.md execution-state aids for large documentation migrations. Produces documentation findings, file edits, or target-repository template files. Do not use for general Swift coding, feature specs, product roadmaps, UI work, CI/release automation, or generic task orchestration.
+description: SwiftPM repository documentation scaffolding, drift audits and template export. Normalize Route/Index separation, AGENTS.md review rules, DocC placement and architecture/proposal/history roles. Not for feature specs, release automation or task orchestration.
 ---
 
 # SwiftPM Documentation
@@ -19,6 +19,8 @@ repo-native, and easy to maintain.
 - Export target-repository documentation from skill-local template sources.
 - Emit `templates/.agent.PLANS.md.tpl` to the target repository as
   `.agent/PLANS.md` for large normalize, migration, or export work.
+- Placing `AGENTS.md` Code Review Rules, target DocC catalogs, `Documentation/Architecture` current truth, `Documentation/Proposals` design-in-progress, `Documentation/Decisions/Migrations/Archive` history, and `Documentation/Reference` material.
+- Preparing GitHub/community-health documentation or profile-based target-repository template output.
 
 ## When Not To Use
 

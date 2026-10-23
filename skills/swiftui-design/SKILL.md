@@ -1,6 +1,6 @@
 ---
 name: swiftui-design
-description: Use this skill for SwiftUI visual design, native Apple UI polish, SwiftUI control selection, system primitive choice, Form/Section/LabeledContent row semantics, anti-AI-slop UI review, and design review involving spacing, typography, semantic colors, component sizing, grouped content, cards, navigation chrome, system controls, tap targets, visual hierarchy, brand fit, design direction, interactive editors, crop/collage/layout tools, screenshots, previews, or UI that feels generic, AI-generated, or non-native. Do not use for WidgetKit widget design, SwiftUI state/data-flow bugs, deep layout behavior, navigation routing, source-level performance, Swift Charts, persistence, networking, or package architecture.
+description: SwiftUI visual design and native UI polish for control choice, Form/Section/LabeledContent semantics, hierarchy, screenshots, and interactive editors. Not for widget design, state bugs, navigation routing, or performance diagnosis.
 ---
 
 # SwiftUI Design
@@ -31,6 +31,7 @@ control primitive choice, and editor surfaces.
   differentiated options and brand-fit tradeoffs.
 - Reviewing interactive editors such as crop, collage, canvas, media-framing,
   layout-picker, and multi-mode configuration surfaces.
+- Reviewing tap targets and component sizing as part of native control polish.
 
 ## When Not To Use
 

@@ -1,6 +1,6 @@
 ---
 name: apple-platform-release
-description: 'Use this skill for Apple-platform release engineering before App Store Connect or Developer ID distribution: signing assets, bundle IDs, capabilities, certificates, provisioning profiles, Xcode version/build numbers, xcodebuild archive/export, IPA or PKG preparation, macOS Developer ID notarization, stapling, Gatekeeper verification, release artifact checks, and upload-ready build troubleshooting. Do not use for App Store metadata operations, TestFlight management, screenshots, pricing, review submission copy, SwiftPM-only no-Xcode app packaging, simulator work, Instruments traces, or app source architecture.'
+description: Xcode app release preparation and troubleshooting for signing, provisioning, archive/export, IPA/PKG artifacts and Developer ID notarization, stapling and Gatekeeper. Not for App Store metadata/TestFlight operations or SwiftPM-only app packaging.
 ---
 
 # Apple Platform Release

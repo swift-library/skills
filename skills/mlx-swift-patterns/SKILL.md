@@ -1,6 +1,6 @@
 ---
 name: mlx-swift-patterns
-description: Use this skill for MLX Swift package implementation and review across SwiftPM dependency setup, MLX arrays, MLXNN, MLXOptimizers, MLXRandom, Apple silicon execution, Metal shader build constraints, model examples, MLX Swift LM/VLM workflows, model download and size selection, memory pressure, backend selection, and package/runtime fallback decisions. Do not use for Apple SDK framework work, Core ML deployment, Foundation Models generation, llama.cpp C/C++ runtime implementation, or server model APIs.
+description: MLX Swift package implementation for arrays, MLXNN/MLXOptimizers/MLXRandom, LM/VLM examples and local inference. Diagnose Metal builds, memory pressure, model selection and backend fallback. Not for Core ML deployment or Foundation Models sessions.
 ---
 
 # MLX Swift Patterns
@@ -23,6 +23,7 @@ experimentation and inference.
   memory-pressure constraints.
 - Comparing MLX Swift against Foundation Models, Core ML, local C/C++ runtimes,
   or server APIs as a backend choice.
+- Choosing model downloads and sizes or reviewing package/runtime fallback decisions.
 
 ## When Not To Use
 
