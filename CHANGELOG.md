@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-### Breaking changes
+### Renames and installation
 
 - `swift-scripts-patterns` is renamed `swift-sh-patterns`, and
   `swift-testings-patterns` is renamed `swift-testing-patterns`. Update prompts
