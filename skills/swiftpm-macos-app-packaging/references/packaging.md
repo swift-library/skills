@@ -61,9 +61,11 @@ plutil -lint MyApp.app/Contents/Info.plist
 - Copy SwiftPM-emitted `*.bundle` resource bundles from the selected build
   output directory into `Contents/Resources`.
 - Copy built `*.framework` outputs into `Contents/Frameworks` when present.
-  For multiple architectures, merge each framework executable from every
-  architecture's build with `lipo` and verify its architecture set. A missing
-  framework binary for any requested architecture fails packaging.
+  For multiple architectures, take the requested slice from each architecture's
+  build, extracting it from universal framework binaries in a private temporary
+  directory that is removed on exit. Merge the thin inputs with `lipo` and verify
+  the final architecture set. A missing framework binary or requested slice
+  fails packaging.
 - Add `@executable_path/../Frameworks` as an rpath when frameworks are embedded.
 - Strip extended attributes with `xattr -cr` and remove `._*` AppleDouble files
   before signing.

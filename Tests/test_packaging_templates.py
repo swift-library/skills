@@ -24,10 +24,22 @@ if name == "PlistBuddy":
 elif name == "lipo":
     if args[0] == "-archs":
         print(pathlib.Path(args[1]).read_text().strip())
-    else:
+    elif "-thin" in args:
+        arch = args[args.index("-thin") + 1]
+        if arch not in pathlib.Path(args[0]).read_text().split():
+            sys.exit(f"lipo: {args[0]} does not contain architecture {arch}")
+        pathlib.Path(args[args.index("-output") + 1]).write_text(arch)
+    elif args[0] == "-create":
         inputs = args[1:args.index("-output")]
-        arches = sorted({arch for path in inputs for arch in pathlib.Path(path).read_text().split()})
-        pathlib.Path(args[-1]).write_text(" ".join(arches))
+        arches = []
+        for path in inputs:
+            for arch in pathlib.Path(path).read_text().split():
+                if arch in arches:
+                    sys.exit(f"lipo: same architectures {arch} found in inputs")
+                arches.append(arch)
+        pathlib.Path(args[-1]).write_text(" ".join(sorted(arches)))
+    else:
+        sys.exit(f"lipo: unsupported arguments: {args}")
 elif name == "ditto":
     pathlib.Path(args[-1]).write_text("archive")
     if os.environ.get("FAIL_DITTO"):
@@ -79,7 +91,7 @@ class PackagingTemplateTests(unittest.TestCase):
         return subprocess.run(["bash", str(self.template(name))], cwd=self.root, env=self.env,
                               capture_output=True, text=True)
 
-    def build_outputs(self, arches=("arm64", "x86_64"), versioned=False):
+    def build_outputs(self, arches=("arm64", "x86_64"), versioned=False, framework_arches=None):
         for arch in arches:
             build = self.root / f".build/{arch}-apple-macosx/release"
             build.mkdir(parents=True)
@@ -93,7 +105,7 @@ class PackagingTemplateTests(unittest.TestCase):
                 (framework / "Support").symlink_to("Versions/Current/Support")
             else:
                 binary = framework / "Support"
-            binary.write_text(arch)
+            binary.write_text(framework_arches[arch] if framework_arches else arch)
             binary.chmod(0o755)
 
     def test_universal_framework_and_executable_have_all_architectures(self):
@@ -121,6 +133,38 @@ class PackagingTemplateTests(unittest.TestCase):
             framework.mkdir()
             (framework / "Support").write_text(missing)
 
+    def test_identical_fat_frameworks_merge_requested_slices(self):
+        self.build_outputs(versioned=True, framework_arches={
+            "arm64": "arm64 x86_64", "x86_64": "arm64 x86_64"})
+        result = self.run_script("package_app.sh")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        binary = self.root / "Example.app/Contents/Frameworks/Support.framework/Support"
+        self.assertEqual(binary.read_text().split(), ["arm64", "x86_64"])
+        self.assertTrue(binary.is_symlink())
+        self.assertEqual(list((self.root / "tmp").iterdir()), [])
+
+    def test_mixed_thin_and_fat_frameworks_merge_requested_slices(self):
+        self.build_outputs()
+        for fat_arch in ("arm64", "x86_64"):
+            with self.subTest(fat_arch=fat_arch):
+                for arch in ("arm64", "x86_64"):
+                    source = self.root / f".build/{arch}-apple-macosx/release/Support.framework/Support"
+                    source.write_text("arm64 x86_64" if arch == fat_arch else arch)
+                result = self.run_script("package_app.sh")
+                self.assertEqual(result.returncode, 0, result.stderr)
+                binary = self.root / "Example.app/Contents/Frameworks/Support.framework/Support"
+                self.assertEqual(binary.read_text().split(), ["arm64", "x86_64"])
+                self.assertEqual(list((self.root / "tmp").iterdir()), [])
+
+    def test_fat_framework_missing_requested_slice_fails(self):
+        self.build_outputs(framework_arches={
+            "arm64": "arm64 x86_64", "x86_64": "arm64 arm64e"})
+        result = self.run_script("package_app.sh")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Support.framework missing arch x86_64", result.stderr)
+        self.assertIn(".build/x86_64-apple-macosx/release/Support.framework/Support", result.stderr)
+        self.assertEqual(list((self.root / "tmp").iterdir()), [])
+
     def test_generic_framework_cannot_hide_missing_architecture_builds(self):
         self.build_outputs()
         for arch in ("arm64", "x86_64"):
@@ -139,12 +183,13 @@ class PackagingTemplateTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual((self.root / "Example.app/Contents/Frameworks/Support.framework/Support").read_text(), "arm64")
 
-    def test_framework_architecture_verification_rejects_wrong_slice(self):
+    def test_framework_missing_requested_thin_slice_fails(self):
         self.build_outputs()
         (self.root / ".build/x86_64-apple-macosx/release/Support.framework/Support").write_text("arm64")
         result = self.run_script("package_app.sh")
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("arch mismatch", result.stderr)
+        self.assertIn("Support.framework missing arch x86_64", result.stderr)
+        self.assertIn(".build/x86_64-apple-macosx/release/Support.framework/Support", result.stderr)
 
     def prepare_notary(self):
         app = self.root / "Example.app"

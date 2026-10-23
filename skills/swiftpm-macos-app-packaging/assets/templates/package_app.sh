@@ -153,6 +153,11 @@ fi
 
 # Universal frameworks must carry a binary from every requested build.
 if [[ ${#ARCH_LIST[@]} -gt 1 ]]; then
+  FRAMEWORK_SLICE_DIR=$(mktemp -d "${TMPDIR:-/tmp}/framework-slices.XXXXXX")
+  trap 'rm -rf "$FRAMEWORK_SLICE_DIR"' EXIT
+  trap 'exit 129' HUP
+  trap 'exit 130' INT
+  trap 'exit 143' TERM
   FRAMEWORK_DIRS=()
   for ARCH in "${ARCH_LIST[@]}"; do
     FRAMEWORK_DIRS+=("$(dirname "$(build_product_path "$APP_NAME" "$ARCH")")")
@@ -178,7 +183,19 @@ if [[ ${#ARCH_LIST[@]} -gt 1 ]]; then
           echo "ERROR: Missing $FRAMEWORK_NAME binary for $FRAMEWORK_ARCH at $SRC" >&2
           exit 1
         fi
-        FRAMEWORK_BINARIES+=("$SRC")
+        SRC_ARCHES=$(lipo -archs "$SRC")
+        read -r -a SRC_ARCH_LIST <<< "$SRC_ARCHES"
+        if [[ " ${SRC_ARCH_LIST[*]} " != *" $FRAMEWORK_ARCH "* ]]; then
+          echo "ERROR: $FRAMEWORK_NAME missing arch $FRAMEWORK_ARCH at $SRC (have: $SRC_ARCHES)" >&2
+          exit 1
+        fi
+        if [[ ${#SRC_ARCH_LIST[@]} -gt 1 ]]; then
+          SLICE="$FRAMEWORK_SLICE_DIR/$FRAMEWORK_ARCH"
+          lipo "$SRC" -thin "$FRAMEWORK_ARCH" -output "$SLICE"
+          FRAMEWORK_BINARIES+=("$SLICE")
+        else
+          FRAMEWORK_BINARIES+=("$SRC")
+        fi
       done
       cp -R "$FRAMEWORK" "$DEST_FRAMEWORK"
       chmod -R u+w "$DEST_FRAMEWORK"
