@@ -222,7 +222,7 @@ The executable lives at `cli/swiftpm-index`.
 - Adoption recommendations distinguish normal dependency, wrapped dependency,
   reference-only package, and keep-custom outcome.
 - Automatic lightweight checks should default to `Evaluate` unless verified P1
-  source code and documentation are already available in the current context.
+  candidate-source material is already available in the current context.
 
 ## Output Format
 

@@ -29,8 +29,8 @@ Use this rule when mapping target package code patterns to library candidates.
 - For automatic coding-time checks, start from `knowledge/replacement-patterns.md`
   and the official hint files. Emit a short library check note, then continue
   implementation or review.
-- Default automatic checks to Evaluate unless verified P1 source code and
-  documentation are already available in the current context.
+- Default automatic checks to Evaluate unless verified P1 candidate-source
+  material is already available in the current context.
 - Use fetched `summary` and `description` fields to infer candidate capability
   for manual discovery only.
 - Treat generated GitHub repository entries as official candidates, not as
