@@ -73,9 +73,9 @@ evidence was made by different collector versions."
 
 Expected behavior: verifies release/snapshot identities, recollects both
 revisions with one collector and compatible configuration/scope before
-comparison, or reports why comparison is unavailable. Separates interface,
-documentation, availability and provenance changes. References shared baseline
-behavior for organization releases.
+running the requested comparison explicitly with swift-interface-distiller,
+or reports why comparison is unavailable. Separates interface,
+documentation, availability and provenance changes.
 
 Forbidden behavior: compares mixed collectors or chooses a SemVer bump from
 the diff. Never treats missing baseline evidence as an empty API.
