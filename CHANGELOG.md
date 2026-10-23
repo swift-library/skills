@@ -2,8 +2,6 @@
 
 ## Unreleased
 
-## 0.2.0
-
 ### Breaking changes
 
 - `swift-scripts-patterns` is renamed `swift-sh-patterns`, and
