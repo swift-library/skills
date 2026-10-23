@@ -4,6 +4,7 @@
 import json
 import os
 from pathlib import Path
+import re
 import shlex
 import subprocess
 import sys
@@ -276,6 +277,46 @@ class ProfileExportTests(unittest.TestCase):
             (SKILL / "templates/README.md.tpl").read_bytes(),
         )
 
+    def test_canonical_artifacts_is_opt_in_and_changes_only_the_guide(self):
+        for profile in ("minimal", "standard"):
+            with self.subTest(profile=profile):
+                default = self.root / f"{profile}-default"
+                selected = self.root / f"{profile}-canonical"
+                self.export(profile=profile, output=default)
+                self.export("--module", "canonical-artifacts", profile=profile, output=selected)
+                default_guide = (default / "AGENTS.md").read_text()
+                selected_guide = (selected / "AGENTS.md").read_text()
+                self.assertNotIn("## Canonical Artifacts", default_guide)
+                self.assertNotIn("AWithoutB", default_guide)
+                self.assertNotIn("mentally subtracting", default_guide)
+                self.assertIn("## Canonical Artifacts", selected_guide)
+                self.assertIn("mentally subtracting", selected_guide)
+                for guide in (default_guide, selected_guide):
+                    self.assertNotIn("<!-- module:", guide)
+                    self.assertNotIn("<!-- /module:", guide)
+                    self.assertIn("## Code Review Rules", guide)
+                without_contract = re.sub(
+                    r"## Canonical Artifacts\n.*?(?=## Task Route\n)",
+                    "", selected_guide, flags=re.DOTALL,
+                )
+                self.assertEqual(default_guide, without_contract)
+                default_files = {
+                    p.relative_to(default): p.read_bytes()
+                    for p in default.rglob("*") if p.is_file()
+                }
+                selected_files = {
+                    p.relative_to(selected): p.read_bytes()
+                    for p in selected.rglob("*") if p.is_file()
+                }
+                default_files.pop(Path("AGENTS.md"))
+                selected_files.pop(Path("AGENTS.md"))
+                self.assertEqual(default_files, selected_files)
+
+    def test_unknown_module_is_a_usage_error_before_writes(self):
+        result = self.export("--module", "unknown", expected=2)
+        self.assertIn("invalid choice", result.stderr)
+        self.assertFalse(self.output.exists())
+
     def test_missing_configuration_uses_root_package(self):
         self.config.unlink()
         self.export("--package-root", self.package)
@@ -343,12 +384,18 @@ class ProfileExportTests(unittest.TestCase):
         for profile in ("minimal", "standard"):
             with self.subTest(profile=profile):
                 output = self.root / profile
-                self.export("--package-root", self.package, profile=profile, output=output)
+                self.export(
+                    "--package-root", self.package, "--module", "canonical-artifacts",
+                    profile=profile, output=output,
+                )
                 for line in (SKILL / "profiles" / f"{profile}.md").read_text().splitlines():
                     if not line.startswith("| `"):
                         continue
                     target, source = line.split("`")[1:4:2]
                     expected = (SKILL / "profiles" / source).read_bytes()
+                    if target == "AGENTS.md":
+                        expected = expected.replace(b"<!-- module:canonical-artifacts -->\n", b"")
+                        expected = expected.replace(b"<!-- /module:canonical-artifacts -->\n", b"")
                     for placeholder, value in replacements.items():
                         expected = expected.replace(placeholder.encode(), value.encode())
                     self.assertEqual((output / target).read_bytes(), expected, target)
@@ -387,6 +434,7 @@ class ProfileExportTests(unittest.TestCase):
     def export_template(self):
         self.export(
             "--package-root", self.package, "--set", "repo-name=swift-package-template",
+            "--module", "canonical-artifacts",
             "--set", "package-name=swift-package-template", output=self.package,
         )
 
@@ -412,6 +460,14 @@ class ProfileExportTests(unittest.TestCase):
         result = self.template_check(1)
         self.assertIn(str(missing), result.stderr)
         self.assertIn("+++ ", result.stdout)
+
+    def test_template_check_requires_the_organizations_module(self):
+        self.export(
+            "--package-root", self.package, "--set", "repo-name=swift-package-template",
+            "--set", "package-name=swift-package-template", output=self.package,
+        )
+        result = self.template_check(1)
+        self.assertIn("+## Canonical Artifacts", result.stdout)
 
 
 if __name__ == "__main__":

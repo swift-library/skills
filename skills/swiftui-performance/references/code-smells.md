@@ -34,7 +34,7 @@ is available.
 - Preserve structural identity with modifier values where possible.
 - Downsample images before rendering large collections.
 - Use `_logChanges()` or `_printChanges()` to confirm update sources.
-- Ask for Instruments evidence when source review cannot rank likely causes.
+- Ask for Instruments findings when source review cannot rank likely causes.
 
 ## Remediation Patterns
 
@@ -118,7 +118,7 @@ With Xcode 27, lazy Observable `@State` initialization can reduce initialization
 work even on supported older deployment targets. OS 27 AsyncImage HTTP caching
 is a separate runtime change and does not remove image decoding cost.
 ContentBuilder's type-checking changes do not establish faster runtime frames.
-Use `official-sources.md` for the version-specific evidence.
+Use `official-sources.md` for the version-specific documentation.
 
 ### Debugging Updates
 

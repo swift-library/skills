@@ -10,7 +10,8 @@ Use it for:
 
 Current template sources:
 
-- `AGENTS.md.tpl`: route-oriented repository entry
+- `AGENTS.md.tpl`: route-oriented repository entry; its marked Canonical
+  Artifacts block is emitted only with `--module canonical-artifacts`
 - `README.md.tpl`: root GitHub-facing landing manual and entry index
 - `LICENSE.tpl`: root OSS license
 - `CODE_OF_CONDUCT.md.tpl`: root participation standards
@@ -62,3 +63,8 @@ The README's `<build-command>` and `<test-command>` placeholders receive
 `.github/swift-package.json`'s `package_directory` selects the manifest and
 adds `--package-path` for a nested package. These documentation templates
 carry no repository scripts.
+
+The exporter consumes `<!-- module:canonical-artifacts -->` /
+`<!-- /module:canonical-artifacts -->` delimiters in `AGENTS.md.tpl`. They do not
+appear in target output. The baseline omits the entire block; the selected
+module emits its complete contents.

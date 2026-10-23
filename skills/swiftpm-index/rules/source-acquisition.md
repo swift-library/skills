@@ -33,7 +33,7 @@ The CLI must not:
 ## Coding-Time Relationship
 
 Automatic lightweight checks should start from curated `knowledge/` hints and
-target code evidence. Use the CLI when the task is full index maintenance,
+target code. Use the CLI when the task is full index maintenance,
 freshness/drift review, SPI discovery, local candidate discovery, source
 refresh, or explicit review-bundle export.
 

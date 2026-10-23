@@ -56,7 +56,7 @@ Test:
 - multiple displays and Spaces
 - System Settings already open to another pane
 
-Expected evidence:
+Expected check results:
 
 - the protected operation succeeds only after the correct identity is granted
 - the UI names the same app/helper visible in System Settings

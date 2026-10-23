@@ -29,7 +29,7 @@ problem.
 - Using optional IDB to inspect the accessibility tree, map interactive
   elements, tap by visible text, type/id, type text, press keys/buttons,
   perform gestures, or run a lightweight accessibility-tree audit.
-- Comparing screenshots, capturing app state bundles, recording test evidence,
+- Comparing screenshots, capturing app state bundles, recording test reports,
   or inspecting Core Data / SwiftData model declarations from project files.
 
 ## When Not To Use
@@ -109,7 +109,7 @@ Use `references/_index.md` only when the needed reference is unclear.
 - `scripts/state_capture.py`: screenshot, logs, device state, optional IDB
   hierarchy, and Markdown bug-report summary.
 - `scripts/test_recorder.py`: screenshot plus optional accessibility tree and
-  Markdown test evidence bundle.
+  Markdown test report bundle.
 - `scripts/visual_diff.py`: Pillow-backed screenshot comparison and diff image
   output.
 - `scripts/model_inspector.py`: Core Data `.xcdatamodeld` and SwiftData
@@ -130,8 +130,6 @@ Use `references/_index.md` only when the needed reference is unclear.
 
 ## Validation Rules
 
-- Run `python3 <script> --help` after editing bundled scripts.
-- Compile edited Python scripts with `python3 -m py_compile`.
 - Verify tool availability before operations that require local Xcode, a
   booted simulator, or IDB.
 - For destructive simulator operations such as erase/delete, require an

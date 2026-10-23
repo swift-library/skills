@@ -35,3 +35,25 @@ Acceptance checks:
 - Code and comments contain no rejected YAML vocabulary without a current
   semantic reason.
 - Critical non-obvious fields and methods document their current contract.
+
+## Output Proportion Matches The Task
+
+Inputs:
+
+- Review or audit a Swift patch for ownership and unnecessary wrappers.
+- Implement a small naming cleanup, or answer whether one wrapper earns its
+  existence.
+
+Expected behavior:
+
+- Reviews/audits use the full review shape: verdict, supported findings, public
+  API and code-shape impact, semantic alignment, next step and applicable diff.
+- Implementation/refactoring reports meaningful choices and applicable
+  validation briefly; a small question receives a direct answer with relevant
+  uncertainty.
+
+Forbidden behavior: requires the full review report for a small implementation
+or question, or omits the review structure from an audit.
+
+Acceptance checks: response length and fields match the task while findings
+remain grounded in the supplied code.

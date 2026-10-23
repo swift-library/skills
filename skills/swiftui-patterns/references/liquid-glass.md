@@ -476,7 +476,7 @@ An automatic scroll edge effect blurs and fades content under system toolbars to
 - Visual direction, hierarchy, spacing, color, or product-level polish as the
   primary task is out of scope.
 - Issues that depend on measured scrolling, animation, hang, hitch, or
-  rendering trace evidence need Instruments trace analysis, which is out of
+  rendering traces need Instruments trace analysis, which is out of
   scope.
 - Do not proactively convert an existing interface to Liquid Glass without an
   explicit user request or existing project convention.

@@ -8,7 +8,7 @@ description: SwiftUI source-level performance implementation, review, and optimi
 ## Purpose
 
 Guide SwiftUI source-level performance during implementation and review, then
-route to Instruments only when runtime evidence is needed.
+route to Instruments only when runtime measurements are needed.
 
 ## Entry Modes
 
@@ -17,8 +17,8 @@ route to Instruments only when runtime evidence is needed.
   materially affect rendering cost.
 - Manual performance review: Use when the user asks for PR-time or existing-code
   performance review, diagnosis, or optimization guidance.
-- Runtime evidence escalation: Trace capture and trace interpretation are out
-  of scope; once Instruments evidence exists, return here for source-level
+- Runtime measurement escalation: Trace capture and trace interpretation are out
+  of scope; once Instruments findings exist, return here for source-level
   remediation when useful.
 
 ## When To Use
@@ -60,7 +60,7 @@ route to Instruments only when runtime evidence is needed.
 4. Prefer targeted fixes: narrow state scope, stabilize identity, move heavy
    work out of `body`, downsample images, reduce layout complexity, and narrow
    animation scope.
-5. If code review is inconclusive or runtime evidence is necessary, use
+5. If code review is inconclusive or runtime measurements are necessary, use
    `references/profiling-intake.md` and request Instruments trace capture and
    analysis.
 6. Report likely causes, evidence, remediation, and validation steps.
@@ -68,13 +68,13 @@ route to Instruments only when runtime evidence is needed.
 ## Reference Files To Consult
 
 - `references/code-smells.md`: source-level SwiftUI performance smell catalog.
-- `references/profiling-intake.md`: what runtime evidence to request before
+- `references/profiling-intake.md`: what runtime measurements to request before
   involving Instruments.
 - `references/report-template.md`: compact review output shape.
 
 ## Decision Rules
 
-- Code-first review is useful, but trace-backed evidence wins.
+- Code-first review is useful, but trace measurements take precedence.
 - Treat performance recommendations as hypotheses until validated.
 - Identity, invalidation fan-out, and heavy `body` work are first-pass checks.
 - Use `equatable()` only when equality is cheaper than recomputing the subtree.
@@ -86,13 +86,16 @@ route to Instruments only when runtime evidence is needed.
 - Rebuild after source edits.
 - Use previews, screenshots, `_logChanges()`, local benchmarks, or user-provided
   traces to validate the changed path.
-- If runtime evidence is required, ask for the smallest Instruments trace that
-  reproduces the symptom; trace analysis itself is out of scope.
+- If runtime measurements are required, ask for the smallest Instruments trace
+  that reproduces the symptom; trace analysis itself is out of scope.
 - Keep before/after claims tied to the same interaction and build mode.
 
 ## Output Format
 
-Return:
+For questions, give a direct answer. For small edits or single operations,
+summarize what changed or ran, validation, and open risks.
+
+For audits, reviews, investigations, and other substantial tasks, return:
 
 1. Phase / stage judgment
 2. SwiftUI surface inspected
@@ -107,6 +110,6 @@ Return:
 - If no code is available, ask for the smallest target view/model slice and
   reproduction path.
 - If the symptom cannot be explained from source, state that and request
-  Instruments trace evidence.
+  Instruments trace findings.
 - If performance is a secondary concern inside a larger refactor, keep the
   performance note short and leave the main refactor outside this skill.

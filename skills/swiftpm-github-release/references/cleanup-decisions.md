@@ -36,7 +36,7 @@ source use a new version; signed annotated tags retain their original identity.
 - Forks keep their own copies. Deleting the repository or making it private
   does not remove content from public forks.
 - Commit IDs and tag targets are inputs to release records and provenance.
-  Replacing them invalidates references and previously accepted evidence.
+  Replacing them invalidates references and accepted check results.
 - SwiftPM records a fingerprint per package version on first resolution. Moving
   a published tag can fail resolution for consumers who resolved it before.
   Keep that version stable and publish a corrected version.

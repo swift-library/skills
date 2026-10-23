@@ -10,7 +10,7 @@ Dedicated performance work stays outside this skill:
 
 - source-level performance smell audits and remediation for update fan-out,
   identity, heavy body work, image cost, animation cost, or layout thrash
-- runtime evidence intake and deciding when to involve Instruments
+- runtime measurement intake and deciding when to involve Instruments
 - `.trace`, `xctrace`, Time Profiler, hangs, hitches, signposts, or trace
   capture/analysis
 

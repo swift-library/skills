@@ -2,11 +2,11 @@
 
 ## Status
 
-<status>
+Proposed
 
 ## Authors / Owners
 
-<authors>
+<authors, affected owners, and accepting authority designated by repository governance>
 
 ## Summary
 

@@ -18,7 +18,7 @@ if !hasAccess {
 }
 ```
 
-SDK evidence:
+SDK declarations:
 
 - `CGPreflightScreenCaptureAccess()` is available on macOS 10.15+.
 - `CGRequestScreenCaptureAccess()` is available on macOS 10.15+.
@@ -45,7 +45,7 @@ let options = [
 let trusted = AXIsProcessTrustedWithOptions(options)
 ```
 
-SDK evidence:
+SDK declarations:
 
 - `AXIsProcessTrustedWithOptions(_:)` is available on macOS 10.9+.
 - `kAXTrustedCheckOptionPrompt` is available on macOS 10.9+.
@@ -72,7 +72,7 @@ if access != kIOHIDAccessTypeGranted {
 }
 ```
 
-SDK evidence:
+SDK declarations:
 
 - `IOHIDCheckAccess(_:)` checks access for an `IOHIDRequestType`.
 - `IOHIDRequestAccess(_:)` requests access from the user.
@@ -100,7 +100,7 @@ let status = AEDeterminePermissionToAutomateTarget(
 )
 ```
 
-SDK evidence:
+SDK declarations:
 
 - `AEDeterminePermissionToAutomateTarget(...)` is available on macOS 10.14+.
 

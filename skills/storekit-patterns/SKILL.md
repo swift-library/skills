@@ -40,7 +40,7 @@ entitlements, and tests purchase flows.
 ## Inputs To Inspect
 
 - Product identifiers, StoreKit configuration files, App Store Connect product
-  setup evidence, and subscription group shape.
+  setup records, and subscription group shape.
 - Product loading, paywall, purchase, restore/sync, entitlement, transaction
   listener, and server-validation code.
 - StoreKit SwiftUI view usage and custom merchandising UI.
@@ -66,7 +66,7 @@ entitlements, and tests purchase flows.
 7. Review subscription status, renewal info, revocation, refunds, family
    sharing, billing retry, grace period, and offer logic where applicable.
 8. Validate using StoreKit configuration, StoreKitTest, sandbox, and server
-   verification evidence according to the app's risk.
+   verification results according to the app's risk.
 - `Product.purchase(options:)` is `@MainActor async throws` and unavailable on
   visionOS; there, use an available `purchase(confirmIn:options:)` overload.
 - `PurchaseResult.success` contains `VerificationResult<Transaction>`; handle

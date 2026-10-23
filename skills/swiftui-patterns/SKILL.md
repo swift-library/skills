@@ -164,8 +164,8 @@ Use these only as light reminders during ordinary SwiftUI implementation:
 - Gate version-specific APIs with `#available` and provide sensible fallbacks.
 - Adopt Liquid Glass only when explicitly requested or already used by the
   project.
-- Treat performance observations as hypotheses unless measured by local
-  evidence. Dedicated performance diagnosis and trace analysis are out of
+- Treat performance observations as hypotheses unless supported by local
+  measurements. Dedicated performance diagnosis and trace analysis are out of
   scope when performance becomes the primary task.
 
 ## Validation Rules
@@ -182,7 +182,10 @@ Use these only as light reminders during ordinary SwiftUI implementation:
 
 ## Output Format
 
-For reviews or implementation recommendations, return:
+For questions, give a direct answer. For small edits or single operations,
+summarize what changed or ran, validation, and open risks.
+
+For audits, reviews, investigations, and other substantial tasks, return:
 
 1. Phase / stage judgment
 2. SwiftUI surface inspected
@@ -203,6 +206,6 @@ For reviews or implementation recommendations, return:
 - If a design request crosses into architecture choice, state management
   framework selection, or app-wide routing design, keep the recommendation
   incremental and ask before imposing a new architecture.
-- If a performance task needs Instruments evidence, ask for trace findings
+- If a performance task needs Instruments measurements, ask for trace findings
   rather than capturing or analyzing traces here, then continue with
   source-level SwiftUI changes where useful.

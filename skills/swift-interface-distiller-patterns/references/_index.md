@@ -1,7 +1,7 @@
 # Interface Distiller References
 
 - [Commands](commands.md): task-oriented command recipes.
-- [Interpretation](interpretation.md): evidence, views, budgets and failures.
+- [Interpretation](interpretation.md): snapshots, views, budgets and failures.
 - [Eval fixtures](eval-fixtures.md): durable behavior cases.
 
 Upstream authorities for the documented CLI contract:

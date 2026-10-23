@@ -87,9 +87,9 @@ metadata, executable identity, signature and distribution archive digest.
 Bind installation and runtime acceptance to those exact bytes, including a run
 without the source/build directories available. Promote the accepted artifact
 without rebuilding it. Rebuilds, re-signing, entitlements or packaging changes
-invalidate affected evidence; changed toolchain/configuration also invalidates
+invalidate affected check results; changed toolchain/configuration also invalidates
 the stages that used it. Retain original failure logs and resume only with
-trusted matching evidence.
+trusted matching check results.
 
 Separate artifact identity from checker identity. A check-only correction does
 not itself require rebuilding or re-signing, and version decisions follow
@@ -186,7 +186,10 @@ scripts/compile_and_run.sh
 
 ## Output Format
 
-For packaging work, return:
+For questions, give a direct answer. For small edits or single operations,
+summarize what changed or ran, validation, and open risks.
+
+For audits, reviews, investigations, and other substantial tasks, return:
 
 1. Phase / stage judgment
 2. Packaging surface inspected

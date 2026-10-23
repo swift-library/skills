@@ -1,7 +1,7 @@
 # SwiftUI Profiling Intake
 
 Use this file when source review is inconclusive or the user already has
-runtime evidence.
+runtime measurements.
 
 ## Ask For
 
@@ -22,7 +22,7 @@ needs:
 
 - `.trace` recording or parsing.
 - Time Profiler, Hangs, Animation Hitches, signposts, or os_log analysis.
-- Measured main-thread coverage, hitch duration, fan-in, or timeline evidence.
+- Measured main-thread coverage, hitch duration, fan-in, or timeline measurements.
 
 Keep this skill responsible for mapping source-level findings to likely fixes.
 

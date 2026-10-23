@@ -4,8 +4,8 @@
 - Official candidate:
 - Source category:
 - Authority:
-- Target evidence:
-- Source evidence:
+- Target code:
+- Candidate source code or documentation:
 - Fit:
 - Recommendation: Adopt / Wrap / Reference / Keep custom
 - Why:

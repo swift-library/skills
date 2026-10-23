@@ -6,6 +6,12 @@ baseline that still makes Route, Index, Truth, and Governance explicit.
 This profile is intentionally small. It is not the default home for the full
 public-repo GitHub/community-health surface.
 
+## Modules
+
+Modules are off by default. Select `--module canonical-artifacts` only when
+the target adopts that contract or the user requests it. It adds the Canonical
+Artifacts section to `AGENTS.md` without changing the output file set.
+
 ## Output Map
 
 `when not inherited` rows are emitted only when the repository's GitHub

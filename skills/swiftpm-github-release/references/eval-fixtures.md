@@ -1,5 +1,7 @@
 # Eval Fixtures
 
+Exercise the applicable cases when changing release behavior.
+
 These cases check readiness audits and dry-run command plans against the
 repository's adopted policy and CI design. Apply [Shared CI](shared-ci.md) only
 to callers implementing that specification. Supply repository declarations,

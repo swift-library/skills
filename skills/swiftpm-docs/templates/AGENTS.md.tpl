@@ -32,6 +32,7 @@ Use this check:
 6. What remains variable, configurable, or case-local?
 7. What evidence proves the result beyond one literal case?
 
+<!-- module:canonical-artifacts -->
 ## Canonical Artifacts
 
 - Treat conversation, review feedback, plans, and intermediate attempts as
@@ -66,6 +67,7 @@ Use this check:
   derive the complete current behavior, boundaries, and operating guidance
   without mentally subtracting a rejected concept.
 
+<!-- /module:canonical-artifacts -->
 ## Task Route
 
 - Before changing versions, dependencies, packaging or release workflows, read

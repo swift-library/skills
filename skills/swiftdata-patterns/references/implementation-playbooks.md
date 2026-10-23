@@ -41,7 +41,7 @@ Deliverables:
 
 - root-cause summary,
 - config changes,
-- validation evidence from at least two devices/simulators.
+- check results from at least two devices/simulators.
 
 ## 4) Handle Cross-Process Updates (Widget/Intent/App Extension)
 

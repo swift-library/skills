@@ -77,7 +77,7 @@ network discovery, and transport-level behavior.
   reconnect, partial frames, and malformed frames.
 - Test local network permission, Bonjour browsing, and physical-device behavior
   when discovery is in scope.
-- Capture Network Instruments or packet/log evidence for performance or
+- Capture Network Instruments traces, packets, or logs for performance or
   interoperability failures.
 
 ## Output

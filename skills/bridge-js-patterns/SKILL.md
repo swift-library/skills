@@ -43,7 +43,7 @@ Swift-TypeScript boundaries.
   authority.
 - BridgeJS is experimental. Do not assume generated ABI, macro behavior,
   supported types, or plugin output paths are stable without current source or
-  local generation evidence.
+  local generation outputs.
 - Treat Swift.org Swift SDKs for WebAssembly documentation and local tool output
   as authority for Swift SDK IDs and Wasm build commands.
 

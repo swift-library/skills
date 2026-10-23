@@ -40,7 +40,8 @@ repository as a reference project.
   semantic concept. A layer that only wraps and forwards is usually worse than
   direct code.
 - Diagnose before patching when behavior is unclear. A low-visibility or weak
-  patch should be replaced by evidence, rollback, or a clearer intervention.
+  patch should be replaced by diagnostic investigation, rollback, or a clearer
+  intervention.
 - Reference-project alignment calibrates semantics; it does not require
   copying the reference project's directory shape, helper types, or implementation scaffolding.
 - Final surface should not keep stale compatibility aliases, forwarding shells,
@@ -50,49 +51,26 @@ repository as a reference project.
 
 ## Canonical Change Shape
 
-Treat conversation and review feedback as inputs to the edit. Before finalizing
-Swift code, recompute the accepted design and make the implementation read as
-if that design had been chosen directly.
+Express the accepted design directly in active code, tests, examples,
+configuration and comments. Remove rejected concepts with their residual names,
+branches, wrappers, flags, fixtures and comments; disabled flags, skipped tests
+and dead branches do not establish a current contract. Avoid correction-shaped
+names such as `AWithoutB` or rules prohibiting a discarded approach unless the
+exclusion is an independent compatibility, safety or architectural invariant.
 
-Two editing paths that end at the same accepted design should produce
-semantically equivalent active code, tests, configuration, examples, and
-comments.
+Judge by semantic identity and ownership, not word matching. Preserve migration
+readers, compatibility adapters, ownership/safety boundaries and regression
+fixtures with an independent current role; name that role directly. Leave
+already-correct role-owned artifacts unchanged when their facts are unaffected.
+Commits and pull requests may explain the delta; production code expresses the
+current contract.
 
-If an intermediate implementation contains `A + B` and the accepted result is
-`A`, remove `B` together with its names, branches, wrappers, configuration,
-tests, examples, and comments. Do not preserve the correction as `AWithoutB`,
-an "intentionally no B" comment, or a permanent prohibition unless excluding
-`B` is itself a current compatibility, safety, or architectural invariant.
-
-Normalize by semantic identity and ownership, not by matching words. Removing a
-current symbol or branch does not invalidate a distinct migration reader,
-compatibility adapter, ownership boundary, or regression fixture that happens
-to use the same domain term. Keep it only when its independent current role is
-real, and name that role directly.
-
-If a role-owned migration, compatibility, ownership, safety, or regression
-artifact is already correct and the task does not change its facts, leave it
-unchanged. Do not create diff noise by restating it merely because it is
-relevant to the current edit.
-
-A disabled flag, skipped test, dead branch, retained fixture, or "do not add"
-rule created by the rejected implementation is still residue. Disabled state
-alone does not make the artifact a compatibility, safety, ownership, or
-regression invariant.
-
-Pull requests and commits may explain the delta. Production code and comments
-describe the current contract.
-
-Add comments where a critical type, property, or method carries semantics that
-names and types cannot express clearly. Useful comments define domain meaning,
-units, valid ranges, identity, ownership, lifecycle, invariants, side effects,
-failure semantics, or concurrency requirements. Public or package-facing APIs
-with non-obvious contracts deserve documentation; obvious private code does not
-need ceremonial comments.
-
-Comments must be standalone and current. Do not restate names or types, narrate
-prior implementations, quote review feedback, or explain that a discarded
-approach is absent.
+Document non-obvious contracts on critical types, properties, methods and
+public/package-facing APIs: domain meaning, units, valid ranges, identity,
+ownership, lifecycle, invariants, side effects, failure semantics or concurrency
+requirements. Keep comments standalone and current. Do not restate names/types,
+narrate prior implementations, quote review feedback, explain a discarded
+approach's absence or add ceremonial comments to obvious private code.
 
 ## Use When
 
@@ -284,7 +262,11 @@ clean.
 
 ## Output Format
 
-For code review, use this shape:
+For reviews and audits, use the full shape below. For implementation,
+refactoring or small questions, give a short answer or summary of meaningful
+code-shape, ownership, public API and alignment choices, plus applicable
+validation or uncertainty. Apply the rules while editing; do not require the
+full review report for those tasks.
 
 ```text
 1. Architecture verdict
@@ -324,7 +306,3 @@ Merge / merge after cleanup / block until fixed.
 7. Code diff (key hunks)
 Show focused git-style unified diff hunks for the recommended fix when applicable.
 ```
-
-For implementation or refactoring, apply the same rules silently while editing,
-then summarize only the meaningful code-shape, ownership, public API, or
-alignment choices.

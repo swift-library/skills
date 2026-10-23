@@ -84,7 +84,7 @@ validation. Published versions and artifact bytes remain immutable.
 
 Acceptance belongs to the exact signed/exported artifact and its digest.
 Source tests do not substitute for installation and critical-path checks.
-Reuse evidence only from a trusted source with matching inputs and unchanged
+Reuse check results only from a trusted source with matching inputs and unchanged
 check definitions; reject missing or modified receipts. Preserve failure logs,
 bound retries and prefer the repository's existing status/resume/check entry
 points. This skill retains ownership of engineering artifacts and does not
@@ -146,7 +146,10 @@ not exempt files merely because they are scripts.
 
 ## Output Format
 
-For release engineering work, return:
+For questions, give a direct answer. For small edits or single operations,
+summarize what changed or ran, validation, and open risks.
+
+For audits, reviews, investigations, and other substantial tasks, return:
 
 1. Phase / stage judgment
 2. Release path

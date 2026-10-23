@@ -6,6 +6,12 @@ This preview shows the expected target-repository outcome for the `minimal`
 profile when the GitHub settings owner has selected local community files.
 Inherited community-health files are omitted from the export.
 
+## Module Selection
+
+This preview uses the default agent guide, which omits the Canonical Artifacts
+section. For a target adopting that contract, add `--module canonical-artifacts`
+to `scripts/export_profile.py`; the target tree stays the same.
+
 ## Source Templates Used
 
 - `templates/Documentation.Reference.Release.md.tpl` ->

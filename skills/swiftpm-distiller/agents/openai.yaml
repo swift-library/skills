@@ -1,5 +1,5 @@
 interface:
   display_name: "SwiftPM Distiller"
-  short_description: "Distill Swift package evidence into skill-authoring handoffs"
+  short_description: "Distill Swift package source material into skill-authoring handoffs"
   brand_color: "#F05138"
-  default_prompt: "Use $swiftpm-distiller to distill a known SwiftPM package, Swift library or unfamiliar import into an evidence-backed handoff with candidate skill boundaries, triggers, workflows, validation commands and risks."
+  default_prompt: "Use $swiftpm-distiller to distill a known SwiftPM package, Swift library or unfamiliar import into a handoff with cited sources, candidate skill boundaries, triggers, workflows, validation commands and risks."

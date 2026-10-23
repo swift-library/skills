@@ -3,6 +3,7 @@
 
 import importlib.util
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -27,12 +28,12 @@ COMMUNITY_FILES = {
 
 
 class TemplateExportTests(unittest.TestCase):
-    def exported_files(self, profile, inherited_paths):
+    def exported_files(self, profile, inherited_paths, modules=frozenset()):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             exports.export_profile(
                 SKILL / "profiles" / f"{profile}.md", root,
-                inherited_paths=inherited_paths,
+                inherited_paths=inherited_paths, modules=modules,
             )
             return {
                 path.relative_to(root): path.read_text()
@@ -78,6 +79,70 @@ class TemplateExportTests(unittest.TestCase):
         inherited = {Path("CONTRIBUTING.md"), Path("SECURITY.md")}
         files = self.exported_files("standard", inherited)
         self.assertEqual(set(files) & COMMUNITY_FILES, COMMUNITY_FILES - inherited)
+
+    def test_module_selection_preserves_inheritance_in_both_profiles(self):
+        for profile in ("minimal", "standard"):
+            for modules in (frozenset(), frozenset({"canonical-artifacts"})):
+                with self.subTest(profile=profile, modules=modules):
+                    files = self.exported_files(profile, COMMUNITY_FILES, modules)
+                    self.assertFalse(set(files) & COMMUNITY_FILES)
+                    self.assertEqual(
+                        "## Canonical Artifacts" in files[Path("AGENTS.md")], bool(modules),
+                    )
+
+    def test_validator_rejects_missing_or_unrequested_contract(self):
+        selected = frozenset({"canonical-artifacts"})
+        guide = self.exported_files("minimal", set(), selected)[Path("AGENTS.md")]
+        with self.assertRaisesRegex(ValueError, "unrequested"):
+            exports.validate_agent_guide(guide, "minimal")
+        for incomplete in ("## Canonical Artifacts\n", guide.replace("editing input", "input")):
+            with self.subTest(guide=incomplete[:40]), self.assertRaises(ValueError):
+                exports.validate_agent_guide(incomplete, "minimal", modules=selected)
+        exports.validate_agent_guide(guide, "minimal", modules=selected)
+
+    def target_validation(self, root, *args, expected=0):
+        result = subprocess.run(
+            [sys.executable, "-B", str(SKILL / "scripts/validate_canonical_target.py"),
+             str(root), *args], capture_output=True, text=True,
+        )
+        self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+        return result.stdout
+
+    def test_target_validator_applies_only_to_adopted_or_required_module(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            exports.export_profile(SKILL / "profiles/minimal.md", root, inherited_paths=set())
+            (root / "README.md").write_text("JSON-only export\n")
+            self.assertIn("not applicable", self.target_validation(root))
+            self.assertIn(
+                "requested Canonical Artifacts section",
+                self.target_validation(root, "--module", "canonical-artifacts", expected=1),
+            )
+            exports.export_profile(
+                SKILL / "profiles/minimal.md", root, inherited_paths=set(),
+                modules=frozenset({"canonical-artifacts"}),
+            )
+            self.assertIn("validation passed", self.target_validation(root))
+            self.assertIn(
+                "validation passed", self.target_validation(root, "--module", "canonical-artifacts"),
+            )
+            (root / "README.md").write_text("JSON-only export\n")
+            self.assertIn("correction-shaped active prose", self.target_validation(root, expected=1))
+
+    def test_target_validator_rejects_incomplete_module_and_review_rules(self):
+        selected = frozenset({"canonical-artifacts"})
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            files = self.exported_files("minimal", set(), selected)
+            guide = files[Path("AGENTS.md")]
+            for text, message in (
+                (guide.replace("editing input", "input"), "misses editing input"),
+                (guide.replace("## Code Review Rules", "## Reviews"), "Code Review Rules section"),
+                (guide + "x" * (32 * 1024), "agents read at most"),
+            ):
+                with self.subTest(message=message):
+                    (root / "AGENTS.md").write_text(text)
+                    self.assertIn(message, self.target_validation(root, expected=1))
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@
 
 Prepare a skill-creation handoff from `/path/to/swift-formatting-plugin`.
 
-## Evidence To Prefer
+## Materials To Prefer
 
 - `Package.swift`: executable targets, plugins, macros, products, toolchain
   constraints, and command/plugin names.
@@ -25,9 +25,9 @@ Package identity:
   SwiftFormattingPlugin command plugin.
 - Package identity: `swift-formatting-plugin` (from manifest and resolved pin).
 
-Evidence inspected:
+Inspected materials:
 
-| Evidence | Source/path | Used for | Notes |
+| Material | Source/path | Used for | Notes |
 |---|---|---|---|
 | Manifest | `Package.swift` | tools, products, plugin/macro targets | includes command/plugin names |
 | Docs | `README.md`, DocC | invocation and setup | command flags and macro annotations |
@@ -35,7 +35,7 @@ Evidence inspected:
 | Interface snapshot/view | `.build/interface-distiller/api.json`, `.build/interface-distiller/interface/part-000001.md` | FormattingRules public declarations | collected during session |
 | Resolved deps | `Package.resolved` | SwiftSyntax pin | maps macro imports to package identity |
 
-Generated interface evidence:
+API snapshot:
 - Availability: generated.
 - Commands: the configuration/collect/render/query sequence below.
 - Working directory: `/path/to/swift-formatting-plugin`
@@ -61,7 +61,7 @@ Public capabilities:
 
 | Claim | Evidence source | Caveat / uncertainty |
 |---|---|---|
-| Package exposes a SwiftPM command plugin backed by an executable formatter tool. | `Package.swift`, README invocation docs and plugin tests | Library interface evidence does not establish tool flags or runtime behavior. |
+| Package exposes a SwiftPM command plugin backed by an executable formatter tool. | `Package.swift`, README invocation docs and plugin tests | A library API snapshot does not establish tool flags or runtime behavior. |
 
 Dependency and import mapping:
 
@@ -99,14 +99,14 @@ Handoff notes for skill creator:
 Authoring handoff:
 - Leave final `SKILL.md` and `agents/openai.yaml` shaping to the authoring
   workflow; keep this distillation focused on package-specific commands, APIs,
-  diagnostics, and evidence.
+  diagnostics, and cited sources.
 ```
 
 ## Robustness Checks
 
 - Are CLI/plugin/macro surfaces separated instead of collapsed into one generic
   "library usage" section?
-- Are commands and diagnostics copied from evidence, not invented?
+- Are commands and diagnostics copied from docs, source or tests, not invented?
 - Are snapshot and rendered-part paths recorded separately, and is the
   collection scope checked before describing plugin or executable behavior?
 - Is architecture review routed away unless package structure is the actual ask?

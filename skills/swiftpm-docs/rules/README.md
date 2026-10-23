@@ -22,11 +22,12 @@ Swift package rules:
 - `architecture-doc-format.md`: use a lightweight arc42-style structure for
   current architecture documents.
 - `decision-record-format.md`: use a lightweight ADR/MADR-style structure for
-  adopted decision records.
+  adopted decision records, statuses, and supersession chains.
 - `proposal-doc-format.md`: use a lightweight Swift Evolution-inspired
   structure for design-in-progress proposals.
 - `proposal-vs-truth-vs-history.md`: classify design-in-progress, current
-  canonical state, and historical record.
+  canonical state, and historical record; handle acceptance, implementation
+  merges, and proposal retirement.
 - `docc-placement.md`: distinguish target-level DocC source catalogs from
   repository-level documentation and generated `.doccarchive` output.
 - `docc-landing-identity.md`: give each public module's DocC landing page the

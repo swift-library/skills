@@ -8,7 +8,7 @@
 - `performance-and-best-practices.md` - test speed, determinism, flaky-test prevention, and parallel-safe defaults
 - `async-testing-and-waiting.md` - async/await in tests, callback bridging, and event-stream verification
 - `migration-from-xctest.md` - pragmatic XCTest -> Swift Testing migration workflow
-- `eval-fixtures.md` - runner-specific assertion interoperability and migration evidence
+- `eval-fixtures.md` - runner-specific assertion interoperability and migration checks
 - `xcode-workflows.md` - navigator/report workflows, insights, and diagnostics quality
 - `review-rules.md` - concise idiomatic Swift Testing review rules
 - `test-quality-rules.md` - Arrange-Act-Assert, F.I.R.S.T., hidden dependencies, and diagnostics

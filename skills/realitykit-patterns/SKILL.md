@@ -75,7 +75,7 @@ performance.
   without capability and permission checks.
 - Do not use RealityKit to own TabletopKit turn/equipment state.
 - Do not mix SceneKit migration claims into new RealityKit architecture without
-  current docs or prototype evidence.
+  current docs or prototype results.
 - Treat RealityKit API additions, visionOS differences, ARKit tracking
   providers, asset-loading behavior, and performance characteristics as current
   Apple documentation and SDK gated.

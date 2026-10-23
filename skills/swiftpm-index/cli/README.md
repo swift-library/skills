@@ -124,8 +124,8 @@ and public API impact checks before any adoption recommendation.
 `enrich` checks root `Package.swift` presence and records GitHub primary
 language as candidate-quality metadata for official candidates. It uses those
 facts for filtering and grouping only; final Adopt / Wrap / Reference / Keep
-custom recommendations still require target code evidence and candidate source
-evidence.
+custom recommendations still require target code and candidate source code or
+documentation.
 
 ## Package Collection Tool Backend
 

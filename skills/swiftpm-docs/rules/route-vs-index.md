@@ -19,7 +19,7 @@ type and programming language do not change these responsibilities.
 | Reference | Exhaustive API/command/schema details, long examples, topic depth | Named reference documents or the project's API documentation |
 | Durable history | Accepted decisions with lasting rationale, migrations, provenance, releases | Existing history or provenance owners |
 | Open work | Defects, requested changes and decisions not yet done | The owner's task plan while that owner does the work; the owning repository's issue tracker when it is handed off or recorded publicly. Documents link to the issue instead of listing the work |
-| Task state | Plans, raw evidence, run logs, intermediate attempts | The declared task-state owner |
+| Task state | Plans, raw outputs, run logs, intermediate attempts | The declared task-state owner |
 
 Use the target's actual documentation locations and casing. These are roles,
 not a prescribed directory tree.
@@ -117,7 +117,7 @@ Skill-specific knowledge and workflows retain their own resource hierarchy.
    current safety/compatibility constraints. Shared words do not make them
    duplicates or obsolete.
 5. Make shipped documentation describe current supported behavior. Keep
-   authoring corrections, local evidence, and run chronology with their task;
+   authoring corrections, local logs and outputs, and run chronology with their task;
    preserve history only where it has durable value and an explicit owner.
 6. Fix an in-scope producer as well as its affected generated outputs. Do not
    manually rewrite generated API or schema content when its source owns it.

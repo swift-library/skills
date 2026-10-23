@@ -194,7 +194,7 @@ Verdict: Ready / Not ready / Ready with warnings / Unknown
 Package: <Package.swift name>
 Products: <products>
 Version/tag: <version or unknown>
-Evidence level: local validation / CI output / dry-run only
+Validation level: local validation / CI output / dry-run only
 Required checks: <repository-configured checks and statuses / none configured / unknown>
 Publish surface: clean / <n> findings in history, tree, assets or facts
 
@@ -221,8 +221,6 @@ commands and label live commands as requiring confirmation.
 
 ## Validation Rules
 
-Exercise the applicable cases in
-[eval fixtures](references/eval-fixtures.md) when changing release behavior.
 Use actual Git state and check output as evidence; distinguish a command plan
 from an executed check. Apply [Shared CI](references/shared-ci.md) validation
 and release requirements only to repositories adopting an implementation of

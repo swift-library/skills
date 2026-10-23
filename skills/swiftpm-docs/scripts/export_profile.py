@@ -10,8 +10,8 @@ import re
 import sys
 
 from profile_export import (
-    PLACEHOLDER, PROFILE_NAMES, SKILL_ROOT, export_files, output_map,
-    package_facts, read_utf8,
+    MODULE_NAMES, PLACEHOLDER, PROFILE_NAMES, SKILL_ROOT, export_files, output_map,
+    package_facts, render_template,
 )
 
 
@@ -25,6 +25,10 @@ def assignment(argument: str) -> tuple[str, str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--profile", required=True, choices=PROFILE_NAMES)
+    parser.add_argument(
+        "--module", action="append", choices=MODULE_NAMES, default=[],
+        help="include an optional contract (default: none)",
+    )
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument(
         "--package-root", type=Path,
@@ -43,8 +47,10 @@ def main() -> int:
             if inherited not in targets:
                 parser.error(f"--inherited {inherited}: path is not in the {args.profile} profile")
         outputs = output_map(profile, inherited_paths=set(args.inherited))
+        modules = frozenset(args.module)
         names = {
-            name for _, source in outputs for name in PLACEHOLDER.findall(read_utf8(source))
+            name for _, source in outputs
+            for name in PLACEHOLDER.findall(render_template(source, modules=modules))
         }
         values = dict(args.values)
         for name in values:
@@ -52,7 +58,9 @@ def main() -> int:
                 parser.error(f"--set {name}: no exported template uses this name")
         replacements = package_facts(args.package_root) if args.package_root else {}
         replacements.update(values)
-        for path in export_files(outputs, args.output, replacements=replacements, force=args.force):
+        for path in export_files(
+            outputs, args.output, replacements=replacements, force=args.force, modules=modules,
+        ):
             print(path)
     except (OSError, ValueError) as error:
         print(error, file=sys.stderr)

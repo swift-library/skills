@@ -2,8 +2,9 @@
 
 Set the variables used by the selected recipe from the task's inputs. Paths,
 module names, symbol selectors, configuration IDs and budgets are parameters.
-`API_DIR` is the target's ignored output directory; keep generated evidence,
-run reports and caches there. Commands below use the installed executable name.
+`API_DIR` is the target's ignored output directory; keep generated snapshots,
+views, run reports and caches there. Commands below use the installed executable
+name.
 
 ## Install And Check
 
@@ -121,8 +122,8 @@ interface-distiller render "$API_DIR/api.json" --by-module \
 Read the generated Markdown parts, not only the JSON file list on stdout.
 Default docs are the leading prose paragraph; `full` retains all comments and
 `none` omits them. `--show-implied` expands collected standard conformance
-requirements collapsed in readable views. Evidence rendering keeps detailed
-metadata and per-symbol anchors. See [interpretation](interpretation.md) before
+requirements collapsed in readable views. Rendering with `--view evidence`
+keeps detailed metadata and per-symbol anchors. See [interpretation](interpretation.md) before
 using measurements or a strict byte limit.
 
 ## Query And Slice
@@ -149,7 +150,7 @@ All query kinds and the `slice` alias accept `json|swift|markdown` and budgets.
 query uses the slice-shaped envelope rather than the unbudgeted result shape.
 For a hard total delivery limit, measure the output, account for context and
 diagnostics, and reduce the payload selection as needed; do not cut raw bytes
-out of structured evidence or declarations.
+out of structured snapshots or declarations.
 
 ## Compare And Baseline
 
@@ -169,6 +170,6 @@ interface-distiller coverage "$API_DIR/api.json"
 
 Baseline write validates before atomic replacement; baseline check never writes.
 Keep a reviewed baseline separate from candidate output. Compiler compatibility
-diagnostics are separate evidence and do not turn a comparison into a version
+diagnostics are separate observations and do not turn a comparison into a version
 or release decision. Handle nonzero exit codes explicitly as described in
 [interpretation](interpretation.md).

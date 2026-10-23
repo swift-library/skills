@@ -41,7 +41,7 @@ submersion data, and motion-related privacy/performance behavior.
 - Motion manager, sensor availability checks, update intervals, queues,
   start/stop lifecycle, and data smoothing code.
 - Pedometer/activity/altimeter/headphone/submersion query and live update code.
-- Tests, device logs, battery/performance evidence, and fallback UI.
+- Tests, device logs, battery/performance measurements, and fallback UI.
 
 ## Workflow
 

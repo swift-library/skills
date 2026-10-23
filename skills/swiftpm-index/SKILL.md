@@ -169,7 +169,7 @@ Read only files relevant to the selected operation:
   package, verify repository source, `Package.swift`, releases, maintenance
   activity, supported platforms, Swift tools version, dependency tree, and
   public-boundary impact.
-- Treat package collection tool output as catalog/tool evidence. It can
+- Treat package collection tool output as catalog metadata and tool results. It can
   validate, diff, generate, or sign collection JSON, but it does not make
   package adoption decisions and is not a source authority tier.
 - Do not use GitHub stars alone as adoption evidence.
@@ -222,7 +222,7 @@ The executable lives at `cli/swiftpm-index`.
 - Adoption recommendations distinguish normal dependency, wrapped dependency,
   reference-only package, and keep-custom outcome.
 - Automatic lightweight checks should default to `Evaluate` unless verified P1
-  source evidence is already available in the current context.
+  candidate-source material is already available in the current context.
 
 ## Output Format
 

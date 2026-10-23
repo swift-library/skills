@@ -21,9 +21,11 @@ the same collection under `skills/`.
 
 ## Compatibility Surface
 
-Consumers depend on the `swift-skills` plugin name, skill names under `skills/`,
-and the installation routes in [Installation](../installation.md). VERSIONING
-decides how a change to this surface affects the next version. Compatibility
+Consumers depend on the `swift-skills` plugin name and the installation routes
+in [Installation](../installation.md). VERSIONING decides how a change to this
+surface affects the next version. Skill names may change in any release; the
+changelog records each rename with the steps to update prompts and directly
+linked installations. Compatibility
 is established by review and tests, not inferred from comparing version
 numbers.
 

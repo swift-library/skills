@@ -26,6 +26,12 @@ not only implied through supporting materials.
   `Documentation/Architecture/*` must be updated explicitly.
 - Do not leave current architecture true only by inference from proposal,
   decision, migration, archive, or reference material.
+- Architecture describes the implemented model; Reference describes its current
+  interfaces and operating guidance. An accepted Decision can describe a
+  pending design without making it current. Where readers need that direction,
+  label it accepted but unimplemented and link the Decision and implementation
+  issue. Update the current docs and resolve that note with the implementation
+  merge, including partial rollout boundaries when applicable.
 
 ## Failure Modes
 

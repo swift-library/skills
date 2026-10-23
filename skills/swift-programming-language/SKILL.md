@@ -124,7 +124,10 @@ them.
 
 ## Output Format
 
-Outputs must include:
+For questions, give a direct answer. For small edits or single operations,
+summarize what changed or ran, validation, and open risks.
+
+For audits, reviews, investigations, and other substantial tasks, return:
 
 1. Phase / stage judgment
 2. Findings

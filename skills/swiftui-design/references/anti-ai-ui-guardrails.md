@@ -66,7 +66,7 @@ Prefer these replacements:
 
 ## Brand Asset Protocol
 
-For branded work, gather evidence before inventing visual identity:
+For branded work, gather brand guidelines and assets before inventing visual identity:
 
 1. Ask for brand guidelines, logo files, palette, typography, and example
    screens.
@@ -166,7 +166,7 @@ Keep code examples project-compatible rather than forcing a new helper layer:
 - The source design context or absence of context is named.
 - The chosen direction is explicit.
 - Banned generic patterns were checked.
-- Brand choices are evidence-backed or labeled as a temporary working spec.
+- Brand choices are supported by brand guidelines and assets or labeled as a temporary working spec.
 - Typography, color, spacing, and icon style are internally consistent.
 - The primary task appears before decorative explanation.
 - Empty, loading, and error states do not look unfinished.

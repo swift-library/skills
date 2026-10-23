@@ -44,3 +44,19 @@ Acceptance checks: round-trip an integer at an unaligned offset with explicit
 byte order; reject an unsupported load type; verify out-of-bounds failure in
 an isolated probe. Inspect each selected SDK declaration and preserve supported
 fallbacks.
+
+## Output Proportionality
+
+Input: Ask what `defer` does, or request a small local correction to one Swift
+routine.
+
+Expected behavior: answer the question directly; for the correction, summarize
+the change, validation, and open risks.
+
+Input: Request an audit of a package's Swift language compatibility.
+
+Expected behavior: use all six Output Format sections, beginning with
+Phase / stage judgment, and keep compatibility findings and risks explicit.
+
+Acceptance checks: the question and small correction use the short path; the
+audit retains every named section from `SKILL.md`.
