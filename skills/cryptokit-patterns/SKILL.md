@@ -1,6 +1,6 @@
 ---
 name: cryptokit-patterns
-description: Use for CryptoKit cryptography in Swift or Apple-platform code across AES-GCM, ChaChaPoly, HMAC, SHA, SymmetricKey, HKDF/PBKDF2, P256/P384/P521, Curve25519, ECDSA/ECDH, HPKE, ML-KEM/ML-DSA, Secure Enclave, nonce/key derivation, crypto migration/review/tests. Do not use for Keychain CRUD/storage or certificate trust/TLS pinning.
+description: CryptoKit implementation and review for authenticated encryption, hashing, key derivation, signing, key agreement, HPKE, ML-KEM/ML-DSA and Secure Enclave. Validate nonce handling, migration and crypto tests. Not for Keychain storage or certificate trust.
 ---
 
 # CryptoKit Patterns
@@ -8,6 +8,11 @@ description: Use for CryptoKit cryptography in Swift or Apple-platform code acro
 Use this skill for cryptographic implementation, review, debugging, migration,
 and testing with CryptoKit and Apple-platform cryptographic APIs. Keychain
 storage and certificate trust-chain concerns are out of scope.
+
+## When To Use
+
+- Implementing or testing AES-GCM, ChaChaPoly, HMAC, SHA, `SymmetricKey`, nonce handling, or HKDF/PBKDF2 key derivation.
+- Reviewing P256/P384/P521, Curve25519, ECDSA/ECDH, HPKE, ML-KEM/ML-DSA, Secure Enclave, or cryptographic migrations.
 
 ## Workflow
 

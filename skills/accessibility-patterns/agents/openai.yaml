@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $accessibility-patterns to review or improve Apple-platform accessibility for SwiftUI, UIKit, AppKit, media, or platform UI code, including VoiceOver, Assistive Access, Dynamic Type, Voice Control, testing, and Nutrition Label recommendations."
+  default_prompt: "Use $accessibility-patterns to implement or audit Apple-platform accessibility, including VoiceOver, Assistive Access, Dynamic Type, assistive controls, Accessibility Inspector, automated audits, and Nutrition Labels."

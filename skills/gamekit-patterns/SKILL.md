@@ -1,6 +1,6 @@
 ---
 name: gamekit-patterns
-description: Use this skill for GameKit and Game Center implementation and review across Game Center entitlement setup, GKLocalPlayer authentication, authenticateHandler, scoped player identifiers, GKAccessPoint, Game Center dashboards, GKLeaderboard, GKAchievement, GKMatchmakerViewController, GKMatch, GKTurnBasedMatch, multiplayer matchmaking, saved games, challenges, friends, nearby discovery, and server identity verification. Do not use for SpriteKit/SceneKit/RealityKit rendering, browser games, generic networking, or StoreKit commerce.
+description: GameKit and Game Center implementation for GKLocalPlayer authentication, leaderboards, achievements, real-time/turn-based matchmaking, saved games, and identity verification. Not for SpriteKit, SceneKit, or RealityKit rendering.
 ---
 
 # GameKit Patterns

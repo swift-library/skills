@@ -1,6 +1,6 @@
 ---
 name: swiftpm-architecture
-description: 'Use this skill for Swift Package architecture design, review, refactoring guidance, and package-structure diagnostics involving Package.swift target graphs, module boundaries, product/library/executable layout, dependency direction, public API surfaces, composition roots, cross-target test strategy, source selection, or compact evidence briefs. Auto-trigger for package-structure work during implementation or review; use manual mode for full architecture review, active/proactive review, context packaging, and reviewer handoff. Do not use for full-repository concatenation, standalone feature specs, roadmap work, code rewrites, strict Swift code-shape taste review, UI feature architecture, or package documentation migration.'
+description: SwiftPM architecture design and review of Package.swift target graphs, module boundaries, product layout, dependency direction and composition roots. Produce findings or compact architecture briefs. Not for UI architecture, code taste or documentation layout.
 ---
 
 # SwiftPM Architecture
@@ -48,6 +48,7 @@ review artifacts when requested.
 - Ambiguous mentions: If the request only names architecture or package shape
   without a concrete change or review ask, gather only enough context to clarify
   intent or provide a lightweight orientation.
+- Selecting package source evidence for an architecture review or reviewer handoff.
 
 ## Progressive Disclosure
 

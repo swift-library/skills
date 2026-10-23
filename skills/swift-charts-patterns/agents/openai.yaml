@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $swift-charts-patterns to review or improve Swift Charts code for marks, axes, selection, Chart3D, accessibility, and API availability."
+  default_prompt: "Use $swift-charts-patterns to implement, review, or debug Swift Charts marks, plots, axes, legends, ChartProxy interactions, Chart3D, selection, and chart accessibility."

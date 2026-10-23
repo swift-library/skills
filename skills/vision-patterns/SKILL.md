@@ -1,6 +1,6 @@
 ---
 name: vision-patterns
-description: Use this skill for Apple Vision and VisionKit implementation and review across OCR, barcode recognition, face detection, face landmarks, image classification, rectangle and horizon detection, document recognition, segmentation, tracking, video-frame processing, coordinate conversion, VNCoreMLModel requests, DataScannerViewController, ImageAnalyzer, VNDocumentCameraViewController, camera permission, overlays, and SwiftUI wrappers. Do not use for Core ML model lifecycle without Vision requests, PhotoKit library workflows, generic camera capture, or visual design.
+description: Vision and VisionKit implementation for OCR, barcodes, segmentation, tracking, coordinate conversion, VNCoreMLModel requests, DataScannerViewController, and ImageAnalyzer. Not for Core ML model lifecycle or photo-library management.
 ---
 
 # Vision Patterns

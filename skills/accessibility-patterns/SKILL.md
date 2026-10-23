@@ -1,6 +1,6 @@
 ---
 name: accessibility-patterns
-description: Use this skill for Apple-platform accessibility implementation, review, auditing, or modernization in SwiftUI, UIKit, AppKit, RealityKit, media, or Apple UI flows when work mentions accessibility, a11y, Assistive Access, VoiceOver, Voice Control, Switch Control, Full Keyboard Access, Dynamic Type, Larger Text, Reduce Motion, Increase Contrast, Differentiate Without Color, accessibility labels, values, hints, traits, actions, UIAccessibility, NSAccessibility, AccessibilityComponent, Accessibility Inspector, performAccessibilityAudit(), WCAG, or App Store Accessibility Nutrition Labels. Do not use for general Focus Engine behavior, tvOS remote focus, UIKit/AppKit focus systems, SwiftUI @FocusState without an accessibility goal, general SwiftUI layout, state, navigation, animation, performance, Swift Charts, visual design, persistence, networking, package architecture, or repository documentation unless accessibility is the concrete goal.
+description: Apple-platform accessibility implementation and audits for VoiceOver, Assistive Access, Dynamic Type, Voice Control, Accessibility Inspector, performAccessibilityAudit(), WCAG, and Accessibility Nutrition Labels. Not for focus movement without an accessibility goal.
 ---
 
 # Accessibility Patterns
@@ -29,6 +29,8 @@ live in SwiftUI, UIKit, or AppKit.
   testing, or accessibility QA checklists.
 - Preparing an App Store Accessibility Nutrition Label recommendation or WCAG
   mapping for reviewed app flows.
+- Implementing Assistive Access or accessibility with `UIAccessibility`,
+  `NSAccessibility`, or RealityKit `AccessibilityComponent`, including media.
 
 ## When Not To Use
 

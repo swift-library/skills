@@ -1,6 +1,6 @@
 ---
 name: cloudkit-patterns
-description: Use this skill for CloudKit implementation and review across iCloud containers, public/private/shared databases, CKRecord modeling, custom zones, record queries, subscriptions, silent-change delivery, CKSyncEngine, server change tokens, CKShare, UICloudSharingController, CKAsset storage, account status, CKError handling, conflict resolution, CloudKit Dashboard workflows, NSUbiquitousKeyValueStore, and iCloud document coordination. Do not use for SwiftData/Core Data CloudKit sync unless direct CloudKit records, schema, sharing, subscriptions, or dashboard behavior is in scope.
+description: CloudKit record, sync and sharing implementation with CKRecord, CKSyncEngine, CKShare, subscriptions, change tokens and conflict recovery. Inspect containers, zones and account state. Not for SwiftData/Core Data sync without a direct CloudKit concern.
 ---
 
 # CloudKit Patterns
@@ -51,6 +51,8 @@ persistence framework.
   server change tokens, and local persistence of sync metadata.
 - Account-status UI, conflict resolution, quota handling, logging, privacy, and
   tests using real or isolated containers.
+- Check `com.apple.developer.icloud-container-identifiers` for the selected container and `com.apple.developer.icloud-container-environment` for Development/Production.
+- For `CKSyncEngine`, check CloudKit and Remote notifications capabilities; its SDK contract requires both.
 
 ## Workflow
 
@@ -66,6 +68,9 @@ persistence framework.
    main-thread boundaries, and user-visible progress.
 6. For sync, verify local persistence of change tokens and `CKSyncEngine` state,
    zone recovery, push-triggered fetches, and conflict handling.
+   - Gate `CKSyncEngine` to iOS 17/macOS 14/tvOS 17/watchOS 10 or later; initialize `Configuration(database:stateSerialization:delegate:)` for a private or shared database, never the public database.
+   - Persist each `.stateUpdate` serialization from `CKSyncEngineDelegate.handleEvent(_:syncEngine:)` alongside app data and restore the latest state on initialization across launches.
+   - Automatic sync timing is indeterminate; use `fetchChanges()` / `sendChanges()` for an explicit sync request.
 7. For sharing, verify records live in a shareable zone, `CKShare` setup,
    share acceptance, participant permissions, and owner/participant semantics.
 8. For iCloud key-value or document coordination, keep the workflow clearly
@@ -84,6 +89,11 @@ persistence framework.
   or review output.
 - Treat `CKSyncEngine`, sharing, account-state, dashboard, and environment
   behavior as current-documentation and local-SDK gated.
+- Limit each sync-engine record batch to 250 saves plus deletes; `RecordZoneChangeBatch(pendingChanges:recordProvider:)` stops at the limit and leaves remaining changes pending.
+- Replace deprecated `CKQueryOperation.recordFetchedBlock` / `queryCompletionBlock` with `recordMatchedBlock` / `queryResultBlock` on iOS 15/macOS 12/tvOS 15/watchOS 8 or later; handle per-record failures and returned cursors.
+- Move fetched `CKAsset.fileURL` data into app-owned storage promptly; the system deletes staged files, and filenames/metadata need separate record fields.
+- Inspect `CKPartialErrorsByItemIDKey` per item and honor `CKErrorRetryAfterKey` as seconds before retrying.
+- For `serverRecordChanged`, merge client/ancestor changes into the server record and retry that record; reusing the stale client record repeats the conflict.
 
 ## Validation
 
@@ -95,6 +105,8 @@ persistence framework.
 - Test subscription delivery, manual fetch, and sync-engine state restoration
   across relaunches when sync is in scope.
 - Verify Dashboard schema/indexes and confirm logs redact record contents.
+- Test signed-out public reads separately from writes: public fetch/query can work without an iCloud account, but public saves and private access require one.
+- In sync-engine tests, set `Configuration.automaticallySync = false` and invoke fetch/send explicitly for deterministic scheduling.
 
 ## Output
 

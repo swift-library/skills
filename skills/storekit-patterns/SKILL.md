@@ -1,6 +1,6 @@
 ---
 name: storekit-patterns
-description: Use this skill for StoreKit implementation and review across in-app purchases, subscriptions, Product loading, purchase results, transaction verification, current entitlements, Transaction.updates, StoreKit views, AppTransaction, refunds, restore/sync, subscription offers, StoreKit configuration testing, and server-side transaction validation. Do not use for pricing strategy, App Store metadata, market commerce planning, release operations, or non-StoreKit payment integrations.
+description: StoreKit implementation and review for in-app purchases, subscriptions, Product loading, verified transactions, current entitlements, Transaction.updates, restore/sync, and StoreKitTest. Not for pricing strategy, release operations, or PassKit checkout.
 ---
 
 # StoreKit Patterns
@@ -22,6 +22,7 @@ entitlements, and tests purchase flows.
 - Testing StoreKit with StoreKit configuration files, sandbox, `SKTestSession`,
   Ask to Buy, billing retry, refunds, or subscription renewal states.
 - Reviewing App Transaction use or server-side transaction/JWS validation.
+- Reviewing `AppTransaction` and subscription offer flows.
 
 ## When Not To Use
 
@@ -66,6 +67,12 @@ entitlements, and tests purchase flows.
    sharing, billing retry, grace period, and offer logic where applicable.
 8. Validate using StoreKit configuration, StoreKitTest, sandbox, and server
    verification evidence according to the app's risk.
+- `Product.purchase(options:)` is `@MainActor async throws` and unavailable on
+  visionOS; there, use an available `purchase(confirmIn:options:)` overload.
+- `PurchaseResult.success` contains `VerificationResult<Transaction>`; handle
+  `.verified`/`.unverified` separately from `.pending` and `.userCancelled`.
+- Iterate `Transaction.currentEntitlements`, `.unfinished`, and `.updates` as
+  async sequences of verification results; `Transaction.finish()` is async.
 
 ## Review Rules
 
@@ -79,6 +86,12 @@ entitlements, and tests purchase flows.
 - Avoid original StoreKit APIs unless the task is migration or legacy support.
 - Treat external purchase, subscription offer, and regional policy claims as
   current-policy gated.
+- Gate `Transaction.currentEntitlements(for:)` and `Product.currentEntitlements`
+  to iOS 18.4/macOS 15.4/tvOS 18.4/watchOS 11.4/visionOS 2.4 or newer.
+- Migrate the singular `currentEntitlement(for:)`/`currentEntitlement` APIs,
+  deprecated at those versions, to the corresponding plural sequences.
+- Legacy `SKPaymentQueue.restoreCompletedTransactions()` is deprecated from
+  iOS 18/macOS 15/tvOS 18/watchOS 11/visionOS 2; use `AppStore.sync()` (async throws).
 
 ## Validation
 

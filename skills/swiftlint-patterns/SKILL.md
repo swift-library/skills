@@ -1,6 +1,6 @@
 ---
 name: swiftlint-patterns
-description: Use this skill for SwiftLint setup, configuration governance, rule selection, .swiftlint.yml, disabled_rules, opt_in_rules, only_rules, analyzer_rules, included/excluded paths, suppressions, baselines, autocorrection, reporters, build tool plugins, command plugins, Xcode run scripts, CI/pre-commit wiring, custom regex rules, Swift custom rules, swiftlint analyze, toolchain selection, and rollout strategy. Do not use for ordinary Swift style review, broad Swift API design, formatting-only work, or package architecture unless SwiftLint enforcement/configuration is the task.
+description: SwiftLint setup and rule governance for .swiftlint.yml, suppressions, baselines, custom rules, swiftlint analyze and toolchain issues. Wire plugins, Xcode scripts or CI enforcement. Not for formatting-only work or general Swift code taste.
 ---
 
 # SwiftLint Patterns

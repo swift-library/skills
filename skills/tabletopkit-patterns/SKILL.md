@@ -1,6 +1,6 @@
 ---
 name: tabletopkit-patterns
-description: Use this skill for TabletopKit implementation and review across visionOS tabletop games, TabletopGame, TableSetup, Tabletop, EntityTabletop, equipment protocols, seats, TableState, TabletopAction, move/update equipment actions, turns, score counters, state bookmarks, interactions, gestures, dice, RealityKit rendering, GroupActivities synchronization, and multiplayer table state. Do not use for generic board-game rules, GameKit matchmaking, RealityKit-only rendering, or browser games without TabletopKit.
+description: TabletopKit visionOS game implementation for TabletopGame, equipment, seats, TableState, TabletopAction, interactions, and GroupActivities synchronization. Not for GameKit matchmaking, generic board-game rules, or RealityKit-only rendering.
 ---
 
 # TabletopKit Patterns

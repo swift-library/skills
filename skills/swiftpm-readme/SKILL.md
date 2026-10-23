@@ -1,6 +1,6 @@
 ---
 name: swiftpm-readme
-description: Derive and verify the Swift-specific facts and content of a Swift package repository's README and GitHub metadata. Use for badge values from Package.swift, tags, license, and CI; Install snippets with the SwiftPM dependency, product lines, and build-from-source commands; Quick start code that must resolve and compile against the published tag; Products, Usage, and Requirements sections checked against public source; and Swift ecosystem topics or About claims checked against the package. Produces README section content, badge and install values, verification results, and topic proposals. Do not use for README header or first-screen layout, badge selection, order, or styling, social preview cards, terminal demos, logos or banners, organization profiles, Homebrew or release-download install lines, CLI command references, MCP client configuration, applying GitHub settings, documentation tree placement, package API design, or release tagging.
+description: SwiftPM README fact checks and content for badge values, Install, compiling Quick start examples, Products, Usage and Requirements. Verify tags, Package.swift, topics and About claims. Not for README visual layout, GitHub settings changes or release tagging.
 ---
 
 # SwiftPM README
@@ -23,6 +23,7 @@ Products, Usage, and Requirements sections that name only what exists.
   against public source.
 - A Swift package needs topic proposals, or its About sentence needs checking
   against what the package does.
+- Checking SwiftPM dependency/product install lines and build-from-source commands, and resolving and compiling Quick start code against the published tag.
 
 ## When Not To Use
 

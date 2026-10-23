@@ -1,6 +1,6 @@
 ---
 name: realitykit-patterns
-description: Use this skill for RealityKit and ARKit implementation and review across RealityView, ARView, Entity, Component, System, AnchorEntity, AnchoringComponent, ModelEntity, USDZ/Reality Composer Pro assets, materials, lighting, physics, collision and input targets, gestures, raycasting, scene understanding, ARKit sessions and anchors, hand/world tracking, spatial audio, SharePlay synchronization, and spatial performance. Do not use for SceneKit-only maintenance, SpriteKit 2D, TabletopKit game-state mechanics, or Focus Engine-only selection.
+description: RealityKit and ARKit implementation for RealityView, entities/components/systems, USDZ assets, physics, gestures, hand/world tracking, and SharePlay synchronization. Not for SceneKit-only maintenance or TabletopKit game-state mechanics.
 ---
 
 # RealityKit Patterns

@@ -2,4 +2,4 @@ interface:
   display_name: "EventKit Patterns"
   short_description: "Implement and review EventKit calendar and reminder flows"
   brand_color: "#FF9500"
-  default_prompt: "Use $eventkit-patterns for EventKit, EventKitUI, EKEventStore, calendar/reminder access, event/reminder CRUD, recurrence, alarms, and SwiftUI wrappers."
+  default_prompt: "Use $eventkit-patterns to review calendar/reminder access, event and reminder CRUD, recurrence, alarms, change notifications, and editor wrappers."

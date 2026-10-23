@@ -1,6 +1,6 @@
 ---
 name: swift-interface-distiller-patterns
-description: Understand a Swift dependency or package's public API without reading its implementation, prepare compact interface context within a byte budget, or review API changes between revisions and releases using swift-interface-distiller. Collect local packages, symbol graphs, binary modules or C/Objective-C headers; produce interface views, queries, slices and comparisons with explicit configuration and completeness. Do not use for SemVer policy decisions, source navigation or usage indexing, or runtime behavior.
+description: swift-interface-distiller public API inspection and revision comparison from packages, symbol graphs, binary modules or C/Objective-C headers. Produce budgeted interface queries and slices with completeness notes. Not for runtime behavior or SemVer policy.
 ---
 
 # Interface Distiller Patterns
@@ -24,6 +24,7 @@ using another version.
 - Review additions, removals and field changes between package revisions or
   releases collected under the same configuration and scope.
 - Inspect an existing snapshot or normalize producer-supplied symbol graphs.
+- Collecting local packages, symbol graphs, binary modules, or C/Objective-C headers into interface views, queries, slices, and comparisons with explicit configuration and completeness.
 
 ## When Not To Use
 

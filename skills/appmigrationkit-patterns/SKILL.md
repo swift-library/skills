@@ -1,6 +1,6 @@
 ---
 name: appmigrationkit-patterns
-description: Use this skill for AppMigrationKit implementation and review across migration extensions, source and destination apps, data-container access, export property declarations, ResourcesExporting, resource import, MigrationStatus, progress, App Group recovery, AppMigrationTester, versioned migration, cancellation, and first-launch import UX. Do not use for generic persistence migration, CloudKit sync, or package architecture unless AppMigrationKit owns the transfer.
+description: AppMigrationKit implementation and review for migration extensions, ResourcesExporting, resource import, MigrationStatus, App Group recovery, AppMigrationTester, and first-launch handoff. Not for persistence schema migration or CloudKit sync.
 ---
 
 # AppMigrationKit Patterns
@@ -21,6 +21,8 @@ setup, resource export/import, and first-launch recovery.
 - Handling migration progress, cancellation, App Group recovery, versioned
   migration, selective export, and error recovery.
 - Testing migration code with AppMigrationKit testing tools.
+- Reviewing source/destination data-container access, export property
+  declarations, first-launch import UX, and `AppMigrationTester` runs.
 
 ## When Not To Use
 

@@ -1,6 +1,6 @@
 ---
 name: foundation-models-patterns
-description: Use this skill to implement or review Apple Foundation Models sessions, model availability, structured generation, streaming, tool calling, and LanguageModel provider integration. Covers on-device and framework-supported cloud paths with explicit privacy and fallback checks. Do not use for standalone Core ML or MLX inference, Vision recognition, deterministic Natural Language analysis, unrelated server AI APIs, or marketing copy.
+description: Foundation Models implementation and review for LanguageModelSession, availability, structured generation, streaming, tool calls, and LanguageModel providers, including framework cloud paths. Not for standalone Core ML/MLX inference or deterministic text analysis.
 ---
 
 # Foundation Models Patterns

@@ -1,6 +1,6 @@
 ---
 name: dockkit-patterns
-description: Use this skill for DockKit implementation and review across DockAccessoryManager, DockAccessory, DockKitError, dock accessory observation, system tracking enable/disable, custom tracking, motorized stand control, rotation/positioning, camera app integration, AVCaptureSession coordination, subject/object tracking, device support, user permission, and physical dock validation. Do not use for generic camera capture, Vision recognition without dock control, Core Motion sensors, or broad accessory setup.
+description: DockKit implementation and debugging for DockAccessoryManager, motorized stand control, system/custom subject tracking, and AVCaptureSession coordination. Not for camera capture or Vision recognition without dock control.
 ---
 
 # DockKit Patterns
@@ -20,6 +20,7 @@ motorized stands, system tracking, custom tracking, and camera coordination.
   and physical dock state.
 - Debugging `DockKitError`, unsupported devices, unavailable accessories, and
   physical dock validation.
+- Reviewing user permission for dock accessory control.
 
 ## When Not To Use
 

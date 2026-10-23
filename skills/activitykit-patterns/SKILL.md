@@ -1,6 +1,6 @@
 ---
 name: activitykit-patterns
-description: Use this skill for ActivityKit implementation and review across Live Activities, Dynamic Island, ActivityAttributes, ActivityContent, request/update/end lifecycle, stale dates, relevance, WidgetKit Live Activity UI, push tokens, APNs liveactivity payloads, push-to-start, frequent updates, and device testing. Do not use for widget visual polish only, ordinary notifications, broad SwiftUI architecture, market messaging, or release operations.
+description: ActivityKit implementation and review for Live Activities, Dynamic Island, ActivityAttributes/ActivityContent, request/update/end lifecycle, push tokens, APNs liveactivity payloads, and push-to-start. Not for ordinary notifications or widget-only visual polish.
 ---
 
 # ActivityKit Patterns

@@ -1,6 +1,6 @@
 ---
 name: swiftui-performance
-description: Use this skill for SwiftUI source-level performance implementation guidance, review, diagnosis, and optimization involving slow rendering, janky scrolling, high CPU or memory use, excessive view updates, invalidation fan-out, unstable identity, heavy work in `body`, image cost, animation cost, or layout thrash. Auto-trigger when SwiftUI implementation or review explicitly involves performance-sensitive surfaces such as large lists, image-heavy views, high-frequency state updates, unstable identity, costly layout, or animation hot paths; use manual mode for PR-time performance review before requiring Instruments evidence. Do not use for `.trace`, `xctrace`, Time Profiler, hang, hitch, or signpost capture/analysis.
+description: SwiftUI source-level performance implementation, review, and optimization for janky scrolling, excessive updates, unstable identity, heavy body work, images, and layout thrash. Not for Instruments trace capture or analysis.
 ---
 
 # SwiftUI Performance
@@ -31,6 +31,8 @@ route to Instruments only when runtime evidence is needed.
 - Checking invalidation scope, identity stability, heavy view-body work, image
   costs, animation scope, or observation fan-out.
 - Producing a short performance review with likely causes and validation steps.
+- Implementing large lists, image-heavy views, high-frequency state updates,
+  costly layouts, or animation hot paths before a performance regression.
 
 ## When Not To Use
 

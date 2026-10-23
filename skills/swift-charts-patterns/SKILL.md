@@ -1,6 +1,6 @@
 ---
 name: swift-charts-patterns
-description: Use this skill for Swift Charts implementation, review, refactoring, debugging, or modernization involving import Charts, Chart, Chart3D, BarMark, LineMark, AreaMark, PointMark, RectangleMark, RuleMark, SectorMark, SurfacePlot, AxisMarks, chart axes, legends, ChartProxy, chartOverlay, chartBackground, chartGesture, chart selection, scrollable axes, Plot APIs, AXChartDescriptorRepresentable, Audio Graph, or chart accessibility. Do not use for general SwiftUI layout, navigation, state management, non-chart animation, Core Data, SwiftData, networking, package architecture, or repository documentation.
+description: Swift Charts implementation, review, and debugging for Chart/Chart3D, marks and plots, axes, legends, ChartProxy, selection, scrollable axes, and Audio Graph accessibility. Not for general SwiftUI layout or non-chart animation.
 ---
 
 # Swift Charts Patterns

@@ -1,6 +1,6 @@
 ---
 name: swift-data-writable-patterns
-description: "Use when SwiftUI or package APIs may fit SwiftDataWritable @Writable surfaces: @Query add/delete/save/reorder, @Writable autosave/throwing/mutableBy variants, single or optional PersistentModel mutation, @Bindable bridge via $model.writable or $model.throwsWritable, domain save/writeback hooks, WritableTransaction runtime bridges, Writable*/ThrowsWritable* domain extensions, or relationship chains such as $book.tags.append(tag). Also use for SwiftDataWritable review of graph-root relationship persistence, context.insert, save/autosave choices, or relationship append semantics; let SwiftData's own persistence, schema, migration, CloudKit, predicate, and custom-store rules govern underlying behavior. Do not use for SwiftData-only schema/container/query work unless @Writable surfaces are concrete."
+description: SwiftDataWritable API implementation and review for @Writable query/model edits, @Bindable bridges, relationship chains and WritableTransaction save hooks. Choose autosave or throwing surfaces. Not for SwiftData-only schema, container or migration work.
 ---
 
 # SwiftDataWritable Patterns
@@ -38,6 +38,7 @@ Use it when the task involves:
   passing `WritableTransaction` to a manual runtime bridge.
 - Reviewing code that imports `SwiftDataWritable` or references
   `Writable*` / `ThrowsWritable*` surface types.
+- Using `@Writable` autosave, throwing, or `mutableBy` variants, optional `PersistentModel` mutation, or `$model.writable` / `$model.throwsWritable` bridges.
 
 SwiftDataWritable defines the API surface, not the persistence truth. When the
 task asks whether a relationship append persists a new model, whether

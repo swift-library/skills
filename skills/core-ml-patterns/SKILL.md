@@ -1,6 +1,6 @@
 ---
 name: core-ml-patterns
-description: Use this skill for Core ML implementation and review across coremltools conversion, .mlmodel, .mlpackage, .mlmodelc, generated model classes, MLModel loading, MLModelConfiguration, compute units, MLFeatureProvider, async and batch prediction, MLState, MLTensor, MLMultiArray, image preprocessing, VNCoreMLModel integration, quantization, palettization, pruning, MLComputePlan profiling, downloaded model deployment, and on-device model performance. Do not use for Foundation Models generation, MLX Swift package runtime work, Vision request semantics without Core ML model issues, or server model APIs.
+description: Core ML conversion, inference, and deployment with coremltools, .mlmodel/.mlpackage assets, MLModel, MLTensor, model compression, and MLComputePlan profiling. Not for Foundation Models generation, MLX runtime work, or Vision-only request semantics.
 ---
 
 # Core ML Patterns

@@ -1,6 +1,6 @@
 ---
 name: swift-testing-patterns
-description: 'Use for Swift Testing test writing, review, XCTest migration, #expect/#require diagnostics, parameterized tests, traits/tags, async tests, fixtures, test doubles, integration tests, snapshot tests, dump snapshots, and flaky or parallel test reliability. Do not use for production concurrency design, UI automation, XCTest metrics, or non-test architecture work.'
+description: Swift Testing test authoring, XCTest migration, parameterized/async tests, fixtures and flaky parallel suites. Diagnose expect/require failures and snapshot regressions. Not for UI automation, XCTest metrics or production concurrency design.
 ---
 
 # Swift Testing Patterns

@@ -1,6 +1,6 @@
 ---
 name: swiftpm-github-release
-description: Audit and dry-run GitHub release readiness for SwiftPM packages and Swift command-line tools. Use for pre-tag gates, version/tag consistency, adopted CI readiness, repository validation commands, and publish-boundary checks. Produce readiness findings and exact next commands from the package declarations and adopted CI contract. Do not use for live tag pushes, GitHub release creation, external package-manager publishing, notarization/signing, App Store releases, or broad code fixes.
+description: SwiftPM package and CLI GitHub release readiness audits and dry runs. Check pre-tag gates, version consistency, adopted CI and repository validation; report blockers and exact next commands. Not for live publishing, signing or App Store release operations.
 ---
 
 # SwiftPM GitHub Release
@@ -26,6 +26,7 @@ distribution operations.
   without performing the live operation.
 - A repository is about to become public or push to a public remote for the
   first time, or release attachments are about to be uploaded.
+- Checking version/tag consistency, adopted CI readiness, package-declared validation commands, and publish boundaries before release.
 
 ## When Not To Use
 

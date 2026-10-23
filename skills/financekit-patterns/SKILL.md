@@ -1,6 +1,6 @@
 ---
 name: financekit-patterns
-description: Use this skill for FinanceKit implementation and review across FinanceStore availability, managed entitlement gating, NSFinancialDataUsageDescription, authorization, account queries, account balances, transaction queries, HistoryToken persistence, transaction history streams, Wallet orders, background delivery extensions, App Group handoff, FinanceKitUI, high-sensitivity financial-data display, and graceful unavailable states. Do not use for StoreKit purchases, PassKit checkout, market finance copy, generic budgeting models, or payment processing.
+description: FinanceKit implementation and review for FinanceStore authorization, accounts, balances, transaction history, Wallet orders, and background delivery. Includes entitlement and availability gating. Not for StoreKit purchases or PassKit checkout.
 ---
 
 # FinanceKit Patterns
@@ -23,6 +23,8 @@ and background delivery.
 - Implementing background delivery extensions, App Group handoff, or
   FinanceKitUI flows.
 - Reviewing high-sensitivity financial-data display, storage, and logging.
+- Checking `NSFinancialDataUsageDescription` and persisting `HistoryToken`
+  values across transaction-history streams.
 
 ## When Not To Use
 

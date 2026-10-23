@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $keychain-patterns to review or implement Keychain Services code for credential storage, access control, biometrics, migration, and tests."
+  default_prompt: "Use $keychain-patterns to implement or review SecItem credential storage, accessibility, access controls, sharing, biometrics, legacy-store migration and keychain tests."

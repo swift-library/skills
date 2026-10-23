@@ -1,6 +1,6 @@
 ---
 name: certificate-trust-patterns
-description: "Use for Apple certificate trust and TLS trust in Swift: SecTrust, SecCertificate, SecIdentity, URLSession authentication challenges, certificate/SPKI/CA/leaf pinning, NSPinnedDomains, client certificates, PKCS#12, mTLS, trust debugging, SecTrustEvaluate migration, and rotation. Do not use for Keychain storage, CryptoKit algorithms, App Transport Security, or server TLS deployment."
+description: SecTrust certificate/TLS trust implementation and debugging for URLSession challenges, certificate/SPKI pinning, NSPinnedDomains, client certificates and mTLS. Review trust API migration and rotation. Not for Keychain storage or server TLS deployment.
 ---
 
 # Certificate Trust Patterns
@@ -8,6 +8,11 @@ description: "Use for Apple certificate trust and TLS trust in Swift: SecTrust, 
 Use this skill for certificate trust evaluation, pinning, client certificates,
 and URLSession trust handling on Apple platforms. Keychain storage and general
 cryptography are out of scope.
+
+## When To Use
+
+- Implementing `SecTrust`, `SecCertificate`, `SecIdentity`, or URLSession authentication-challenge handling.
+- Reviewing certificate/SPKI/CA/leaf pinning, `NSPinnedDomains`, PKCS#12 client identities, mTLS, rotation, trust debugging, or `SecTrustEvaluate` migration.
 
 ## Workflow
 

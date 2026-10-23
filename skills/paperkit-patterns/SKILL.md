@@ -1,6 +1,6 @@
 ---
 name: paperkit-patterns
-description: Use this skill for PaperKit implementation and review across PaperMarkupViewController, PaperMarkup, structured markup elements, feature sets, insertion UI, toolbar/controller integration, PencilKit coexistence, markup persistence, thumbnails, rendering, SwiftUI/UIKit/AppKit wrapping, undo, document-based apps, and compatibility handling. Do not use for freeform PencilKit-only drawing, PDFKit document semantics, or stable production claims without current SDK verification.
+description: PaperKit structured markup implementation for PaperMarkupViewController, PaperMarkup, feature sets, persistence, rendering, undo, and PencilKit integration. Not for PencilKit-only drawing or PDFKit document semantics.
 ---
 
 # PaperKit Patterns
@@ -21,6 +21,7 @@ rendering, insertion UI, and compatibility handling.
   markup data.
 - Debugging unsupported content, feature-set compatibility, autosave, undo, or
   SwiftUI/UIKit/AppKit wrapper behavior.
+- Integrating insertion UI, toolbars, and markup controllers.
 
 ## When Not To Use
 

@@ -1,6 +1,6 @@
 ---
 name: xcode-instruments
-description: Use this skill for Xcode Instruments and xctrace work involving .trace files, recording traces, analyzing traces, Time Profiler, Hangs, Animation Hitches, SwiftUI template traces, SwiftUI update lanes, signposts, os_log timestamps, performance windows, analyze_trace.py, record_trace.py, connected devices, simulator profiling, or correlating trace evidence to source-level performance findings. Do not use for source-only SwiftUI refactoring, general SwiftUI layout or state design, Swift Charts, Core Data, SwiftData, networking, package architecture, or repository documentation.
+description: Xcode Instruments trace recording and analysis with xctrace, .trace files, Time Profiler, Hangs, Animation Hitches, SwiftUI update lanes and signposts. Correlate profiling windows with source findings. Not for source-only SwiftUI performance review.
 ---
 
 # Xcode Instruments
@@ -22,6 +22,7 @@ recording when local Xcode tools are available.
 - Correlating trace evidence with source-level performance findings.
 - Focusing analysis on a time window, log message, signpost interval, hang, or
   hitch.
+- Using `analyze_trace.py` or `record_trace.py` for connected-device or simulator profiling, including SwiftUI update lanes.
 
 ## When Not To Use
 

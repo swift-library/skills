@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $xcode-instruments to analyze or record an Xcode Instruments trace with xctrace, Time Profiler, hangs, hitches, logs, and signposts."
+  default_prompt: "Use $xcode-instruments to record or analyze Instruments .trace files with xctrace, Time Profiler, Hangs, Animation Hitches, SwiftUI lanes and signposts, correlating time windows with source findings."

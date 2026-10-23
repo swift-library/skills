@@ -1,6 +1,6 @@
 ---
 name: authenticationservices-patterns
-description: Use this skill for AuthenticationServices implementation and review across Sign in with Apple, ASAuthorizationAppleIDProvider, ASAuthorizationController, ASAuthorizationAppleIDCredential, credential state checks, identity-token validation handoff, ASWebAuthenticationSession, WebAuthenticationSession, OAuth callback handling, password AutoFill, passkeys, security-key authentication, associated domains, SignInWithAppleButton, presentation contexts, existing-account setup, and account-security upgrades. Do not use for generic Keychain storage, generic OAuth server design, or biometric-protected local secrets unless AuthenticationServices is in scope.
+description: AuthenticationServices login implementation and review for Sign in with Apple, ASWebAuthenticationSession OAuth callbacks, passkeys, security keys and password AutoFill. Handle credential state and presentation contexts. Not for Keychain-only storage.
 ---
 
 # AuthenticationServices Patterns
@@ -26,6 +26,7 @@ protection are out of scope.
   setup, or account-security upgrade flows.
 - Reviewing presentation context providers, callback URLs, cancellation,
   ephemeral sessions, or user-visible authentication errors.
+- Using `ASAuthorizationAppleIDProvider`, `ASAuthorizationController`, `ASAuthorizationAppleIDCredential`, or `SignInWithAppleButton` in Sign in with Apple flows.
 
 ## When Not To Use
 

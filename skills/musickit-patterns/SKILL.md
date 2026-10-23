@@ -1,6 +1,6 @@
 ---
 name: musickit-patterns
-description: Use this skill for MusicKit and Apple Music implementation and review across MusicAuthorization, catalog and library access, Apple Music subscription checks and offers, ApplicationMusicPlayer/SystemMusicPlayer, playback queues, artwork, charts, playlists, user tokens, MediaPlayer integration, Now Playing, remote commands, background audio, interruptions, and route changes. Do not use for generic AVKit video playback, StoreKit purchases, non-Apple streaming services, or music marketing copy.
+description: MusicKit implementation and review for MusicAuthorization, catalog/library access, subscription checks, ApplicationMusicPlayer/SystemMusicPlayer queues, and background audio. Not for generic AVKit playback or StoreKit purchases.
 ---
 
 # MusicKit Patterns
@@ -23,6 +23,7 @@ playback queues.
   Now Playing metadata, or remote commands.
 - Debugging Apple Music user-token, region, library, playback, or background
   audio behavior.
+- Reviewing MediaPlayer integration, interruptions, and audio route changes.
 
 ## When Not To Use
 

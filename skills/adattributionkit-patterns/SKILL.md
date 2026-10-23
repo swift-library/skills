@@ -1,6 +1,6 @@
 ---
 name: adattributionkit-patterns
-description: Use this skill for AdAttributionKit implementation and review across privacy-preserving ad attribution, publisher and advertised app setup, ad network identifiers, UIEventAttributionView, JWS impressions, StoreKit-rendered ads, postbacks, conversion values, conversion tags, re-engagement, developer postback copies, testing, and server integration boundaries. Do not use for campaign strategy, ASO, App Store metadata, or market reporting without app-side AdAttributionKit APIs.
+description: AdAttributionKit implementation and review for UIEventAttributionView, JWS impressions, StoreKit-rendered ads, postbacks, conversion values, and re-engagement. Not for campaign strategy or StoreKit purchases.
 ---
 
 # AdAttributionKit Patterns

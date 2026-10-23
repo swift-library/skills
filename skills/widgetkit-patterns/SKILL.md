@@ -1,6 +1,6 @@
 ---
 name: widgetkit-patterns
-description: Use this skill for WidgetKit implementation and review across widget extension targets, Widget, WidgetBundle, StaticConfiguration, AppIntentConfiguration, TimelineProvider, AppIntentTimelineProvider, TimelineEntry, reload policies, WidgetCenter, widget families, Lock Screen widgets, StandBy, Smart Stack behavior, interactive widgets, App Intents-backed configuration, ControlWidget, shared App Group data, deep links, push or background reload strategy, previews, snapshots, and extension constraints. Do not use for visual-only widget polish, Live Activity lifecycle, App Intent action design, or App Store screenshot/metadata work unless WidgetKit implementation is in scope.
+description: WidgetKit implementation and debugging for extension targets, TimelineProvider, AppIntentConfiguration, WidgetCenter reloads, interactive widgets, ControlWidget, and shared App Group data. Not for visual-only polish, Live Activity lifecycle, or general App Intent design.
 ---
 
 # WidgetKit Patterns
@@ -71,6 +71,16 @@ Visual-only widget review is out of scope.
 
 ## Review Rules
 
+- `AppIntentConfiguration` pairs a `WidgetConfigurationIntent` with an
+  `AppIntentTimelineProvider` whose `Intent` type matches the configuration.
+- Gate that configuration/provider pair at iOS 17, macOS 14, watchOS 10,
+  or visionOS 26; both are unavailable on tvOS.
+- `TimelineProvider` uses synchronous `placeholder(in:)` and completion-based
+  `getSnapshot(in:completion:)` / `getTimeline(in:completion:)`.
+- `AppIntentTimelineProvider` keeps a synchronous placeholder but uses async
+  `snapshot(for:in:)` / `timeline(for:in:)` with the configuration intent.
+- `TimelineReloadPolicy` offers `.atEnd`, `.after(Date)`, and `.never`.
+  Use `WidgetCenter.shared.reloadTimelines(ofKind:)` for a specific widget kind.
 - Do not handle visual-only feedback here when no WidgetKit implementation
   change is involved.
 - Do not fetch broad network data or perform heavy image processing inside

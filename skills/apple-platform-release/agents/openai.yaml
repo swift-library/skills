@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $apple-platform-release to prepare or troubleshoot Apple-platform signing, Xcode archive/export, IPA/PKG artifacts, Developer ID notarization, stapling, or Gatekeeper verification."
+  default_prompt: "Use $apple-platform-release to prepare or troubleshoot Xcode app signing, provisioning, archive/export, IPA/PKG artifacts, Developer ID notarization, stapling and Gatekeeper verification."

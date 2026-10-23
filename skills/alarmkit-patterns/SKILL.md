@@ -1,6 +1,6 @@
 ---
 name: alarmkit-patterns
-description: Use this skill for AlarmKit implementation and review across authorization, AlarmManager, alarm versus timer decisions, Alarm.Schedule, scheduling/configuration, state observation, countdowns, AlarmAttributes, AlarmPresentation, AlarmPresentationState, AlarmButton, stop/snooze/secondary actions, Live Activity/widget extension wiring, and Info.plist setup. Do not use for EventKit calendar alarms, generic local notifications, or ActivityKit-only UI without AlarmKit scheduling.
+description: AlarmKit implementation and review for AlarmManager authorization, Alarm.Schedule, alarms/timers, countdowns, AlarmPresentation, stop/snooze actions, and Live Activity wiring. Not for EventKit alarms, local notifications, or ActivityKit-only UI.
 ---
 
 # AlarmKit Patterns

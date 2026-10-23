@@ -2,4 +2,4 @@ interface:
   display_name: "PermissionKit Patterns"
   short_description: "Implement and review PermissionKit communication"
   brand_color: "#FF2D55"
-  default_prompt: "Use $permissionkit-patterns for child communication experiences, communication limits, contact handles, AskCenter, PermissionButton, PermissionQuestion, CommunicationTopic, PermissionChoice, PermissionResponse, significant app update topics, response observation, AskError, family/child account behavior, and iMessage-only availability."
+  default_prompt: "Use $permissionkit-patterns to implement or review PermissionKit child/guardian requests, communication limits, response observation, significant app update topics and availability/error handling."

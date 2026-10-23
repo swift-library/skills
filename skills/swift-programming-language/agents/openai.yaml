@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $swift-programming-language to implement, modernize, or review Swift code for broad language patterns, API naming, argument labels, FormatStyle usage, documentation comments, and project-compatible modern API assumptions."
+  default_prompt: "Use $swift-programming-language to implement, modernize or review Swift language patterns, API naming, argument labels, documentation comments and FormatStyle, keeping framework-specific work with its domain owner."

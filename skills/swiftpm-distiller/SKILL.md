@@ -1,6 +1,6 @@
 ---
 name: swiftpm-distiller
-description: Distill known SwiftPM package or Swift library evidence into a normalized, evidence-backed handoff report for a separate skill-creation workflow. Use when asked to turn SwiftPM/library evidence into candidate skill boundaries, candidate triggers, suggested tasks, workflows, suggested validation commands, risks, uncertainty, or import/dependency mapping. Do not use for final SKILL.md authoring, final skill metadata, collection placement, package architecture review, dependency recommendation, generic docs migration, code rewrites, or non-Swift package analysis.
+description: SwiftPM package or Swift library distillation into a skill-authoring handoff with candidate triggers, API workflows, validation commands and risks. Resolve unfamiliar imports to their packages first. Not for final SKILL.md authoring or adoption decisions.
 ---
 
 # SwiftPM Distiller
@@ -53,6 +53,7 @@ and open questions should be handed to the skill creator.
   dependency module, or "what does X do?" Resolve the module to package and
   interface evidence first, then distill agent-operational guidance rather than
   guessing from the import name.
+- Identifying risks, uncertainty, and evidence gaps in the candidate skill handoff.
 
 ## When Not To Use
 

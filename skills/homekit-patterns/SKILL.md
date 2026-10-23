@@ -1,6 +1,6 @@
 ---
 name: homekit-patterns
-description: Use this skill for HomeKit and MatterSupport implementation and review across HMHomeManager, homes, rooms, accessories, services, characteristics, action sets, triggers, Matter commissioning, MatterAddDeviceExtensionRequestHandler, HomeKit entitlements, delegate lifecycle, and HomeKit Accessory Simulator validation. Do not use for generic Bluetooth, generic networking, SwiftUI architecture, or broad IoT product strategy.
+description: HomeKit and MatterSupport implementation for HMHomeManager, characteristic read/write/observe flows, action sets, triggers, and Matter commissioning extensions. Not for generic Bluetooth communication or AccessorySetupKit picker flows.
 ---
 
 # HomeKit Patterns

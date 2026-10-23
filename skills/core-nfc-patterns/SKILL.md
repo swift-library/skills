@@ -1,6 +1,6 @@
 ---
 name: core-nfc-patterns
-description: Use this skill for Core NFC implementation and review across NFCNDEFReaderSession, NFCTagReaderSession, NFCReaderSession, NFCNDEFMessage, NFCNDEFPayload, NDEF read/write, ISO 7816, ISO 15693, FeliCa, MIFARE, VAS/payment reader sessions, background tag reading, NFCReaderUsageDescription, NFC tag reader entitlements, readingAvailable checks, session invalidation, and physical tag testing. Do not use for Core Bluetooth, PassKit checkout, general QR/barcode scanning, or generic hardware strategy.
+description: Core NFC tag implementation and debugging for NFCNDEFReaderSession, NFCTagReaderSession, NDEF read/write, ISO 7816, FeliCa, entitlements, and session invalidation. Not for PassKit checkout or camera barcode scanning.
 ---
 
 # Core NFC Patterns
@@ -20,6 +20,8 @@ physical tag validation.
   background tag reading, and availability checks.
 - Debugging session invalidation, polling options, physical tag behavior,
   payload parsing, and write failures.
+- Reviewing `NFCReaderSession`, VAS/payment reader sessions, and
+  `readingAvailable` checks.
 
 ## When Not To Use
 

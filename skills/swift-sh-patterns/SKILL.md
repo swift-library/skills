@@ -1,6 +1,6 @@
 ---
 name: swift-sh-patterns
-description: Use this skill when writing, reviewing, or debugging Swift scripts that run through swift-sh, including swift-sh shebangs such as `#!/usr/bin/swift sh`, `swift-sh` or `swift sh` invocation, swift-sh import-line dependency comments, local path dependency comments, script argument passthrough, stdout/stderr, exit codes, cache/package/open command usage, and script-level validation. Do not use for ordinary Swift scripts with no swift-sh runner or dependency-comment behavior, installing swift-sh or Swift toolchains, Homebrew/tap/PATH setup, Xcode/CLT setup, app implementation, SwiftPM package architecture, or package migration as the primary task.
+description: swift-sh script authoring and debugging with shebangs, import-line dependency comments, argument passthrough, stdout/stderr, exit codes and cache/package/open commands. Not for ordinary Swift scripts, runner installation or maintained-package migration.
 ---
 
 # swift-sh Patterns
@@ -43,6 +43,7 @@ migration into a maintained SwiftPM package.
   behavior.
 - Choosing a stable swift-sh invocation when toolchain managers affect
   `swift sh` subcommand lookup.
+- Using `swift sh cache clean`, `swift sh package`, or `swift sh open`, and validating swift-sh scripts.
 
 ## When Not To Use
 

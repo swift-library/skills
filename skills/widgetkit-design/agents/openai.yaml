@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $widgetkit-design to review and polish WidgetKit widget design."
+  default_prompt: "Use $widgetkit-design to review or polish WidgetKit layouts, Lock Screen and Home Screen families, Gauge, containerBackground, typography, padding, hierarchy, and visible data freshness."

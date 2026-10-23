@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $swift-concurrency-patterns to diagnose Swift Concurrency diagnostics, actor isolation, Sendable issues, data races, async/await migration, and Swift 6 strict concurrency changes."
+  default_prompt: "Use $swift-concurrency-patterns to diagnose or review async/await, actors, tasks, Sendable, isolation, data races and Swift 6 migration, including concurrency-specific SwiftUI or Core Data failures."

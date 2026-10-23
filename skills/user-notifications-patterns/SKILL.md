@@ -1,6 +1,6 @@
 ---
 name: user-notifications-patterns
-description: Use this skill for UserNotifications and APNs implementation and review across notification authorization, local notifications, remote push registration, APNs token handling, payload fields, silent/background pushes, foreground and tap handling, categories, actions, badges, localization keys, notification service/content extensions, delivery debugging, and simulator/device testing. Do not use for marketing push copy alone, App Store release operations, Live Activities, or simulator operation with no notification implementation change.
+description: UserNotifications and APNs implementation and debugging for authorization, local scheduling, push tokens/payloads, background pushes, foreground/tap handling, and service/content extensions. Not for Live Activities or notification copy alone.
 ---
 
 # User Notifications Patterns
@@ -22,6 +22,7 @@ and app routing code.
 - Building notification service or content extensions.
 - Routing foreground notifications, notification taps, deep links, or app state
   updates.
+- Validating notification delivery and routing with simulator/device tests.
 
 ## When Not To Use
 
@@ -66,6 +67,18 @@ and app routing code.
 
 ## Review Rules
 
+- Set `UNUserNotificationCenter.delegate` before returning from
+  `application(_:didFinishLaunchingWithOptions:)` to receive response callbacks.
+- Foreground presentation requires `willPresent` handling and timely completion;
+  without it, the notification is not presented.
+- On iOS 14+, use presentation options `.banner` and `.list` in place of
+  deprecated `.alert`; these are presentation choices, not authorization options.
+- Adding a `UNNotificationRequest` with an existing pending identifier replaces
+  that request; keep identifiers deliberate when rescheduling.
+- A service extension must call its content handler before expiration or the
+  original content is delivered; handle `serviceExtensionTimeWillExpire()`.
+- `UNAuthorizationOptions.timeSensitive` is deprecated in favor of the
+  time-sensitive entitlement; do not request it as a permission option.
 - Do not place secrets or sensitive private data in notification payloads.
 - Do not assume a push arrives, arrives once, arrives in order, or launches the
   app immediately.

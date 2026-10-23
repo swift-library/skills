@@ -2,4 +2,4 @@ interface:
   display_name: "SwiftPM Plugin Patterns"
   short_description: "Design and debug SwiftPM plugin tools"
   brand_color: "#F05138"
-  default_prompt: "Use $swiftpm-plugin-patterns to design or debug a SwiftPM plugin with an executable tool, core target, generated sources, and SwiftSyntax-safe validation."
+  default_prompt: "Use $swiftpm-plugin-patterns to design, implement or debug command/build tool plugins, executable tool/core boundaries, generated sources and context.tool(named:) host-tool failures."

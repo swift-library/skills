@@ -5,6 +5,12 @@
 - Breaking: rename `swift-scripts-patterns` to `swift-sh-patterns` (`swift-sh Patterns`).
 - Breaking: rename `swift-testings-patterns` to `swift-testing-patterns` (`Swift Testing Patterns`).
 - Collection documentation lives under `docs/`, indexed by `docs/README.md`.
+- Skill descriptions lead with the framework or task and keep only adjacent
+  boundaries; the whole collection listing fits Claude Code and Codex listing
+  budgets, enforced by `scripts/check`.
+- CloudKit, App Intents, WidgetKit, UserNotifications, BackgroundTasks,
+  EnergyKit, StoreKit and HealthKit skills add SDK-verified API, entitlement
+  and availability facts.
 - `scripts/check` validates skill contracts, metadata, links, reference cycles,
   and organization-neutral content, and reports host listing sizes.
 - Repository automation uses lowercase `scripts/`, including the macOS app

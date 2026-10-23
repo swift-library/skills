@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $swiftdata-patterns whenever a change touches SwiftData code, including models, relationships, containers, contexts, queries, migrations, CloudKit sync, concurrency, or Core Data coexistence."
+  default_prompt: "Use $swiftdata-patterns to implement or debug SwiftData models, relationship persistence, graph-root insertion, contexts, queries, migrations and CloudKit sync, including persistence beneath @Writable chains."

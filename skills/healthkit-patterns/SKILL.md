@@ -1,6 +1,6 @@
 ---
 name: healthkit-patterns
-description: Use this skill for HealthKit implementation and review across HKHealthStore setup, share/read authorization, health data availability, sample queries, statistics queries, observer and anchored object queries, background delivery, sample writing/deleting, units, workouts, HKWorkoutSession, HKLiveWorkoutBuilder, workout mirroring, HealthKit privacy, and health-chart data. Do not use for generic persistence, chart styling only, medical advice, or fitness product copy with no HealthKit behavior.
+description: HealthKit implementation and review for HKHealthStore authorization, sample/statistics queries, anchored updates, background delivery, HKWorkoutSession, HKLiveWorkoutBuilder, and workout mirroring. Not for chart styling or clinical interpretation.
 ---
 
 # HealthKit Patterns
@@ -43,6 +43,8 @@ updates, and manage workout sessions.
 - Workout configuration, `HKWorkoutSession`, `HKLiveWorkoutBuilder`, delegates,
   mirroring, and watch/iPhone coordination.
 - Tests, device data availability, background delivery setup, and privacy UI.
+- Inspect `NSHealthShareUsageDescription` (reading) and
+  `NSHealthUpdateUsageDescription` (writing) in Info.plist.
 
 ## Workflow
 
@@ -58,6 +60,10 @@ updates, and manage workout sessions.
 6. For workouts, define the workout configuration, session lifecycle, builder,
    live data source, delegate handling, and sample association.
 7. Keep health data display privacy-first and avoid logging sensitive samples.
+- `HKHealthStore.requestAuthorization(toShare:read:)` is async throws from
+  iOS 15/watchOS 8/macCatalyst 15/macOS 13; completion success is not an access grant.
+- End builder collection with `endCollection(at:)` before `finishWorkout`; the
+  latter creates and saves the workout.
 
 ## Review Rules
 
@@ -67,6 +73,12 @@ updates, and manage workout sessions.
 - Do not write samples without clear provenance, units, and user intent.
 - Do not miss observer-query completion handlers.
 - Do not put sensitive health values into logs, analytics, or previews.
+- `authorizationStatus(for:)` reports permission to save the type; its
+  sharing status does not reveal read permission.
+- Background delivery still needs an observer query and corresponding fetches;
+  step-count delivery is limited to hourly or slower even if requesting immediate.
+- Gate `HKWorkoutSession(healthStore:configuration:)` to iOS 26/watchOS 5;
+  this initializer is unavailable on tvOS, visionOS, macOS, and Mac Catalyst.
 
 ## Validation
 
@@ -77,6 +89,8 @@ updates, and manage workout sessions.
 - Test background delivery and observer completion on device when in scope.
 - Test workout start, pause, resume, end, save, and mirroring paths when
   workout behavior changes.
+- Test the callback form of `finishWorkout`: nil workout plus nil error means
+  saving succeeded but the sample is unavailable because the device is locked.
 
 ## Output
 

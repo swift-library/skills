@@ -2,4 +2,4 @@ interface:
   display_name: "JavaScriptKit Patterns"
   short_description: "Use JavaScriptKit for Swift Wasm interop"
   brand_color: "#F05138"
-  default_prompt: "Use $javascriptkit-patterns to implement or review JavaScriptKit JSObject/JSValue interop in this Swift Wasm package."
+  default_prompt: "Use $javascriptkit-patterns to implement or review JavaScriptKit dynamic interop, value conversion, callback lifetimes, exceptions, async promises and PackageToJS packaging in Swift/Wasm."

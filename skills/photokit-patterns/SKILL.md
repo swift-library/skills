@@ -1,6 +1,6 @@
 ---
 name: photokit-patterns
-description: Use this skill for Photos, PhotosUI, and photo/camera workflow implementation and review across PhotosPicker, PHPickerViewController, Transferable media loading, PhotoKit library authorization, limited library handling, saving to albums, PHAsset workflows, AVCaptureSession photo/video capture, camera permission, media thumbnails, downsampling, HEIC/HEIF handling, and media-grid memory behavior. Do not use for playback-only AVKit work, generic image loading, market screenshots, or visual design polish.
+description: Photos and PhotosUI implementation for PhotosPicker, PHPickerViewController, Transferable loading, limited-library access, PHAsset albums, and AVCaptureSession photo/video capture. Includes downsampling and media-grid memory. Not for playback-only AVKit.
 ---
 
 # PhotoKit Patterns

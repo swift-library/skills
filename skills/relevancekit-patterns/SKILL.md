@@ -1,6 +1,6 @@
 ---
 name: relevancekit-patterns
-description: Use this skill for RelevanceKit implementation and review across watchOS Smart Stack relevance, RelevantContext, widget relevance donation, WidgetKit and App Intents integration, time/date relevance, location and place relevance, fitness clues, sleep clues, hardware clues, grouping, relevant widget testing, permission boundaries, graceful unsupported-platform behavior, and current SDK gating. Do not use for visual-only WidgetKit review, generic widget timelines, HealthKit data access, Core Location implementation, or App Intent design unless RelevanceKit relevance signals are in scope.
+description: RelevanceKit implementation and review for watchOS Smart Stack surfacing, RelevantContext, widget relevance donation, contextual clues, and permission/SDK gating. Not for widget timelines, visual polish, or underlying HealthKit/Core Location data access.
 ---
 
 # RelevanceKit Patterns
@@ -22,6 +22,7 @@ timeline implementation.
 - Testing relevance on watchOS and handling unsupported platforms gracefully.
 - Reviewing permission boundaries for location, fitness, sleep, or other
   sensitive contextual signals used to influence widget visibility.
+- Grouping relevance signals and checking current SDK availability gates.
 
 ## When Not To Use
 

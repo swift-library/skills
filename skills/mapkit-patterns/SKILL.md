@@ -1,6 +1,6 @@
 ---
 name: mapkit-patterns
-description: Use this skill for MapKit and map-backed location implementation and review across SwiftUI Map, markers, annotations, overlays, camera state, map controls, search, directions, Look Around, snapshots, MKMapItem, Core Location authorization, live updates, geofencing, background location, simulator GPX testing, and map accessibility. Do not use for generic privacy copy, non-map location storage, broad SwiftUI architecture, or server-side geospatial systems.
+description: MapKit implementation and review for SwiftUI Map, annotations, overlays, camera state, search, directions, and Look Around; Core Location authorization, geofencing, and background updates for map features.
 ---
 
 # MapKit Patterns

@@ -1,6 +1,6 @@
 ---
 name: sensorkit-patterns
-description: Use this skill for SensorKit implementation and review across SRSensorReader, SRSensor, SRFetchRequest, SRFetchResult, sensor authorization, com.apple.developer.sensorkit.reader.allow entitlement, research-study approval, user consent, sample fetches, deletion records, ambient light, device usage, keyboard metrics, messages/phone usage, visits, wrist detection, speech metrics, face metrics, wrist temperature, ECG, PPG, and high-sensitivity data handling. Do not use for Core Motion app sensors, HealthKit samples, general analytics, or non-research sensor access.
+description: SensorKit research-data implementation for SRSensorReader, authorization, reader entitlements, approved sample fetches, deletion records, and consent/privacy handling. Not for Core Motion app sensors, HealthKit samples, or non-research access.
 ---
 
 # SensorKit Patterns
@@ -22,6 +22,8 @@ high-sensitivity sensor-derived metrics.
   metrics, wrist temperature, ECG, or PPG.
 - Reviewing privacy, consent, storage, research-study boundaries, and data
   minimization for SensorKit data.
+- Reviewing `com.apple.developer.sensorkit.reader.allow` and approved
+  messages/phone usage data access.
 
 ## When Not To Use
 

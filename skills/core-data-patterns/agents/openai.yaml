@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $core-data-patterns to review or fix Core Data code, including stack setup, contexts, fetches, saves, migration, CloudKit sync, performance, or testing."
+  default_prompt: "Use $core-data-patterns to implement or diagnose Core Data stacks, contexts, fetches, saves, conflicts, migrations, CloudKit sync, performance and test-store behavior."

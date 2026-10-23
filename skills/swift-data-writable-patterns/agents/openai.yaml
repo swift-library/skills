@@ -2,4 +2,4 @@ interface:
   display_name: "SwiftDataWritable Patterns"
   short_description: "Writable SwiftData query, model, relationship, and transaction surfaces"
   brand_color: "#F05138"
-  default_prompt: "Use $swift-data-writable-patterns to check whether SwiftUI + SwiftData read/write/edit work fits SwiftDataWritable @Writable query, model, Bindable bridge, relationship-chain, transaction, graph-root persistence, or save-boundary workflows."
+  default_prompt: "Use $swift-data-writable-patterns to implement or review SwiftDataWritable @Writable query/model edits, Bindable bridges, relationship chains and transaction/save hooks, using SwiftData rules for underlying persistence."

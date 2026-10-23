@@ -1,6 +1,6 @@
 ---
 name: spritekit-patterns
-description: Use this skill for SpriteKit implementation and review across SKScene, SKView, SpriteView, SKRenderer, SKNode, SKSpriteNode, SKAction, texture atlases, physics bodies, SKPhysicsWorld, contact delegates, touch input, SKCameraNode, particles, tile maps, shaders, constraints, frame-cycle callbacks, SwiftUI presentation, and 2D game performance. Do not use for Game Center services, SceneKit 3D, RealityKit/ARKit, browser games, or generic SwiftUI layout.
+description: SpriteKit 2D implementation and review for SKScene, SpriteView, node hierarchies, SKAction, texture atlases, physics contacts, frame callbacks, and performance. Not for Game Center services or SceneKit/RealityKit 3D rendering.
 ---
 
 # SpriteKit Patterns
@@ -23,6 +23,7 @@ particles, tile maps, shaders, SwiftUI presentation, and performance.
   contact delegates.
 - Handling touches, camera/HUD behavior, particles, tile maps, audio nodes,
   texture atlases, shaders, or performance overlays.
+- Coordinating `SKCameraNode` camera/HUD state with SwiftUI presentation.
 
 ## When Not To Use
 

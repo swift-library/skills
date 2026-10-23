@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/icon-small.svg"
   icon_large: "./assets/icon-large.png"
   brand_color: "#F05138"
-  default_prompt: "Use $cryptokit-patterns to review or implement CryptoKit code for encryption, hashing, key agreement, signing, Secure Enclave, availability, and tests."
+  default_prompt: "Use $cryptokit-patterns to implement or review CryptoKit encryption, hashing, key derivation, signing, key agreement, HPKE, post-quantum APIs and Secure Enclave with availability and crypto tests."

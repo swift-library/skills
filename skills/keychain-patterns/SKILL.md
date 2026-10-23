@@ -1,6 +1,6 @@
 ---
 name: keychain-patterns
-description: 'Use for Apple Keychain Services in Swift or Apple-platform code: SecItem CRUD, OSStatus, kSecClass, kSecAttrAccessible, SecAccessControl, access groups/sharing, credential storage, migration from UserDefaults/@AppStorage/plists/NSCoding, keychain-bound biometrics, macOS data protection keychain, and keychain tests. Do not use for CryptoKit algorithms, certificate trust/pinning, App Transport Security, or server auth architecture.'
+description: Keychain Services credential storage and migration with SecItem CRUD, OSStatus, accessibility, SecAccessControl, biometrics and access groups. Covers macOS data protection keychains and tests. Not for CryptoKit algorithms or certificate trust.
 ---
 
 # Keychain Patterns
@@ -9,6 +9,11 @@ Use this skill for Keychain Services implementation, review, debugging, and
 modernization on Apple platforms. Keep the workflow centered on Keychain
 storage and access control; cryptography and certificate trust work is out of
 scope.
+
+## When To Use
+
+- Implementing `SecItem` CRUD, `OSStatus` handling, `kSecClass`, `kSecAttrAccessible`, `SecAccessControl`, access-group sharing, or keychain-bound biometrics.
+- Migrating credentials from `UserDefaults`, `@AppStorage`, plists, or `NSCoding`; reviewing macOS data protection keychains and keychain tests.
 
 ## Workflow
 

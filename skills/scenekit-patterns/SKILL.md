@@ -1,6 +1,6 @@
 ---
 name: scenekit-patterns
-description: Use this skill for SceneKit implementation, migration review, and maintenance across SCNView, SceneView, SCNScene, SCNNode, transforms, SCNGeometry, SCNMaterial, PBR materials, lights, cameras, SCNAction, SCNTransaction, animations, physics, particles, model loading, shader modifiers, SCNProgram, hit testing, render delegates, and SpriteKit overlays. Do not use for new RealityKit/ARKit-first work, SpriteKit 2D, low-level Metal rendering, or browser 3D.
+description: SceneKit maintenance and migration review for SCNView, SCNScene, SCNNode, materials, animation, physics, shader modifiers, and SCNProgram. Not for new RealityKit/ARKit work, SpriteKit 2D scenes, or low-level Metal rendering.
 ---
 
 # SceneKit Patterns
@@ -23,6 +23,7 @@ embedding.
 - Adding physics, particles, hit testing, SpriteKit overlays, custom geometry,
   shader modifiers, `SCNProgram`, or renderer delegates.
 - Reviewing SceneKit-to-RealityKit migration boundaries for an existing app.
+- Loading SceneKit models and their imported `SCNGeometry` content.
 
 ## When Not To Use
 

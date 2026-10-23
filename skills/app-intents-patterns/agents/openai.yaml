@@ -2,4 +2,4 @@ interface:
   display_name: "App Intents Patterns"
   short_description: "Implement and review App Intents system integrations"
   brand_color: "#0A84FF"
-  default_prompt: "Use $app-intents-patterns for App Intents actions, entities, shortcuts, Siri, Spotlight, widgets, controls, Focus, and related system integration work."
+  default_prompt: "Use $app-intents-patterns to implement or review AppIntent actions, entities and queries, App Shortcuts, Siri/Spotlight discovery, widget/control interactions, Focus filters, and Live Activity actions."
