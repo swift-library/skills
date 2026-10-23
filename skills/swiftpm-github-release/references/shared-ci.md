@@ -84,7 +84,8 @@ instead of copying the script. A template carries no scripts.
 
 - Workflows run their own scripts by checking out the workflow repository at
   `job.workflow_sha`; they embed no script source and need no generators.
-- Builds and tests pass `--disable-index-store`; CI never uses the index.
+- macOS builds and tests pass `--disable-index-store`; CI never uses the index.
+  Linux keeps it because XCTest discovers tests through the index store.
 - Each job requests only the permissions it uses. Release workflows restore
   and save no caches and never cancel running or queued releases.
 - The repository validates itself: its CI calls the validation and policy
