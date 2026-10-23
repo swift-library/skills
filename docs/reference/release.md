@@ -22,7 +22,7 @@ the same collection under `skills/`.
 ## Compatibility Surface
 
 Consumers depend on the `swift-skills` plugin name, skill names under `skills/`,
-and the installation routes in [Installation](../Installation.md). VERSIONING
+and the installation routes in [Installation](../installation.md). VERSIONING
 decides how a change to this surface affects the next version. Compatibility
 is established by review and tests, not inferred from comparing version
 numbers.
@@ -33,7 +33,7 @@ Collection checks use Python 3 and Git. Each skill's `SKILL.md` or
 `scripts/README.md` identifies the tools its workflow needs. The collection has
 no Swift package dependency declarations or lockfile.
 
-[Plugin distribution](../Architecture/skill-authoring.md#plugin-distribution)
+[Plugin distribution](../architecture/skill-authoring.md#plugin-distribution)
 documents isolated Claude Code and Codex installation checks. Verified host,
 operating-system and tool-version combinations for this release are not
 established.
@@ -46,8 +46,10 @@ It also checks plugin identity, marketplace sources and whole-collection skill
 discovery. Checks are read-only. Version updates are manual; a version metadata
 generator is not established.
 
-[`scripts/check`](../../scripts/check) runs plugin validation, distribution
+[`scripts/check`](../../scripts/check) runs plugin and skill validation,
 regression tests, both documentation profile exports and a whitespace check.
+Skill validation checks frontmatter, host metadata, links, reference cycles and
+organization-neutral content, and reports host listing sizes.
 The CI validation job uses read-only repository permissions.
 
 ## Candidate, Acceptance and Publication
@@ -55,7 +57,7 @@ The CI validation job uses read-only repository permissions.
 The candidate is the committed source tree for the whole plugin. Run
 `scripts/check` against that candidate and review the version source, mirrors
 and changelog. Use the isolated host checks in
-[Plugin distribution](../Architecture/skill-authoring.md#plugin-distribution)
+[Plugin distribution](../architecture/skill-authoring.md#plugin-distribution)
 for installation evidence.
 
 Publication follows the organization's
@@ -85,7 +87,7 @@ record.
 | Operation | Existing command or explicit manual procedure | Required access |
 | --- | --- | --- |
 | Version update and check | Manually update `VERSION` and the three mirrors; run `python3 -B scripts/validate-plugins.py` and `scripts/check` | Repository write access for updates; local read and execution access for checks |
-| Candidate validation and build | `scripts/check`; isolated host checks in [Plugin distribution](../Architecture/skill-authoring.md#plugin-distribution); a collection release build is not established | Local execution access and the selected hosts |
+| Candidate validation and build | `scripts/check`; isolated host checks in [Plugin distribution](../architecture/skill-authoring.md#plugin-distribution); a collection release build is not established | Local execution access and the selected hosts |
 | Status and interrupted-run recovery | Inspect `git status`, the candidate commit and CI results; publication recovery follows VERSIONING | Repository read access; publication access for recovery |
 | Acceptance and publication | Manually review candidate evidence and follow VERSIONING's release procedure with tag `vX.Y.Z` and message `skills X.Y.Z`; release automation is not established | Authorized maintainer with tag and release write access |
 | Cleanup | Manually inventory and remove the task's reproducible `.build/` outputs and isolated host homes after verification | Local filesystem access |

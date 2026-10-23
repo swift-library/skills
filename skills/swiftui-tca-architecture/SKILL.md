@@ -33,7 +33,7 @@ of scope.
 - The user explicitly asks for TCA, `@Reducer`, `StoreOf`, `Effect`,
   `TestStore`, `@Dependency`, `@Shared`, TCA navigation, or TCA presentation.
 - A review or refactor is scoped to existing TCA code.
-- `swiftui-architecture` has already selected TCA and handed off detailed work.
+- The feature architecture owner has selected TCA and handed off detailed work.
 
 ## When Not To Use
 

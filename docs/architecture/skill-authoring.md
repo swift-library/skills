@@ -13,12 +13,13 @@ references, templates, or scripts needed for the current task.
 
 ## Ownership Model
 
-- `AGENTS.md` routes work inside this repository and records durable operating
-  notes. It should not duplicate full skill logic.
-- `README.md` indexes the collection, available skills, and installation paths.
-- `Documentation/Architecture/*` owns collection-level skill design rules.
-- `skills/*/SKILL.md` owns the boundary, trigger contract, workflow, validation
-  rules, and output format for one skill.
+- `AGENTS.md` guides collection maintenance and cross-cutting edit guardrails.
+- `README.md` is the reader manual and discovery entry for scope, installation,
+  usage, and requirements.
+- `docs/README.md` indexes collection documentation; `docs/catalog.md` owns
+  skill discovery, and `docs/architecture/*` owns skill authoring rules.
+- Each skill's description and `skills/*/SKILL.md` own its trigger and overlap
+  boundaries; `SKILL.md` also owns its workflow, validation, and output.
 - `skills/*/rules/` owns stable skill-local invariants and decision rules.
 - `skills/*/knowledge/` owns curated domain knowledge used by the skill.
 - `skills/*/references/` owns long-form source material or topic depth that
@@ -130,7 +131,7 @@ Expected traits:
 - produces implementation guidance, review findings, or small code changes
 - prefers one framework or tightly bounded platform domain per skill
 
-Examples: `swift-concurrency-patterns`, `swift-testings-patterns`,
+Examples: `swift-concurrency-patterns`, `swift-testing-patterns`,
 `core-data-patterns`, and `swiftui-patterns`.
 
 Default split rule: prefer one Apple / Swift framework or tightly bounded
@@ -191,11 +192,14 @@ Do not create a separate skill when:
 
 When two skills could trigger, route to the more specific one first. Keep
 baseline skills shallow and make them hand off to domain skills for deep work.
+For work spanning several security domains, combine the focused skills that own
+those domains.
 
-Keep skill references one-directional: a skill names or relies on only the
-skills it invokes or derives from, never its callers, so the reference graph
-has no cycles. Treat caller decisions as inputs; when a decision is absent,
-produce no output that depends on it and report that the decision is needed.
+Keep dependency edges one-directional: a skill names the skills it invokes or
+derives from. Describe callers by responsibility rather than skill name, so
+the reference graph has no cycles. Treat caller decisions as inputs; when a
+decision is absent, produce no output that depends on it and report that the
+decision is needed.
 An orchestrator invoked by a higher-level orchestrator describes that owner
 by responsibility or by the artifact it reads, such as a shared standard,
 rather than by skill name.
@@ -320,8 +324,8 @@ review before changing this collection. A candidate may come from a user idea,
 an existing local skill that might be split or merged, an observed repeated
 task, or another public/local skill. The goal is to improve local trigger
 precision, workflow quality, reference coverage, or mechanical reliability.
-When the feed workflow routes a candidate here, this collection still owns the
-local value, authority, information-conservation, and final shape decision.
+The collection owns candidate value, authority, information conservation, and
+final shape decisions.
 Record those decisions in audit-ready rows: source item id/name, state, local
 destination, local owner, reason, and authority status when the item depends on
 mutable Apple, Swift, Xcode, package, or tool behavior.
@@ -400,15 +404,19 @@ snippet, fixture, or output exemplar.
 
 ## Description-Driven Disclosure
 
-Progressive disclosure starts in the `description`, not in the `SKILL.md` body.
-The description is always visible to the agent and should decide whether the
-skill is worth loading at all.
+Hosts list skills within a character budget. When the listing exceeds that
+budget, a host may shorten descriptions or show only names. Names must carry
+the framework or task so selection remains meaningful in a names-only listing.
+Descriptions provide the next trigger filter before the `SKILL.md` body is read.
+The collection's total listing size is checked by `scripts/check`; the validator
+owns host budgets and which scenarios are enforced.
 
 Write each description as a compact trigger filter:
 
-- name the highest-signal task or code shape first
+- lead with the framework or task and its highest-signal code shape
+- omit filler such as "Use this skill ..."
 - include the main positive trigger categories
-- include negative boundaries when nearby skills could also match
+- keep only adjacent negative boundaries where another skill could also match
 - identify the output or judgment the skill produces
 - avoid full package, framework, API, or topic catalogs
 
@@ -435,13 +443,14 @@ Every description should answer:
 - what artifact or judgment the skill produces
 - what should not trigger it
 
-Put high-value trigger phrases early. Include negative boundaries. Avoid broad
-names and descriptions such as "Swift helper", "docs", "review", or "utility".
+Put high-value trigger phrases early. Include adjacent negative boundaries.
+Avoid broad names and descriptions such as "Swift helper", "docs", "review",
+or "utility".
 
 Good descriptions name capability and boundary:
 
 ```yaml
-description: Use for Swift Package architecture design, review, and diagnostics involving target graphs, module boundaries, dependency direction, composition roots, public API surfaces, source selection, or compact evidence briefs. Do not use for feature specs, roadmap planning, code rewrites, UI feature architecture, or full-repository concatenation.
+description: Swift Package architecture design, review, and diagnostics involving target graphs, module boundaries, dependency direction, composition roots, public API surfaces, source selection, or compact evidence briefs. Do not use for UI feature architecture or package documentation placement.
 ```
 
 Bad descriptions are too broad:
@@ -519,9 +528,9 @@ loop:
 5. Add or update `agents/openai.yaml` only after `SKILL.md` is stable.
 6. Apply the skill candidate review rules before adding, splitting, merging,
    adapting, incorporating, or registering a skill.
-7. Update discovery in `Documentation/Catalog.md` and routing in `AGENTS.md`
-   after the skill directory contains `SKILL.md`. The root plugin discovers
-   every skill under `skills/` automatically.
+7. Update discovery in `docs/catalog.md` after the skill directory contains
+   `SKILL.md`. Update `AGENTS.md` only when collection maintenance routes change.
+   The root plugin discovers every skill under `skills/` automatically.
 8. Reconcile every advertised path before commit:
    - every advertised `skills/<name>` path exists
    - every advertised skill directory contains `SKILL.md`
@@ -529,8 +538,8 @@ loop:
    - every rename or split stages both the old-path deletion and new-path
      addition
    - no stale old skill names remain outside intentional migration notes
-9. Keep `AGENTS.md` short. It may record durable conflict routing, but detailed
-   trigger lists belong in each skill's `description` and `SKILL.md` body.
+9. Keep overlap boundaries and detailed triggers in the skills' descriptions
+   and `SKILL.md` bodies. `AGENTS.md` guides collection maintenance.
 10. Validate before handoff.
 
 ## Validation Checklist
@@ -563,13 +572,21 @@ Before publishing or materially changing a skill, check:
   tracked skill directory through `skills/`.
 - Discovery and routing do not point at untracked, missing, or partially
   renamed skill directories.
-- `scripts/check` passes for collection distribution and template exports.
-- Route guidance in `AGENTS.md` stays short and does not duplicate full skill
-  workflows.
+- `scripts/check` validates distribution, skill contracts, links, acyclic
+  references, organization-neutral content, and template exports, and reports
+  host listing sizes.
+- `AGENTS.md` routes collection maintenance; overlap boundaries live in the
+  skills' descriptions and `SKILL.md`, and discovery lives in `docs/catalog.md`.
 - Current-source verification is complete before Apple, Swift, Xcode,
   swiftlang, package, availability, or tool behavior that may have changed is
   promoted to a local rule. Otherwise it is explicitly marked evidence-limited
   or needing verification.
+
+## Organization-Neutral Guidance
+
+Public skills carry generic methods and organization-agnostic specifications.
+Read organization facts from the target repository at runtime. A skill about
+one organization's own product may name that product's repository.
 
 ## Source Authority
 
@@ -596,7 +613,7 @@ directory at the repository root.
 
 The version source and its mirrors follow the organization's
 [versioning standard](https://github.com/swift-library/.github/blob/master/VERSIONING.md#one-version-source);
-[Release](../Reference/Release.md) lists them for this repository.
+[Release](../reference/release.md) lists them for this repository.
 
 Run `scripts/check` for manifest and regression validation. For host checks,
 use isolated homes under the ignored `.build/` directory and confirm the real

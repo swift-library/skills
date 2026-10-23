@@ -9,13 +9,13 @@ Choose a skill by the task it supports.
 | [`swift-programming-language`](../skills/swift-programming-language/SKILL.md) | Broad Swift language and API baseline work. |
 | [`swift-code-taste`](../skills/swift-code-taste/SKILL.md) | Apply Swift code taste while writing or reviewing code. |
 | [`swift-concurrency-patterns`](../skills/swift-concurrency-patterns/SKILL.md) | Diagnose and modernize Swift Concurrency code. |
-| [`swift-testings-patterns`](../skills/swift-testings-patterns/SKILL.md) | Write and review Swift Testing tests. |
+| [`swift-testing-patterns`](../skills/swift-testing-patterns/SKILL.md) | Write and review Swift Testing tests. |
 | [`swiftpm-architecture`](../skills/swiftpm-architecture/SKILL.md) | Design and review Swift package architecture. |
 | [`swiftpm-index`](../skills/swiftpm-index/SKILL.md) | Check SwiftPM infrastructure and package collection catalogs. |
 | [`swiftpm-distiller`](../skills/swiftpm-distiller/SKILL.md) | Distill Swift packages into agent-ready skills. |
 | [`swift-interface-distiller-patterns`](../skills/swift-interface-distiller-patterns/SKILL.md) | Read public API, prepare budgeted interface context, and compare observations. |
 | [`swiftpm-plugin-patterns`](../skills/swiftpm-plugin-patterns/SKILL.md) | Design and debug SwiftPM plugin tools. |
-| [`swift-scripts-patterns`](../skills/swift-scripts-patterns/SKILL.md) | Write Swift scripts with swift-sh safely and portably. |
+| [`swift-sh-patterns`](../skills/swift-sh-patterns/SKILL.md) | Write Swift scripts with swift-sh safely and portably. |
 | [`swift-python-patterns`](../skills/swift-python-patterns/SKILL.md) | Operate Swift PythonKit-style bridge packages. |
 | [`swift-design-tokens-patterns`](../skills/swift-design-tokens-patterns/SKILL.md) | Operate Swift design-token compiler packages. |
 | [`swiftlint-patterns`](../skills/swiftlint-patterns/SKILL.md) | Implement and review SwiftLint enforcement. |

@@ -2,7 +2,7 @@
 
 The `swift-skills` marketplace publishes the `swift-skills` plugin for Claude
 Code and Codex. Installing it loads every skill under `skills/`. The
-[catalog](Catalog.md) describes the workflows available to your agent.
+[catalog](catalog.md) describes the workflows available to your agent.
 
 ## Claude Code
 

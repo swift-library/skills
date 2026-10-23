@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Breaking: rename `swift-scripts-patterns` to `swift-sh-patterns` (`swift-sh Patterns`).
+- Breaking: rename `swift-testings-patterns` to `swift-testing-patterns` (`Swift Testing Patterns`).
+- Collection documentation lives under `docs/`, indexed by `docs/README.md`.
+- `scripts/check` validates skill contracts, metadata, links, reference cycles,
+  and organization-neutral content, and reports host listing sizes.
 - Repository automation uses lowercase `scripts/`, including the macOS app
   packaging scaffold and templates.
 - `swiftpm-github-release` audits readiness against the shared CI contract:
