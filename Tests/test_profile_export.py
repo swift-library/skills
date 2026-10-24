@@ -2,7 +2,6 @@
 """Profile exports fill package facts and preserve author content."""
 
 import json
-import os
 from pathlib import Path
 import re
 import shlex
@@ -420,54 +419,6 @@ class ProfileExportTests(unittest.TestCase):
         result = self.export("--package-root", self.package, expected=1)
         self.assertIn(str(self.config), result.stderr)
         self.assertFalse(self.output.exists())
-
-    def template_check(self, expected):
-        result = subprocess.run(
-            [str(ROOT / "scripts/check-package-template"), str(self.package)],
-            env={**os.environ, "RUNNER_TEMP": str(self.root / "runner")},
-            capture_output=True, text=True,
-        )
-        self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
-        self.assertFalse((self.root / "runner/export").exists())
-        return result
-
-    def export_template(self):
-        self.export(
-            "--package-root", self.package, "--set", "repo-name=swift-package-template",
-            "--module", "canonical-artifacts",
-            "--set", "package-name=swift-package-template", output=self.package,
-        )
-
-    def test_template_check_accepts_matching_export_and_extra_files(self):
-        self.export_template()
-        self.template_check(0)
-        self.template_check(0)
-        self.assertTrue((self.package / "Package.swift").is_file())
-
-    def test_template_check_prints_unified_diff_for_changed_file(self):
-        self.export_template()
-        (self.package / "README.md").write_text("changed documentation\n")
-        result = self.template_check(1)
-        self.assertIn(f"--- {self.package / 'README.md'}", result.stdout)
-        self.assertIn("+++ ", result.stdout)
-        self.assertIn("-changed documentation", result.stdout)
-        self.assertIn("+# swift-package-template", result.stdout)
-
-    def test_template_check_reports_missing_file(self):
-        self.export_template()
-        missing = self.package / "CONTRIBUTING.md"
-        missing.unlink()
-        result = self.template_check(1)
-        self.assertIn(str(missing), result.stderr)
-        self.assertIn("+++ ", result.stdout)
-
-    def test_template_check_requires_the_organizations_module(self):
-        self.export(
-            "--package-root", self.package, "--set", "repo-name=swift-package-template",
-            "--set", "package-name=swift-package-template", output=self.package,
-        )
-        result = self.template_check(1)
-        self.assertIn("+## Canonical Artifacts", result.stdout)
 
 
 if __name__ == "__main__":

@@ -66,11 +66,6 @@
   availability facts.
 - `swiftpm-distiller` states its boundary and source layers once.
 
-### Automation
-
-- CI checks that `swift-library/swift-package-template` carries the minimal
-  documentation export with the Canonical Artifacts module.
-
 ## 0.1.0
 
 - First release of the `swift-skills` plugin for Claude Code and Codex, with skills for:
