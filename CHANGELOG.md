@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.1.1
+
 ### Renames and installation
 
 - `swift-scripts-patterns` is renamed `swift-sh-patterns`, and
