@@ -60,7 +60,10 @@ Read `README.md` first for the collection shape and authority model.
   `scripts/check`.
 - For Swift package target-repository templates, edit
   `skills/swiftpm-docs/templates/` with the owning profiles and rules; run
-  `scripts/check` and `scripts/check-package-template <template-directory>`.
+  `scripts/check`. A template change merges here on its own. After a release,
+  the organization's
+  [template publisher](https://github.com/swift-library/github-workflows#package-template-publication)
+  re-exports it into swift-library/swift-package-template.
 - For the reader manual or documentation index, edit `README.md` or
   `docs/README.md`; keep detailed architecture and reference content in their
   named documents.
