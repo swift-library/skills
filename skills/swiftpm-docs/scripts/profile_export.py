@@ -183,12 +183,25 @@ def package_facts(package_root: Path) -> dict[str, str]:
     }
 
 
-def export_files(
-    outputs: list[tuple[Path, Path]], output_root: Path, *,
-    replacements: dict[str, str] | None = None, force: bool = True,
-    modules: frozenset[str] = frozenset(),
-) -> list[Path]:
-    rendered = [(target, render_template(source, modules=modules)) for target, source in outputs]
+def render_outputs(
+    outputs: list[tuple[Path, Path]], *,
+    replacements: dict[str, str] | None = None, modules: frozenset[str] = frozenset(),
+) -> list[tuple[Path, bytes]]:
+    rendered: list[tuple[Path, bytes]] = []
+    for target, source in outputs:
+        text = render_template(source, modules=modules)
+        if replacements:
+            text = PLACEHOLDER.sub(
+                lambda match: replacements.get(match.group(1), match.group(0)),
+                text,
+            )
+        rendered.append((target, text.encode("utf-8")))
+    return rendered
+
+
+def check_destinations(
+    outputs: list[tuple[Path, Path]], output_root: Path, *, force: bool = True,
+) -> None:
     try:
         resolved_root = output_root.resolve()
     except (OSError, RuntimeError) as error:
@@ -207,15 +220,35 @@ def export_files(
             raise ValueError(f"{destination}: destination must be a regular file, not a symlink")
         if not force and destination.exists():
             raise FileExistsError(f"{destination}: already exists; use --force to overwrite")
+
+
+def export_files(
+    outputs: list[tuple[Path, Path]], output_root: Path, *,
+    replacements: dict[str, str] | None = None, force: bool = True,
+    modules: frozenset[str] = frozenset(),
+) -> list[Path]:
+    rendered = render_outputs(outputs, replacements=replacements, modules=modules)
+    check_destinations(outputs, output_root, force=force)
     written: list[Path] = []
-    for target, text in rendered:
+    for target, content in rendered:
         destination = output_root / target
-        if replacements:
-            text = PLACEHOLDER.sub(
-                lambda match: replacements.get(match.group(1), match.group(0)),
-                text,
-            )
         destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_bytes(text.encode("utf-8"))
+        destination.write_bytes(content)
         written.append(destination)
     return written
+
+
+def drifted_files(
+    outputs: list[tuple[Path, Path]], output_root: Path, *,
+    replacements: dict[str, str] | None = None, modules: frozenset[str] = frozenset(),
+) -> list[tuple[Path, bytes | None, bytes]]:
+    """Return (destination, current bytes or None when missing, exported bytes) per difference."""
+    rendered = render_outputs(outputs, replacements=replacements, modules=modules)
+    check_destinations(outputs, output_root)
+    drifted: list[tuple[Path, bytes | None, bytes]] = []
+    for target, expected in rendered:
+        destination = output_root / target
+        actual = destination.read_bytes() if destination.exists() else None
+        if actual != expected:
+            drifted.append((destination, actual, expected))
+    return drifted

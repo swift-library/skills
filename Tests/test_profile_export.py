@@ -2,7 +2,6 @@
 """Profile exports fill package facts and preserve author content."""
 
 import json
-import os
 from pathlib import Path
 import re
 import shlex
@@ -421,54 +420,82 @@ class ProfileExportTests(unittest.TestCase):
         self.assertIn(str(self.config), result.stderr)
         self.assertFalse(self.output.exists())
 
-    def template_check(self, expected):
-        result = subprocess.run(
-            [str(ROOT / "scripts/check-package-template"), str(self.package)],
-            env={**os.environ, "RUNNER_TEMP": str(self.root / "runner")},
-            capture_output=True, text=True,
-        )
-        self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
-        self.assertFalse((self.root / "runner/export").exists())
-        return result
-
-    def export_template(self):
-        self.export(
-            "--package-root", self.package, "--set", "repo-name=swift-package-template",
-            "--module", "canonical-artifacts",
-            "--set", "package-name=swift-package-template", output=self.package,
+    def package_export(self, *args, expected=0):
+        return self.export(
+            "--package-root", self.package, "--module", "canonical-artifacts",
+            "--set", "repo-name=swift-example", "--set", "package-name=swift-example",
+            *args, output=self.package, expected=expected,
         )
 
-    def test_template_check_accepts_matching_export_and_extra_files(self):
-        self.export_template()
-        self.template_check(0)
-        self.template_check(0)
-        self.assertTrue((self.package / "Package.swift").is_file())
+    def package_files(self):
+        return {path: path.read_bytes() for path in self.package.rglob("*") if path.is_file()}
 
-    def test_template_check_prints_unified_diff_for_changed_file(self):
-        self.export_template()
-        (self.package / "README.md").write_text("changed documentation\n")
-        result = self.template_check(1)
-        self.assertIn(f"--- {self.package / 'README.md'}", result.stdout)
-        self.assertIn("+++ ", result.stdout)
+    def test_check_accepts_matching_export_and_extra_files(self):
+        self.package_export()
+        before = self.package_files()
+        result = self.package_export("--check")
+        self.assertIn("6 files match the minimal export", result.stdout)
+        self.assertEqual(self.package_files(), before)
+
+    def test_check_prints_unified_diff_and_writes_nothing(self):
+        self.package_export()
+        readme = self.package / "README.md"
+        readme.write_text("changed documentation\n")
+        result = self.package_export("--check", expected=1)
+        self.assertIn(f"--- {readme}\n", result.stdout)
+        self.assertIn(f"+++ {readme} (minimal export)\n", result.stdout)
         self.assertIn("-changed documentation", result.stdout)
-        self.assertIn("+# swift-package-template", result.stdout)
+        self.assertIn("+# swift-example", result.stdout)
+        self.assertIn("1 file(s) differ from the minimal export", result.stderr)
+        self.assertIn("--force instead of --check", result.stderr)
+        self.assertEqual(readme.read_text(), "changed documentation\n")
 
-    def test_template_check_reports_missing_file(self):
-        self.export_template()
+    def test_check_reports_missing_file(self):
+        self.package_export()
         missing = self.package / "CONTRIBUTING.md"
         missing.unlink()
-        result = self.template_check(1)
-        self.assertIn(str(missing), result.stderr)
-        self.assertIn("+++ ", result.stdout)
+        result = self.package_export("--check", expected=1)
+        self.assertIn(f"{missing}: missing file", result.stderr)
+        self.assertIn("+# Contributing", result.stdout)
+        self.assertFalse(missing.exists())
 
-    def test_template_check_requires_the_organizations_module(self):
+    def test_check_compares_the_package_requirement(self):
+        self.package_export()
+        manifest = self.package / "Package.swift"
+        manifest.write_text(MANIFEST.replace("swift-tools-version: 6.2", "swift-tools-version: 6.3"))
+        result = self.package_export("--check", expected=1)
+        self.assertIn("-- Swift 6.2 or later;", result.stdout)
+        self.assertIn("+- Swift 6.3 or later;", result.stdout)
+
+    def test_check_compares_the_selected_modules(self):
         self.export(
-            "--package-root", self.package, "--set", "repo-name=swift-package-template",
-            "--set", "package-name=swift-package-template", output=self.package,
+            "--package-root", self.package, "--set", "repo-name=swift-example",
+            "--set", "package-name=swift-example", output=self.package,
         )
-        result = self.template_check(1)
+        result = self.package_export("--check", expected=1)
         self.assertIn("+## Canonical Artifacts", result.stdout)
 
+    def test_check_skips_inherited_files(self):
+        self.package_export("--inherited", "CONTRIBUTING.md")
+        self.assertFalse((self.package / "CONTRIBUTING.md").exists())
+        result = self.package_export("--check", "--inherited", "CONTRIBUTING.md")
+        self.assertIn("5 files match the minimal export", result.stdout)
+
+    def test_check_rejects_symlinked_destination(self):
+        self.package_export()
+        readme = self.package / "README.md"
+        referent = self.root / "README.md"
+        referent.write_bytes(readme.read_bytes())
+        readme.unlink()
+        readme.symlink_to(referent)
+        result = self.package_export("--check", expected=1)
+        self.assertIn(f"{readme}: must resolve inside output directory", result.stderr)
+        self.assertTrue(readme.is_symlink())
+
+    def test_check_and_force_are_exclusive(self):
+        result = self.export("--check", "--force", expected=2)
+        self.assertIn("not allowed with argument", result.stderr)
+        self.assertFalse(self.output.exists())
 
 if __name__ == "__main__":
     unittest.main()

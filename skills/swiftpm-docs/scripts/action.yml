@@ -1,0 +1,41 @@
+name: Documentation export check
+description: Fail when a Swift package repository's documentation differs from a swiftpm-docs profile export.
+inputs:
+  path:
+    description: Repository root, which is both the export destination and the package root for requirements and commands.
+    default: .
+  profile:
+    description: Profile to export (minimal or standard).
+    required: true
+  modules:
+    description: Optional contracts to include, one per line, such as canonical-artifacts.
+    default: ''
+  values:
+    description: Identity placeholders as NAME=VALUE, one per line.
+    default: ''
+  inherited:
+    description: Community files the repository inherits instead of exporting, one path per line.
+    default: ''
+runs:
+  using: composite
+  steps:
+    - name: Compare documentation with the profile export
+      shell: bash
+      env:
+        EXPORT_PATH: ${{ inputs.path }}
+        EXPORT_PROFILE: ${{ inputs.profile }}
+        EXPORT_MODULES: ${{ inputs.modules }}
+        EXPORT_VALUES: ${{ inputs.values }}
+        EXPORT_INHERITED: ${{ inputs.inherited }}
+      run: |
+        args=(--check --profile "$EXPORT_PROFILE" --package-root "$EXPORT_PATH" --output "$EXPORT_PATH")
+        while read -r module; do
+          [[ -z "$module" ]] || args+=(--module "$module")
+        done <<< "$EXPORT_MODULES"
+        while read -r value; do
+          [[ -z "$value" ]] || args+=(--set "$value")
+        done <<< "$EXPORT_VALUES"
+        while read -r inherited; do
+          [[ -z "$inherited" ]] || args+=(--inherited "$inherited")
+        done <<< "$EXPORT_INHERITED"
+        python3 -B "$GITHUB_ACTION_PATH/export_profile.py" "${args[@]}"

@@ -124,6 +124,12 @@ Add `--module canonical-artifacts` to include the Canonical Artifacts contract
 in `AGENTS.md`. Omit the flag for the baseline agent guide. For an existing
 target, preserve its adopted module selection when regenerating the guide.
 
+For a repository whose documentation must stay equal to an export, `--check`
+compares the files with the export, prints a unified diff for each difference
+and writes nothing. Its CI runs the same check with the composite action
+`scripts/action.yml`, pinned by commit; `scripts/README.md` lists the inputs
+and how to adopt a newer export.
+
 ## Role Model
 
 Each role from `rules/route-vs-index.md` maps to one location in a Swift

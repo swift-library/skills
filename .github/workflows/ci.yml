@@ -24,29 +24,58 @@ jobs:
       - name: Validate collection distribution and documentation exports
         run: scripts/check
 
-  package-template:
+  export-action:
     runs-on: ubuntu-24.04
+    env:
+      FIXTURE: .build/documentation-export
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Export documentation into a package fixture
+        run: |
+          mkdir -p "$FIXTURE"
+          printf '%s\n' '// swift-tools-version: 6.3' 'import PackageDescription' \
+            'let package = Package(name: "Example")' > "$FIXTURE/Package.swift"
+          python3 -B skills/swiftpm-docs/scripts/export_profile.py --profile minimal \
+            --module canonical-artifacts --package-root "$FIXTURE" --output "$FIXTURE" \
+            --set repo-name=example --set package-name=example
+      - name: Accept the matching export
+        uses: ./skills/swiftpm-docs/scripts
         with:
-          repository: swift-library/swift-package-template
-          path: template
-          persist-credentials: false
-      - name: Check package template documentation
-        run: scripts/check-package-template template
+          path: ${{ env.FIXTURE }}
+          profile: minimal
+          modules: canonical-artifacts
+          values: |
+            repo-name=example
+            package-name=example
+      - name: Change the exported README
+        run: echo 'changed documentation' >> "$FIXTURE/README.md"
+      - name: Check the changed export
+        id: drift
+        continue-on-error: true
+        uses: ./skills/swiftpm-docs/scripts
+        with:
+          path: ${{ env.FIXTURE }}
+          profile: minimal
+          modules: canonical-artifacts
+          values: |
+            repo-name=example
+            package-name=example
+      - name: Require the changed export to fail
+        env:
+          DRIFT: ${{ steps.drift.outcome }}
+        run: test "$DRIFT" = failure
 
   result:
-    needs: [validate, package-template]
+    needs: [validate, export-action]
     if: always()
     runs-on: ubuntu-24.04
     steps:
       - name: Require successful collection validation
         env:
           VALIDATE: ${{ needs.validate.result }}
-          PACKAGE_TEMPLATE: ${{ needs.package-template.result }}
+          EXPORT_ACTION: ${{ needs.export-action.result }}
         run: |
           test "$VALIDATE" = success
-          test "$PACKAGE_TEMPLATE" = success
+          test "$EXPORT_ACTION" = success

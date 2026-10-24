@@ -68,8 +68,10 @@
 
 ### Automation
 
-- CI checks that `swift-library/swift-package-template` carries the minimal
-  documentation export with the Canonical Artifacts module.
+- `export_profile.py --check` compares a repository's documentation with a
+  profile export and writes nothing. The composite action
+  `skills/swiftpm-docs/scripts` runs the same check in a package's CI; the
+  package pins it by commit and adopts template changes by moving the pin.
 
 ## 0.1.0
 
