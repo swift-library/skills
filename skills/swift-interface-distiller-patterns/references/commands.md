@@ -113,8 +113,8 @@ interface-distiller render "$API_DIR/api.json" --docs summary \
   --output-dir "$API_DIR/interface" --report "$API_DIR/interface-size.json"
 interface-distiller render "$API_DIR/api.json" --docs full --show-implied \
   --output-dir "$API_DIR/full"
-interface-distiller render "$API_DIR/api.json" --view evidence \
-  --output-dir "$API_DIR/evidence"
+interface-distiller render "$API_DIR/api.json" --view symbols \
+  --output-dir "$API_DIR/symbols"
 interface-distiller render "$API_DIR/api.json" --by-module \
   --byte-budget "$MAX_BYTES" --output-dir "$API_DIR/modules"
 ```
@@ -122,7 +122,7 @@ interface-distiller render "$API_DIR/api.json" --by-module \
 Read the generated Markdown parts, not only the JSON file list on stdout.
 Default docs are the leading prose paragraph; `full` retains all comments and
 `none` omits them. `--show-implied` expands collected standard conformance
-requirements collapsed in readable views. Rendering with `--view evidence`
+requirements collapsed in readable views. Rendering with `--view symbols`
 keeps detailed metadata and per-symbol anchors. See [interpretation](interpretation.md) before
 using measurements or a strict byte limit.
 

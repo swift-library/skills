@@ -33,13 +33,13 @@ blank line or structural content; list-only comments have no prose summary.
 
 Readable views collapse standard requirements implied by observed conformances.
 `--show-implied` reveals those collected declarations. Canonical JSON and
-`--view evidence` retain them regardless. Default synthesized-member exclusion
+`--view symbols` retain them regardless. Default synthesized-member exclusion
 is a recorded scope policy; it is not missing collection. Protocol extension
 declarations and conformances remain in scope.
 
 Interface anchors identify top-level blocks, including standalone external
 extensions; members link to their containing block. Views rendered with
-`--view evidence` use per-symbol anchors. Use canonical IDs when a stable symbol
+`--view symbols` use per-symbol anchors. Use canonical IDs when a stable symbol
 identity is needed.
 
 Distinguish compiler-reported, parsed, derived and policy fields. Snapshot

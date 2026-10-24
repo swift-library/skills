@@ -7,7 +7,7 @@ Read `README.md` first for the collection shape and authority model.
 - Name the behavior, root cause, invariant, owner, data flow, and validation
   before changing reusable skill files.
 - Change the owning skill or collection layer, not the nearest convenient file.
-- Keep changes traceable to the request, source evidence, or owning invariant.
+- Keep changes traceable to the request, a cited source, or the owning invariant.
 - Do not promote one fixture, one source run, or local execution state into
   reusable skill contracts.
 - Keep skill docs focused on current reusable capabilities, trigger conditions,

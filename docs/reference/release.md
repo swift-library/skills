@@ -60,7 +60,7 @@ The candidate is the committed source tree for the whole plugin. Run
 `scripts/check` against that candidate and review the version source, mirrors
 and changelog. Use the isolated host checks in
 [Plugin distribution](../architecture/skill-authoring.md#plugin-distribution)
-for installation evidence.
+for installation checks.
 
 Publication follows the organization's
 [release procedure](https://github.com/swift-library/.github/blob/master/VERSIONING.md#release-procedure)
@@ -70,16 +70,16 @@ a release workflow, automated acceptance receipts and release attachments are
 not established. The maintainer must resolve those manual steps before
 publication and publish the exact accepted source commit.
 
-## Evidence Reuse and Invalidation
+## Result Reuse and Invalidation
 
 Review local check output and CI results against the candidate commit, check
-definitions and actual tool environment. Automated evidence receipts and a
-release evidence retention mechanism are not established. Keep required check
+definitions and actual tool environment. Automated result receipts and a
+release record retention mechanism are not established. Keep required check
 logs and host installation results with the candidate's review record.
 
 Changed source, manifests, dependencies or installation routes require fresh
 affected checks. Check-only changes require fresh affected validation against
-the same identified source artifact. Host installation evidence must identify
+the same identified source artifact. Host installation results must identify
 the installed plugin version and skill inventory; source checks alone do not
 establish host loading. Record failures and retry decisions in the review
 record.
@@ -91,10 +91,10 @@ record.
 | Version update and check | Manually update `VERSION` and the three mirrors; run `python3 -B scripts/validate-plugins.py` and `scripts/check` | Repository write access for updates; local read and execution access for checks |
 | Candidate validation and build | `scripts/check`; isolated host checks in [Plugin distribution](../architecture/skill-authoring.md#plugin-distribution); a collection release build is not established | Local execution access and the selected hosts |
 | Status and interrupted-run recovery | Inspect `git status`, the candidate commit and CI results; publication recovery follows VERSIONING | Repository read access; publication access for recovery |
-| Acceptance and publication | Manually review candidate evidence and follow VERSIONING's release procedure with tag `vX.Y.Z` and message `skills X.Y.Z`; release automation is not established | Authorized maintainer with tag and release write access |
+| Acceptance and publication | Manually review the candidate's check results and follow VERSIONING's release procedure with tag `vX.Y.Z` and message `skills X.Y.Z`; release automation is not established | Authorized maintainer with tag and release write access |
 | Cleanup | Manually inventory and remove the task's reproducible `.build/` outputs and isolated host homes after verification | Local filesystem access |
 
 The task owns its `.build/` check outputs, isolated host homes and exports.
-Preserve unique source changes, required evidence and active processes when
+Preserve unique source changes, required results and active processes when
 cleaning up. Keep private paths and individual run status in local records,
 outside this reference. Automated artifact retention is not established.

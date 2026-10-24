@@ -100,7 +100,7 @@ def validate_release_reference(root: Path, profile_name: str) -> None:
     for heading in (
         "Components and Version Sources", "Compatibility Surface",
         "Dependencies and Verified Combinations", "Derived Metadata and Drift Checks",
-        "Candidate, Acceptance and Publication", "Evidence Reuse and Invalidation",
+        "Candidate, Acceptance and Publication", "Result Reuse and Invalidation",
         "Entry Points and Artifact Retention",
     ):
         if f"## {heading}" not in text:
