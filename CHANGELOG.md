@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.1.2
+
 ### Templates
 
 - The swiftpm-docs `AGENTS.md` template is a lean guide: the title, a two-line
