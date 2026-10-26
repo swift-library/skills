@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Templates
+
+- The swiftpm-docs `AGENTS.md` template is a lean guide: the title, a two-line
+  Task Route and the Code Review Rules (Public claims, Public documentation,
+  Behavior and compatibility). The First-Principles Work, Boundary Guardrails,
+  Authority and Operating Notes sections are removed; Canonical Artifacts stays
+  an optional module.
+
 ## 0.1.1
 
 ### Renames and installation
