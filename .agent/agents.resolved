@@ -1,39 +1,30 @@
 {
-  "instructions" : {
-    "chatgpt" : {
-
-    },
-    "sections" : [
+  "instructions": {
+    "chatgpt": {},
+    "sections": [
       {
-        "hash" : "sha256:86223f5aa20af8d9579e64fd9c7b14566aedb5e3a06df8e9ef3df8c8d83a6244",
-        "name" : "guide",
-        "path" : ".agent/instructions/guide.md",
-        "source" : "."
+        "hash": "sha256:86223f5aa20af8d9579e64fd9c7b14566aedb5e3a06df8e9ef3df8c8d83a6244",
+        "name": "guide",
+        "path": ".agent/instructions/guide.md",
+        "source": "."
       },
       {
-        "hash" : "sha256:2b35b200dee2344a34b09571a46c58761d55ca6a6d412f60d6aa476016a8681f",
-        "name" : "code-review-rules",
-        "path" : ".agent/instructions/code-review-rules.md",
-        "source" : "."
+        "hash": "sha256:2b35b200dee2344a34b09571a46c58761d55ca6a6d412f60d6aa476016a8681f",
+        "name": "code-review-rules",
+        "path": ".agent/instructions/code-review-rules.md",
+        "source": "."
       }
     ],
-    "targets" : {
-      "AGENTS.md" : {
-        "agents" : [
-          "claude-code",
-          "codex"
-        ],
-        "blockHash" : "sha256:a79ca2e9209ce5b3f366d3a316e185cf8b6e0edcfacb6f9314971c308b58fb32",
-        "created" : false,
-        "headingOffset" : 0
+    "targets": {
+      "AGENTS.md": {
+        "agents": ["claude-code", "codex"],
+        "blockHash": "sha256:a79ca2e9209ce5b3f366d3a316e185cf8b6e0edcfacb6f9314971c308b58fb32",
+        "created": false,
+        "headingOffset": 0
       }
     }
   },
-  "skills" : {
-
-  },
-  "sources" : {
-
-  },
-  "version" : 1
+  "skills": {},
+  "sources": {},
+  "version": 1
 }
