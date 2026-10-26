@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Build and maintain Swift packages and Apple apps with agent skills in a single plugin.",
-    "version": "0.1.1"
+    "version": "0.1.2"
   },
   "plugins": [
     {

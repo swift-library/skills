@@ -9,3 +9,7 @@ DerivedData/
 /template/
 __pycache__/
 *.py[cod]
+/.agent/*
+!/.agent/instructions/
+!/.agent/agents.json
+!/.agent/agents.resolved
